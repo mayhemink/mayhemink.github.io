@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>Mayhem Ink — Timecards 7/7</title>
+<style>
+  :root{
+    --ink:#111111; --red:#C8102E; --bg:#f4f4f5; --card:#ffffff;
+    --green:#1a9c4b; --amber:#e08a00; --blue:#2264c7; --gray:#8a8a8e;
+    --line:#e3e3e6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg); color:var(--ink);
+    -webkit-user-select:none; user-select:none;
+  }
+  header{
+    background:var(--ink); color:#fff; padding:14px 18px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:10;
+  }
+  header .brand{font-weight:800; font-size:20px; letter-spacing:.5px;}
+  header .brand span{color:var(--red);}
+  header .date{font-size:14px; color:#bbb; font-weight:600;}
+  .wrap{max-width:820px; margin:0 auto; padding:16px 14px 90px;}
+
+  /* ---- summary strip ---- */
+  .strip{
+    display:flex; gap:10px; margin-bottom:16px;
+  }
+  .strip .pill{
+    flex:1; background:var(--card); border-radius:12px; padding:10px 6px;
+    text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.07);
+  }
+  .strip .pill b{display:block; font-size:22px;}
+  .strip .pill small{color:var(--gray); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;}
+
+  /* ---- job cards ---- */
+  .jobgroup{margin-bottom:14px;}
+  .jobgroup h2{
+    font-size:13px; color:var(--gray); font-weight:800; letter-spacing:.5px;
+    margin:4px 4px 8px; text-transform:uppercase;
+  }
+  .card{
+    background:var(--card); border-radius:14px; padding:16px;
+    box-shadow:0 1px 3px rgba(0,0,0,.07); margin-bottom:10px;
+    display:flex; align-items:center; gap:14px; cursor:pointer;
+    border-left:6px solid var(--line);
+  }
+  .card.st-setup{border-left-color:var(--amber);}
+  .card.st-print{border-left-color:var(--blue);}
+  .card.st-pause{border-left-color:var(--red);}
+  .card.st-done{border-left-color:var(--green); opacity:.75;}
+  .card .loc{flex:1;}
+  .card .loc .l1{font-size:18px; font-weight:800;}
+  .card .loc .l2{font-size:13px; color:var(--gray); margin-top:3px; font-weight:600;}
+  .card .stat{text-align:right;}
+  .badge{
+    display:inline-block; font-size:12px; font-weight:800; letter-spacing:.4px;
+    padding:5px 11px; border-radius:999px; text-transform:uppercase;
+    background:#ececee; color:var(--gray);
+  }
+  .badge.setup{background:#fdf0dd; color:var(--amber);}
+  .badge.print{background:#e2ecfb; color:var(--blue);}
+  .badge.pause{background:#fbe3e7; color:var(--red);}
+  .badge.done{background:#e0f3e7; color:var(--green);}
+  .card .who{font-size:12px; color:var(--gray); margin-top:5px; font-weight:600;}
+
+  /* ---- detail view ---- */
+  #detail{display:none;}
+  .back{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:16px; font-weight:700; color:var(--red);
+    background:none; border:none; padding:10px 4px; cursor:pointer;
+  }
+  .dhead{background:var(--card); border-radius:14px; padding:18px; box-shadow:0 1px 3px rgba(0,0,0,.07); margin-bottom:14px;}
+  .dhead .jn{font-size:14px; font-weight:800; color:var(--red); letter-spacing:.5px;}
+  .dhead .cu{font-size:24px; font-weight:800; margin:2px 0 6px;}
+  .dhead .meta{font-size:14px; color:var(--gray); font-weight:600;}
+
+  .field{background:var(--card); border-radius:14px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,.07); margin-bottom:12px;}
+  .field label{display:block; font-size:12px; font-weight:800; color:var(--gray); text-transform:uppercase; letter-spacing:.5px; margin-bottom:9px;}
+  .segs{display:flex; gap:8px; flex-wrap:wrap;}
+  .seg{
+    flex:1; min-width:70px; padding:13px 8px; border-radius:10px; border:2px solid var(--line);
+    background:#fafafa; font-size:16px; font-weight:700; text-align:center; cursor:pointer;
+  }
+  .seg.on{background:var(--ink); color:#fff; border-color:var(--ink);}
+
+  .steps{margin-bottom:12px;}
+  .step{
+    background:var(--card); border-radius:14px; box-shadow:0 1px 3px rgba(0,0,0,.07);
+    margin-bottom:10px; padding:16px; display:flex; align-items:center; gap:14px;
+  }
+  .step .num{
+    width:34px; height:34px; border-radius:50%; background:#ececee; color:var(--gray);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; flex-shrink:0;
+  }
+  .step.done .num{background:var(--green); color:#fff;}
+  .step .info{flex:1;}
+  .step .info b{font-size:17px; display:block;}
+  .step .info small{color:var(--gray); font-size:12px; font-weight:600;}
+  .step .time{font-size:18px; font-weight:800; min-width:86px; text-align:right;}
+  .step .time input{
+    font-size:16px; font-weight:700; width:110px; padding:6px; border:2px solid var(--line); border-radius:8px;
+  }
+  .bigbtn{
+    width:100%; padding:20px; border:none; border-radius:14px;
+    font-size:20px; font-weight:800; color:#fff; cursor:pointer;
+    letter-spacing:.3px; box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .bigbtn:active{transform:scale(.985);}
+  .bigbtn.b-setup{background:var(--amber);}
+  .bigbtn.b-print{background:var(--blue);}
+  .bigbtn.b-done{background:var(--green);}
+  .bigbtn.b-resume{background:var(--green);}
+  .bigbtn:disabled{background:#c9c9cd; box-shadow:none;}
+  .btnrow{display:flex; gap:10px; margin-bottom:12px;}
+  .btnrow .bigbtn{flex:1;}
+  .pausebtn{
+    flex:0 0 130px; padding:20px 10px; border:2px solid var(--red); background:#fff; color:var(--red);
+    border-radius:14px; font-size:16px; font-weight:800; cursor:pointer;
+  }
+  .donebanner{
+    background:var(--green); color:#fff; border-radius:14px; padding:18px; text-align:center;
+    font-size:18px; font-weight:800; margin-bottom:12px;
+  }
+  .donebanner small{display:block; font-weight:600; font-size:14px; opacity:.9; margin-top:4px;}
+  textarea{
+    width:100%; border:2px solid var(--line); border-radius:10px; padding:12px;
+    font-size:16px; font-family:inherit; min-height:64px; resize:vertical;
+    -webkit-user-select:text; user-select:text;
+  }
+  .pauselog{font-size:13px; color:var(--gray); font-weight:600; margin-top:8px; line-height:1.6;}
+  .pauselog b{color:var(--red);}
+
+  /* ---- end of day ---- */
+  .eod{
+    position:fixed; left:0; right:0; bottom:0; background:var(--card);
+    border-top:1px solid var(--line); padding:12px 14px;
+    display:flex; gap:10px; z-index:10;
+  }
+  .eod button{
+    flex:1; padding:15px; border:none; border-radius:12px; font-size:16px; font-weight:800; cursor:pointer;
+  }
+  .eod .export{background:var(--ink); color:#fff;}
+  #exportview{display:none;}
+  #exportview pre{
+    background:var(--card); border-radius:14px; padding:16px; font-size:13px;
+    white-space:pre-wrap; word-break:break-word; box-shadow:0 1px 3px rgba(0,0,0,.07);
+    -webkit-user-select:text; user-select:text; line-height:1.5;
+  }
+  .copybtn{
+    width:100%; padding:18px; border:none; border-radius:14px; background:var(--red); color:#fff;
+    font-size:18px; font-weight:800; cursor:pointer; margin-bottom:12px;
+  }
+  .toast{
+    position:fixed; top:70px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; padding:12px 22px; border-radius:999px;
+    font-weight:700; font-size:15px; z-index:99; display:none;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">MAYHEM <span>INK</span></div>
+  <div class="date" id="hdrdate"></div>
+</header>
+
+<div class="wrap">
+
+  <!-- LIST VIEW -->
+  <div id="list">
+    <div class="strip">
+      <div class="pill"><b id="s-total">0</b><small>Cards</small></div>
+      <div class="pill"><b id="s-active">0</b><small>Running</small></div>
+      <div class="pill"><b id="s-done">0</b><small>Done</small></div>
+      <div class="pill"><b id="s-pieces">0</b><small>Pieces</small></div>
+    </div>
+    <div id="groups"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div id="detail"></div>
+
+  <!-- EXPORT VIEW -->
+  <div id="exportview">
+    <button class="back" onclick="showList()">&#8592; Back to jobs</button>
+    <button class="copybtn" onclick="copyExport()">Copy — send to Kolton</button>
+    <pre id="exporttext"></pre>
+  </div>
+
+</div>
+
+<div class="eod" id="eodbar">
+  <button class="export" onclick="showExport()">End of Day — Export Times</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ================= DAY DATA (generated from the daily rundown) =================
+const DAY = "2026-07-07";
+const PRINTERS = ["Jalen","Corey","Spencer"];
+const COUNTS = [1,2,3,4,5,6];
+const ROWS = [
+  {id:"18432-front",  job:"18432", customer:"Trail Hero",      location:"Front",        colors:3, screens:3, qty:120},
+  {id:"18432-back",   job:"18432", customer:"Trail Hero",      location:"Back",         colors:1, screens:1, qty:120},
+  {id:"18437-front",  job:"18437", customer:"Creation Cartel", location:"Front",        colors:2, screens:1, qty:48},
+  {id:"18441-front",  job:"18441", customer:"Brand Makers",    location:"Front",        colors:4, screens:4, qty:300},
+  {id:"18441-lsleeve",job:"18441", customer:"Brand Makers",    location:"Left Sleeve",  colors:1, screens:1, qty:300},
+  {id:"18441-rsleeve",job:"18441", customer:"Brand Makers",    location:"Right Sleeve", colors:1, screens:1, qty:300},
+];
+// ===============================================================================
+
+const KEY = "mayhem_timing_" + DAY;
+let state = load();
+let currentRow = null;
+let ticker = null;
+
+function load(){
+  try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; }
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+}
+function rec(id){
+  const row = ROWS.find(r => r.id === id);
+  if(!state[id]) state[id] = {printer:null, colors:row.colors, screens:row.screens, setupStart:null, setupDone:null, jobDone:null, pauses:[], notes:""};
+  if(!state[id].pauses) state[id].pauses = [];
+  if(state[id].colors == null) state[id].colors = row.colors;
+  if(state[id].screens == null) state[id].screens = row.screens;
+  return state[id];
+}
+
+// ---------- time helpers ----------
+function now(){ return Date.now(); }
+function fmt(ts){
+  if(!ts) return "";
+  const d = new Date(ts);
+  let h = d.getHours(), m = d.getMinutes();
+  const ap = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+  return h + ":" + String(m).padStart(2,"0") + " " + ap;
+}
+function toHM(ts){ // for <input type=time>
+  const d = new Date(ts);
+  return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+}
+function fromHM(hm, refTs){ // set clock time on same day
+  const d = new Date(refTs || now());
+  const [h,m] = hm.split(":").map(Number);
+  d.setHours(h, m, 0, 0);
+  return d.getTime();
+}
+function mins(ms){ return Math.round(ms/60000); }
+function isPaused(r){ const p = r.pauses[r.pauses.length-1]; return p && !p.end; }
+function pausedMsBetween(r, a, b){
+  let t = 0;
+  for(const p of r.pauses){
+    const s = Math.max(p.start, a), e = Math.min(p.end || now(), b);
+    if(e > s) t += e - s;
+  }
+  return t;
+}
+function status(r){
+  if(!r) return "idle";
+  if(r.jobDone) return "done";
+  if(isPaused(r)) return "pause";
+  if(r.setupDone) return "print";
+  if(r.setupStart) return "setup";
+  return "idle";
+}
+
+// ---------- LIST VIEW ----------
+function showList(){
+  currentRow = null;
+  stopTicker();
+  document.getElementById("detail").style.display = "none";
+  document.getElementById("exportview").style.display = "none";
+  document.getElementById("list").style.display = "block";
+  document.getElementById("eodbar").style.display = "flex";
+  renderList();
+}
+function renderList(){
+  const groups = {};
+  for(const row of ROWS){
+    const k = row.job + " — " + row.customer;
+    (groups[k] = groups[k] || []).push(row);
+  }
+  let html = "";
+  for(const k in groups){
+    html += '<div class="jobgroup"><h2>#' + esc(k) + '</h2>';
+    for(const row of groups[k]){
+      const r = state[row.id];
+      const st = status(r);
+      const stCls = {idle:"", setup:"st-setup", print:"st-print", pause:"st-pause", done:"st-done"}[st];
+      const badge = {
+        idle:'<span class="badge">Not started</span>',
+        setup:'<span class="badge setup">Setting up</span>',
+        print:'<span class="badge print">Printing</span>',
+        pause:'<span class="badge pause">Paused</span>',
+        done:'<span class="badge done">Done</span>'
+      }[st];
+      const who = r && r.printer
+        ? '<div class="who">' + esc(r.printer) + '</div>' : "";
+      const cc = r && r.colors != null ? r.colors : row.colors;
+      const ss = r && r.screens != null ? r.screens : row.screens;
+      html += '<div class="card ' + stCls + '" onclick="openRow(\'' + row.id + '\')">' +
+        '<div class="loc"><div class="l1">' + esc(row.location) + '</div>' +
+        '<div class="l2">' + cc + ' color · ' + ss + ' screen' + (ss>1?"s":"") + ' · ' + row.qty + ' pcs</div></div>' +
+        '<div class="stat">' + badge + who + '</div></div>';
+    }
+    html += '</div>';
+  }
+  document.getElementById("groups").innerHTML = html;
+  // summary strip
+  let active = 0, done = 0;
+  for(const row of ROWS){
+    const st = status(state[row.id]);
+    if(st === "setup" || st === "print" || st === "pause") active++;
+    if(st === "done") done++;
+  }
+  document.getElementById("s-total").textContent = ROWS.length;
+  document.getElementById("s-active").textContent = active;
+  document.getElementById("s-done").textContent = done;
+  document.getElementById("s-pieces").textContent = ROWS.reduce((a,r)=>a+r.qty,0);
+}
+
+// ---------- DETAIL VIEW ----------
+function openRow(id){
+  currentRow = ROWS.find(r => r.id === id);
+  editingField = null;
+  pausePicking = false;
+  editingPause = null;
+  pauseDraft = null;
+  rec(id);
+  document.getElementById("list").style.display = "none";
+  document.getElementById("exportview").style.display = "none";
+  document.getElementById("eodbar").style.display = "none";
+  document.getElementById("detail").style.display = "block";
+  renderDetail();
+  startTicker();
+}
+function renderDetail(){
+  const row = currentRow;
+  const r = rec(row.id);
+  const st = status(r);
+
+  let html = '<button class="back" onclick="showList()">&#8592; All jobs</button>';
+  html += '<div class="dhead"><div class="jn">JOB #' + esc(row.job) + '</div>' +
+    '<div class="cu">' + esc(row.customer) + ' — ' + esc(row.location) + '</div>' +
+    '<div class="meta">' + row.qty + ' pieces</div></div>';
+
+  // printer picker
+  html += '<div class="field"><label>Printer</label><div class="segs">' +
+    PRINTERS.map(p => '<div class="seg ' + (r.printer===p?"on":"") + '" onclick="setPrinter(\'' + p + '\')">' + p + '</div>').join("") +
+    '</div></div>';
+  // colors + screens (prefilled from the order — tap to correct, e.g. white/flash-white = 2 colors but 1 screen)
+  html += '<div class="field"><label>Colors' + (r.colors !== row.colors ? ' <span style="color:var(--red)">(order says ' + row.colors + ')</span>' : '') + '</label><div class="segs">' +
+    COUNTS.map(c => '<div class="seg ' + (r.colors===c?"on":"") + '" onclick="setColors(' + c + ')">' + c + '</div>').join("") +
+    '</div></div>';
+  html += '<div class="field"><label>Screens' + (r.screens !== row.screens ? ' <span style="color:var(--red)">(order says ' + row.screens + ')</span>' : '') + '</label><div class="segs">' +
+    COUNTS.map(c => '<div class="seg ' + (r.screens===c?"on":"") + '" onclick="setScreens(' + c + ')">' + c + '</div>').join("") +
+    '</div></div>';
+
+  // steps
+  html += '<div class="steps">';
+  html += stepHtml(1, "Setup Start", "started lining up", r.setupStart, "setupStart");
+  html += stepHtml(2, "Setup Done", "first good print", r.setupDone, "setupDone");
+  html += stepHtml(3, "Job Done", "last shirt off the press", r.jobDone, "jobDone");
+  html += '</div>';
+
+  // live timer / action button
+  if(st === "done"){
+    const m = calcRow(row);
+    html += '<div class="donebanner">DONE — ' + m.setupMin + ' min setup · ' + m.printMin + ' min print' +
+      '<small>' + m.pph + ' pieces/hour</small></div>';
+  } else if(st === "pause"){
+    html += '<button class="bigbtn b-resume" onclick="resumeJob()">&#9654; RESUME — job is paused</button>';
+  } else if(pausePicking){
+    html += '<div class="field"><label>Why did the job stop?</label><div class="segs" style="flex-wrap:wrap">' +
+      PAUSE_REASONS.map(x => '<div class="seg" style="min-width:44%" onclick="pickPause(\'' + x + '\')">' + x + '</div>').join("") +
+      '<div class="seg" style="min-width:44%" onclick="cancelPause()">Cancel</div></div></div>';
+  } else if(st === "idle"){
+    const ready = !!r.printer;
+    html += '<button class="bigbtn b-setup" ' + (ready?"":"disabled") + ' onclick="stamp(\'setupStart\')">' +
+      (ready ? "START SETUP" : "Pick your name first") + '</button>';
+  } else if(st === "setup"){
+    html += '<div class="btnrow"><button class="bigbtn b-print" onclick="stamp(\'setupDone\')">SETUP DONE &#8594; PRINTING <span id="live"></span></button>' +
+      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>';
+  } else if(st === "print"){
+    html += '<div class="btnrow"><button class="bigbtn b-done" onclick="stamp(\'jobDone\')">JOB DONE <span id="live"></span></button>' +
+      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>';
+  }
+
+  // stops (pause log) — editable
+  if(r.setupStart && !pausePicking){
+    html += '<div class="field"><label>Stops</label>';
+    r.pauses.forEach((p, i) => {
+      if(editingPause === i){
+        html += pauseEditor();
+      } else {
+        html += '<div class="pauselog" onclick="editPause(' + i + ')" style="cursor:pointer;padding:7px 0;border-bottom:1px solid var(--line)">' +
+          '<b>' + fmt(p.start) + (p.end ? ' – ' + fmt(p.end) + '</b> (' + mins(p.end - p.start) + ' min)' : ' – now</b>') +
+          (p.reason ? ' · ' + esc(p.reason) : '') +
+          ((p.added || p.edited) ? ' <span style="color:var(--amber);font-weight:800">&#9998; edited</span>' : '') +
+          ' <span style="color:var(--gray);font-size:11px">&nbsp;tap to fix</span></div>';
+      }
+    });
+    if(editingPause === NEW_PAUSE) html += pauseEditor();
+    if(editingPause === null){
+      html += '<button onclick="addPause()" style="margin-top:10px;padding:11px 16px;border:2px dashed var(--line);background:none;border-radius:10px;font-weight:700;color:var(--gray);cursor:pointer;font-size:14px">+ Add a stop we forgot to log</button>';
+    }
+    html += '</div>';
+  }
+
+  // notes
+  html += '<div class="field"><label>Notes</label>' +
+    '<textarea placeholder="Anything weird about this run..." onblur="setNotes(this.value)">' + esc(r.notes||"") + '</textarea></div>';
+
+  document.getElementById("detail").innerHTML = html;
+  updateLive();
+}
+let editingField = null;
+function stepHtml(n, title, sub, ts, field){
+  let timeCell;
+  if(editingField === field){
+    timeCell = '<input type="time" id="timeedit" value="' + toHM(ts) + '">' +
+      '<div style="margin-top:8px;display:flex;gap:6px;justify-content:flex-end">' +
+      '<button onclick="saveTime(\'' + field + '\')" style="padding:8px 16px;border:none;border-radius:8px;background:var(--green);color:#fff;font-weight:800;font-size:14px;cursor:pointer">Save</button>' +
+      '<button onclick="cancelTime()" style="padding:8px 12px;border:none;border-radius:8px;background:#ececee;color:var(--gray);font-weight:800;font-size:14px;cursor:pointer">X</button></div>';
+  } else if(ts){
+    const wasEdited = currentRow && (rec(currentRow.id).edits || {})[field];
+    timeCell = '<span onclick="editTime(\'' + field + '\')" style="cursor:pointer;border-bottom:2px dotted var(--gray)">' + fmt(ts) + '</span>' +
+      (wasEdited ? '<div style="font-size:10px;color:var(--amber);font-weight:800">&#9998; EDITED</div>' : '');
+  } else {
+    timeCell = '<span style="color:var(--gray)">—</span>';
+  }
+  return '<div class="step ' + (ts?"done":"") + '">' +
+    '<div class="num">' + (ts ? "&#10003;" : n) + '</div>' +
+    '<div class="info"><b>' + title + '</b><small>' + sub + '</small></div>' +
+    '<div class="time">' + timeCell + '</div></div>';
+}
+function updateLive(){
+  const el = document.getElementById("live");
+  if(!el || !currentRow) return;
+  const r = rec(currentRow.id);
+  const st = status(r);
+  if(st === "setup"){
+    const m = mins(now() - r.setupStart - pausedMsBetween(r, r.setupStart, now()));
+    el.textContent = "· " + m + " min";
+  } else if(st === "print"){
+    const m = mins(now() - r.setupDone - pausedMsBetween(r, r.setupDone, now()));
+    el.textContent = "· " + m + " min";
+  }
+}
+function startTicker(){ stopTicker(); ticker = setInterval(updateLive, 15000); }
+function stopTicker(){ if(ticker){ clearInterval(ticker); ticker = null; } }
+
+// ---------- actions ----------
+function setPrinter(p){ rec(currentRow.id).printer = p; save(); renderDetail(); }
+function setColors(c){ rec(currentRow.id).colors = c; save(); renderDetail(); }
+function setScreens(c){ rec(currentRow.id).screens = c; save(); renderDetail(); }
+function setNotes(v){ rec(currentRow.id).notes = v; save(); }
+function stamp(field){
+  const r = rec(currentRow.id);
+  if(field === "setupDone" && r.setupStart && (now() - r.setupStart) < 120000){
+    if(!confirm("Setup was under 2 minutes — mis-tap? Press OK only if setup really is done.")) return;
+  }
+  if(field === "jobDone" && r.setupDone && (now() - r.setupDone) < 120000){
+    if(!confirm("Print ran under 2 minutes — is the job really done?")) return;
+  }
+  r[field] = now();
+  save(); renderDetail();
+  toast(field === "jobDone" ? "Job done — nice." : "Time logged " + fmt(now()));
+}
+const PAUSE_REASONS = ["Lunch","Broke a screen","Waiting on ink","Waiting on approval","Press problem","Other"];
+const NEW_PAUSE = -1;
+let pausePicking = false;
+let editingPause = null;
+let pauseDraft = null;
+function pauseJob(){ pausePicking = true; renderDetail(); }
+function cancelPause(){ pausePicking = false; renderDetail(); }
+function pickPause(reason){
+  pausePicking = false;
+  rec(currentRow.id).pauses.push({start: now(), end: null, reason: reason});
+  save(); renderDetail();
+}
+
+// ---- audit trail ----
+function logEdit(r, field, oldV, newV){
+  r.audit = r.audit || [];
+  r.audit.push({field: field, old: oldV, new: newV, at: now()});
+  r.edits = r.edits || {};
+  r.edits[field] = true;
+}
+
+// ---- pause editing ----
+function pauseEditor(){
+  const d = pauseDraft;
+  return '<div style="padding:10px 0">' +
+    '<div style="display:flex;gap:14px;margin-bottom:10px">' +
+    '<div><small style="font-weight:800;color:var(--gray)">STOPPED AT</small><br><input type="time" id="p-start" value="' + toHM(d.start) + '" style="font-size:16px;padding:8px;border:2px solid var(--line);border-radius:8px"></div>' +
+    '<div><small style="font-weight:800;color:var(--gray)">BACK AT</small><br><input type="time" id="p-end" value="' + (d.end ? toHM(d.end) : "") + '" style="font-size:16px;padding:8px;border:2px solid var(--line);border-radius:8px"></div></div>' +
+    '<div class="segs" style="margin-bottom:10px">' +
+    PAUSE_REASONS.map(x => '<div class="seg ' + (d.reason===x?"on":"") + '" style="min-width:30%;padding:10px 6px;font-size:13px" onclick="setPauseReason(\'' + x + '\')">' + x + '</div>').join("") +
+    '</div><div style="display:flex;gap:8px">' +
+    '<button onclick="savePause()" style="flex:1;padding:13px;border:none;border-radius:10px;background:var(--green);color:#fff;font-weight:800;font-size:15px;cursor:pointer">Save</button>' +
+    '<button onclick="deletePause()" style="padding:13px 16px;border:none;border-radius:10px;background:var(--red);color:#fff;font-weight:800;font-size:15px;cursor:pointer">Delete</button>' +
+    '<button onclick="cancelPauseEdit()" style="padding:13px 16px;border:none;border-radius:10px;background:#ececee;color:var(--gray);font-weight:800;font-size:15px;cursor:pointer">X</button>' +
+    '</div></div>';
+}
+function readPauseInputs(){
+  const s = document.getElementById("p-start"), e = document.getElementById("p-end");
+  if(s && /^\d{1,2}:\d{2}$/.test(s.value)) pauseDraft.start = fromHM(s.value, pauseDraft.start);
+  if(e && /^\d{1,2}:\d{2}$/.test(e.value)) pauseDraft.end = fromHM(e.value, pauseDraft.start);
+}
+function editPause(i){
+  const p = rec(currentRow.id).pauses[i];
+  pauseDraft = {start: p.start, end: p.end, reason: p.reason};
+  editingPause = i; renderDetail();
+}
+function addPause(){
+  pauseDraft = {start: now(), end: now(), reason: ""};
+  editingPause = NEW_PAUSE; renderDetail();
+}
+function setPauseReason(x){ readPauseInputs(); pauseDraft.reason = x; renderDetail(); }
+function cancelPauseEdit(){ editingPause = null; pauseDraft = null; renderDetail(); }
+function savePause(){
+  readPauseInputs();
+  const r = rec(currentRow.id);
+  if(editingPause === NEW_PAUSE){
+    r.pauses.push({start: pauseDraft.start, end: pauseDraft.end, reason: pauseDraft.reason, added: true});
+    logEdit(r, "pause added", null, fmt(pauseDraft.start) + "-" + fmt(pauseDraft.end) + " " + pauseDraft.reason);
+  } else {
+    const p = r.pauses[editingPause];
+    if(p.start !== pauseDraft.start || p.end !== pauseDraft.end || p.reason !== pauseDraft.reason){
+      logEdit(r, "pause " + (editingPause+1), fmt(p.start) + "-" + (p.end?fmt(p.end):"?") + " " + (p.reason||""), fmt(pauseDraft.start) + "-" + (pauseDraft.end?fmt(pauseDraft.end):"?") + " " + pauseDraft.reason);
+      p.start = pauseDraft.start; p.end = pauseDraft.end; p.reason = pauseDraft.reason; p.edited = true;
+    }
+  }
+  editingPause = null; pauseDraft = null;
+  save(); renderDetail();
+}
+function deletePause(){
+  const r = rec(currentRow.id);
+  if(editingPause !== NEW_PAUSE){
+    const p = r.pauses[editingPause];
+    logEdit(r, "pause deleted", fmt(p.start) + "-" + (p.end?fmt(p.end):"?") + " " + (p.reason||""), null);
+    r.pauses.splice(editingPause, 1);
+  }
+  editingPause = null; pauseDraft = null;
+  save(); renderDetail();
+}
+function resumeJob(){
+  const r = rec(currentRow.id);
+  const p = r.pauses[r.pauses.length-1];
+  if(p && !p.end) p.end = now();
+  save(); renderDetail();
+}
+function editTime(field){ editingField = field; renderDetail(); }
+function cancelTime(){ editingField = null; renderDetail(); }
+function saveTime(field){
+  const el = document.getElementById("timeedit");
+  const r = rec(currentRow.id);
+  if(el && /^\d{1,2}:\d{2}$/.test(el.value)){
+    const nv = fromHM(el.value, r[field]);
+    if(nv !== r[field]){
+      logEdit(r, field, r[field], nv);
+      r[field] = nv;
+    }
+  }
+  editingField = null;
+  save(); renderDetail();
+}
+
+// ---------- math ----------
+function calcRow(row){
+  const r = state[row.id] || {};
+  const out = {setupMin:null, printMin:null, pph:null, pauseMin:0};
+  if(r.setupStart && r.setupDone){
+    out.setupMin = mins((r.setupDone - r.setupStart) - pausedMsBetween(r, r.setupStart, r.setupDone));
+  }
+  if(r.setupDone && r.jobDone){
+    const printMs = (r.jobDone - r.setupDone) - pausedMsBetween(r, r.setupDone, r.jobDone);
+    out.printMin = mins(printMs);
+    if(printMs > 0) out.pph = Math.round(row.qty / (printMs/3600000));
+  }
+  out.pauseMin = mins((r.pauses||[]).reduce((a,p)=>a + ((p.end||now()) - p.start), 0));
+  return out;
+}
+
+// ---------- export ----------
+function buildExport(){
+  let anyEdits = false;
+  let t = "MAYHEM INK — JOB TIMING " + DAY + "\n";
+  t += "================================\n";
+  const byJob = {};
+  for(const row of ROWS){
+    (byJob[row.job] = byJob[row.job] || []).push(row);
+  }
+  for(const job in byJob){
+    const rows = byJob[job];
+    t += "\n#" + job + " " + rows[0].customer + "\n";
+    for(const row of rows){
+      const r = state[row.id] || {};
+      const m = calcRow(row);
+      const cc = r.colors != null ? r.colors : row.colors;
+      const ss = r.screens != null ? r.screens : row.screens;
+      t += "  " + row.location + " (" + cc + "c/" + ss + "s, " + row.qty + " pcs)";
+      if(cc !== row.colors || ss !== row.screens) t += " [order said " + row.colors + "c/" + row.screens + "s]";
+      if(!r.setupStart){ t += " — NOT RUN\n"; continue; }
+      const ed = r.edits || {};
+      const mk = f => ed[f] ? "*" : "";
+      if(Object.keys(ed).length) anyEdits = true;
+      t += "\n    " + (r.printer||"?") +
+        " · setup " + fmt(r.setupStart) + mk("setupStart") + "–" + (r.setupDone?fmt(r.setupDone)+mk("setupDone"):"?") +
+        (m.setupMin!=null ? " (" + m.setupMin + "m)" : "") +
+        " · done " + (r.jobDone?fmt(r.jobDone)+mk("jobDone"):"NOT FINISHED") +
+        (m.printMin!=null ? " (" + m.printMin + "m print, " + m.pph + " pcs/hr)" : "") + "\n";
+      if((r.pauses||[]).length){
+        for(const p of r.pauses){
+          t += "    STOPPED " + fmt(p.start) + "–" + (p.end?fmt(p.end):"?") +
+            " (" + mins((p.end||now())-p.start) + "m)" + (p.reason ? ": " + p.reason : "") +
+            (p.added ? " *added by hand" : (p.edited ? " *edited" : "")) + "\n";
+        }
+      }
+      if(r.notes) t += "    NOTE: " + r.notes + "\n";
+      if((r.audit||[]).length){
+        for(const a of r.audit){
+          t += "    EDIT LOG: " + a.field + " " + (typeof a.old === "number" ? fmt(a.old) : (a.old==null?"—":a.old)) +
+            " -> " + (typeof a.new === "number" ? fmt(a.new) : (a.new==null?"—":a.new)) + " (changed at " + fmt(a.at) + ")\n";
+        }
+      }
+    }
+  }
+  if(anyEdits) t += "\n* = time was entered or changed by hand, not live-tapped\n";
+  t += "\n--- raw data (for Claude) ---\n";
+  t += JSON.stringify({day:DAY, rows:ROWS, times:state});
+  return t;
+}
+function showExport(){
+  document.getElementById("list").style.display = "none";
+  document.getElementById("detail").style.display = "none";
+  document.getElementById("eodbar").style.display = "none";
+  document.getElementById("exportview").style.display = "block";
+  document.getElementById("exporttext").textContent = buildExport();
+}
+function copyExport(){
+  const txt = buildExport();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>toast("Copied — paste it to Kolton"), ()=>fallbackCopy(txt));
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt){
+  const ta = document.createElement("textarea");
+  ta.value = txt; document.body.appendChild(ta);
+  ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+  toast("Copied — paste it to Kolton");
+}
+
+// ---------- misc ----------
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+let toastTimer = null;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ el.style.display = "none"; }, 2200);
+}
+
+document.getElementById("hdrdate").textContent = new Date(DAY + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+showList();
+</script>
+</body>
+</html>
