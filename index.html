@@ -204,7 +204,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ================= DAY DATA (generated from the daily rundown) =================
+// ==DATA-START== (everything between the markers is regenerated daily — do not hand-edit)
 const DAY = "2026-07-07";
 const PRINTERS = ["Jalen","Corey","Spencer"];
 const COUNTS = [1,2,3,4,5,6];
@@ -216,7 +216,7 @@ const ROWS = [
   {id:"18441-lsleeve",job:"18441", customer:"Brand Makers",    location:"Left Sleeve",  colors:1, screens:1, qty:300},
   {id:"18441-rsleeve",job:"18441", customer:"Brand Makers",    location:"Right Sleeve", colors:1, screens:1, qty:300},
 ];
-// ===============================================================================
+// ==DATA-END==
 
 const KEY = "mayhem_timing_" + DAY;
 let state = load();
@@ -424,6 +424,9 @@ function renderDetail(){
   html += '<div class="field"><label>Notes</label>' +
     '<textarea placeholder="Anything weird about this run..." onblur="setNotes(this.value)">' + esc(r.notes||"") + '</textarea></div>';
 
+  // save & finish — everything already auto-saves; this is the "I'm done here" button
+  html += '<button class="bigbtn" style="background:var(--ink);margin-bottom:10px" onclick="saveAndFinish()">&#10003; SAVE &amp; FINISH</button>';
+
   document.getElementById("detail").innerHTML = html;
   updateLive();
 }
@@ -464,6 +467,13 @@ function startTicker(){ stopTicker(); ticker = setInterval(updateLive, 15000); }
 function stopTicker(){ if(ticker){ clearInterval(ticker); ticker = null; } }
 
 // ---------- actions ----------
+function saveAndFinish(){
+  const ta = document.querySelector("#detail textarea");
+  if(ta) setNotes(ta.value);
+  save();
+  toast("Saved");
+  showList();
+}
 function setPrinter(p){ rec(currentRow.id).printer = p; save(); renderDetail(); }
 function setColors(c){ rec(currentRow.id).colors = c; save(); renderDetail(); }
 function setScreens(c){ rec(currentRow.id).screens = c; save(); renderDetail(); }
