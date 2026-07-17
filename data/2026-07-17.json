@@ -1,0 +1,359 @@
+{
+ "day": "2026-07-17",
+ "rows": [
+  {
+   "id": "6271-1776-front",
+   "job": "6271",
+   "customer": "Ruthless \u2014 July Order",
+   "location": "Front LC \u2014 flag (Since 1776 blk)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 46
+  },
+  {
+   "id": "6271-1776-back",
+   "job": "6271",
+   "customer": "Ruthless \u2014 July Order",
+   "location": "Back \u2014 Since 1776",
+   "colors": 2,
+   "screens": 2,
+   "qty": 46
+  },
+  {
+   "id": "6271-250th-front",
+   "job": "6271",
+   "customer": "Ruthless \u2014 July Order",
+   "location": "Front LC \u2014 flag (250th blk)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 46
+  },
+  {
+   "id": "6271-250th-back",
+   "job": "6271",
+   "customer": "Ruthless \u2014 July Order",
+   "location": "Back \u2014 250th Anniv Freedom",
+   "colors": 1,
+   "screens": 1,
+   "qty": 46
+  },
+  {
+   "id": "6271-olive-front",
+   "job": "6271",
+   "customer": "Ruthless \u2014 July Order",
+   "location": "Front \u2014 Ruthless Co (olive tees)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 27
+  },
+  {
+   "id": "6271-olive-sleeve",
+   "job": "6271",
+   "customer": "Ruthless \u2014 July Order",
+   "location": "Sleeve \u2014 flag (olive tees)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 27
+  },
+  {
+   "id": "6275-pattern-front",
+   "job": "6275",
+   "customer": "Ruthless \u2014 Ace Hdwr",
+   "location": "Front \u2014 western pattern (wht/char)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 36
+  },
+  {
+   "id": "6275-pattern-back",
+   "job": "6275",
+   "customer": "Ruthless \u2014 Ace Hdwr",
+   "location": "Back \u2014 spine pattern (wht/char)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 36
+  },
+  {
+   "id": "6275-aztec-front",
+   "job": "6275",
+   "customer": "Ruthless \u2014 Ace Hdwr",
+   "location": "Front \u2014 aztec logo (Blush Frost)",
+   "colors": 5,
+   "screens": 5,
+   "qty": 20
+  },
+  {
+   "id": "6275-1776-front",
+   "job": "6275",
+   "customer": "Ruthless \u2014 Ace Hdwr",
+   "location": "Front LC \u2014 flag (shared scrn w/ 6271)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 22
+  },
+  {
+   "id": "6275-1776-back",
+   "job": "6275",
+   "customer": "Ruthless \u2014 Ace Hdwr",
+   "location": "Back \u2014 Since 1776 (shared scrn w/ 6271)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 22
+  },
+  {
+   "id": "6275-whph-circle",
+   "job": "6275",
+   "customer": "Ruthless \u2014 Ace Hdwr",
+   "location": "Full Front \u2014 WHPH circle (blk)",
+   "colors": 3,
+   "screens": 3,
+   "qty": 22
+  },
+  {
+   "id": "6275-whph-flag",
+   "job": "6275",
+   "customer": "Ruthless \u2014 Ace Hdwr",
+   "location": "Back \u2014 flag (WHPH blk)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 22
+  }
+ ],
+ "times": {
+  "6271-olive-front": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784297655075,
+   "setupDone": 1784297754974,
+   "jobDone": 1784298251817,
+   "pauses": [],
+   "notes": ""
+  },
+  "6271-olive-sleeve": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784298259932,
+   "setupDone": 1784298419016,
+   "jobDone": 1784298845879,
+   "pauses": [],
+   "notes": ""
+  },
+  "6271-1776-back": {
+   "printer": "Jalen",
+   "colors": 2,
+   "screens": 2,
+   "setupStart": 1784299962187,
+   "setupDone": 1784300340000,
+   "jobDone": 1784305036303,
+   "pauses": [
+    {
+     "start": 1784300340000,
+     "end": 1784302800000,
+     "reason": "Other",
+     "added": true
+    }
+   ],
+   "notes": "",
+   "audit": [
+    {
+     "field": "setupDone",
+     "old": 1784302778871,
+     "new": 1784300340000,
+     "at": 1784302790221
+    },
+    {
+     "field": "pause added",
+     "old": null,
+     "new": "8:59 AM-9:40 AM Other",
+     "at": 1784302834366
+    }
+   ],
+   "edits": {
+    "setupDone": true,
+    "pause added": true
+   }
+  },
+  "6275-1776-back": {
+   "printer": "Jalen",
+   "colors": 2,
+   "screens": 2,
+   "setupStart": 1784305114217,
+   "setupDone": 1784306042385,
+   "jobDone": 1784306711097,
+   "pauses": [],
+   "notes": "My startup time for this one was ink mixing as screens were already lined up\n"
+  },
+  "6271-250th-back": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784307236655,
+   "setupDone": 1784307594300,
+   "jobDone": 1784309053252,
+   "pauses": [],
+   "notes": ""
+  },
+  "6271-1776-front": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784311484359,
+   "setupDone": 1784311764038,
+   "jobDone": 1784313277067,
+   "pauses": [
+    {
+     "start": 1784311560000,
+     "end": 1784311560000,
+     "reason": "",
+     "added": true
+    }
+   ],
+   "notes": "",
+   "audit": [
+    {
+     "field": "pause added",
+     "old": null,
+     "new": "12:06 PM-12:06 PM ",
+     "at": 1784313281014
+    }
+   ],
+   "edits": {
+    "pause added": true
+   }
+  },
+  "6271-250th-front": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784313292858,
+   "setupDone": 1784313348988,
+   "jobDone": 1784314616764,
+   "pauses": [],
+   "notes": ""
+  },
+  "6275-1776-front": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784314628358,
+   "setupDone": 1784314629854,
+   "jobDone": 1784315210803,
+   "pauses": [],
+   "notes": ""
+  },
+  "6275-whph-circle": {
+   "printer": "Jalen",
+   "colors": 3,
+   "screens": 3,
+   "setupStart": 1784315853879,
+   "setupDone": 1784316586243,
+   "jobDone": 1784319172060,
+   "pauses": [],
+   "notes": ""
+  },
+  "6275-whph-flag": {
+   "printer": "Jalen",
+   "colors": 2,
+   "screens": 2,
+   "setupStart": 1784319469423,
+   "setupDone": 1784319627340,
+   "jobDone": 1784320223813,
+   "pauses": [],
+   "notes": ""
+  },
+  "6275-aztec-front": {
+   "printer": "Spencer",
+   "colors": 4,
+   "screens": 4,
+   "setupStart": 1784304905207,
+   "setupDone": 1784306913394,
+   "jobDone": 1784309451344,
+   "pauses": [
+    {
+     "start": 1784306880000,
+     "end": 1784307600000,
+     "reason": "Other",
+     "edited": true
+    }
+   ],
+   "notes": "5 color is only for dark garments.\nStopped for about 5 min to adjust reg during run.",
+   "audit": [
+    {
+     "field": "pause 1",
+     "old": "10:59 AM-11:00 AM Other",
+     "new": "10:48 AM-11:00 AM Other",
+     "at": 1784309484128
+    }
+   ],
+   "edits": {
+    "pause 1": true
+   }
+  },
+  "6275-pattern-front": {
+   "printer": "Spencer",
+   "colors": 2,
+   "screens": 2,
+   "setupStart": 1784318484813,
+   "setupDone": 1784319225161,
+   "jobDone": 1784322730958,
+   "pauses": [
+    {
+     "start": 1784320299743,
+     "end": 1784322018900,
+     "reason": "Other"
+    }
+   ],
+   "notes": ""
+  },
+  "6275-pattern-back": {
+   "printer": "Spencer",
+   "colors": 2,
+   "screens": 2,
+   "setupStart": 1784322776636,
+   "setupDone": 1784323248871,
+   "jobDone": 1784325012063,
+   "pauses": [
+    {
+     "start": 1784323924542,
+     "end": 1784324304540,
+     "reason": "Other"
+    }
+   ],
+   "notes": "Color change"
+  }
+ },
+ "conflicts": {
+  "6271-olive-front": {
+   "note": "Run reported on two iPads with full timestamps; Jalen's record kept as primary pending Kolton's ruling.",
+   "primary": "Jalen 8:14-8:24 AM (kept in times)",
+   "alternate": {
+    "printer": "Spencer",
+    "colors": 1,
+    "screens": 1,
+    "setupStart": 1784302470784,
+    "setupDone": 1784302711721,
+    "jobDone": 1784304028920,
+    "pauses": [
+     {
+      "start": 1784303001606,
+      "end": 1784303454803,
+      "reason": "Other"
+     }
+    ],
+    "notes": "Job paused for ink change. There should be a button for that."
+   }
+  }
+ },
+ "sources": [
+  "slack #timecards 1784320453.225319 (Jalen)",
+  "slack #timecards 1784321832.058029 (Spencer 1)",
+  "slack #timecards 1784325062.154579 (Spencer 2)"
+ ],
+ "flags": [
+  "aztec corrected 5c->4c on card (light garments)",
+  "6271-1776-back setupDone hand-edited + 41m 'Other' stop",
+  "6275-pattern-front 29m 'Other' stop unexplained"
+ ]
+}
