@@ -175,6 +175,7 @@
   .jobhead .jnum span{color:var(--red);}
   .jobhead .jcust{font-size:14px; color:var(--gray); font-weight:700; flex:1;}
   .jobhead .jscreens{font-size:13px; font-weight:800; color:var(--red); white-space:nowrap;}
+  .jobnote{background:#2ee84e; color:#093313; font-weight:800; font-size:14px; letter-spacing:.3px; padding:8px 12px; border-radius:8px; margin-top:8px; text-transform:uppercase;}
   .mockstrip{display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding:10px 0 4px;}
   .mockstrip img{height:92px; border-radius:8px; background:#fff; border:1px solid var(--line); flex-shrink:0;}
   .dmock{text-align:center; margin-bottom:12px;}
@@ -225,12 +226,12 @@ const DAY = "2026-07-20";
 const PRINTERS = ["Jalen","Corey","Spencer"];
 const COUNTS = [1,2,3,4,5,6];
 const ROWS = [
-  {id:"6323-front-lc", job:"6323", customer:"LETS GO CASS (Tekton)",      location:"Front LC — Lets Go Cass (UPS TODAY — SETUP LAST)", colors:2, screens:2, qty:33,  img:"img_6323"},
-  {id:"6323-back",     job:"6323", customer:"LETS GO CASS (Tekton)",      location:"Full back — Cassidy (UPS TODAY — SETUP LAST)",     colors:4, screens:4, qty:33,  img:"img_6323"},
-  {id:"6303-front-lc", job:"6303", customer:"SKRE — In the Reeds (CC)",   location:"Front LC — duck logo puff (tees + hoodies)",       colors:3, screens:3, qty:153, img:"img_6303f"},
-  {id:"6303-back",     job:"6303", customer:"SKRE — In the Reeds (CC)",   location:"Back — hunter scene (tees + hoodies)",             colors:3, screens:3, qty:153, img:"img_6303b"},
-  {id:"6304-front",    job:"6304", customer:"SKRE — Flying V (CC)",       location:"Front center — Flying V puff (tees + hoodies)",    colors:2, screens:2, qty:153, img:"img_6304"},
-  {id:"6330-front",    job:"6330", customer:"Zion Narrows — Titan (Brad)",location:"Front — Zion (cust. supplied Tultex)",             colors:6, screens:6, qty:190, img:"img_6330"},
+  {id:"6330-front",    job:"6330", customer:"Zion Narrows — Titan (Brad)", location:"Front — Zion (cust. supplied Tultex)",          colors:6, screens:6, qty:190, img:"img_6330"},
+  {id:"6303-front-lc", job:"6303", customer:"SKRE — In the Reeds (CC)",    location:"Front LC — duck logo puff (tees + hoodies)",    colors:3, screens:3, qty:153, img:"img_6303f"},
+  {id:"6303-back",     job:"6303", customer:"SKRE — In the Reeds (CC)",    location:"Back — hunter scene (tees + hoodies)",          colors:3, screens:3, qty:153, img:"img_6303b"},
+  {id:"6304-front",    job:"6304", customer:"SKRE — Flying V (CC)",        location:"Front center — Flying V puff (tees + hoodies)", colors:2, screens:2, qty:153, img:"img_6304"},
+  {id:"6323-front-lc", job:"6323", customer:"LETS GO CASS (Tekton)",       location:"Front LC — Lets Go Cass sign",                  colors:2, screens:2, qty:33,  img:"img_6323", note:"Coming on UPS today — setup last"},
+  {id:"6323-back",     job:"6323", customer:"LETS GO CASS (Tekton)",       location:"Full back — Cassidy",                           colors:4, screens:4, qty:33,  img:"img_6323", note:"Coming on UPS today — setup last"},
 ];
 const FLAGS = [
   ["SETUP LAST", "#6323 — garments <b>coming on UPS today</b> — set this job up last."],
@@ -338,6 +339,7 @@ function renderList(){
       '<div class="jnum"><span>#' + esc(g0.job) + '</span></div>' +
       '<div class="jcust">' + esc(g0.customer) + '</div>' +
       '<div class="jscreens">' + gScreens + ' SCREENS</div></div>' +
+      (function(){ const gNote = groups[k].map(r=>r.note).find(Boolean); return gNote ? '<div class="jobnote">' + esc(gNote) + '</div>' : ''; })() +
       (gImgs.length ? '<div class="mockstrip">' + gImgs.map(x => '<img src="' + IMG[x] + '">').join('') + '</div>' : '') +
       '</div>';
     for(const row of groups[k]){
