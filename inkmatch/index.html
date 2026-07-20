@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mayhem Ink — Ink Matcher</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; margin: 0; background: #fafafa; color: #111; padding: 20px; }
+h1 { font-size: 20px; margin: 0 0 2px; letter-spacing: .5px; }
+.sub { color: #777; font-size: 12px; margin-bottom: 18px; }
+.panel { background: #fff; border: 1px solid #e3e3e3; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+.inputrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+input[type=text] { font-size: 16px; padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px; width: 160px; font-family: ui-monospace, Menlo, monospace; }
+input[type=text]:focus { outline: 2px solid #4a90d9; border-color: transparent; }
+input[type=color] { width: 46px; height: 42px; border: 1px solid #ccc; border-radius: 8px; padding: 2px; background: #fff; cursor: pointer; }
+button { font-size: 13px; padding: 10px 14px; border: 1px solid #ccc; border-radius: 8px; background: #fff; cursor: pointer; font-weight: 600; }
+button:hover { background: #f0f0f0; }
+button.primary { background: #111; color: #fff; border-color: #111; }
+button.primary:hover { background: #333; }
+.hint { font-size: 11px; color: #999; margin-top: 8px; }
+#droparea { display: block; border: 2px dashed #ccc; border-radius: 10px; padding: 14px; text-align: center; color: #888; font-size: 13px; cursor: pointer; transition: border-color .15s; }
+#droparea.drag { border-color: #4a90d9; color: #4a90d9; }
+#artcanvas { max-width: 100%; border-radius: 8px; cursor: crosshair; display: none; margin-top: 12px; border: 1px solid #e3e3e3; }
+.results { display: none; }
+.target-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.target-sw { width: 54px; height: 54px; border-radius: 10px; border: 1px solid rgba(0,0,0,.15); }
+.target-info { font-size: 13px; color: #555; }
+.target-info b { font-size: 15px; color: #111; font-family: ui-monospace, Menlo, monospace; }
+.match { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 8px; background: #fff; }
+.match.best { border: 2px solid #111; }
+.match-sw { width: 44px; height: 44px; border-radius: 8px; border: 1px solid rgba(0,0,0,.12); flex-shrink: 0; }
+.match-name { font-weight: 700; font-size: 15px; }
+.match-meta { font-size: 12px; color: #777; }
+.match-de { margin-left: auto; text-align: right; }
+.acc-num { font-weight: 800; font-size: 18px; }
+.de-num { font-weight: 400; font-size: 11px; color: #999; }
+.de-label { font-size: 11px; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-top: 2px; }
+.q0 { background: #d8f5d0; color: #1d6b0f; }
+.q1 { background: #e9f5d0; color: #4f6b0f; }
+.q2 { background: #fdf3cd; color: #8a6d00; }
+.q3 { background: #fde3cd; color: #94500a; }
+.q4 { background: #fbd5d5; color: #a02222; }
+.compare { display: flex; height: 40px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0,0,0,.12); margin: 4px 0 14px; }
+.compare div { flex: 1; }
+.hist { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.hist button { width: 28px; height: 28px; border-radius: 6px; padding: 0; border: 1px solid rgba(0,0,0,.15); }
+.section-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
+.footer { font-size: 11px; color: #aaa; font-style: italic; margin-top: 4px; }
+</style>
+</head>
+<body>
+<h1>MAYHEM INK — INK MATCHER</h1>
+<div class="sub">Finds the closest match from the 217 Pantones we stock &bull; CIEDE2000 color distance &bull; B# = storage block</div>
+
+<div class="panel">
+  <div class="section-label">Customer color</div>
+  <div class="inputrow">
+    <input type="text" id="hexin" placeholder="#1a6b3c" maxlength="7" autocomplete="off">
+    <input type="color" id="pickin" value="#1a6b3c" title="Color picker">
+    <button id="eyedrop" style="display:none" title="Pick a color from anywhere on screen">&#128269; Screen picker</button>
+    <button class="primary" id="go">Match it</button>
+  </div>
+  <div class="hist" id="hist"></div>
+  <div class="hint">Paste a hex code, use the picker, or drop the customer&rsquo;s artwork below and click a color in it.</div>
+</div>
+
+<div class="panel">
+  <div class="section-label">Or sample from artwork</div>
+  <label id="droparea" for="filein">Drop an image here, paste a screenshot, or click to browse (PNG / JPG)</label>
+  <input type="file" id="filein" accept="image/*" style="display:none">
+  <canvas id="artcanvas"></canvas>
+</div>
+
+<div class="panel results" id="results">
+  <div class="section-label">Closest inks we stock</div>
+  <div class="target-bar">
+    <div class="target-sw" id="tsw"></div>
+    <div class="target-info">Customer color<br><b id="thex"></b></div>
+  </div>
+  <div id="matchlist"></div>
+  <div class="footer">Accuracy = 100 &minus; &Delta;E (perceptual color distance, where 100 is black vs. white). 99%+ &asymp; identical, 97%+ very close, 94%+ noticeably similar, below 90% = nearest we have. Screen colors are approximations &mdash; confirm on the physical book for critical jobs.</div>
+</div>
+
+<script>
+const INKS = [["107","#fbe122","Yellows","B1"],["117","#c99700","Yellows","B1"],["0131","#f2f0a1","Yellows","B1"],["452","#b0aa7e","Yellows","B9"],["458","#d9c756","Yellows","B9"],["460","#e4d77e","Yellows","B9"],["585","#dbde70","Yellows","B11"],["809","#e3e829","Yellows","B13"],["7402","#ecd898","Yellows","B14"],["7499","#f1e6b2","Yellows","B14"],["130","#f2a900","Oranges","B1"],["135","#ffc658","Oranges","B2"],["141","#f2c75c","Oranges","B2"],["142","#f1be48","Oranges","B2"],["143","#f1b434","Oranges","B2"],["146","#a76d11","Oranges","B2"],["149","#ffc27b","Oranges","B2"],["151","#ff8200","Oranges","B3"],["153","#be6a14","Oranges","B3"],["157","#eca154","Oranges","B3"],["158","#e87722","Oranges","B3"],["162","#ffbe9f","Oranges","B4"],["166","#e35205","Oranges","B4"],["722","#c88242","Oranges","B13"],["723","#b36924","Oranges","B13"],["1235","#ffb81c","Oranges","B1"],["1255","#ad841f","Oranges","B1"],["1365","#ffb549","Oranges","B2"],["1375","#ff9e1b","Oranges","B2"],["1525","#b94700","Oranges","B3"],["1565","#ffa06a","Oranges","B3"],["1575","#ff7f32","Oranges","B3"],["1585","#ff6a13","Oranges","B3"],["1595","#d86018","Oranges","B3"],["3514","#f1b300","Oranges","B8"],["7411","#e6a65d","Oranges","B14"],["7507","#fcd299","Oranges","B15"],["7509","#d6a461","Oranges","B15"],["7510","#c6893f","Oranges","B15"],["7511","#b77729","Oranges","B15"],["7556","#b78b20","Oranges","B15"],["7564","#db8a06","Oranges","B15"],["7571","#c67d30","Oranges","B15"],["021","#fe5000","Reds & Maroons","B1"],["032","#ef3340","Reds & Maroons","B1"],["168","#73381d","Reds & Maroons","B4"],["170","#ff8674","Reds & Maroons","B4"],["173","#cf4520","Reds & Maroons","B5"],["174","#963821","Reds & Maroons","B5"],["178","#ff585d","Reds & Maroons","B5"],["179","#e03c31","Reds & Maroons","B5"],["180","#be3a34","Reds & Maroons","B5"],["194","#9b2743","Reds & Maroons","B5"],["200","#ba0c2f","Reds & Maroons","B6"],["202","#862633","Reds & Maroons","B6"],["483","#653024","Reds & Maroons","B9"],["491","#7f3035","Reds & Maroons","B9"],["492","#8f3237","Reds & Maroons","B9"],["1635","#ff8d6d","Reds & Maroons","B4"],["1645","#ff6a39","Reds & Maroons","B4"],["1665","#dc4405","Reds & Maroons","B4"],["1685","#833921","Reds & Maroons","B4"],["1788","#ee2737","Reds & Maroons","B5"],["1795","#d22630","Reds & Maroons","B5"],["1805","#af272f","Reds & Maroons","B5"],["1815","#7c2529","Reds & Maroons","B5"],["4975","#3f2021","Reds & Maroons","B9"],["4985","#874b52","Reds & Maroons","B9"],["5005","#b07c83","Reds & Maroons","B10"],["7416","#e56a54","Reds & Maroons","B14"],["7417","#e04e39","Reds & Maroons","B14"],["7419","#b04a5a","Reds & Maroons","B14"],["7420","#9b2242","Reds & Maroons","B14"],["7421","#651d32","Reds & Maroons","B14"],["7428","#6a2c3e","Reds & Maroons","B14"],["7523","#ab5c57","Reds & Maroons","B15"],["7526","#8a391b","Reds & Maroons","B15"],["7585","#af5c37","Reds & Maroons","B15"],["7621","#ab2328","Reds & Maroons","B16"],["7625","#e1523d","Reds & Maroons","B16"],["7636","#bc204b","Reds & Maroons","B16"],["7641","#8e2c48","Reds & Maroons","B16"],["7642","#732e4a","Reds & Maroons","B16"],["7644","#582d40","Reds & Maroons","B16"],["184","#f65275","Pinks","B5"],["210","#f99fc9","Pinks","B6"],["218","#e56db1","Pinks","B6"],["225","#df1995","Pinks","B6"],["237","#ec86d0","Pinks","B6"],["701","#e68699","Pinks","B13"],["702","#d25b73","Pinks","B13"],["705","#f5dadf","Pinks","B13"],["1775","#ff8da1","Pinks","B5"],["2039","#e63888","Pinks","B6"],["2112","#351f65","Purples & Violets","B6"],["2665","#7d55c7","Purples & Violets","B7"],["5195","#66435a","Purples & Violets","B10"],["7437","#ccaed0","Purples & Violets","B14"],["272","#7474c1","Blues","B7"],["279","#418fde","Blues","B7"],["284","#6cace4","Blues","B7"],["286","#0033a0","Blues","B7"],["289","#0c2340","Blues","B7"],["294","#002f6c","Blues","B7"],["533","#1f2a44","Blues","B10"],["537","#bbc7d6","Blues","B10"],["542","#7bafd4","Blues","B10"],["647","#236192","Blues","B12"],["653","#326295","Blues","B12"],["654","#003a70","Blues","B12"],["659","#7ba4db","Blues","B12"],["660","#407ec9","Blues","B12"],["2184","#0084d4","Blues","B6"],["2372","#281e78","Blues","B6"],["2380","#28334a","Blues","HD"],["2717","#a7c6ed","Blues","B7"],["2726","#485cc7","Blues","B7"],["2965","#00263e","Blues","B7"],["5405","#4f758b","Blues","B10"],["5415","#5b7f95","Blues","B10"],["5425","#7a99ac","Blues","B10"],["7545","#425563","Blues","B15"],["7699","#34657f","Blues","B16"],["306","#00b5e2","Teals & Aquas","B8"],["312","#00a9ce","Teals & Aquas","B8"],["325","#64ccc9","Teals & Aquas","B8"],["628","#b8dde1","Teals & Aquas","B12"],["1837","#81d8d0","Teals & Aquas","B5"],["2397","#00b7bd","Teals & Aquas","B6"],["2985","#5bc2e7","Teals & Aquas","B7"],["3115","#00c1d5","Teals & Aquas","B8"],["3262","#00bfb3","Teals & Aquas","B8"],["5487","#5d7975","Teals & Aquas","B10"],["7465","#40c1ac","Teals & Aquas","B14"],["7700","#165c7d","Teals & Aquas","B16"],["7709","#63b1bc","Teals & Aquas","B16"],["337","#8fd6bd","Greens","B8"],["360","#6cc24a","Greens","B8"],["364","#4a7729","Greens","B8"],["373","#cdea80","Greens","B8"],["376","#84bd00","Greens","B8"],["378","#59621d","Greens","B8"],["567","#173f35","Greens","B11"],["575","#67823a","Greens","B11"],["3435","#154734","Greens","B8"],["5535","#183028","Greens","B11"],["5545","#43695b","Greens","B11"],["5743","#3e4827","Greens","B11"],["5763","#737b4c","Greens","B11"],["5767","#8a8d4a","Greens","B11"],["5783","#a3aa83","Greens","B11"],["7739","#319b42","Greens","B16"],["7745","#abad23","Greens","B16"],["126","#9a7611","Tans & Browns","B1"],["132","#a07400","Tans & Browns","B2"],["438","#584446","Tans & Browns","B9"],["462","#5c462b","Tans & Browns","B9"],["463","#744f28","Tans & Browns","B9"],["465","#b9975b","Tans & Browns","B9"],["466","#c6aa76","Tans & Browns","B9"],["468","#ddcba4","Tans & Browns","B9"],["482","#dbc8b6","Tans & Browns","B9"],["729","#b58150","Tans & Browns","B13"],["731","#774212","Tans & Browns","B13"],["2309","#e7ceb5","Tans & Browns","B6"],["2318","#a47449","Tans & Browns","B6"],["2325","#a09074","Tans & Browns","B6"],["2468","#97694c","Tans & Browns","B6"],["4515","#b3a369","Tans & Browns","B9"],["4645","#ad7c59","Tans & Browns","B9"],["4655","#bf9474","Tans & Browns","B9"],["4675","#dcbfa6","Tans & Browns","B9"],["4705","#7c4d3a","Tans & Browns","B9"],["4735","#c0a392","Tans & Browns","B9"],["7500","#dfd1a7","Tans & Browns","B15"],["7502","#ceb888","Tans & Browns","B15"],["7504","#94795d","Tans & Browns","B15"],["7506","#efdbb2","Tans & Browns","B15"],["7508","#e1b87f","Tans & Browns","B15"],["7527","#d6d2c4","Tans & Browns","B15"],["7528","#c5b9ac","Tans & Browns","B15"],["7533","#473729","Tans & Browns","B15"],["7562","#bd9b60","Tans & Browns","B15"],["7589","#5c4738","Tans & Browns","B15"],["7590","#d4b59e","Tans & Browns","B15"],["7591","#c07d59","Tans & Browns","B15"],["7769","#716135","Tans & Browns","B16"],["401","#afa9a0","Grays & Neutrals","B9"],["413","#babbb1","Grays & Neutrals","B9"],["415","#919388","Grays & Neutrals","B9"],["417","#65665c","Grays & Neutrals","HD"],["423","#898d8d","Grays & Neutrals","B9"],["425","#54585a","Grays & Neutrals","B9"],["428","#c1c6c8","Grays & Neutrals","B9"],["430","#7c878e","Grays & Neutrals","B9"],["447","#373a36","Grays & Neutrals","HD"],["663","#e5e1e6","Grays & Neutrals","B12"],["5625","#708573","Grays & Neutrals","B11"],["5635","#94a596","Grays & Neutrals","B11"],["7538","#949a90","Grays & Neutrals","B15"],["7539","#8e9089","Grays & Neutrals","B15"],["7541","#d9e1e2","Grays & Neutrals","B15"],["7543","#98a4ae","Grays & Neutrals","B15"],["CG1","#d9d9d6","Grays & Neutrals","HD"],["CG4","#bbbcbc","Grays & Neutrals","HD"],["CG5","#b1b3b3","Grays & Neutrals","HD"],["CG6","#a7a8aa","Grays & Neutrals","HD"],["CG7","#97999b","Grays & Neutrals","HD"],["CG9","#75787b","Grays & Neutrals","HD"],["CG10","#63666a","Grays & Neutrals","HD"],["CG11","#53565a","Grays & Neutrals","HD"],["WG1","#d7d2cb","Grays & Neutrals","HD"],["WG2","#cbc4bc","Grays & Neutrals","HD"],["WG5","#aca39a","Grays & Neutrals","HD"],["WG7","#968c83","Grays & Neutrals","HD"],["WG8","#8c8279","Grays & Neutrals","HD"],["WG11","#6e6259","Grays & Neutrals","HD"]];
+const NAMES = { "021":"Orange 021", "032":"Red 032", "0131":"Yellow 0131", "1837":"1837 (Tiffany)" };
+function dispName(c){ if(NAMES[c]) return NAMES[c]; if(c.startsWith("CG")) return "Cool Gray "+c.slice(2); if(c.startsWith("WG")) return "Warm Gray "+c.slice(2); return c; }
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(x=>x+x).join(""); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+function rgb2lab(r,g,b){
+  let f=v=>{v/=255; return v>0.04045?Math.pow((v+0.055)/1.055,2.4):v/12.92;};
+  r=f(r); g=f(g); b=f(b);
+  let x=(r*0.4124564+g*0.3575761+b*0.1804375)/0.95047,
+      y=(r*0.2126729+g*0.7151522+b*0.0721750),
+      z=(r*0.0193339+g*0.1191920+b*0.9503041)/1.08883;
+  let t=v=>v>0.008856?Math.cbrt(v):(7.787*v+16/116);
+  x=t(x); y=t(y); z=t(z);
+  return [116*y-16, 500*(x-y), 200*(y-z)];
+}
+function de2000(l1,l2){
+  const [L1,a1,b1]=l1,[L2,a2,b2]=l2, rad=Math.PI/180, deg=180/Math.PI;
+  const C1=Math.hypot(a1,b1), C2=Math.hypot(a2,b2), Cb=(C1+C2)/2;
+  const G=0.5*(1-Math.sqrt(Math.pow(Cb,7)/(Math.pow(Cb,7)+Math.pow(25,7))));
+  const a1p=a1*(1+G), a2p=a2*(1+G);
+  const C1p=Math.hypot(a1p,b1), C2p=Math.hypot(a2p,b2);
+  let h1p=Math.atan2(b1,a1p)*deg; if(h1p<0)h1p+=360;
+  let h2p=Math.atan2(b2,a2p)*deg; if(h2p<0)h2p+=360;
+  const dLp=L2-L1, dCp=C2p-C1p;
+  let dhp=0;
+  if(C1p*C2p!==0){ dhp=h2p-h1p; if(dhp>180)dhp-=360; else if(dhp<-180)dhp+=360; }
+  const dHp=2*Math.sqrt(C1p*C2p)*Math.sin(dhp/2*rad);
+  const Lbp=(L1+L2)/2, Cbp=(C1p+C2p)/2;
+  let hbp=h1p+h2p;
+  if(C1p*C2p!==0){ if(Math.abs(h1p-h2p)>180){ hbp += (h1p+h2p<360)?360:-360; } hbp/=2; }
+  const T=1-0.17*Math.cos((hbp-30)*rad)+0.24*Math.cos(2*hbp*rad)+0.32*Math.cos((3*hbp+6)*rad)-0.20*Math.cos((4*hbp-63)*rad);
+  const dTheta=30*Math.exp(-Math.pow((hbp-275)/25,2));
+  const Rc=2*Math.sqrt(Math.pow(Cbp,7)/(Math.pow(Cbp,7)+Math.pow(25,7)));
+  const Sl=1+(0.015*Math.pow(Lbp-50,2))/Math.sqrt(20+Math.pow(Lbp-50,2));
+  const Sc=1+0.045*Cbp, Sh=1+0.015*Cbp*T;
+  const Rt=-Math.sin(2*dTheta*rad)*Rc;
+  return Math.sqrt(Math.pow(dLp/Sl,2)+Math.pow(dCp/Sc,2)+Math.pow(dHp/Sh,2)+Rt*(dCp/Sc)*(dHp/Sh));
+}
+const inkLabs = INKS.map(i=>({code:i[0],hex:i[1],fam:i[2],block:i[3],lab:rgb2lab(...hex2rgb(i[1]))}));
+function acc(de){ return Math.max(0, 100-de).toFixed(1).replace(/\.0$/,""); }
+function quality(de){ if(de<1)return["Spot on","q0"]; if(de<3)return["Very close","q1"]; if(de<6)return["Close","q2"]; if(de<10)return["In the ballpark","q3"]; return["Nearest we have","q4"]; }
+function match(hex){
+  hex=hex.trim(); if(!hex.startsWith("#"))hex="#"+hex;
+  if(!/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) { alert("That doesn't look like a hex code (e.g. #1a6b3c)"); return; }
+  const lab=rgb2lab(...hex2rgb(hex));
+  const ranked=inkLabs.map(i=>({...i,de:de2000(lab,i.lab)})).sort((a,b)=>a.de-b.de).slice(0,6);
+  document.getElementById("results").style.display="block";
+  document.getElementById("tsw").style.background=hex;
+  document.getElementById("thex").textContent=hex.toUpperCase();
+  document.getElementById("matchlist").innerHTML=ranked.map((m,i)=>{
+    const q=quality(m.de);
+    return '<div class="match'+(i===0?' best':'')+'">'
+      +'<div class="match-sw" style="background:'+m.hex+'"></div>'
+      +'<div><div class="match-name">'+dispName(m.code)+'</div>'
+      +'<div class="match-meta">'+m.fam+' &bull; '+m.block+' &bull; '+m.hex.toUpperCase()+'</div>'
+      +(i===0?'<div class="compare" style="width:180px"><div style="background:'+hex+'"></div><div style="background:'+m.hex+'"></div></div>':'')
+      +'</div><div class="match-de"><div class="acc-num">'+acc(m.de)+'%</div><div class="de-num">&Delta;E '+m.de.toFixed(1)+'</div><div class="de-label '+q[1]+'">'+q[0]+'</div></div></div>';
+  }).join("");
+  saveHist(hex);
+  document.getElementById("results").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function getHist(){ try{return JSON.parse(localStorage.getItem("mi_hist")||"[]");}catch(e){return[];} }
+function saveHist(hex){ let h=getHist().filter(x=>x!==hex); h.unshift(hex); h=h.slice(0,12); localStorage.setItem("mi_hist",JSON.stringify(h)); renderHist(); }
+function renderHist(){ document.getElementById("hist").innerHTML=getHist().map(x=>'<button style="background:'+x+'" title="'+x+'" data-hex="'+x+'"></button>').join(""); }
+document.getElementById("hist").addEventListener("click",e=>{ const h=e.target.dataset.hex; if(h){ document.getElementById("hexin").value=h; match(h);} });
+renderHist();
+const hexin=document.getElementById("hexin"), pickin=document.getElementById("pickin");
+document.getElementById("go").onclick=()=>match(hexin.value||pickin.value);
+hexin.addEventListener("keydown",e=>{if(e.key==="Enter")match(hexin.value);});
+pickin.addEventListener("input",()=>{hexin.value=pickin.value;});
+pickin.addEventListener("change",()=>{match(pickin.value);});
+if(window.EyeDropper){ const ed=document.getElementById("eyedrop"); ed.style.display="inline-block";
+  ed.onclick=async()=>{ try{ const r=await new EyeDropper().open(); hexin.value=r.sRGBHex; match(r.sRGBHex);}catch(e){} }; }
+const drop=document.getElementById("droparea"), filein=document.getElementById("filein"), cv=document.getElementById("artcanvas"), ctx=cv.getContext("2d",{willReadFrequently:true});
+filein.onchange=()=>{ if(filein.files[0]) loadImg(filein.files[0]); };
+["dragover","dragenter"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("drag");}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("drag");}));
+drop.addEventListener("drop",e=>{ const f=e.dataTransfer.files[0]; if(f) loadImg(f); });
+document.addEventListener("paste",e=>{ for(const it of e.clipboardData.items){ if(it.type.startsWith("image/")){ loadImg(it.getAsFile()); break; } } });
+function loadImg(file){
+  const img=new Image();
+  img.onload=()=>{ const maxw=1400; const sc=Math.min(1,maxw/img.width);
+    cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc);
+    ctx.drawImage(img,0,0,cv.width,cv.height); cv.style.display="block";
+    drop.textContent="Click any color in the artwork below (drop a new image to replace)"; URL.revokeObjectURL(img.src); };
+  img.src=URL.createObjectURL(file);
+}
+cv.addEventListener("click",e=>{
+  const r=cv.getBoundingClientRect();
+  const x=Math.round((e.clientX-r.left)*(cv.width/r.width)), y=Math.round((e.clientY-r.top)*(cv.height/r.height));
+  const d=ctx.getImageData(Math.max(0,x-1),Math.max(0,y-1),3,3).data;
+  let rr=0,gg=0,bb=0,n=0;
+  for(let i=0;i<d.length;i+=4){ if(d[i+3]>0){rr+=d[i];gg+=d[i+1];bb+=d[i+2];n++;} }
+  if(!n) return;
+  const hex="#"+[rr,gg,bb].map(v=>Math.round(v/n).toString(16).padStart(2,"0")).join("");
+  hexin.value=hex; pickin.value=hex; match(hex);
+});
+</script>
+</body>
+</html>
