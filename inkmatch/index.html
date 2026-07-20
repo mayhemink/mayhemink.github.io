@@ -49,6 +49,7 @@ button.primary:hover { background: #333; }
 .section-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
 .footer { font-size: 11px; color: #aaa; font-style: italic; margin-top: 4px; }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 <h1>MAYHEM INK — INK MATCHER</h1>
@@ -68,9 +69,14 @@ button.primary:hover { background: #333; }
 
 <div class="panel">
   <div class="section-label">Or sample from artwork</div>
-  <label id="droparea" for="filein">Drop an image here, paste a screenshot, or click to browse (PNG / JPG)</label>
-  <input type="file" id="filein" accept="image/*" style="display:none">
+  <label id="droparea" for="filein">Drop artwork here, paste a screenshot, or click to browse (PNG / JPG / PDF)</label>
+  <input type="file" id="filein" accept="image/*,application/pdf" style="display:none">
   <canvas id="artcanvas"></canvas>
+  <div id="pdfnav" style="display:none; margin-top:10px; text-align:center;">
+    <button id="pgprev">&#9664; Prev</button>
+    <span id="pginfo" style="font-size:13px; color:#555; margin:0 10px;"></span>
+    <button id="pgnext">Next &#9654;</button>
+  </div>
 </div>
 
 <div class="panel results" id="results">
@@ -162,7 +168,14 @@ filein.onchange=()=>{ if(filein.files[0]) loadImg(filein.files[0]); };
 ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("drag");}));
 drop.addEventListener("drop",e=>{ const f=e.dataTransfer.files[0]; if(f) loadImg(f); });
 document.addEventListener("paste",e=>{ for(const it of e.clipboardData.items){ if(it.type.startsWith("image/")){ loadImg(it.getAsFile()); break; } } });
+let pdfDoc=null, pdfPage=1;
 function loadImg(file){
+  if(file.type==="application/pdf"||/\.pdf$/i.test(file.name||"")){
+    if(window.pdfjsLib){ loadPdf(file); }
+    else alert("PDF support runs on the website version:\nmayhemink.github.io/inkmatch\n(or export the PDF as a PNG/JPG)");
+    return;
+  }
+  pdfDoc=null; document.getElementById("pdfnav").style.display="none";
   const img=new Image();
   img.onload=()=>{ const maxw=1400; const sc=Math.min(1,maxw/img.width);
     cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc);
@@ -170,6 +183,30 @@ function loadImg(file){
     drop.textContent="Click any color in the artwork below (drop a new image to replace)"; URL.revokeObjectURL(img.src); };
   img.src=URL.createObjectURL(file);
 }
+async function loadPdf(file){
+  try{
+    const buf=await file.arrayBuffer();
+    pdfDoc=await pdfjsLib.getDocument({data:buf}).promise;
+    pdfPage=1; renderPdfPage();
+  }catch(err){ alert("Couldn't read that PDF: "+err.message); }
+}
+async function renderPdfPage(){
+  const page=await pdfDoc.getPage(pdfPage);
+  const v1=page.getViewport({scale:1});
+  const sc=Math.min(2, 1400/v1.width);
+  const vp=page.getViewport({scale:sc});
+  cv.width=Math.round(vp.width); cv.height=Math.round(vp.height);
+  ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,cv.width,cv.height);
+  await page.render({canvasContext:ctx, viewport:vp}).promise;
+  cv.style.display="block";
+  const nav=document.getElementById("pdfnav");
+  nav.style.display=pdfDoc.numPages>1?"block":"none";
+  document.getElementById("pginfo").textContent="Page "+pdfPage+" of "+pdfDoc.numPages;
+  drop.textContent="Click any color in the artwork below (drop a new file to replace)";
+}
+document.getElementById("pgprev").onclick=()=>{ if(pdfDoc&&pdfPage>1){pdfPage--;renderPdfPage();} };
+document.getElementById("pgnext").onclick=()=>{ if(pdfDoc&&pdfPage<pdfDoc.numPages){pdfPage++;renderPdfPage();} };
+if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 cv.addEventListener("click",e=>{
   const r=cv.getBoundingClientRect();
   const x=Math.round((e.clientX-r.left)*(cv.width/r.width)), y=Math.round((e.clientY-r.top)*(cv.height/r.height));
