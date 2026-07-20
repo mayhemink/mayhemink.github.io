@@ -48,7 +48,9 @@ button.primary:hover { background: #333; }
 .hist button { width: 28px; height: 28px; border-radius: 6px; padding: 0; border: 1px solid rgba(0,0,0,.15); }
 .section-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
 .match:hover { background: #f6f6f6; }
-.match.copied { border-color: #1d6b0f !important; background: #f3fbf0; }
+.match { position: relative; }
+.match.copied { border-color: #1d6b0f !important; }
+.copy-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(240,251,236,.97); color: #1d6b0f; font-size: 21px; font-weight: 800; border-radius: 10px; z-index: 2; letter-spacing: .3px; }
 .footer { font-size: 11px; color: #aaa; font-style: italic; margin-top: 4px; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -176,13 +178,12 @@ document.getElementById("matchlist").addEventListener("click",e=>{
   const row=e.target.closest(".match"); if(!row) return;
   const txt=row.dataset.copy;
   const done=()=>{
-    const pill=row.querySelector(".de-label");
-    if(!pill.dataset.orig){ pill.dataset.orig=pill.textContent; pill.dataset.origcls=pill.className; }
-    pill.textContent="Copied \u2713 "+txt;
-    pill.className="de-label q0";
+    let ov=row.querySelector(".copy-overlay");
+    if(!ov){ ov=document.createElement("div"); ov.className="copy-overlay"; row.appendChild(ov); }
+    ov.textContent="\u2713 Copied \u2014 "+txt;
     row.classList.add("copied");
     clearTimeout(row._t);
-    row._t=setTimeout(()=>{ pill.textContent=pill.dataset.orig; pill.className=pill.dataset.origcls; row.classList.remove("copied"); },1800);
+    row._t=setTimeout(()=>{ ov.remove(); row.classList.remove("copied"); },2200);
   };
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done)); }
   else fallbackCopy(txt,done);
