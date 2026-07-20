@@ -28,7 +28,7 @@ button.primary:hover { background: #333; }
 .target-sw { width: 54px; height: 54px; border-radius: 10px; border: 1px solid rgba(0,0,0,.15); }
 .target-info { font-size: 13px; color: #555; }
 .target-info b { font-size: 15px; color: #111; font-family: ui-monospace, Menlo, monospace; }
-.match { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 8px; background: #fff; }
+.match { cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 8px; background: #fff; }
 .match.best { border: 2px solid #111; }
 .match-sw { width: 44px; height: 44px; border-radius: 8px; border: 1px solid rgba(0,0,0,.12); flex-shrink: 0; }
 .match-name { font-weight: 700; font-size: 15px; }
@@ -47,6 +47,9 @@ button.primary:hover { background: #333; }
 .hist { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .hist button { width: 28px; height: 28px; border-radius: 6px; padding: 0; border: 1px solid rgba(0,0,0,.15); }
 .section-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
+.match:hover { background: #f6f6f6; }
+#toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; font-size: 13px; font-weight: 600; padding: 10px 18px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 99; }
+#toast.show { opacity: 1; }
 .footer { font-size: 11px; color: #aaa; font-style: italic; margin-top: 4px; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -81,6 +84,7 @@ button.primary:hover { background: #333; }
 
 <div class="panel results" id="results">
   <div class="section-label">Closest inks we stock</div>
+  <div class="hint" style="margin:-2px 0 10px">Click a match to copy its label (e.g. &ldquo;7421 Maroon&rdquo;) for the film.</div>
   <div class="target-bar">
     <div class="target-sw" id="tsw"></div>
     <div class="target-info">Customer color<br><b id="thex"></b></div>
@@ -129,6 +133,25 @@ function de2000(l1,l2){
 }
 const inkLabs = INKS.map(i=>({code:i[0],hex:i[1],fam:i[2],block:i[3],lab:rgb2lab(...hex2rgb(i[1]))}));
 function acc(de){ return Math.max(0, 100-de).toFixed(1).replace(/\.0$/,""); }
+function copyName(m){
+  const L=m.lab[0], c=m.code;
+  if(NAMES[c]) return c==="1837" ? "1837 Tiffany Blue" : NAMES[c];
+  if(c.startsWith("CG")||c.startsWith("WG")) return dispName(c);
+  let w;
+  switch(m.fam){
+    case "Yellows": w="Yellow"; break;
+    case "Oranges": w="Orange"; break;
+    case "Reds & Maroons": w=L<38?"Maroon":"Red"; break;
+    case "Pinks": w="Pink"; break;
+    case "Purples & Violets": w="Purple"; break;
+    case "Blues": w=L<25?"Navy":"Blue"; break;
+    case "Teals & Aquas": w=L>72?"Aqua":"Teal"; break;
+    case "Greens": w="Green"; break;
+    case "Tans & Browns": w=L<50?"Brown":"Tan"; break;
+    default: w="Gray";
+  }
+  return c+" "+w;
+}
 function quality(de){ if(de<1)return["Spot on","q0"]; if(de<3)return["Very close","q1"]; if(de<6)return["Close","q2"]; if(de<10)return["In the ballpark","q3"]; return["Nearest we have","q4"]; }
 function match(hex){
   hex=hex.trim(); if(!hex.startsWith("#"))hex="#"+hex;
@@ -140,7 +163,7 @@ function match(hex){
   document.getElementById("thex").textContent=hex.toUpperCase();
   document.getElementById("matchlist").innerHTML=ranked.map((m,i)=>{
     const q=quality(m.de);
-    return '<div class="match'+(i===0?' best':'')+'">'
+    return '<div class="match'+(i===0?' best':'')+'" data-copy="'+copyName(m)+'" title="Click to copy">'
       +'<div class="match-sw" style="background:'+m.hex+'"></div>'
       +'<div><div class="match-name">'+dispName(m.code)+'</div>'
       +'<div class="match-meta">'+m.fam+' &bull; '+m.block+' &bull; '+m.hex.toUpperCase()+'</div>'
@@ -150,6 +173,14 @@ function match(hex){
   saveHist(hex);
   document.getElementById("results").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
+document.getElementById("matchlist").addEventListener("click",e=>{
+  const row=e.target.closest(".match"); if(!row) return;
+  const txt=row.dataset.copy;
+  const done=()=>{ const to=document.getElementById("toast"); to.textContent="Copied \u201C"+txt+"\u201D"; to.classList.add("show"); clearTimeout(to._t); to._t=setTimeout(()=>to.classList.remove("show"),1600); };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done)); }
+  else fallbackCopy(txt,done);
+});
+function fallbackCopy(txt,done){ const ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");done();}catch(e){} document.body.removeChild(ta); }
 function getHist(){ try{return JSON.parse(localStorage.getItem("mi_hist")||"[]");}catch(e){return[];} }
 function saveHist(hex){ let h=getHist().filter(x=>x!==hex); h.unshift(hex); h=h.slice(0,12); localStorage.setItem("mi_hist",JSON.stringify(h)); renderHist(); }
 function renderHist(){ document.getElementById("hist").innerHTML=getHist().map(x=>'<button style="background:'+x+'" title="'+x+'" data-hex="'+x+'"></button>').join(""); }
@@ -218,5 +249,6 @@ cv.addEventListener("click",e=>{
   hexin.value=hex; pickin.value=hex; match(hex);
 });
 </script>
+<div id="toast"></div>
 </body>
 </html>
