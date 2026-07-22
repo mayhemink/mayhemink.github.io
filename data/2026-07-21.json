@@ -1,0 +1,33 @@
+{
+  "day": "2026-07-21",
+  "rows": [
+    {"id": "6323-front-lc", "job": "6323", "customer": "LETS GO CASS (Tekton)", "location": "Front LC — Lets Go Cass sign", "colors": 2, "screens": 2, "qty": 33, "img": "img_6323", "note": "MUST SHIP TODAY — run first"},
+    {"id": "6323-back", "job": "6323", "customer": "LETS GO CASS (Tekton)", "location": "Full back — Cassidy", "colors": 4, "screens": 4, "qty": 33, "img": "img_6323", "note": "MUST SHIP TODAY — run first"},
+    {"id": "6303-front-lc", "job": "6303", "customer": "SKRE — In the Reeds (CC)", "location": "Front LC — duck logo puff (tees + hoodies)", "colors": 3, "screens": 3, "qty": 153, "img": "img_6303", "note": "FRONTS ONLY — backs ran yesterday"},
+    {"id": "6315-front", "job": "6315", "customer": "Mayhem Ink Look (Brad)", "location": "Full front — golden brown on black (cust. supplied)", "colors": 1, "screens": 1, "qty": 88, "img": "img_6315"},
+    {"id": "6318-front", "job": "6318", "customer": "Duck Creek NF Sign (Brad)", "location": "Full front — NF sign (cust. supplied)", "colors": 2, "screens": 2, "qty": 60, "img": "img_6318"},
+    {"id": "6321-front", "job": "6321", "customer": "Family Reunion (Brad)", "location": "Full front — Lake Crew (cust. supplied)", "colors": 1, "screens": 1, "qty": 29, "img": "img_6321"},
+    {"id": "6331-front", "job": "6331", "customer": "Westrek Buck Flag (BM)", "location": "Front center 10in — buck flag", "colors": 2, "screens": 2, "qty": 145, "img": "img_6331"},
+    {"id": "6295-front", "job": "6295", "customer": "Boots Pest Control", "location": "Front LC — 2 color (lime green + white)", "colors": 2, "screens": 2, "qty": 12, "img": "img_6295"}
+  ],
+  "times": {
+    "6323-front-lc": {"printer": "Jalen", "colors": 2, "screens": 2, "setupStart": 1784652600000, "setupDone": 1784652900000, "jobDone": 1784655048654, "pauses": [], "notes": "", "audit": [{"field": "setupDone", "old": 1784653972276, "new": 1784652900000, "at": 1784654000741}, {"field": "setupStart", "old": 1784653289750, "new": 1784652600000, "at": 1784654008640}], "edits": {"setupDone": true, "setupStart": true}},
+    "6323-back": {"printer": "Spencer", "colors": 4, "screens": 4, "setupStart": 1784659039089, "setupDone": 1784662008041, "jobDone": 1784664256425, "pauses": [{"start": 1784661030511, "end": 1784661282519, "reason": "Waiting on ink"}, {"start": 1784661428981, "end": 1784661572725, "reason": "Waiting on approval"}], "notes": ""},
+    "6303-front-lc": {"printer": "Corey", "colors": 3, "screens": 3, "setupStart": 1784647958662, "setupDone": 1784647966365, "jobDone": 1784655141427, "pauses": [], "notes": ""},
+    "6315-front": {"printer": "Corey", "colors": 1, "screens": 1, "setupStart": null, "setupDone": null, "jobDone": null, "pauses": [], "notes": ""},
+    "6318-front": {"printer": "Corey", "colors": 2, "screens": 2, "setupStart": 1784657952677, "setupDone": 1784672084089, "jobDone": 1784672089127, "pauses": [{"start": 1784658148491, "end": 1784672082207, "reason": "Press problem"}], "notes": ""},
+    "6321-front": {"printer": "Spencer", "colors": 1, "screens": 1, "setupStart": 1784667184294, "setupDone": 1784667426386, "jobDone": 1784669113596, "pauses": [{"start": 1784667733404, "end": 1784668123327, "reason": "Other"}], "notes": "Flip screen from youth to adult design."},
+    "6331-front": {"printer": "Corey", "colors": 1, "screens": 1, "setupStart": 1784668193148, "setupDone": 1784668474906, "jobDone": 1784671812543, "pauses": [], "notes": ""},
+    "6295-front": {"printer": "Spencer", "colors": 3, "screens": 3, "setupStart": 1784669369307, "setupDone": 1784670020110, "jobDone": 1784671164089, "pauses": [{"start": 1784670026228, "end": 1784670226034, "reason": "Other"}, {"start": 1784670240000, "end": 1784670420000, "reason": "Ink change", "edited": true}], "notes": "Stopped to find shirts", "audit": [{"field": "pause 2", "old": "3:44 PM-3:59 PM Ink change", "new": "3:44 PM-3:47 PM Ink change", "at": 1784671186821}], "edits": {"pause 2": true}}
+  },
+  "conflicts": {
+    "6303-front-lc": {
+      "note": "Row had data on two iPads. Spencer's card: setup 1784646143440-1784646987711 (14m) then open-ended 'Waiting on approval' pause from 1784646994640, no jobDone. Corey's card (stored in times): setup 8s at 9:32, print done 11:32. Sheet row uses Spencer's setup (14m) + Corey's print (120m).",
+      "spencer_card": {"printer": "Spencer", "colors": 3, "screens": 3, "setupStart": 1784646143440, "setupDone": 1784646987711, "jobDone": null, "pauses": [{"start": 1784646994640, "end": null, "reason": "Waiting on approval"}], "notes": ""}
+    }
+  },
+  "exports": {
+    "source": "Merged from 3 iPad export messages in Slack #timecards",
+    "message_ts": ["1784671209.900749", "1784671437.217959", "1784672151.734659"]
+  }
+}
