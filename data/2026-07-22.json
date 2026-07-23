@@ -1,0 +1,222 @@
+{
+ "day": "2026-07-22",
+ "rows": [
+  {
+   "id": "6301-front",
+   "job": "6301",
+   "customer": "Fieldcraft Outpost — God Family Prepping",
+   "location": "Front chest 11in — 3c puff matte, NO underbase",
+   "colors": 3,
+   "screens": 3,
+   "qty": 144,
+   "img": "img_6301",
+   "note": "RUN FIRST — front/back burned separate, run on both presses"
+  },
+  {
+   "id": "6301-backneck",
+   "job": "6301",
+   "customer": "Fieldcraft Outpost — God Family Prepping",
+   "location": "Back neck vertical — 1c, scale as tall as possible",
+   "colors": 1,
+   "screens": 1,
+   "qty": 144,
+   "img": "img_6301",
+   "note": "RUN FIRST — front/back burned separate, run on both presses"
+  },
+  {
+   "id": "6317-front",
+   "job": "6317",
+   "customer": "Buck Circle July 13th (Brad)",
+   "location": "Front — Duck Creek buck skull (pull stock ST360 Black)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 49,
+   "img": "img_6317"
+  },
+  {
+   "id": "6319-front",
+   "job": "6319",
+   "customer": "2026 New Buck Logo (Brad)",
+   "location": "Full front — Duck Creek Utah (cust. supplied)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 81,
+   "img": "img_6319"
+  },
+  {
+   "id": "6296-nessie",
+   "job": "6296",
+   "customer": "Everwild — July Order (Wren)",
+   "location": "Full front — Nessie / Hide and Seek Champs (cust. supplied)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 130,
+   "img": "img_6296_nes",
+   "note": "6296 runs LAST"
+  },
+  {
+   "id": "6296-shakes",
+   "job": "6296",
+   "customer": "Everwild — July Order (Wren)",
+   "location": "Full front — Bear Lake Shakes (cust. supplied)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 92,
+   "img": "img_6296_shk",
+   "note": "6296 runs LAST"
+  },
+  {
+   "id": "6296-smokey",
+   "job": "6296",
+   "customer": "Everwild — July Order (Wren)",
+   "location": "Front — Smokey (grey tees, cust. supplied)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 84,
+   "img": "img_6296_smk",
+   "note": "6296 runs LAST"
+  },
+  {
+   "id": "6296-back",
+   "job": "6296",
+   "customer": "Everwild — July Order (Wren)",
+   "location": "Upper back — BEAR LAKE (grey tees)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 84,
+   "img": "img_6296_smk",
+   "note": "6296 runs LAST"
+  }
+ ],
+ "times": {
+  "6301-front": {
+   "printer": "Spencer",
+   "colors": 3,
+   "screens": 3,
+   "setupStart": 1784734515511,
+   "setupDone": 1784736588675,
+   "jobDone": 1784748112159,
+   "pauses": [
+    {
+     "start": 1784735527818,
+     "end": 1784736282124,
+     "reason": "Waiting on ink"
+    },
+    {
+     "start": 1784736593624,
+     "end": 1784738197887,
+     "reason": "Waiting on approval"
+    },
+    {
+     "start": 1784742101534,
+     "end": 1784744876549,
+     "reason": "Lunch"
+    }
+   ],
+   "notes": ""
+  },
+  "6296-smokey": {
+   "printer": null,
+   "colors": 1,
+   "screens": 1,
+   "setupStart": null,
+   "setupDone": null,
+   "jobDone": null,
+   "pauses": [],
+   "notes": ""
+  },
+  "6296-nessie": {
+   "printer": null,
+   "colors": 1,
+   "screens": 1,
+   "setupStart": null,
+   "setupDone": null,
+   "jobDone": null,
+   "pauses": [],
+   "notes": ""
+  },
+  "6296-shakes": {
+   "printer": "Spencer",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784751497709,
+   "setupDone": 1784751890102,
+   "jobDone": 1784755401777,
+   "pauses": [
+    {
+     "start": 1784753820000,
+     "end": 1784754197028,
+     "reason": "Other",
+     "edited": true
+    }
+   ],
+   "notes": "",
+   "audit": [
+    {
+     "field": "pause 1",
+     "old": "3:02 PM-? Other",
+     "new": "2:57 PM-? Other",
+     "at": 1784754195046
+    }
+   ],
+   "edits": {
+    "pause 1": true
+   }
+  },
+  "6301-backneck": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784735636326,
+   "setupDone": 1784735639703,
+   "jobDone": 1784741602777,
+   "pauses": [],
+   "notes": "Setup time was low due to figuring out ink colors with Kolton and Christian \nProbably 15 minutes of time \n"
+  },
+  "6319-front": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784744599584,
+   "setupDone": 1784745000000,
+   "jobDone": 1784749099785,
+   "pauses": [],
+   "notes": "",
+   "audit": [
+    {
+     "field": "setupDone",
+     "old": 1784749090136,
+     "new": 1784745000000,
+     "at": 1784749117415
+    }
+   ],
+   "edits": {
+    "setupDone": true
+   }
+  },
+  "6317-front": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1784749523480,
+   "setupDone": null,
+   "jobDone": null,
+   "pauses": [
+    {
+     "start": 1784753677666,
+     "end": null,
+     "reason": "Other"
+    }
+   ],
+   "notes": ""
+  }
+ },
+ "sources": [
+  {
+   "ts": "1784757515.962039"
+  },
+  {
+   "ts": "1784757745.082999"
+  }
+ ]
+}
