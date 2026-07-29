@@ -1,0 +1,344 @@
+{
+ "day": "2026-07-27",
+ "rows": [
+  {
+   "id": "6296-mtndude",
+   "job": "6296",
+   "url": "<https://www.printavo.com/invoices/23630470|https://www.printavo.com/invoices/23630470>",
+   "customer": "Everwild Apparel \u2014 July Order (Wren)",
+   "location": "Full front \u2014 Mountain Dude (blk/wht tees, cust. supplied)",
+   "colors": 3,
+   "screens": 3,
+   "qty": 92,
+   "img": "img_6296_mtn"
+  },
+  {
+   "id": "6296-nessie",
+   "job": "6296",
+   "url": "<https://www.printavo.com/invoices/23630470|https://www.printavo.com/invoices/23630470>",
+   "customer": "Everwild Apparel \u2014 July Order (Wren)",
+   "location": "Full front \u2014 Hide & Seek / Nessie (grn/terra tees, cust. supplied)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 130,
+   "img": "img_6296_nessie"
+  },
+  {
+   "id": "6296-shakes",
+   "job": "6296",
+   "url": "<https://www.printavo.com/invoices/23630470|https://www.printavo.com/invoices/23630470>",
+   "customer": "Everwild Apparel \u2014 July Order (Wren)",
+   "location": "Full front \u2014 Raspberry Shakes (terra/brown/blk, cust. supplied)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 133,
+   "img": "img_6296_shakes"
+  },
+  {
+   "id": "6296-smokey",
+   "job": "6296",
+   "url": "<https://www.printavo.com/invoices/23630470|https://www.printavo.com/invoices/23630470>",
+   "customer": "Everwild Apparel \u2014 July Order (Wren)",
+   "location": "Front \u2014 Smokey (grey tees, cust. supplied)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 84,
+   "img": "img_6296_smk",
+   "note": "VERIFY colors \u2014 Printavo says 1-color but mockup is full-color. Confirm before burning."
+  },
+  {
+   "id": "6296-back",
+   "job": "6296",
+   "url": "<https://www.printavo.com/invoices/23630470|https://www.printavo.com/invoices/23630470>",
+   "customer": "Everwild Apparel \u2014 July Order (Wren)",
+   "location": "Upper back \u2014 BEAR LAKE (grey tees)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 84,
+   "img": "img_6296_smk"
+  },
+  {
+   "id": "6296-lc6",
+   "job": "6296",
+   "url": "<https://www.printavo.com/invoices/23630470|https://www.printavo.com/invoices/23630470>",
+   "customer": "Everwild Apparel \u2014 July Order (Wren)",
+   "location": "Front LC \u2014 Sun/Lake/Shake smiley (black tees)",
+   "colors": 6,
+   "screens": 6,
+   "qty": 84,
+   "img": "img_6296_six"
+  },
+  {
+   "id": "6296-fullback6",
+   "job": "6296",
+   "url": "<https://www.printavo.com/invoices/23630470|https://www.printavo.com/invoices/23630470>",
+   "customer": "Everwild Apparel \u2014 July Order (Wren)",
+   "location": "Full back \u2014 SUN LAKE SHAKE (black tees)",
+   "colors": 6,
+   "screens": 6,
+   "qty": 84,
+   "img": "img_6296_six"
+  },
+  {
+   "id": "6286-pepsi",
+   "job": "6286",
+   "url": "<https://www.printavo.com/invoices/23589343|https://www.printavo.com/invoices/23589343>",
+   "customer": "Pepsi Summer Vibes (Zieber)",
+   "location": "Full front \u2014 Pepsi Summer Vibes (6210 CVC, Black)",
+   "colors": 6,
+   "screens": 6,
+   "qty": 50,
+   "img": "img_6286"
+  },
+  {
+   "id": "6305-horse",
+   "job": "6305",
+   "url": "<https://www.printavo.com/invoices/23667547|https://www.printavo.com/invoices/23667547>",
+   "customer": "Tagged Out \u2014 Horse Logo",
+   "location": "Front center chest \u2014 Horse Logo, 1-color PUFF (2/0 on hoodies, underbase on Duck Camo)",
+   "colors": 1,
+   "screens": 2,
+   "qty": 80,
+   "note": "No mockup in Printavo & not tagged Screen Printing \u2014 verify art/placement."
+  },
+  {
+   "id": "6311-pies-lc",
+   "job": "6311",
+   "url": "<https://www.printavo.com/invoices/23684308|https://www.printavo.com/invoices/23684308>",
+   "customer": "Homemade Pies \u2014 Thunderbird (cust. supplied)",
+   "location": "Front L chest \u2014 Ho-Made Pies (black, cust. supplied)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 50,
+   "img": "img_6311_1"
+  },
+  {
+   "id": "6311-pies-back",
+   "job": "6311",
+   "url": "<https://www.printavo.com/invoices/23684308|https://www.printavo.com/invoices/23684308>",
+   "customer": "Homemade Pies \u2014 Thunderbird (cust. supplied)",
+   "location": "Full back \u2014 Ho-Made Pies (black, cust. supplied)",
+   "colors": 4,
+   "screens": 4,
+   "qty": 50,
+   "img": "img_6311_2"
+  },
+  {
+   "id": "6349-biscuit",
+   "job": "6349",
+   "url": "<https://www.printavo.com/invoices/23815261|https://www.printavo.com/invoices/23815261>",
+   "customer": "Biscuit Bus (Powell)",
+   "location": "Full front \u2014 Biscuit Bus (1717 Garment-Dyed, Ivory)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 8,
+   "note": "No mockup & not tagged Screen Printing in Printavo \u2014 easy 1-color, verify."
+  }
+ ],
+ "times": {
+  "6296-smokey": {
+   "printer": "Spencer",
+   "colors": 3,
+   "screens": 3,
+   "setupStart": 1785167293054,
+   "setupDone": 1785169270396,
+   "jobDone": 1785174152444,
+   "pauses": [],
+   "notes": ""
+  },
+  "6296-fullback6": {
+   "printer": "Spencer",
+   "colors": 6,
+   "screens": 6,
+   "setupStart": 1785179720231,
+   "setupDone": 1785182942332,
+   "jobDone": 1785252490128,
+   "pauses": [
+    {
+     "start": 1785181119098,
+     "end": 1785181998510,
+     "reason": "Waiting on ink"
+    },
+    {
+     "start": 1785182452783,
+     "end": 1785182941066,
+     "reason": "Waiting on approval"
+    },
+    {
+     "start": 1785182940000,
+     "end": 1785183300000,
+     "reason": "Other",
+     "edited": true
+    },
+    {
+     "start": 1785187318544,
+     "end": 1785188112167,
+     "reason": "Other"
+    },
+    {
+     "start": 1785188614108,
+     "end": 1785249195491,
+     "reason": "Other"
+    }
+   ],
+   "notes": "",
+   "audit": [
+    {
+     "field": "pause 3",
+     "old": "2:09 PM-3:21 PM Other",
+     "new": "2:09 PM-2:15 PM Other",
+     "at": 1785187309915
+    }
+   ],
+   "edits": {
+    "pause 3": true
+   }
+  },
+  "6305-horse": {
+   "printer": "Spencer",
+   "colors": 2,
+   "screens": 1,
+   "setupStart": 1785254743615,
+   "setupDone": 1785254968599,
+   "jobDone": 1785263207420,
+   "pauses": [
+    {
+     "start": 1785254976882,
+     "end": 1785256353052,
+     "reason": "Waiting on approval"
+    },
+    {
+     "start": 1785256838894,
+     "end": 1785258322390,
+     "reason": "Ink change"
+    },
+    {
+     "start": 1785259431704,
+     "end": 1785262205021,
+     "reason": "Lunch"
+    }
+   ],
+   "notes": ""
+  },
+  "6311-pies-lc": {
+   "printer": "Spencer",
+   "colors": 2,
+   "screens": 1,
+   "setupStart": 1785267731131,
+   "setupDone": 1785267858620,
+   "jobDone": 1785271632855,
+   "pauses": [
+    {
+     "start": 1785269699224,
+     "end": 1785270249573,
+     "reason": "Other"
+    }
+   ],
+   "notes": ""
+  },
+  "6296-mtndude": {
+   "printer": "Jalen",
+   "colors": 3,
+   "screens": 3,
+   "setupStart": 1785167393522,
+   "setupDone": 1785168584234,
+   "jobDone": 1785174591997,
+   "pauses": [],
+   "notes": ""
+  },
+  "6296-back": {
+   "printer": "Jalen",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1785177724309,
+   "setupDone": 1785178083885,
+   "jobDone": 1785181040797,
+   "pauses": [],
+   "notes": ""
+  },
+  "6296-lc6": {
+   "printer": "Jalen",
+   "colors": 6,
+   "screens": 6,
+   "setupStart": 1785181309597,
+   "setupDone": 1785182548799,
+   "jobDone": 1785248095254,
+   "pauses": [
+    {
+     "start": 1785183443329,
+     "end": 1785189144059,
+     "reason": "Other"
+    },
+    {
+     "start": 1785189207319,
+     "end": 1785248094336,
+     "reason": "Other"
+    }
+   ],
+   "notes": "Job got fucked no count this"
+  },
+  "6286-pepsi": {
+   "printer": "Jalen",
+   "colors": 6,
+   "screens": 6,
+   "setupStart": 1785253020000,
+   "setupDone": 1785255767922,
+   "jobDone": 1785265910820,
+   "pauses": [
+    {
+     "start": 1785258900000,
+     "end": 1785261900000,
+     "reason": "Lunch",
+     "edited": true
+    }
+   ],
+   "notes": "",
+   "audit": [
+    {
+     "field": "setupStart",
+     "old": 1785252297865,
+     "new": 1785253020000,
+     "at": 1785253064937
+    },
+    {
+     "field": "pause 1",
+     "old": "12:05 PM-? Lunch",
+     "new": "11:15 AM-12:05 PM Lunch",
+     "at": 1785261927291
+    }
+   ],
+   "edits": {
+    "setupStart": true,
+    "pause 1": true
+   }
+  },
+  "6311-pies-back": {
+   "printer": "Jalen",
+   "colors": 3,
+   "screens": 3,
+   "setupStart": 1785266940000,
+   "setupDone": 1785267918894,
+   "jobDone": 1785274200000,
+   "pauses": [],
+   "notes": "",
+   "audit": [
+    {
+     "field": "setupStart",
+     "old": 1785267269938,
+     "new": 1785266940000,
+     "at": 1785267282071
+    },
+    {
+     "field": "jobDone",
+     "old": 1785275843053,
+     "new": 1785274200000,
+     "at": 1785275853519
+    }
+   ],
+   "edits": {
+    "setupStart": true,
+    "jobDone": true
+   }
+  }
+ }
+}
