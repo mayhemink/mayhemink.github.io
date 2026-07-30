@@ -1,0 +1,71 @@
+{
+ "day": "2026-07-30",
+ "rows": [
+  {
+   "id": "6312-front",
+   "job": "6312",
+   "url": "https://www.printavo.com/invoices/23684331",
+   "customer": "Ho-Made Pies — 95 Year Logo",
+   "location": "Full front — 6 color (cust. supplied blk tees)",
+   "colors": 6,
+   "screens": 6,
+   "qty": 250
+  },
+  {
+   "id": "6313-lc",
+   "job": "6313",
+   "url": "https://www.printavo.com/invoices/23684361",
+   "customer": "Ho-Made Pies — Original Logo",
+   "location": "Front LC — 2 color (cust. supplied tees)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 700
+  },
+  {
+   "id": "6313-back",
+   "job": "6313",
+   "url": "https://www.printavo.com/invoices/23684361",
+   "customer": "Ho-Made Pies — Original Logo",
+   "location": "Full back — 4 color (cust. supplied tees)",
+   "colors": 4,
+   "screens": 4,
+   "qty": 700
+  }
+ ],
+ "times": {
+  "6312-front": {
+   "printer": "Jalen",
+   "colors": 6,
+   "screens": 6,
+   "setupStart": 1785341271810,
+   "setupDone": 1785343185111,
+   "jobDone": null,
+   "pauses": [
+    {
+     "start": 1785348000000,
+     "end": 1785349800000,
+     "reason": "Lunch",
+     "edited": true
+    },
+    {
+     "start": 1785355038604,
+     "end": null,
+     "reason": "Other"
+    }
+   ],
+   "notes": "Jalen left for doctors at 2 Corey then will possibly pick it up later ",
+   "audit": [
+    {
+     "field": "pause 1",
+     "old": "1:56 PM-? Lunch",
+     "new": "12:00 PM-12:30 PM Lunch",
+     "at": 1785355018539
+    }
+   ],
+   "edits": {
+    "pause 1": true
+   }
+  }
+ },
+ "_archiveNote": "Card board was labeled DAY=2026-07-30 but all timestamps are 2026-07-29 (America/Denver); archived under the actual work day. Single-iPad export posted to #timecards at 1:58 PM 2026-07-29; job 6312-front unfinished at export (open 'Other' pause from 1:57 PM)."
+}
