@@ -1,18 +1,18 @@
 {
-  "version": 4,
+  "version": 5,
   "generated": "2026-08-01T00:00:00.000Z",
   "rules": {
     "front": {
-      "fullFront": { "anchor": "center", "drop": 3, "width": 11 },
-      "leftChest": { "anchor": "leftChest", "drop": 2.5, "width": 3.5 },
-      "pocket": { "anchor": "leftChest", "drop": 6, "width": 4 },
-      "customF": { "anchor": "center", "drop": 5, "width": 8 }
+      "fullFront": { "line": "center", "drop": 3, "defaultWidth": 11 },
+      "leftChest": { "line": "leftChest", "drop": 2.5, "defaultWidth": 3.5 },
+      "pocket": { "line": "leftChest", "drop": 6, "defaultWidth": 4 },
+      "customF": { "line": "center", "drop": 5, "defaultWidth": 8 }
     },
     "back": {
-      "fullBack": { "anchor": "center", "drop": 4, "width": 11 },
-      "nape": { "anchor": "center", "drop": 0.75, "width": 3 },
-      "upperBack": { "anchor": "center", "drop": 1.5, "width": 11 },
-      "customB": { "anchor": "center", "drop": 5, "width": 8 }
+      "fullBack": { "line": "center", "drop": 4, "defaultWidth": 11 },
+      "nape": { "line": "center", "drop": 0.75, "defaultWidth": 3 },
+      "upperBack": { "line": "center", "drop": 1.5, "defaultWidth": 11 },
+      "customB": { "line": "center", "drop": 5, "defaultWidth": 8 }
     }
   },
   "styles": {
@@ -22,8 +22,8 @@
       "tokens": ["dm108", "6337"],
       "bodyLenM": 29,
       "calib": {
-        "front": { "ppi": 18.7, "centerX": 312, "collarboneY": 132, "leftChestX": 392, "default": true },
-        "back": { "ppi": 18.7, "centerX": 312, "collarboneY": 100, "leftChestX": 392, "default": true }
+        "front": { "ppi": 18.7, "centerX": 312, "collarY": 150, "leftChestX": 392, "default": true },
+        "back": { "ppi": 18.7, "centerX": 312, "collarY": 112, "leftChestX": 392, "default": true }
       },
       "photos": [
         { "file": "styles/DM108/front/624Wx724H-6337-White-5-DM108WhiteFlatFront4.jpg", "side": "front", "color": "White" },
@@ -38,8 +38,8 @@
       "tokens": ["dm130", "7462"],
       "bodyLenM": 29.25,
       "calib": {
-        "front": { "ppi": 18.7, "centerX": 312, "collarboneY": 132, "leftChestX": 392, "default": true },
-        "back": { "ppi": 18.7, "centerX": 312, "collarboneY": 100, "leftChestX": 392, "default": true }
+        "front": { "ppi": 18.7, "centerX": 312, "collarY": 150, "leftChestX": 392, "default": true },
+        "back": { "ppi": 18.7, "centerX": 312, "collarY": 112, "leftChestX": 392, "default": true }
       },
       "photos": [
         { "file": "styles/DM130/front/624Wx724H-7462-White-12-DM130WhiteFlatFront3.jpg", "side": "front", "color": "White" },
@@ -54,8 +54,8 @@
       "tokens": ["nl6210", "11021", "6210"],
       "bodyLenM": 29,
       "calib": {
-        "front": { "ppi": 18.7, "centerX": 312, "collarboneY": 132, "leftChestX": 392, "default": true },
-        "back": { "ppi": 18.7, "centerX": 312, "collarboneY": 100, "leftChestX": 392, "default": true }
+        "front": { "ppi": 18.7, "centerX": 312, "collarY": 150, "leftChestX": 392, "default": true },
+        "back": { "ppi": 18.7, "centerX": 312, "collarY": 112, "leftChestX": 392, "default": true }
       },
       "photos": [
         { "file": "styles/NL6210/front/624Wx724H-11021-White-12-NL6210WhiteFlatFront4.jpg", "side": "front", "color": "White" },

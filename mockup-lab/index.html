@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v4 — Style Catalog + Anchor Placement</title>
+<title>Mayhem Mockup Lab v5 — Guided Calibration + True-Inch Placement</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -130,8 +130,9 @@
   .preview-panel canvas{max-width:100%;max-height:64vh;display:block;}
   .canvas-frame.calibrating{cursor:crosshair;}
   .drawbanner{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#111;
-    font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:5px 14px;border-radius:3px;display:none;z-index:5;max-width:92%;text-align:center;}
+    font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:6px 14px;border-radius:3px;display:none;z-index:5;max-width:92%;text-align:center;}
   .drawbanner.show{display:block;}
+  .drawbanner .how{display:block;font-weight:500;font-size:10px;margin-top:2px;letter-spacing:0;}
   .preview-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px;}
   .preview-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
   .preview-label b{color:var(--ink);}
@@ -161,9 +162,9 @@
 <header>
   <div class="head-inner">
     <div>
-      <p class="eyebrow">Mayhem Ink · Mockup Lab · v4</p>
-      <h1>Style Catalog <span class="x">+ Anchor Placement</span></h1>
-      <p class="head-sub">Placement rules in real inches, anchored to the garment — "left chest: on the shoulder line, 2.5&Prime; below the collarbone" — applied identically to every photo of every calibrated style. Hosted catalog loads automatically.</p>
+      <p class="eyebrow">Mayhem Ink · Mockup Lab · v5</p>
+      <h1>Guided Calibration <span class="x">+ True-Inch Placement</span></h1>
+      <p class="head-sub">Calibrate each style with a guided walkthrough — scale, bottom of collar, center of apparel, left-chest line. Placement baselines read like press language ("left chest @ 2.5&Prime; down"); type the design's real width and it grows down and out, never up.</p>
     </div>
     <div class="catalog-badge" id="catalogBadge">catalog: local mode</div>
   </div>
@@ -202,7 +203,7 @@
       </div>
       <div class="btnrow">
         <button class="btn ghost sm" id="calibBtn">⌖ Calibrate this style + side</button>
-        <button class="btn ghost sm" id="showAnchors">Show anchors</button>
+        <button class="btn ghost sm" id="showAnchors">Show grid lines</button>
       </div>
       <div class="calib-chips" id="calibChips" style="display:none;"></div>
       <div class="gallery" id="gallery"></div>
@@ -222,37 +223,46 @@
       <div class="checkline"><input type="checkbox" id="autoUnderbase" checked><span>Auto white underbase on dark garments (+1 screen)</span></div>
     </div>
 
-    <!-- STEP 3: PLACEMENT RULES -->
+    <!-- STEP 3: PLACEMENT -->
     <div class="panel">
-      <h3><span class="stepnum">03</span> Placement rules</h3>
-      <p class="desc">Rules live in real inches off the anchors, so one rule reads correctly on every calibrated style — and it's the same language you'd give the press.</p>
+      <h3><span class="stepnum">03</span> Placement</h3>
+      <p class="desc">Baseline per location is just a line + a drop — "left chest @ 2.5&Prime; down from the bottom of the collar." Type the design's true width; it stays centered on its line and grows downward, never up. Nudge from there if a job calls for it.</p>
       <div class="locbtns" id="locBtns"></div>
       <div class="rulebox">
         <div class="rb-title" id="ruleTitle">rule</div>
-        <div class="row3">
+        <div class="row2">
           <div>
-            <label class="lbl" style="margin-top:0;">Anchor line</label>
+            <label class="lbl" style="margin-top:0;">On line</label>
             <select id="ruleAnchor">
-              <option value="center">Center seam</option>
-              <option value="leftChest">Left-chest line</option>
+              <option value="center">Center of apparel</option>
+              <option value="leftChest">Left chest line</option>
             </select>
           </div>
           <div>
-            <label class="lbl" style="margin-top:0;">Below collarbone (in)</label>
+            <label class="lbl" style="margin-top:0;">Drop below collar (in)</label>
             <input type="number" id="ruleDrop" step="0.25" value="2.5">
-          </div>
-          <div>
-            <label class="lbl" style="margin-top:0;">Print width (in)</label>
-            <input type="number" id="ruleWidth" step="0.25" value="3.5">
           </div>
         </div>
       </div>
-      <label class="lbl">Size tweak (% of rule width)</label>
-      <input type="range" id="sizePct" min="50" max="150" value="100">
-      <div class="val"><span id="sizePctVal">100</span>% · actual: <span id="actualIn">—</span></div>
+      <label class="lbl">Design width (in)</label>
+      <input type="number" id="designW" step="0.25" min="0.5" value="3.5">
+      <div class="val" id="actualIn">—</div>
+      <div class="row2">
+        <div>
+          <label class="lbl">Nudge across (in)</label>
+          <input type="number" id="nudgeX" step="0.125" value="0">
+        </div>
+        <div>
+          <label class="lbl">Nudge down (in)</label>
+          <input type="number" id="nudgeY" step="0.125" value="0">
+        </div>
+      </div>
       <label class="lbl">Rotation (°)</label>
       <input type="range" id="rotDeg" min="-10" max="10" step="0.5" value="0">
       <div class="val"><span id="rotVal">0</span>°</div>
+      <div class="btnrow">
+        <button class="btn ghost sm" id="resetFit">Reset size &amp; nudge</button>
+      </div>
     </div>
 
     <!-- STEP 4: BOARD -->
@@ -296,7 +306,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V4 · ANCHOR RULES + HOSTED CATALOG</span>
+  <span>MAYHEM MOCKUP LAB · V5 · GUIDED CALIBRATION + TRUE-INCH PLACEMENT</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -392,29 +402,48 @@ const LOCATIONS={
   front:[['fullFront','Full front'],['leftChest','Left chest'],['pocket','Pocket hit'],['customF','Custom front']],
   back:[['fullBack','Full back'],['nape','Nape tag'],['upperBack','Upper back'],['customB','Custom back']]
 };
-/* global placement rules — inches, anchored. Same rule reads on every calibrated style. */
+/* v5 placement baselines — no prebaked widths. A rule is just a line + a drop:
+   "left chest @ 2.5in down (from bottom of collar)". defaultWidth only seeds the
+   builder's Design width box; the real size is whatever you type per design. */
 const RULES={
   front:{
-    fullFront:{anchor:'center',drop:3,width:11},
-    leftChest:{anchor:'leftChest',drop:2.5,width:3.5},
-    pocket:{anchor:'leftChest',drop:6,width:4},
-    customF:{anchor:'center',drop:5,width:8}
+    fullFront:{line:'center',drop:3,defaultWidth:11},
+    leftChest:{line:'leftChest',drop:2.5,defaultWidth:3.5},
+    pocket:{line:'leftChest',drop:6,defaultWidth:4},
+    customF:{line:'center',drop:5,defaultWidth:8}
   },
   back:{
-    fullBack:{anchor:'center',drop:4,width:11},
-    nape:{anchor:'center',drop:0.75,width:3},
-    upperBack:{anchor:'center',drop:1.5,width:11},
-    customB:{anchor:'center',drop:5,width:8}
+    fullBack:{line:'center',drop:4,defaultWidth:11},
+    nape:{line:'center',drop:0.75,defaultWidth:3},
+    upperBack:{line:'center',drop:1.5,defaultWidth:11},
+    customB:{line:'center',drop:5,defaultWidth:8}
   }
 };
-/* per style+side calibration: {ppi, centerX, collarboneY, leftChestX} — null until set.
-   Defaults tuned for standard 624x724 SanMar flats so it demos out of the box. */
+/* migration: v4 rules used {anchor,width}; v4 calib used collarboneY */
+function normRule(r){
+  if(!r)return null;
+  return {line:r.line||r.anchor||'center',drop:(r.drop!=null?r.drop:2.5),defaultWidth:r.defaultWidth||r.width||4};
+}
+function defCalib(side){
+  return side==='front'
+    ?{ppi:18.7,centerX:312,collarY:150,leftChestX:392,default:true}
+    :{ppi:18.7,centerX:312,collarY:112,leftChestX:392,default:true};
+}
+function normCalib(c,side){
+  const d=defCalib(side);
+  if(!c)return d;
+  return {
+    ppi:c.ppi||d.ppi,
+    centerX:c.centerX||d.centerX,
+    collarY:(c.collarY!=null?c.collarY:(c.collarboneY!=null?c.collarboneY:d.collarY)),
+    leftChestX:c.leftChestX||d.leftChestX,
+    default:!!c.default
+  };
+}
+/* per style+side calibration: {ppi, centerX, collarY, leftChestX} */
 const CALIB={};
 Object.keys(STYLES).forEach(k=>{
-  CALIB[k]={
-    front:{ppi:18.7,centerX:312,collarboneY:132,leftChestX:392,default:true},
-    back:{ppi:18.7,centerX:312,collarboneY:100,leftChestX:392,default:true}
-  };
+  CALIB[k]={front:defCalib('front'),back:defCalib('back')};
 });
 
 const PHOTOS=[]; // {id, styleKey, side, colorName, canvas, origName}
@@ -424,30 +453,43 @@ const state={
   styleKey:'DM108', side:'front', activePhotoId:null,
   artF:null, artB:null, artInks:[], inkAssign:[],
   loc:{front:'fullFront', back:'fullBack'},
-  fit:{}, // per side:loc {sizePct, rot}
+  fit:{}, // per side:loc {widthIn, rot, nudgeX, nudgeY}
   fabricBlend:true, autoUnderbase:true, boardMode:'front',
   calibStep:-1, showAnchors:false, hosted:false
 };
+/* guided calibration walkthrough — each step tells the person exactly what to
+   click and why. guide: 'point' = crosshair, 'h' = horizontal line preview,
+   'v' = vertical line preview follows the cursor. */
 const CAL_STEPS={
   front:[
-    {key:'scaleTop',label:'1/5 · Click the very top of the collar (center)'},
-    {key:'scaleBottom',label:'2/5 · Click the bottom hem (center) — then enter body length'},
-    {key:'centerX',label:'3/5 · Click anywhere on the center line of the shirt'},
-    {key:'collarboneY',label:'4/5 · Click where the neckline meets the shoulder (collarbone height)'},
-    {key:'leftChestX',label:'5/5 · Click the left-chest line (wearer’s left = your right)'}
+    {key:'scaleTop',short:'scale ①',guide:'point',label:'STEP 1 OF 5 · SET THE SCALE',
+     how:'Click the very TOP of the collar, dead center.'},
+    {key:'scaleBottom',short:'scale ②',guide:'point',label:'STEP 2 OF 5 · SET THE SCALE',
+     how:'Click the BOTTOM HEM at center — you\'ll then enter the size-M body length from the spec sheet.'},
+    {key:'collarY',short:'collar',guide:'h',label:'STEP 3 OF 5 · BOTTOM OF COLLAR',
+     how:'Click where the collar seam meets the body. Every drop ("2.5″ down") measures from this line.'},
+    {key:'centerX',short:'center',guide:'v',label:'STEP 4 OF 5 · CENTER OF APPAREL',
+     how:'Click anywhere on the vertical centerline of the shirt. Center designs grow out from this line, never off it.'},
+    {key:'leftChestX',short:'left chest',guide:'v',label:'STEP 5 OF 5 · LEFT CHEST LINE',
+     how:'Click the middle of the left-chest print area (wearer\'s left = your right). Left-chest logos stay centered on this line.'}
   ],
   back:[
-    {key:'scaleTop',label:'1/4 · Click the very top of the collar (center)'},
-    {key:'scaleBottom',label:'2/4 · Click the bottom hem (center) — then enter body length'},
-    {key:'centerX',label:'3/4 · Click anywhere on the center line of the shirt'},
-    {key:'collarboneY',label:'4/4 · Click the base of the back collar'}
+    {key:'scaleTop',short:'scale ①',guide:'point',label:'STEP 1 OF 4 · SET THE SCALE',
+     how:'Click the very TOP of the collar, dead center.'},
+    {key:'scaleBottom',short:'scale ②',guide:'point',label:'STEP 2 OF 4 · SET THE SCALE',
+     how:'Click the BOTTOM HEM at center — you\'ll then enter the size-M body length from the spec sheet.'},
+    {key:'collarY',short:'collar',guide:'h',label:'STEP 3 OF 4 · BOTTOM OF COLLAR',
+     how:'Click where the base of the back collar meets the body. Every drop measures from this line.'},
+    {key:'centerX',short:'center',guide:'v',label:'STEP 4 OF 4 · CENTER OF APPAREL',
+     how:'Click anywhere on the vertical centerline of the shirt.'}
   ]
 };
 let calTemp={};
+let calGuide=null;
 
 function fitKey(){return state.side+':'+state.loc[state.side];}
 function getFit(){
-  if(!state.fit[fitKey()])state.fit[fitKey()]={sizePct:100,rot:0};
+  if(!state.fit[fitKey()])state.fit[fitKey()]={widthIn:curRule().defaultWidth,rot:0,nudgeX:0,nudgeY:0};
   return state.fit[fitKey()];
 }
 function curRule(){return RULES[state.side][state.loc[state.side]];}
@@ -587,18 +629,22 @@ function reDetect(){
   refreshInkList();
 }
 
-/* ================= PLACEMENT MATH ================= */
+/* ================= PLACEMENT MATH =================
+   v5 model: the design's horizontal CENTER is pinned to its line (center of
+   apparel or left-chest line) — scaling grows it center-out, it never drifts
+   off the line. The design's TOP edge is pinned at drop inches below the
+   bottom of the collar — scaling grows it downward, never up the shirt. */
 function computePlacement(photo,side,loc){
   const cal=CALIB[photo.styleKey][side];
   const rule=RULES[side][loc];
   if(!cal||!rule)return null;
   const fk=side+':'+loc;
-  const fit=state.fit[fk]||{sizePct:100,rot:0};
-  const anchorX=rule.anchor==='leftChest'?(cal.leftChestX||cal.centerX):cal.centerX;
-  const widthIn=rule.width*fit.sizePct/100;
-  const wpx=widthIn*cal.ppi;
-  const topY=cal.collarboneY+rule.drop*cal.ppi;
-  return {anchorX,topY,wpx,widthIn,rot:fit.rot||0};
+  const fit=state.fit[fk]||{};
+  const widthIn=fit.widthIn||rule.defaultWidth;
+  const anchorX=(rule.line==='leftChest'?(cal.leftChestX||cal.centerX):cal.centerX)+(fit.nudgeX||0)*cal.ppi;
+  const dropIn=rule.drop+(fit.nudgeY||0);
+  const topY=cal.collarY+dropIn*cal.ppi;
+  return {anchorX,topY,wpx:widthIn*cal.ppi,widthIn,dropIn,rot:fit.rot||0};
 }
 
 /* ================= RENDER ================= */
@@ -614,7 +660,7 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
   ctx.drawImage(photo.canvas,0,0);
   const art=side==='front'?state.artF:state.artB;
   const pl=computePlacement(photo,side,loc);
-  if(art&&pl){
+  if(art&&pl&&state.calibStep<0){
     const artH=pl.wpx*(art.height/art.width);
     ctx.save();
     ctx.translate(pl.anchorX,pl.topY+artH/2);ctx.rotate(pl.rot*Math.PI/180);
@@ -629,19 +675,39 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
   if(overlay){
     const cal=CALIB[photo.styleKey][side];
     ctx.save();ctx.setLineDash([10,6]);ctx.font='700 12px "JetBrains Mono", monospace';
-    // center line
-    ctx.strokeStyle='#4CC38A';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.moveTo(cal.centerX,0);ctx.lineTo(cal.centerX,H);ctx.stroke();
-    ctx.fillStyle='#4CC38A';ctx.fillText('center',cal.centerX+4,16);
-    // collarbone line
-    ctx.strokeStyle='#FF5A1F';ctx.lineWidth=2;
-    ctx.beginPath();ctx.moveTo(0,cal.collarboneY);ctx.lineTo(W,cal.collarboneY);ctx.stroke();
-    ctx.fillStyle='#FF5A1F';ctx.fillText('collarbone',6,cal.collarboneY-6);
-    // left chest line
-    if(side==='front'&&cal.leftChestX){
-      ctx.strokeStyle='#FFB454';ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.moveTo(cal.leftChestX,0);ctx.lineTo(cal.leftChestX,H);ctx.stroke();
-      ctx.fillStyle='#FFB454';ctx.fillText('left chest',cal.leftChestX+4,32);
+    const drawV=(x,color,lab,ty)=>{ctx.strokeStyle=color;ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
+      if(lab){ctx.fillStyle=color;ctx.fillText(lab,x+4,ty||16);}};
+    const drawH=(y,color,lab)=>{ctx.strokeStyle=color;ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
+      if(lab){ctx.fillStyle=color;ctx.fillText(lab,6,y-6);}};
+    const mark=(p,color)=>{ctx.setLineDash([]);ctx.strokeStyle=color;ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(p.x-9,p.y);ctx.lineTo(p.x+9,p.y);ctx.moveTo(p.x,p.y-9);ctx.lineTo(p.x,p.y+9);ctx.stroke();
+      ctx.setLineDash([10,6]);};
+    if(state.calibStep>=0){
+      // progress so far
+      if(calTemp.scaleTop)mark(calTemp.scaleTop,'#4CC38A');
+      if(calTemp.scaleBottom)mark(calTemp.scaleBottom,'#4CC38A');
+      if(calTemp.collarY)drawH(calTemp.collarY.y,'#FF5A1F','bottom of collar');
+      if(calTemp.centerX)drawV(calTemp.centerX.x,'#4CC38A','center',16);
+      if(calTemp.leftChestX)drawV(calTemp.leftChestX.x,'#FFB454','left chest',32);
+      // live guide follows the cursor for the current step
+      const st=CAL_STEPS[side][state.calibStep];
+      if(st&&calGuide){
+        if(st.guide==='v')drawV(calGuide.x,'rgba(255,90,31,.95)','');
+        else if(st.guide==='h')drawH(calGuide.y,'rgba(255,90,31,.95)','');
+        else mark(calGuide,'#FF5A1F');
+      }
+    } else {
+      drawV(cal.centerX,'#4CC38A','center',16);
+      drawH(cal.collarY,'#FF5A1F','bottom of collar');
+      if(side==='front'&&cal.leftChestX)drawV(cal.leftChestX,'#FFB454','left chest',32);
+      // top-of-design line for the current location's baseline
+      if(pl){
+        ctx.strokeStyle='#B9B6AD';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(0,pl.topY);ctx.lineTo(W,pl.topY);ctx.stroke();
+        ctx.fillStyle='#B9B6AD';ctx.fillText(`top of design · ${pl.dropIn.toFixed(2)}" down`,6,pl.topY+14);
+      }
     }
     // ruler note
     ctx.fillStyle='rgba(0,0,0,0.65)';ctx.fillRect(6,H-30,150,22);
@@ -684,7 +750,7 @@ function buildLocBtns(){
   LOCATIONS[state.side].forEach(([key,label])=>{
     const b=document.createElement('button');
     const r=RULES[state.side][key];
-    b.innerHTML=label+`<span class="st">${r.width}" @ ${r.drop}" down</span>`;
+    b.innerHTML=label+`<span class="st">@ ${r.drop}" down</span>`;
     if(state.loc[state.side]===key)b.classList.add('active');
     b.onclick=()=>{state.loc[state.side]=key;buildLocBtns();syncRuleInputs();syncFitInputs();refresh();};
     el.appendChild(b);
@@ -692,14 +758,15 @@ function buildLocBtns(){
 }
 function syncRuleInputs(){
   const r=curRule();
-  $('ruleTitle').textContent=LOCATIONS[state.side].find(l=>l[0]===state.loc[state.side])[1]+' rule';
-  $('ruleAnchor').value=r.anchor;
+  $('ruleTitle').textContent=LOCATIONS[state.side].find(l=>l[0]===state.loc[state.side])[1]+' baseline';
+  $('ruleAnchor').value=r.line;
   $('ruleDrop').value=r.drop;
-  $('ruleWidth').value=r.width;
 }
 function syncFitInputs(){
   const fit=getFit();
-  $('sizePct').value=fit.sizePct;$('sizePctVal').textContent=fit.sizePct;
+  $('designW').value=fit.widthIn;
+  $('nudgeX').value=fit.nudgeX||0;
+  $('nudgeY').value=fit.nudgeY||0;
   $('rotDeg').value=fit.rot;$('rotVal').textContent=fit.rot;
 }
 function refreshCalibStatus(){
@@ -786,7 +853,11 @@ function refresh(){
   $('previewLabel').innerHTML=`<b>${s.name}</b> · ${photo.colorName} · ${state.side} · ${loc}`;
   $('previewScreens').textContent=`${sc.inks} ink + ${sc.ub} UB = ${sc.total} screens`;
   const pl=computePlacement(photo,state.side,loc);
-  $('actualIn').textContent=pl?pl.widthIn.toFixed(2)+'" wide, '+curRule().drop+'" below collarbone':'—';
+  if(pl){
+    const art=state.side==='front'?state.artF:state.artB;
+    const hIn=art?pl.widthIn*art.height/art.width:0;
+    $('actualIn').textContent=`${pl.widthIn.toFixed(2)}" wide${hIn?` × ${hIn.toFixed(2)}" tall`:''} · top ${pl.dropIn.toFixed(2)}" below collar`;
+  } else $('actualIn').textContent='—';
   const plel=$('previewPms');plel.innerHTML='';
   state.inkAssign.forEach(a=>{
     const p=PMS[a.idx];
@@ -802,13 +873,13 @@ function refresh(){
 const frame=$('canvasFrame'),mainCv=$('mainCanvas');
 function startCalib(){
   if(!activePhoto()){alert('Load a photo for this style + side first.');return;}
-  state.calibStep=0;calTemp={};
+  state.calibStep=0;calTemp={};calGuide=null;
   frame.classList.add('calibrating');
   $('calibBtn').classList.add('on');
   renderCalibChips();refresh();
 }
 function cancelCalib(){
-  state.calibStep=-1;calTemp={};
+  state.calibStep=-1;calTemp={};calGuide=null;
   frame.classList.remove('calibrating');
   $('calibBtn').classList.remove('on');
   $('drawBanner').classList.remove('show');
@@ -820,18 +891,27 @@ function renderCalibChips(){
   steps.forEach((st,i)=>{
     const c=document.createElement('span');
     c.className='cchip'+(i<state.calibStep?' done':i===state.calibStep?' active':'');
-    c.innerHTML=`<span class="dot"></span>${st.key}`;
+    c.innerHTML=`<span class="dot"></span>${st.short}`;
     el.appendChild(c);
   });
   const banner=$('drawBanner');
   if(state.calibStep>=0&&state.calibStep<steps.length){
-    banner.textContent=steps[state.calibStep].label;banner.classList.add('show');
+    const st=steps[state.calibStep];
+    banner.innerHTML=`${st.label}<span class="how">${st.how}</span>`;
+    banner.classList.add('show');
   } else banner.classList.remove('show');
 }
 function canvasPos(e){
   const r=mainCv.getBoundingClientRect();
   return {x:(e.clientX-r.left)*(mainCv.width/r.width), y:(e.clientY-r.top)*(mainCv.height/r.height)};
 }
+mainCv.addEventListener('mousemove',e=>{
+  if(state.calibStep<0)return;
+  calGuide=canvasPos(e);refresh();
+});
+mainCv.addEventListener('mouseleave',()=>{
+  if(state.calibStep>=0){calGuide=null;refresh();}
+});
 mainCv.addEventListener('click',e=>{
   if(state.calibStep<0)return;
   const steps=CAL_STEPS[state.side];
@@ -848,8 +928,8 @@ mainCv.addEventListener('click',e=>{
   if(state.calibStep>=steps.length){
     const cal=CALIB[state.styleKey][state.side];
     cal.ppi=calTemp.ppi||cal.ppi;
-    cal.centerX=calTemp.centerX?calTemp.centerX.x:cal.centerX;
-    cal.collarboneY=calTemp.collarboneY?calTemp.collarboneY.y:cal.collarboneY;
+    if(calTemp.collarY)cal.collarY=calTemp.collarY.y;
+    if(calTemp.centerX)cal.centerX=calTemp.centerX.x;
     if(calTemp.leftChestX)cal.leftChestX=calTemp.leftChestX.x;
     cal.default=false;
     cancelCalib();
@@ -915,8 +995,10 @@ function downloadBoard(){
   ctx.fillStyle='#111';ctx.font='900 40px "Archivo Black", Arial Black, sans-serif';
   ctx.fillText('MAYHEM INK — MOCKUP BOARD',pad,60);
   ctx.font='500 19px "JetBrains Mono", monospace';ctx.fillStyle='#555';
-  const fr=RULES.front[state.loc.front];
-  ctx.fillText(`${s.name} · ${s.sub} · ${state.loc.front} ${fr.width}" · ${new Date().toLocaleDateString()}`,pad,94);
+  const frLoc=state.loc.front;
+  const frFit=state.fit['front:'+frLoc]||{};
+  const frW=frFit.widthIn||RULES.front[frLoc].defaultWidth;
+  ctx.fillText(`${s.name} · ${s.sub} · ${frLoc} ${frW}" @ ${RULES.front[frLoc].drop}" down · ${new Date().toLocaleDateString()}`,pad,94);
   items.forEach((item,i)=>{
     const main=item.front||item.back;
     const col=i%cols,row=(i/cols)|0;
@@ -959,11 +1041,11 @@ function calibExport(){
   return out;
 }
 function saveBundle(){
-  const out={v:4,rules:RULES,calib:calibExport(),fit:state.fit,photos:PHOTOS.map(p=>({
+  const out={v:5,rules:RULES,calib:calibExport(),fit:state.fit,photos:PHOTOS.map(p=>({
     styleKey:p.styleKey,side:p.side,colorName:p.colorName,origName:p.origName||'',url:p.canvas.toDataURL('image/jpeg',0.88)
   }))};
   const blob=new Blob([JSON.stringify(out)],{type:'application/json'});
-  const a=document.createElement('a');a.download='mayhem-bundle-v4.json';
+  const a=document.createElement('a');a.download='mayhem-bundle-v5.json';
   a.href=URL.createObjectURL(blob);a.click();
 }
 function exportManifest(){
@@ -976,22 +1058,22 @@ function exportManifest(){
     styles[key]={name:s.name,sub:s.sub,tokens:s.tokens,bodyLenM:s.bodyLenM,
       calib:{front:{...CALIB[key].front},back:{...CALIB[key].back}},photos};
   });
-  const out={version:4,generated:new Date().toISOString(),rules:RULES,styles};
+  const out={version:5,generated:new Date().toISOString(),rules:RULES,styles};
   const blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.download='styles.json';
   a.href=URL.createObjectURL(blob);a.click();
 }
 function applyManifest(data,baseUrl){
   if(data.rules)Object.entries(data.rules).forEach(([side,locs])=>{
-    Object.entries(locs).forEach(([loc,r])=>{if(RULES[side])RULES[side][loc]=r;});
+    Object.entries(locs).forEach(([loc,r])=>{if(RULES[side]&&RULES[side][loc])RULES[side][loc]=normRule(r);});
   });
   let loaded=0,total=0;
   Object.entries(data.styles||{}).forEach(([key,sd])=>{
     if(!STYLES[key])STYLES[key]={name:sd.name||key,sub:sd.sub||'',tokens:sd.tokens||[key.toLowerCase()],bodyLenM:sd.bodyLenM||29};
-    if(!CALIB[key])CALIB[key]={front:{ppi:18.7,centerX:312,collarboneY:132,leftChestX:392,default:true},back:{ppi:18.7,centerX:312,collarboneY:100,leftChestX:392,default:true}};
+    if(!CALIB[key])CALIB[key]={front:defCalib('front'),back:defCalib('back')};
     if(sd.calib){
-      if(sd.calib.front)CALIB[key].front=sd.calib.front;
-      if(sd.calib.back)CALIB[key].back=sd.calib.back;
+      if(sd.calib.front)CALIB[key].front=normCalib(sd.calib.front,'front');
+      if(sd.calib.back)CALIB[key].back=normCalib(sd.calib.back,'back');
     }
     (sd.photos||[]).forEach(meta=>{
       total++;
@@ -1016,10 +1098,15 @@ function loadBundleOrManifest(file){
       if(data.photos&&data.photos.length&&data.photos[0].url){
         // bundle with embedded images
         if(data.rules)Object.entries(data.rules).forEach(([side,locs])=>{
-          Object.entries(locs).forEach(([loc,rr])=>{if(RULES[side])RULES[side][loc]=rr;});
+          Object.entries(locs).forEach(([loc,rr])=>{if(RULES[side]&&RULES[side][loc])RULES[side][loc]=normRule(rr);});
         });
-        if(data.calib)Object.entries(data.calib).forEach(([k,v])=>{if(CALIB[k])CALIB[k]=v;});
-        if(data.fit)state.fit=data.fit;
+        if(data.calib)Object.entries(data.calib).forEach(([k,v])=>{
+          if(CALIB[k])CALIB[k]={front:normCalib(v.front,'front'),back:normCalib(v.back,'back')};
+        });
+        if(data.fit){
+          state.fit={};
+          Object.entries(data.fit).forEach(([k,f])=>{if(f&&f.widthIn)state.fit[k]=f;}); // v4 sizePct fits are dropped
+        }
         let pending=data.photos.length;
         data.photos.forEach(meta=>{
           const img=new Image();
@@ -1092,11 +1179,21 @@ $('sideFront').onclick=()=>{state.side='front';$('sideFront').classList.add('act
   state.activePhotoId=null;cancelCalib();buildLocBtns();buildGallery();refreshCalibStatus();syncRuleInputs();syncFitInputs();refresh();};
 $('sideBack').onclick=()=>{state.side='back';$('sideBack').classList.add('active');$('sideFront').classList.remove('active');
   state.activePhotoId=null;cancelCalib();buildLocBtns();buildGallery();refreshCalibStatus();syncRuleInputs();syncFitInputs();refresh();};
-$('ruleAnchor').onchange=e=>{curRule().anchor=e.target.value;buildLocBtns();refresh();buildBoard();};
+$('ruleAnchor').onchange=e=>{curRule().line=e.target.value;buildLocBtns();refresh();buildBoard();};
 $('ruleDrop').addEventListener('input',e=>{curRule().drop=+e.target.value||0;buildLocBtns();refresh();buildBoard();});
-$('ruleWidth').addEventListener('input',e=>{curRule().width=+e.target.value||1;buildLocBtns();refresh();buildBoard();});
-$('sizePct').addEventListener('input',e=>{getFit().sizePct=+e.target.value;$('sizePctVal').textContent=e.target.value;refresh();});
+$('designW').addEventListener('input',e=>{
+  const v=+e.target.value;
+  getFit().widthIn=(v&&v>=0.5)?v:curRule().defaultWidth;
+  refresh();buildBoard();
+});
+$('nudgeX').addEventListener('input',e=>{getFit().nudgeX=+e.target.value||0;refresh();buildBoard();});
+$('nudgeY').addEventListener('input',e=>{getFit().nudgeY=+e.target.value||0;refresh();buildBoard();});
 $('rotDeg').addEventListener('input',e=>{getFit().rot=+e.target.value;$('rotVal').textContent=e.target.value;refresh();});
+$('resetFit').onclick=()=>{
+  const f=getFit();
+  f.widthIn=curRule().defaultWidth;f.nudgeX=0;f.nudgeY=0;f.rot=0;
+  syncFitInputs();refresh();buildBoard();
+};
 $('fabricBlend').onchange=e=>{state.fabricBlend=e.target.checked;refresh();buildBoard();};
 $('autoUnderbase').onchange=e=>{state.autoUnderbase=e.target.checked;refresh();buildBoard();};
 $('boardMode').onchange=e=>{state.boardMode=e.target.value;buildBoard();};
