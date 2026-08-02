@@ -1563,7 +1563,10 @@ function downloadBoard(){
     ctx.fillText(line1,x+14,y+drawH+66);
     if(line2)ctx.fillText(line2,x+14,y+drawH+84);
     ctx.fillText(`${sc.total} screens`,x+14,y+drawH+(line2?102:84));
+    stampWatermark(ctx,x,y,cellW,cellH,'rgba(19,21,23,0.05)',20);
   });
+  ctx.fillStyle='#666';ctx.font='500 14px "JetBrains Mono", monospace';
+  ctx.fillText('MOCKUPS © MAYHEM INK SCREEN PRINTING · mayhemink.net — not for production by outside printers',pad,b.height-14);
   downloadCanvas(b,`mayhem-board-${slug(s.name)}.png`);
 }
 
@@ -1888,6 +1891,21 @@ function v7AfterRefresh(){
 const __v7refresh=refresh;refresh=function(){__v7refresh();v7AfterRefresh();};
 
 /* ---------- export helpers ---------- */
+function stampWatermark(ctx,x,y,w,h,color,size){
+  ctx.save();
+  ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+  ctx.translate(x+w/2,y+h/2);ctx.rotate(-Math.PI/7);
+  ctx.font='900 '+size+'px "Archivo Black", Arial Black, sans-serif';
+  ctx.fillStyle=color;ctx.textAlign='center';
+  const stepX=size*8.4,stepY=size*3.4;
+  let row=0;
+  for(let yy=-h;yy<h;yy+=stepY){
+    const off=(row++%2)?stepX/2:0;
+    for(let xx=-w;xx<w;xx+=stepX)ctx.fillText('MAYHEM INK',xx+off,yy);
+  }
+  ctx.restore();
+  ctx.textAlign='left';
+}
 function drawPageHeader(ctx,W,title){
   ctx.fillStyle='#131517';ctx.fillRect(0,0,W,1080);
   if(LOGO.__ok){
@@ -1915,10 +1933,15 @@ function drawPageFooter(ctx,W,H,note){
     ctx.save();ctx.translate(x,H-64);ctx.rotate(-Math.PI/4);ctx.fillRect(0,-8,10,26);ctx.restore();
   }
   ctx.restore();
+  ctx.fillStyle='#7BAFD4';ctx.font='700 12px "JetBrains Mono", monospace';
+  ctx.fillText('MOCKUP & ART PREP © MAYHEM INK SCREEN PRINTING — NOT FOR PRODUCTION BY OUTSIDE PRINTERS',50,H-44);
   ctx.fillStyle='#98A0A6';ctx.font='500 12px "JetBrains Mono", monospace';
-  ctx.fillText(note,50,H-28);
+  ctx.fillText(note,50,H-24);
   ctx.textAlign='right';
-  ctx.fillText('MAYHEM INK · MOCKUP LAB',W-50,H-28);
+  ctx.fillStyle='#E8EAEC';ctx.font='700 12px "JetBrains Mono", monospace';
+  ctx.fillText('MAYHEM INK · mayhemink.net',W-50,H-44);
+  ctx.fillStyle='#98A0A6';ctx.font='500 12px "JetBrains Mono", monospace';
+  ctx.fillText('MOCKUP LAB',W-50,H-24);
   ctx.textAlign='left';
 }
 function drawInkChips(ctx,x,y,dark){
@@ -1955,6 +1978,7 @@ function approvalFor(item){
   const pg=document.createElement('canvas');pg.width=W;pg.height=H;
   const ctx=pg.getContext('2d');
   drawPageHeader(ctx,W,'CUSTOMER APPROVAL MOCKUP');
+  stampWatermark(ctx,0,150,W,H-220,'rgba(232,234,236,0.035)',30);
   const sides=[];
   if(g.front)sides.push(['front',g.front]);
   if(g.back)sides.push(['back',g.back]);
@@ -1982,6 +2006,7 @@ function approvalFor(item){
       ctx.fillStyle='#888';ctx.font='500 11px "JetBrains Mono", monospace';
       ctx.fillText('+ white underbase',x0+24,168+cardH-30);
     }
+    stampWatermark(ctx,x0,168,cardW,cardH,'rgba(19,21,23,0.05)',24);
     x0+=cardW+gap;
   });
   const s=STYLES[item.styleKey]||{name:item.styleKey,sub:''};
@@ -2031,6 +2056,7 @@ function renderSummaryTo(pg){
     ctx.fillStyle='#98A0A6';ctx.font='500 9.5px "JetBrains Mono", monospace';
     ctx.fillText('CONTRAST BACKGROUND FOR REFERENCE ONLY — NOT PRINTED',x0+26,cardH+196-158+cardH-160-8>0?196+cardH-160-10:640);
     drawInkChips(ctx,x0+24,168+cardH-56,false);
+    stampWatermark(ctx,x0+14,196,cardW-28,cardH-160,'rgba(255,255,255,0.05)',24);
     x0+=cardW+gap;
   });
   // run list
