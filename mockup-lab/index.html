@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v5 — Guided Calibration + True-Inch Placement</title>
+<title>Mayhem Mockup Lab v6 — Smart Search + Mockup Sets</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -155,6 +155,41 @@
   .note b{color:var(--ink);}
   footer{max-width:1560px;margin:50px auto 0;padding:20px 30px 0;border-top:1px solid var(--line);color:var(--muted);
     font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+  /* ---- v6 smart search + sets ---- */
+  .set-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+  .set-tabs button{background:var(--surface2);border:1px solid var(--line2);color:var(--muted);padding:7px 12px;cursor:pointer;
+    border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;}
+  .set-tabs button.active{background:var(--accent);border-color:var(--accent);color:#111;}
+  .set-tabs button.addset{border-style:dashed;}
+  .searchwrap{position:relative;}
+  .searchbox{
+    width:100%;background:var(--surface2);border:1.5px solid var(--line2);color:var(--ink);
+    font-family:'JetBrains Mono',monospace;font-size:14px;padding:11px 12px;border-radius:4px;
+  }
+  .searchbox:focus{border-color:var(--accent);outline:none;}
+  .search-results{
+    position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0d0d0f;border:1px solid var(--line2);
+    border-radius:4px;z-index:40;max-height:320px;overflow:auto;display:none;box-shadow:0 10px 30px rgba(0,0,0,.6);
+  }
+  .search-results.show{display:block;}
+  .sr-item{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:7px 10px;cursor:pointer;border-bottom:1px solid #202024;}
+  .sr-item:last-child{border-bottom:none;}
+  .sr-item:hover,.sr-item.hot{background:var(--surface2);}
+  .sr-item canvas{width:34px;height:40px;object-fit:cover;border-radius:3px;border:1px solid var(--line2);}
+  .sr-item .sr-name{font-size:12.5px;font-weight:600;}
+  .sr-item .sr-style{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent2);}
+  .sr-item .sr-add{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
+  .set-items{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+  .set-chip{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--line2);
+    border-radius:4px;padding:4px 8px 4px 4px;}
+  .set-chip canvas{width:26px;height:30px;border-radius:3px;border:1px solid var(--line2);}
+  .set-chip .sc-txt{line-height:1.15;}
+  .set-chip .sc-name{font-size:11px;font-weight:600;}
+  .set-chip .sc-style{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent2);}
+  .set-chip button{background:none;border:none;color:var(--warn);cursor:pointer;font-size:12px;padding:2px 4px;}
+  .set-empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:12px;}
+  .set-artnote{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent2);margin-top:8px;}
 </style>
 </head>
 <body>
@@ -162,9 +197,9 @@
 <header>
   <div class="head-inner">
     <div>
-      <p class="eyebrow">Mayhem Ink · Mockup Lab · v5</p>
-      <h1>Guided Calibration <span class="x">+ True-Inch Placement</span></h1>
-      <p class="head-sub">Calibrate each style with a guided walkthrough — scale, bottom of collar, center of apparel, left-chest line. Placement baselines read like press language ("left chest @ 2.5&Prime; down"); type the design's real width and it grows down and out, never up.</p>
+      <p class="eyebrow">Mayhem Ink · Mockup Lab · v6</p>
+      <h1>Smart Search <span class="x">+ Mockup Sets</span></h1>
+      <p class="head-sub">Type "6210 stone" or "dm130 desert tan" and hit enter — garments from ANY style land in the same set, each placed with its own calibration. Build multiple sets side by side, each with its own art. All the v5 true-inch placement underneath.</p>
     </div>
     <div class="catalog-badge" id="catalogBadge">catalog: local mode</div>
   </div>
@@ -210,22 +245,41 @@
       <div class="gallery-empty" id="galleryEmpty">No photos yet for this style + side.</div>
     </div>
 
-    <!-- STEP 2: ARTWORK + INKS -->
+    <!-- STEP 2: SMART SEARCH + SETS -->
     <div class="panel">
-      <h3><span class="stepnum">02</span> Artwork &amp; inks</h3>
+      <h3><span class="stepnum">02</span> Search &amp; sets</h3>
+      <p class="desc">Type style + color — "6210 stone", "dm130 desert tan" — and hit Enter. Mixed styles live in the same set; each set carries its own art and becomes its own board.</p>
+      <div class="set-tabs" id="setTabs"></div>
+      <div class="searchwrap">
+        <input type="text" id="searchBox" class="searchbox" placeholder="⌕  search any style + color…" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <div class="set-items" id="setItems"></div>
+      <div class="set-empty" id="setEmpty">Set is empty — search above to add garments. Empty set = board falls back to every color of the current style.</div>
+      <div class="btnrow">
+        <button class="btn ghost sm" id="clearSet">Clear set</button>
+        <button class="btn ghost sm" id="removeSet">Delete set</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: ARTWORK + INKS -->
+    <div class="panel">
+      <h3><span class="stepnum">03</span> Artwork &amp; inks</h3>
+      <p class="desc">Art belongs to the active set — switch sets and the art, inks and boards switch with it.</p>
       <div class="row2">
         <div class="drop" id="artDropF"><b>Front art</b>transparent PNG<input type="file" id="artInputF" accept="image/*"></div>
         <div class="drop" id="artDropB"><b>Back art</b>transparent PNG<input type="file" id="artInputB" accept="image/*"></div>
       </div>
+      <div class="set-artnote" id="artSetNote"></div>
       <div id="inkList"></div>
       <div class="screens-pill" id="screensPill">—</div>
       <div class="checkline"><input type="checkbox" id="fabricBlend" checked><span>Fabric blend — wrinkles show through the ink</span></div>
       <div class="checkline"><input type="checkbox" id="autoUnderbase" checked><span>Auto white underbase on dark garments (+1 screen)</span></div>
     </div>
 
-    <!-- STEP 3: PLACEMENT -->
+    <!-- STEP 4: PLACEMENT -->
     <div class="panel">
-      <h3><span class="stepnum">03</span> Placement</h3>
+      <h3><span class="stepnum">04</span> Placement</h3>
       <p class="desc">Baseline per location is just a line + a drop — "left chest @ 2.5&Prime; down from the bottom of the collar." Type the design's true width; it stays centered on its line and grows downward, never up. Nudge from there if a job calls for it.</p>
       <div class="locbtns" id="locBtns"></div>
       <div class="rulebox">
@@ -265,9 +319,10 @@
       </div>
     </div>
 
-    <!-- STEP 4: BOARD -->
+    <!-- STEP 5: BOARD -->
     <div class="panel">
-      <h3><span class="stepnum">04</span> Board</h3>
+      <h3><span class="stepnum">05</span> Board</h3>
+      <p class="desc">The board is the active set — mixed styles welcome, each placed by its own calibration.</p>
       <label class="lbl">Board layout</label>
       <select id="boardMode">
         <option value="front" selected>Front only</option>
@@ -306,7 +361,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V5 · GUIDED CALIBRATION + TRUE-INCH PLACEMENT</span>
+  <span>MAYHEM MOCKUP LAB · V6 · SMART SEARCH + MOCKUP SETS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -448,6 +503,12 @@ Object.keys(STYLES).forEach(k=>{
 
 const PHOTOS=[]; // {id, styleKey, side, colorName, canvas, origName}
 let photoSeq=1;
+
+/* ================= v6: MOCKUP SETS ================= */
+/* a set = a named list of garments (any styles mixed) + its own front/back art */
+const SETS=[{name:'SET A',items:[],artF:null,artB:null,artInks:[],inkAssign:[]}];
+let activeSetIdx=0;
+function activeSet(){return SETS[activeSetIdx];}
 
 const state={
   styleKey:'DM108', side:'front', activePhotoId:null,
@@ -939,26 +1000,155 @@ mainCv.addEventListener('click',e=>{
   renderCalibChips();refresh();
 });
 
+/* ================= v6: SEARCH + SET UI ================= */
+function garmentIndex(){
+  // one entry per unique style+color, with front/back photo refs
+  const map={};
+  PHOTOS.forEach(p=>{
+    const key=p.styleKey+'|'+slug(p.colorName);
+    if(!map[key])map[key]={styleKey:p.styleKey,colorName:p.colorName,front:null,back:null};
+    if(p.side==='front'&&!map[key].front)map[key].front=p;
+    if(p.side==='back'&&!map[key].back)map[key].back=p;
+  });
+  return Object.values(map);
+}
+function searchGarments(q){
+  const toks=q.toLowerCase().split(/\s+/).filter(Boolean);
+  if(!toks.length)return [];
+  const scored=[];
+  garmentIndex().forEach(g=>{
+    const s=STYLES[g.styleKey]||{};
+    const hay=(g.styleKey+' '+(s.name||'')+' '+(s.sub||'')+' '+(s.tokens||[]).join(' ')+' '+g.colorName).toLowerCase();
+    let score=0,ok=true;
+    toks.forEach(t=>{
+      if(!hay.includes(t)){ok=false;return;}
+      score+=10;
+      if(g.colorName.toLowerCase().startsWith(t))score+=6;
+      if(g.colorName.toLowerCase().split(/\s+/).some(w=>w.startsWith(t)))score+=4;
+      if(g.styleKey.toLowerCase().includes(t))score+=3;
+    });
+    if(ok)scored.push({g,score});
+  });
+  return scored.sort((a,b)=>b.score-a.score||a.g.colorName.localeCompare(b.g.colorName)).slice(0,12).map(x=>x.g);
+}
+function thumbCanvas(photo,w,h){
+  const c=document.createElement('canvas');c.width=w;c.height=h;
+  if(photo){
+    const sc=Math.max(w/photo.canvas.width,h/photo.canvas.height);
+    const dw=photo.canvas.width*sc,dh=photo.canvas.height*sc;
+    c.getContext('2d').drawImage(photo.canvas,(w-dw)/2,(h-dh)/2,dw,dh);
+  }
+  return c;
+}
+function addToSet(g){
+  const set=activeSet();
+  const key=g.styleKey+'|'+slug(g.colorName);
+  if(set.items.some(it=>it.styleKey+'|'+slug(it.colorName)===key))return;
+  set.items.push({styleKey:g.styleKey,colorName:g.colorName});
+  // jump the preview to what was just added
+  const p=g.front||g.back;
+  if(p){state.styleKey=g.styleKey;state.side=p.side;state.activePhotoId=p.id;
+    buildStyleTabs();buildGallery();refreshCalibStatus();}
+  renderSetItems();refresh();buildBoard();
+}
+function renderSetTabs(){
+  const el=$('setTabs');el.innerHTML='';
+  SETS.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.textContent=s.name+(s.items.length?` (${s.items.length})`:'');
+    if(i===activeSetIdx)b.classList.add('active');
+    b.onclick=()=>{switchSet(i);};
+    el.appendChild(b);
+  });
+  const add=document.createElement('button');add.className='addset';add.textContent='+ SET';
+  add.onclick=()=>{
+    SETS.push({name:'SET '+String.fromCharCode(65+SETS.length),items:[],artF:null,artB:null,artInks:[],inkAssign:[]});
+    switchSet(SETS.length-1);
+  };
+  el.appendChild(add);
+}
+function switchSet(i){
+  // stash current art/ink state into the outgoing set
+  const cur=activeSet();
+  cur.artF=state.artF;cur.artB=state.artB;cur.artInks=state.artInks;cur.inkAssign=state.inkAssign;
+  activeSetIdx=i;
+  const nxt=activeSet();
+  state.artF=nxt.artF;state.artB=nxt.artB;
+  state.artInks=nxt.artInks||[];state.inkAssign=nxt.inkAssign||[];
+  renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();refresh();buildBoard();
+}
+function renderSetItems(){
+  const el=$('setItems');el.innerHTML='';
+  const set=activeSet();
+  $('setEmpty').style.display=set.items.length?'none':'block';
+  set.items.forEach((it,idx)=>{
+    const g=garmentIndex().find(x=>x.styleKey===it.styleKey&&slug(x.colorName)===slug(it.colorName));
+    const chip=document.createElement('div');chip.className='set-chip';
+    chip.appendChild(thumbCanvas(g&&(g.front||g.back),26,30));
+    const txt=document.createElement('div');txt.className='sc-txt';
+    txt.innerHTML=`<div class="sc-name">${it.colorName}</div><div class="sc-style">${it.styleKey}</div>`;
+    chip.appendChild(txt);
+    const x=document.createElement('button');x.textContent='✕';
+    x.onclick=()=>{set.items.splice(idx,1);renderSetTabs();renderSetItems();buildBoard();};
+    chip.appendChild(x);
+    el.appendChild(chip);
+  });
+  renderSetTabs();
+}
+function refreshArtNote(){
+  const set=activeSet();
+  $('artSetNote').textContent=`art loaded into ${set.name}: front ${state.artF?'✓':'—'} · back ${state.artB?'✓':'—'}`;
+}
+let srHot=0;
+function renderSearchResults(){
+  const box=$('searchBox'),el=$('searchResults');
+  const results=searchGarments(box.value);
+  el.innerHTML='';
+  if(!box.value.trim()||!results.length){el.classList.remove('show');return;}
+  results.forEach((g,i)=>{
+    const d=document.createElement('div');d.className='sr-item'+(i===srHot?' hot':'');
+    d.appendChild(thumbCanvas(g.front||g.back,34,40));
+    const mid=document.createElement('div');
+    mid.innerHTML=`<div class="sr-name">${g.colorName}</div><div class="sr-style">${(STYLES[g.styleKey]||{}).name||g.styleKey}${g.front&&g.back?' · F+B':g.front?' · F only':' · B only'}</div>`;
+    d.appendChild(mid);
+    const add=document.createElement('div');add.className='sr-add';add.textContent='↵ add';
+    d.appendChild(add);
+    d.onmousedown=e=>{e.preventDefault();addToSet(g);box.value='';renderSearchResults();box.focus();};
+    el.appendChild(d);
+  });
+  el.classList.add('show');
+}
+
 /* ================= BOARD ================= */
 function boardItems(){
   const mode=state.boardMode;
-  let items=[];
-  if(mode==='pair'){
-    photosFor(state.styleKey,'front').forEach(f=>{
-      const back=photosFor(state.styleKey,'back').find(b=>slug(b.colorName)===slug(f.colorName));
-      items.push({front:f,back});
-    });
-  } else photosFor(state.styleKey,mode).forEach(p=>items.push(mode==='front'?{front:p}:{back:p}));
+  const set=activeSet();
+  let garments;
+  if(set.items.length){
+    garments=set.items.map(it=>garmentIndex().find(x=>x.styleKey===it.styleKey&&slug(x.colorName)===slug(it.colorName))).filter(Boolean);
+  } else {
+    // fallback: every color of the current style (v5 behavior)
+    garments=garmentIndex().filter(g=>g.styleKey===state.styleKey);
+  }
+  const items=[];
+  garments.forEach(g=>{
+    if(mode==='pair'){if(g.front||g.back)items.push({front:g.front,back:g.back});}
+    else if(mode==='front'){if(g.front)items.push({front:g.front});}
+    else {if(g.back)items.push({back:g.back});}
+  });
   return items;
 }
 function buildBoard(){
   const grid=$('cardGrid');grid.innerHTML='';
-  const s=STYLES[state.styleKey];
+  const set=activeSet();
   const items=boardItems();
-  if(!items.length){$('boardDesc').textContent='No photos loaded for this style'+(state.boardMode!=='pair'?' + side':'')+'.';return;}
-  $('boardDesc').textContent=`${s.name} · ${items.length} colorway${items.length>1?'s':''} · ${state.boardMode==='pair'?'front + back':state.boardMode}`;
+  if(!items.length){$('boardDesc').textContent=set.items.length?'Set garments have no photos for this layout.':'No photos loaded for this style'+(state.boardMode!=='pair'?' + side':'')+'.';return;}
+  const styleCount=new Set(items.map(i=>(i.front||i.back).styleKey)).size;
+  const src=set.items.length?`${set.name} · ${styleCount} style${styleCount>1?'s':''}`:STYLES[state.styleKey].name+' (all colors)';
+  $('boardDesc').textContent=`${src} · ${items.length} garment${items.length>1?'s':''} · ${state.boardMode==='pair'?'front + back':state.boardMode}`;
   items.forEach(item=>{
     const main=item.front||item.back;
+    const s=STYLES[main.styleKey]||{name:main.styleKey,sub:''};
     const card=document.createElement('div');card.className='card';
     const wrap=document.createElement('div');wrap.className='cwrap'+(item.front&&item.back?' pair':'');
     const cvs=[];
@@ -978,9 +1168,11 @@ function buildBoard(){
 }
 function downloadCanvas(cv,fname){const a=document.createElement('a');a.download=fname;a.href=cv.toDataURL('image/png');a.click();}
 function downloadBoard(){
-  const s=STYLES[state.styleKey];
+  const set=activeSet();
   const items=boardItems();
   if(!items.length)return;
+  const styleKeys=[...new Set(items.map(i=>(i.front||i.back).styleKey))];
+  const s=styleKeys.length===1?STYLES[styleKeys[0]]:{name:set.items.length?set.name:'Mixed styles',sub:styleKeys.join(' + ')};
   const pairMode=items.some(i=>i.front&&i.back);
   const cols=Math.min(3,items.length),rows=Math.ceil(items.length/cols);
   const shirtW=pairMode?300:480;
@@ -1018,7 +1210,8 @@ function downloadBoard(){
     ctx.fillStyle='#111';ctx.font='800 20px "Archivo Black", Arial Black, sans-serif';
     ctx.fillText(main.colorName.toUpperCase(),x+14,y+drawH+42);
     ctx.font='500 12.5px "JetBrains Mono", monospace';ctx.fillStyle='#666';
-    const callout=pmsCalloutText(sc);
+    const ms=STYLES[main.styleKey]||{name:main.styleKey};
+    const callout=ms.name+' · '+pmsCalloutText(sc);
     const maxW=cellW-28;
     let line1=callout,line2='';
     while(ctx.measureText(line1).width>maxW&&line1.includes(' · ')){
@@ -1082,7 +1275,7 @@ function applyManifest(data,baseUrl){
         const c=processPhoto(img);
         c.__id='p'+photoSeq;
         PHOTOS.push({id:photoSeq++,styleKey:key,side:meta.side,colorName:meta.color,canvas:c,origName:meta.file.split('/').pop()});
-        if(++loaded===total){buildStyleTabs();buildGallery();refreshCalibStatus();refresh();buildBoard();}
+        if(++loaded===total){buildStyleTabs();buildGallery();refreshCalibStatus();renderSetItems();refresh();buildBoard();}
       };
       img.onerror=()=>{if(++loaded===total){buildStyleTabs();buildGallery();refreshCalibStatus();refresh();buildBoard();}};
       img.src=(baseUrl||'')+meta.file;
@@ -1216,13 +1409,46 @@ wireDrop('baseDrop','baseInput',handleFiles,true);
 wireDrop('artDropF','artInputF',f=>loadImgFile(f,img=>{
   const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
   c.getContext('2d').drawImage(img,0,0);
-  state.artF=c;reDetect();refresh();buildBoard();
+  state.artF=c;activeSet().artF=c;reDetect();
+  activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
+  refreshArtNote();refresh();buildBoard();
 }));
 wireDrop('artDropB','artInputB',f=>loadImgFile(f,img=>{
   const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
   c.getContext('2d').drawImage(img,0,0);
-  state.artB=c;reDetect();refresh();buildBoard();
+  state.artB=c;activeSet().artB=c;reDetect();
+  activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
+  refreshArtNote();refresh();buildBoard();
 }));
+
+/* v6 search + set wiring */
+const sb=$('searchBox');
+sb.addEventListener('input',()=>{srHot=0;renderSearchResults();});
+sb.addEventListener('focus',()=>renderSearchResults());
+sb.addEventListener('blur',()=>setTimeout(()=>$('searchResults').classList.remove('show'),150));
+sb.addEventListener('keydown',e=>{
+  const results=searchGarments(sb.value);
+  if(e.key==='ArrowDown'){e.preventDefault();srHot=Math.min(srHot+1,results.length-1);renderSearchResults();}
+  else if(e.key==='ArrowUp'){e.preventDefault();srHot=Math.max(srHot-1,0);renderSearchResults();}
+  else if(e.key==='Enter'){
+    e.preventDefault();
+    if(results.length){addToSet(results[Math.min(srHot,results.length-1)]);sb.value='';srHot=0;renderSearchResults();}
+  }
+  else if(e.key==='Escape'){$('searchResults').classList.remove('show');}
+});
+$('clearSet').onclick=()=>{activeSet().items=[];renderSetTabs();renderSetItems();buildBoard();};
+$('removeSet').onclick=()=>{
+  if(SETS.length===1){activeSet().items=[];renderSetTabs();renderSetItems();buildBoard();return;}
+  SETS.splice(activeSetIdx,1);
+  activeSetIdx=Math.max(0,activeSetIdx-1);
+  const nxt=activeSet();
+  state.artF=nxt.artF;state.artB=nxt.artB;
+  state.artInks=nxt.artInks||[];state.inkAssign=nxt.inkAssign||[];
+  renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();refresh();buildBoard();
+};
+activeSet().artF=state.artF; // default demo art belongs to SET A
+activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
+renderSetTabs();renderSetItems();refreshArtNote();
 
 refresh();buildBoard();
 </script>
