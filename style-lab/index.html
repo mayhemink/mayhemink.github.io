@@ -150,7 +150,7 @@
   <main class="col">
     <div class="panel">
       <h3><span class="pn">⌖</span> Calibration — <span id="calWho" style="color:var(--accent2);">pick a style</span></h3>
-      <p class="desc">No numbers: collar line → center line → left-chest line → DRAG a 10-inch print box where a real 10&Prime; print would sit. Back skips left-chest. Front rolls into back automatically.</p>
+      <p class="desc">No numbers: collar line → center line → left-chest line → then <b>scale the Mayhem logo until it looks like a real 10&Prime; print</b> — drag it onto the chest, size it with the slider or scroll wheel, trust your eye. The back reuses the front's scale automatically (same photo framing), so backs are just 2 clicks.</p>
       <div class="row2" style="max-width:640px;">
         <div>
           <label class="lbl" style="margin-top:0;">Side</label>
@@ -410,25 +410,42 @@ async function handleIntake(files){
   z.addEventListener('drop',e=>{const fs=[...e.dataTransfer.files];if(fs.length)handleIntake(fs);});
 })();
 
-/* ================= CALIBRATION (ported drag-box flow) ================= */
-const CAL_STEPS={
-  front:[
+/* ================= CALIBRATION (logo-as-ruler flow) ================= */
+/* The scale step: place + size the actual Mayhem logo until it LOOKS like a
+   10" print. Kolton's eye knows that graphic at 10" better than any rectangle. */
+const LOGOIMG=new Image();let LOGO_DARK=null;
+LOGOIMG.onload=()=>{
+  const c=document.createElement('canvas');c.width=LOGOIMG.width;c.height=LOGOIMG.height;
+  const x=c.getContext('2d');
+  x.drawImage(LOGOIMG,0,0);
+  x.globalCompositeOperation='source-in';
+  x.fillStyle='#16181B';x.fillRect(0,0,c.width,c.height); // dark tint for light calibration photos
+  LOGO_DARK=c;
+};
+LOGOIMG.src='../mockup-lab/assets/mayhem-logo.png';
+
+function stepsFor(side){
+  const frontOK=calOK(sel.style,'front');
+  if(side==='front')return [
     {key:'collarY',short:'collar',guide:'h',label:'1 / 4 — COLLAR LINE',how:'Click where the collar meets the body.'},
     {key:'centerX',short:'center',guide:'v',label:'2 / 4 — CENTER LINE',how:'Click the vertical center of the shirt.'},
     {key:'leftChestX',short:'l-chest',guide:'v',label:'3 / 4 — LEFT-CHEST LINE',how:'Click the middle of the left-chest print area (wearer\'s left = your right).'},
-    {key:'scaleBar',short:'10" bar',guide:'bar',label:'4 / 4 — DRAG A 10-INCH PRINT BOX',how:'Press and drag across the chest where a 10-inch-wide print would sit. Drag again to redo, then ✓ confirm.'}
-  ],
-  back:[
-    {key:'collarY',short:'collar',guide:'h',label:'1 / 3 — COLLAR LINE',how:'Click where the base of the back collar meets the body.'},
-    {key:'centerX',short:'center',guide:'v',label:'2 / 3 — CENTER LINE',how:'Click the vertical center of the shirt.'},
-    {key:'scaleBar',short:'10" bar',guide:'bar',label:'3 / 3 — DRAG A 10-INCH PRINT BOX',how:'Drag where a 10-inch print would sit. Drag again to redo, then ✓ confirm.'}
-  ]
-};
-let calStep=-1,calTemp={},calGuide=null,barDragging=false,zoom=1;
+    {key:'logoScale',short:'10" logo',guide:'logo',label:'4 / 4 — SIZE THE LOGO TO 10 INCHES',how:'Drag the logo onto the chest. Slider or scroll wheel to size it until it looks like a real 10" print, then ✓ confirm.'}
+  ];
+  const base=[
+    {key:'collarY',short:'collar',guide:'h',label:'1 / '+(frontOK?2:3)+' — COLLAR LINE',how:'Click where the base of the back collar meets the body.'},
+    {key:'centerX',short:'center',guide:'v',label:'2 / '+(frontOK?2:3)+' — CENTER LINE',how:'Click the vertical center of the shirt.'}
+  ];
+  if(!frontOK)base.push({key:'logoScale',short:'10" logo',guide:'logo',label:'3 / 3 — SIZE THE LOGO TO 10 INCHES',how:'Drag + size the logo until it looks like a real 10" print, then ✓ confirm.'});
+  return base;
+}
+let calSteps=[];
+let calStep=-1,calTemp={},calGuide=null,logoDragging=false,dragOff=null,zoom=1;
 const cvEl=$('cv'),frame=$('frame');
 
 function startCalib(){
   if(!sel.style||!curPhotoCanvas){alert('Pick a style (and make sure a photo loads) first.');return;}
+  calSteps=stepsFor(sel.side);
   calStep=0;calTemp={};calGuide=null;zoom=1;
   frame.classList.add('calibrating');
   $('calibBtn').classList.add('on');
@@ -447,18 +464,27 @@ function applyZoom(){
   cvEl.style.width=calStep>=0?(zoom*100)+'%':'';
 }
 function goToStep(i){
-  const steps=CAL_STEPS[sel.side];
-  for(let k=i;k<steps.length;k++)delete calTemp[steps[k].key];
-  delete calTemp.ppi;delete calTemp.barLive;delete calTemp.barY;
+  for(let k=i;k<calSteps.length;k++)delete calTemp[calSteps[k].key];
+  delete calTemp.ppi;
   calStep=i;renderChips();render();
 }
+function initLogoStep(){
+  // seed the logo centered on the chest at a plausible size
+  if(calTemp.logoScale)return;
+  const cx=calTemp.centerX?calTemp.centerX.x:cvEl.width/2;
+  const cy=(calTemp.collarY?calTemp.collarY.y:cvEl.height*0.2)+cvEl.height*0.14;
+  calTemp.logoScale={cx,cy,w:cvEl.width*0.42};
+}
 function finishCalib(){
-  const b=calTemp.scaleBar;if(!b)return;
-  const barIn=parseFloat($('barIn').value)||10;
   const st=CAT.styles[sel.style];
   if(!st.calib)st.calib={front:{},back:{}};
   const cal=st.calib[sel.side]||(st.calib[sel.side]={});
-  cal.ppi=Math.abs(b.x2-b.x1)/barIn;
+  const barIn=parseFloat($('barIn').value)||10;
+  if(calTemp.logoScale){
+    cal.ppi=calTemp.logoScale.w/barIn;
+  } else if(calOK(sel.style,'front')&&sel.side==='back'){
+    cal.ppi=st.calib.front.ppi; // same photo framing front/back — carry the scale for cohesion
+  } else return;
   if(calTemp.collarY)cal.collarY=calTemp.collarY.y;
   if(calTemp.centerX)cal.centerX=calTemp.centerX.x;
   if(calTemp.leftChestX)cal.leftChestX=calTemp.leftChestX.x;
@@ -474,7 +500,7 @@ function finishCalib(){
   }
 }
 function renderChips(){
-  const steps=CAL_STEPS[sel.side];
+  const steps=calSteps;
   const el=$('chips');el.style.display='flex';el.innerHTML='';
   [1,2,3].forEach(z=>{
     const c=document.createElement('span');
@@ -495,15 +521,25 @@ function renderChips(){
     el.appendChild(c);
   });
   const st=steps[calStep];
-  if(st&&st.key==='scaleBar'&&calTemp.scaleBar){
-    const ok=document.createElement('span');ok.className='cchip confirm';ok.textContent='✓ confirm bar';
+  if(st&&st.key==='logoScale'){
+    initLogoStep();
+    const minus=document.createElement('span');minus.className='cchip zoom';minus.textContent='−';
+    minus.onclick=()=>{calTemp.logoScale.w*=0.95;render();};
+    const plus=document.createElement('span');plus.className='cchip zoom';plus.textContent='+';
+    plus.onclick=()=>{calTemp.logoScale.w*=1.05;render();};
+    el.appendChild(minus);el.appendChild(plus);
+    const slider=document.createElement('input');
+    slider.type='range';slider.min=10;slider.max=90;slider.step=0.5;
+    slider.style.cssText='flex:1;min-width:140px;accent-color:var(--accent);';
+    slider.value=calTemp.logoScale.w/cvEl.width*100;
+    slider.oninput=e=>{calTemp.logoScale.w=cvEl.width*(+e.target.value)/100;render();};
+    el.appendChild(slider);
+    const ok=document.createElement('span');ok.className='cchip confirm';ok.textContent='✓ that looks 10" — confirm';
     ok.onclick=finishCalib;el.appendChild(ok);
   }
   const banner=$('banner');
   if(calStep>=0&&calStep<steps.length){
-    banner.innerHTML=(st.key==='scaleBar'&&calTemp.scaleBar)
-      ?`${st.label}<span class="how">Bar set — drag again to redo, or hit ✓ CONFIRM BAR.</span>`
-      :`${st.label}<span class="how">${st.how}</span>`;
+    banner.innerHTML=`${st.label}<span class="how">${st.how}</span>`;
     banner.classList.add('show');
   } else banner.classList.remove('show');
 }
@@ -514,34 +550,39 @@ function pos(e){
 cvEl.addEventListener('mousemove',e=>{
   if(calStep<0)return;
   const p=pos(e);calGuide=p;
-  if(barDragging&&calTemp.barLive)calTemp.barLive.x2=p.x;
+  if(logoDragging&&calTemp.logoScale){
+    calTemp.logoScale.cx=p.x-dragOff.x;
+    calTemp.logoScale.cy=p.y-dragOff.y;
+  }
   render();
 });
-cvEl.addEventListener('mouseleave',()=>{if(calStep>=0&&!barDragging){calGuide=null;render();}});
+cvEl.addEventListener('mouseleave',()=>{if(calStep>=0&&!logoDragging){calGuide=null;render();}});
 cvEl.addEventListener('mousedown',e=>{
   if(calStep<0)return;
-  const st=CAL_STEPS[sel.side][calStep];
-  if(!st||st.key!=='scaleBar')return;
+  const st=calSteps[calStep];
+  if(!st||st.key!=='logoScale')return;
   e.preventDefault();
+  initLogoStep();
   const p=pos(e);
-  calTemp.barY=p.y;calTemp.barLive={x1:p.x,x2:p.x};delete calTemp.scaleBar;
-  barDragging=true;render();
+  dragOff={x:p.x-calTemp.logoScale.cx,y:p.y-calTemp.logoScale.cy};
+  logoDragging=true;
 });
+cvEl.addEventListener('wheel',e=>{
+  if(calStep<0)return;
+  const st=calSteps[calStep];
+  if(!st||st.key!=='logoScale'||!calTemp.logoScale)return;
+  e.preventDefault();
+  calTemp.logoScale.w*=e.deltaY<0?1.04:0.96;
+  render();
+},{passive:false});
 cvEl.addEventListener('click',e=>{
   if(calStep<0)return;
-  const st=CAL_STEPS[sel.side][calStep];
-  if(!st||st.key==='scaleBar')return;
+  const st=calSteps[calStep];
+  if(!st||st.key==='logoScale')return;
   calTemp[st.key]=pos(e);
   calStep++;renderChips();render();
 });
-window.addEventListener('mouseup',()=>{
-  if(!barDragging)return;
-  barDragging=false;
-  if(calTemp.barLive&&Math.abs(calTemp.barLive.x2-calTemp.barLive.x1)>=8)
-    calTemp.scaleBar={x1:calTemp.barLive.x1,x2:calTemp.barLive.x2,y:calTemp.barY};
-  delete calTemp.barLive;
-  renderChips();render();
-});
+window.addEventListener('mouseup',()=>{logoDragging=false;});
 
 /* ================= RENDER ================= */
 function render(){
@@ -577,13 +618,27 @@ function render(){
     if(calTemp.collarY)drawH(calTemp.collarY.y,'#4B9CD3','collar');
     if(calTemp.centerX)drawV(calTemp.centerX.x,'#98A0A6','center',16);
     if(calTemp.leftChestX)drawV(calTemp.leftChestX.x,'#7BAFD4','left chest',32);
-    if(calTemp.barLive)drawBar(calTemp.barLive.x1,calTemp.barLive.x2,calTemp.barY,'#4CC38A',barIn+'" print');
-    else if(calTemp.scaleBar)drawBar(calTemp.scaleBar.x1,calTemp.scaleBar.x2,calTemp.scaleBar.y,'#4CC38A',barIn+'" print — ✓ to confirm');
-    const st=CAL_STEPS[sel.side][calStep];
-    if(st&&calGuide&&!barDragging){
+    if(calTemp.logoScale&&LOGO_DARK){
+      const L=calTemp.logoScale;
+      const lh=L.w*(LOGO_DARK.height/LOGO_DARK.width);
+      ctx.setLineDash([]);
+      ctx.globalAlpha=0.92;
+      ctx.drawImage(LOGO_DARK,L.cx-L.w/2,L.cy-lh/2,L.w,lh);
+      ctx.globalAlpha=1;
+      // width ticks + label
+      ctx.strokeStyle='#4CC38A';ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.moveTo(L.cx-L.w/2,L.cy-lh/2-14);ctx.lineTo(L.cx+L.w/2,L.cy-lh/2-14);
+      ctx.moveTo(L.cx-L.w/2,L.cy-lh/2-20);ctx.lineTo(L.cx-L.w/2,L.cy-lh/2-8);
+      ctx.moveTo(L.cx+L.w/2,L.cy-lh/2-20);ctx.lineTo(L.cx+L.w/2,L.cy-lh/2-8);
+      ctx.stroke();
+      ctx.fillStyle='#4CC38A';ctx.font='700 14px "JetBrains Mono", monospace';
+      ctx.fillText('does this look '+barIn+'" wide?',L.cx-L.w/2,L.cy-lh/2-26);
+    }
+    const st=calSteps[calStep];
+    if(st&&calGuide&&!logoDragging){
       if(st.guide==='v')drawV(calGuide.x,'rgba(75,156,211,.95)','');
       else if(st.guide==='h')drawH(calGuide.y,'rgba(75,156,211,.95)','');
-      else if(st.guide==='bar'&&!calTemp.scaleBar)drawV(calGuide.x,'rgba(76,195,138,.6)','');
     }
   } else if(showLines&&sel.style){
     const c=CAT.styles[sel.style].calib&&CAT.styles[sel.style].calib[sel.side];
