@@ -1786,15 +1786,49 @@ function loadImgFile(file,cb){
   r.onload=e=>{const img=new Image();img.onload=()=>cb(img);img.src=e.target.result;};
   r.readAsDataURL(file);
 }
+/* v7.2.2 auto-trim: crop art canvas to its visible (alpha) bounding box so
+   artboard-padded exports (CorelDRAW/Illustrator SVGs on a full letter page,
+   padded PNGs) come across at true art size instead of page size. Keeps a
+   0.5% safety pad so anti-aliased edges/strokes aren't clipped. */
+function alphaBBox(c){
+  let d;
+  try{d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;}catch(e){return null;}
+  let minX=c.width,minY=c.height,maxX=-1,maxY=-1;
+  for(let y=0;y<c.height;y++){
+    const row=y*c.width;
+    for(let x=0;x<c.width;x++){
+      if(d[(row+x)*4+3]>8){
+        if(x<minX)minX=x;if(x>maxX)maxX=x;
+        if(y<minY)minY=y;if(y>maxY)maxY=y;
+      }
+    }
+  }
+  if(maxX<0)return null; /* fully transparent */
+  const pad=Math.max(2,Math.round(Math.max(c.width,c.height)*0.005));
+  return {
+    minX:Math.max(0,minX-pad),minY:Math.max(0,minY-pad),
+    maxX:Math.min(c.width-1,maxX+pad),maxY:Math.min(c.height-1,maxY+pad)
+  };
+}
+function trimCanvas(c){
+  const bb=alphaBBox(c);
+  if(!bb)return c;
+  const w=bb.maxX-bb.minX+1,h=bb.maxY-bb.minY+1;
+  if(bb.minX===0&&bb.minY===0&&w===c.width&&h===c.height)return c;
+  const t=document.createElement('canvas');t.width=w;t.height=h;
+  t.getContext('2d').drawImage(c,bb.minX,bb.minY,w,h,0,0,w,h);
+  return t;
+}
 /* art loader: rasterizes SVG at high resolution (crisp at any print size), passes
-   raster formats straight through. Always calls back with a canvas. */
+   raster formats straight through. Always calls back with a canvas, auto-trimmed
+   to the visible art (v7.2.2). */
 function loadArtFile(file,cb){
   const isSvg=/svg/i.test(file.type)||/\.svg$/i.test(file.name);
   if(!isSvg){
     loadImgFile(file,img=>{
       const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
       c.getContext('2d').drawImage(img,0,0);
-      cb(c);
+      cb(trimCanvas(c));
     });
     return;
   }
@@ -1808,8 +1842,18 @@ function loadArtFile(file,cb){
       if(vw&&vh&&(!img.naturalWidth||img.naturalWidth<600)){w=vw;h=vh;}
       const TARGET=1600,sc=TARGET/Math.max(w,h);
       w=Math.max(1,Math.round(w*sc));h=Math.max(1,Math.round(h*sc));
-      const c=document.createElement('canvas');c.width=w;c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
+      /* probe pass: find the visible art inside the artboard */
+      const probe=document.createElement('canvas');probe.width=w;probe.height=h;
+      probe.getContext('2d').drawImage(img,0,0,w,h);
+      const bb=alphaBBox(probe);
+      if(!bb){cb(probe);return;}
+      /* final pass: re-rasterize the vector so the ART (not the artboard)
+         gets the full TARGET resolution, cropped to its bounding box */
+      const bw=bb.maxX-bb.minX+1,bh=bb.maxY-bb.minY+1;
+      const sc2=TARGET/Math.max(bw,bh);
+      const c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(bw*sc2));c.height=Math.max(1,Math.round(bh*sc2));
+      c.getContext('2d').drawImage(img,-bb.minX*sc2,-bb.minY*sc2,w*sc2,h*sc2);
       cb(c);
     };
     img.onerror=()=>alert('Could not read that SVG — try exporting it again or use a PNG.');
