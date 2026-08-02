@@ -202,6 +202,14 @@
   .cchip.undo{cursor:pointer;border-color:var(--warn);color:var(--warn);}
   .cchip.done{cursor:pointer;}
   .cchip.confirm{cursor:pointer;border-color:var(--ok);color:var(--ok);font-weight:700;}
+  .cchip.zoom{cursor:pointer;}
+  .cchip.zoom.zon{border-color:var(--accent);color:var(--accent2);}
+  /* calibration zoom: frame becomes a scrollable column, banner sticks to top */
+  .canvas-frame.calibrating{flex-direction:column;justify-content:flex-start;overflow:auto;max-height:82vh;}
+  .canvas-frame.calibrating .drawbanner{position:sticky;top:6px;left:auto;transform:none;align-self:center;z-index:6;}
+  .canvas-frame.calibrating .pv2{width:100%;}
+  .canvas-frame.calibrating .pvcell{width:100%;flex:none;}
+  .canvas-frame.calibrating .pvcell canvas{max-width:none;max-height:none;}
 </style>
 </head>
 <body>
@@ -285,7 +293,7 @@
     <!-- STEP 3: PLACEMENT -->
     <div class="panel">
       <h3><span class="stepnum">03</span> Placement</h3>
-      <p class="desc">Baseline per location is just a line + a drop — "left chest @ 2.5&Prime; down from the bottom of the collar." Type the design's true width; it stays centered on its line and grows downward, never up.</p>
+      <p class="desc">Baseline per location is just a line + a drop. Shop standards: fronts start 2&Prime; below the collar; full back 4&Prime; down at 10&Prime;; locker tag 1&Prime; down at 3&Prime;. Type the design's true width; it stays centered on its line and grows downward, never up.</p>
       <label class="lbl" style="margin-top:0;">Side</label>
       <div class="segmented" style="width:100%;display:flex;margin-bottom:10px;">
         <button id="sideFront" class="active" style="flex:1;">FRONT</button>
@@ -467,24 +475,22 @@ const STYLES={
   NL6210:{name:'Next Level 6210',sub:'CVC Crew',tokens:['nl6210','11021','6210'],bodyLenM:29}
 };
 const LOCATIONS={
-  front:[['fullFront','Full front'],['leftChest','Left chest'],['pocket','Pocket hit'],['customF','Custom front']],
-  back:[['fullBack','Full back'],['nape','Nape tag'],['upperBack','Upper back'],['customB','Custom back']]
+  front:[['fullFront','Full front'],['leftChest','Left chest'],['customF','Custom front']],
+  back:[['fullBack','Full back'],['lockerTag','Locker tag'],['customB','Custom back']]
 };
 /* v5 placement baselines — no prebaked widths. A rule is just a line + a drop:
    "left chest @ 2.5in down (from bottom of collar)". defaultWidth only seeds the
    builder's Design width box; the real size is whatever you type per design. */
 const RULES={
   front:{
-    fullFront:{line:'center',drop:3,defaultWidth:10},
-    leftChest:{line:'leftChest',drop:2.5,defaultWidth:3.5},
-    pocket:{line:'leftChest',drop:6,defaultWidth:4},
-    customF:{line:'center',drop:5,defaultWidth:8}
+    fullFront:{line:'center',drop:2,defaultWidth:10},
+    leftChest:{line:'leftChest',drop:2,defaultWidth:3.5},
+    customF:{line:'center',drop:2,defaultWidth:8}
   },
   back:{
     fullBack:{line:'center',drop:4,defaultWidth:10},
-    nape:{line:'center',drop:0.75,defaultWidth:3},
-    upperBack:{line:'center',drop:1.5,defaultWidth:10},
-    customB:{line:'center',drop:5,defaultWidth:8}
+    lockerTag:{line:'center',drop:1,defaultWidth:3},
+    customB:{line:'center',drop:4,defaultWidth:8}
   }
 };
 /* migration: v4 rules used {anchor,width}; v4 calib used collarboneY */
@@ -810,7 +816,7 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
       drawV(cal.centerX,'#4CC38A','center',16);
       drawH(cal.collarY,'#FF5A1F','collar');
       drawH(cal.collarY+2*cal.ppi,'rgba(76,195,138,.5)','2" down');
-      const refW=10*cal.ppi,refDrop=(side==='front'?3:4)*cal.ppi;
+      const refW=10*cal.ppi,refDrop=(side==='front'?2:4)*cal.ppi;
       drawBar(cal.centerX-refW/2,cal.centerX+refW/2,cal.collarY+refDrop,'rgba(76,195,138,.55)','10" ref');
       if(side==='front'&&cal.leftChestX)drawV(cal.leftChestX,'#FFB454','left chest',32);
       // top-of-design line for the current location's baseline
@@ -964,11 +970,20 @@ function refresh(){
 
 /* ================= CALIBRATION FLOW ================= */
 const frame=$('canvasFrame'),mainCv=$('mainCanvas'),backCv=$('backCanvas');
+function applyCalZoom(){
+  const z=state.calZoom||1;
+  [mainCv,backCv].forEach(cv=>{
+    if(state.calibStep>=0)cv.style.width=(z*100)+'%';
+    else cv.style.width='';
+  });
+}
 function startCalib(){
   if(!photosFor(state.styleKey,state.side).length){alert('No photos loaded for '+state.styleKey+' '+state.side+'.');return;}
   state.calibStep=0;calTemp={};calGuide=null;
+  if(!state.calZoom)state.calZoom=1;
   frame.classList.add('calibrating');
   $('calibBtn').classList.add('on');
+  applyCalZoom();
   renderCalibChips();refresh();
 }
 function cancelCalib(){
@@ -977,6 +992,7 @@ function cancelCalib(){
   $('calibBtn').classList.remove('on');
   $('drawBanner').classList.remove('show');
   $('calibChips').style.display='none';
+  applyCalZoom();
 }
 function goToStep(i){
   // clear this step and everything after it, then resume there
@@ -995,12 +1011,29 @@ function finishCalib(){
   if(calTemp.centerX)cal.centerX=calTemp.centerX.x;
   if(calTemp.leftChestX)cal.leftChestX=calTemp.leftChestX.x;
   cal.default=false;
+  const doneSide=state.side;
   cancelCalib();markDirty();
   refreshCalibStatus();refresh();buildBoard();
+  // auto-continue: front done -> roll straight into the back (and vice versa)
+  const otherSide=doneSide==='front'?'back':'front';
+  if(CALIB[state.styleKey][otherSide].default&&photosFor(state.styleKey,otherSide).length){
+    state.side=otherSide;
+    $('sideFront').classList.toggle('active',otherSide==='front');
+    $('sideBack').classList.toggle('active',otherSide==='back');
+    buildLocBtns();syncRuleInputs();syncFitInputs();refreshCalibStatus();
+    startCalib();
+  }
 }
 function renderCalibChips(){
   const steps=CAL_STEPS[state.side];
   const el=$('calibChips');el.style.display='flex';el.innerHTML='';
+  [1,2,3].forEach(z=>{
+    const c=document.createElement('span');
+    c.className='cchip zoom'+((state.calZoom||1)===z?' zon':'');
+    c.textContent='🔍'+z+'x';
+    c.onclick=()=>{state.calZoom=z;applyCalZoom();renderCalibChips();};
+    el.appendChild(c);
+  });
   if(state.calibStep>0){
     const u=document.createElement('span');u.className='cchip undo';
     u.innerHTML='↩ undo';
