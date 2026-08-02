@@ -1819,20 +1819,22 @@ refresh();buildBoard();
 
 /* ================= v7 SHELL LOGIC ================= */
 const LOGO=new Image();LOGO.__ok=false;
-LOGO.onload=()=>{
-  LOGO.__ok=true;
-  // adopt the real logo as the demo art if the user hasn't uploaded their own
-  if(state.artF&&state.artF.__isDemo){
-    const c=document.createElement('canvas');c.width=LOGO.width;c.height=LOGO.height;
-    c.getContext('2d').drawImage(LOGO,0,0);
-    c.__id='art'+(artIdSeq++);
-    state.artF=c;activeSet().artF=c;reDetect();
-    activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
-    refreshArtNote();refresh();buildBoard();
-  }
-};
+window.__userArt=false;
+['artInputF','artInputB'].forEach(id=>{const el=$(id);if(el)el.addEventListener('change',()=>{window.__userArt=true;});});
+function adoptLogoAsDemo(){
+  // the real logo becomes the demo art unless the user uploaded their own
+  if(!LOGO.__ok||window.__userArt)return;
+  const c=document.createElement('canvas');c.width=LOGO.width;c.height=LOGO.height;
+  c.getContext('2d').drawImage(LOGO,0,0);
+  c.__id='art'+(artIdSeq++);
+  state.artF=c;activeSet().artF=c;reDetect();
+  activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
+  refreshArtNote();refresh();buildBoard();
+}
+LOGO.onload=()=>{LOGO.__ok=true;adoptLogoAsDemo();};
 LOGO.src='assets/mayhem-logo.png';
-if(state.artF)state.artF.__isDemo=true;
+// the engine rebuilds its drawn demo after webfonts load — re-adopt after that
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>setTimeout(adoptLogoAsDemo,200));
 
 let curTab='mock';
 function setTab(t){
