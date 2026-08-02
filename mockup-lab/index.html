@@ -190,6 +190,17 @@
   .set-chip button{background:none;border:none;color:var(--warn);cursor:pointer;font-size:12px;padding:2px 4px;}
   .set-empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:12px;}
   .set-artnote{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent2);margin-top:8px;}
+
+  /* ---- v6.2 dual preview ---- */
+  .pv2{display:flex;gap:16px;align-items:flex-start;justify-content:center;width:100%;}
+  .pvcell{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:7px;}
+  .pvcell canvas{max-width:100%;max-height:56vh;display:block;}
+  .pvcap{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--muted);}
+  .pvcell.edit .pvcap{color:var(--accent);font-weight:700;}
+  .pvcell.edit canvas{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+  .btn.dirty{background:var(--accent);color:#111;border-color:var(--accent);}
+  .cchip.undo{cursor:pointer;border-color:var(--warn);color:var(--warn);}
+  .cchip.done{cursor:pointer;}
 </style>
 </head>
 <body>
@@ -219,12 +230,22 @@
       </div>
       <label class="lbl">Calibration (one-time per style + side)</label>
       <select id="calStyleSel"></select>
-      <div class="calib-status" id="calibStatus" style="margin-top:6px;">—</div>
+      <div class="row2" style="margin-top:8px;">
+        <div>
+          <label class="lbl" style="margin-top:0;">Body length, size M (in)</label>
+          <input type="number" id="bodyLenIn" step="0.25" value="29">
+        </div>
+        <div>
+          <label class="lbl" style="margin-top:0;">Status</label>
+          <div class="calib-status" id="calibStatus" style="margin-top:8px;">—</div>
+        </div>
+      </div>
       <div class="btnrow">
         <button class="btn ghost sm" id="calibBtn">⌖ Calibrate current side</button>
         <button class="btn ghost sm" id="showAnchors">Show grid lines</button>
       </div>
       <div class="calib-chips" id="calibChips" style="display:none;"></div>
+      <div class="val" style="margin-top:6px;">Pick the side (FRONT/BACK in Placement) → Calibrate → follow the orange banner, one click per step. Undo any click with ↩. When done, <b>Export styles.json</b> lights up — push that file to save forever.</div>
     </div>
 
     <!-- STEP 1: SMART SEARCH + SETS -->
@@ -252,6 +273,7 @@
         <div class="drop" id="artDropF"><b>Front art</b>transparent PNG<input type="file" id="artInputF" accept="image/*"></div>
         <div class="drop" id="artDropB"><b>Back art</b>transparent PNG<input type="file" id="artInputB" accept="image/*"></div>
       </div>
+      <div class="checkline"><input type="checkbox" id="dupBack"><span>Back uses the same art as front (no second upload)</span></div>
       <div class="set-artnote" id="artSetNote"></div>
       <div id="inkList"></div>
       <div class="screens-pill" id="screensPill">—</div>
@@ -312,9 +334,9 @@
       <p class="desc">The board is the active set — mixed styles welcome, each placed by its own calibration.</p>
       <label class="lbl">Board layout</label>
       <select id="boardMode">
-        <option value="front" selected>Front only</option>
+        <option value="pair" selected>Front + back pairs (matched by color)</option>
+        <option value="front">Front only</option>
         <option value="back">Back only</option>
-        <option value="pair">Front + back pairs (matched by color)</option>
       </select>
       <button class="btn" id="buildBoard" style="margin-top:12px;">Build the board</button>
       <div class="btnrow">
@@ -331,7 +353,10 @@
       <h3 style="margin-bottom:10px;">Live preview</h3>
       <div class="canvas-frame" id="canvasFrame">
         <span class="drawbanner" id="drawBanner"></span>
-        <canvas id="mainCanvas"></canvas>
+        <div class="pv2">
+          <div class="pvcell" id="pvF"><canvas id="mainCanvas" data-side="front"></canvas><div class="pvcap">FRONT</div></div>
+          <div class="pvcell" id="pvB"><canvas id="backCanvas" data-side="back"></canvas><div class="pvcap">BACK</div></div>
+        </div>
       </div>
       <div class="preview-meta">
         <span class="preview-label" id="previewLabel"></span>
@@ -493,16 +518,26 @@ let photoSeq=1;
 
 /* ================= v6: MOCKUP SETS ================= */
 /* a set = a named list of garments (any styles mixed) + its own front/back art */
-const SETS=[{name:'SET A',items:[],artF:null,artB:null,artInks:[],inkAssign:[]}];
+const SETS=[{name:'SET A',items:[],artF:null,artB:null,dupBack:false,artInks:[],inkAssign:[]}];
 let activeSetIdx=0;
 function activeSet(){return SETS[activeSetIdx];}
+/* art actually used for a side — honors the "back uses front art" duplicate flag */
+function artFor(side){
+  if(side==='front')return state.artF;
+  return activeSet().dupBack?state.artF:state.artB;
+}
+let manifestDirty=false;
+function markDirty(){
+  manifestDirty=true;
+  const b=$('exportManifest');b.classList.add('dirty');b.textContent='Export styles.json ●';
+}
 
 const state={
   styleKey:'DM108', side:'front', activePhotoId:null, previewGarment:null,
   artF:null, artB:null, artInks:[], inkAssign:[],
   loc:{front:'fullFront', back:'fullBack'},
   fit:{}, // per side:loc {widthIn, rot, nudgeX, nudgeY}
-  fabricBlend:true, autoUnderbase:true, boardMode:'front',
+  fabricBlend:true, autoUnderbase:true, boardMode:'pair',
   calibStep:-1, showAnchors:false, hosted:false
 };
 /* guided calibration walkthrough — each step tells the person exactly what to
@@ -510,26 +545,26 @@ const state={
    'v' = vertical line preview follows the cursor. */
 const CAL_STEPS={
   front:[
-    {key:'scaleTop',short:'scale ①',guide:'point',label:'STEP 1 OF 5 · SET THE SCALE',
-     how:'Click the very TOP of the collar, dead center.'},
-    {key:'scaleBottom',short:'scale ②',guide:'point',label:'STEP 2 OF 5 · SET THE SCALE',
-     how:'Click the BOTTOM HEM at center — you\'ll then enter the size-M body length from the spec sheet.'},
-    {key:'collarY',short:'collar',guide:'h',label:'STEP 3 OF 5 · BOTTOM OF COLLAR',
-     how:'Click where the collar seam meets the body. Every drop ("2.5″ down") measures from this line.'},
-    {key:'centerX',short:'center',guide:'v',label:'STEP 4 OF 5 · CENTER OF APPAREL',
-     how:'Click anywhere on the vertical centerline of the shirt. Center designs grow out from this line, never off it.'},
-    {key:'leftChestX',short:'left chest',guide:'v',label:'STEP 5 OF 5 · LEFT CHEST LINE',
-     how:'Click the middle of the left-chest print area (wearer\'s left = your right). Left-chest logos stay centered on this line.'}
+    {key:'scaleTop',short:'top',guide:'point',label:'1 / 5 — TOP OF COLLAR',
+     how:'Click the very top of the collar.'},
+    {key:'scaleBottom',short:'hem',guide:'point',label:'2 / 5 — BOTTOM HEM',
+     how:'Click the bottom hem, straight below the collar. (Uses the body length from the Catalog panel.)'},
+    {key:'collarY',short:'collar',guide:'h',label:'3 / 5 — COLLAR LINE',
+     how:'Click where the collar meets the body. All "X inches down" measures from here.'},
+    {key:'centerX',short:'center',guide:'v',label:'4 / 5 — CENTER LINE',
+     how:'Click the vertical center of the shirt.'},
+    {key:'leftChestX',short:'l-chest',guide:'v',label:'5 / 5 — LEFT-CHEST LINE',
+     how:'Click the middle of the left-chest print area (wearer\'s left = your right).'}
   ],
   back:[
-    {key:'scaleTop',short:'scale ①',guide:'point',label:'STEP 1 OF 4 · SET THE SCALE',
-     how:'Click the very TOP of the collar, dead center.'},
-    {key:'scaleBottom',short:'scale ②',guide:'point',label:'STEP 2 OF 4 · SET THE SCALE',
-     how:'Click the BOTTOM HEM at center — you\'ll then enter the size-M body length from the spec sheet.'},
-    {key:'collarY',short:'collar',guide:'h',label:'STEP 3 OF 4 · BOTTOM OF COLLAR',
-     how:'Click where the base of the back collar meets the body. Every drop measures from this line.'},
-    {key:'centerX',short:'center',guide:'v',label:'STEP 4 OF 4 · CENTER OF APPAREL',
-     how:'Click anywhere on the vertical centerline of the shirt.'}
+    {key:'scaleTop',short:'top',guide:'point',label:'1 / 4 — TOP OF COLLAR',
+     how:'Click the very top of the collar.'},
+    {key:'scaleBottom',short:'hem',guide:'point',label:'2 / 4 — BOTTOM HEM',
+     how:'Click the bottom hem, straight below the collar. (Uses the body length from the Catalog panel.)'},
+    {key:'collarY',short:'collar',guide:'h',label:'3 / 4 — COLLAR LINE',
+     how:'Click where the base of the back collar meets the body.'},
+    {key:'centerX',short:'center',guide:'v',label:'4 / 4 — CENTER LINE',
+     how:'Click the vertical center of the shirt.'}
   ]
 };
 let calTemp={};
@@ -661,7 +696,7 @@ function detectInks(canvas){
   }));
 }
 function reDetect(){
-  const srcs=[state.artF,state.artB].filter(Boolean);
+  const srcs=[state.artF,activeSet().dupBack?null:state.artB].filter(Boolean);
   let all=[];
   srcs.forEach(s=>{all=all.concat(detectInks(s));});
   const merged=[];
@@ -701,22 +736,28 @@ function defaultPreviewGarment(){
   const idx=garmentIndex();
   return idx.find(g=>slug(g.colorName)==='black')||idx.find(g=>slug(g.colorName).includes('black'))||idx[0]||null;
 }
-function activePhoto(){
-  // calibrating: always show a photo of the style being calibrated
-  if(state.calibStep>=0)return photosFor(state.styleKey,state.side)[0]||null;
+function garmentPhotos(){
+  // calibrating: only show the side being calibrated, using that style's first photo
+  if(state.calibStep>=0){
+    const p=photosFor(state.styleKey,state.side)[0]||null;
+    return state.side==='front'?{front:p,back:null}:{front:null,back:p};
+  }
   let g=null;
   if(state.previewGarment)
     g=garmentIndex().find(x=>x.styleKey===state.previewGarment.styleKey&&slug(x.colorName)===state.previewGarment.colorSlug);
   if(!g)g=defaultPreviewGarment();
-  if(!g)return null;
-  return state.side==='front'?(g.front||g.back):(g.back||g.front);
+  return g?{front:g.front,back:g.back}:{front:null,back:null};
+}
+function activePhoto(){
+  const gp=garmentPhotos();
+  return state.side==='front'?(gp.front||gp.back):(gp.back||gp.front);
 }
 function renderMock(photo,targetCanvas,side,loc,overlay){
   const W=photo.canvas.width,H=photo.canvas.height;
   targetCanvas.width=W;targetCanvas.height=H;
   const ctx=targetCanvas.getContext('2d');
   ctx.drawImage(photo.canvas,0,0);
-  const art=side==='front'?state.artF:state.artB;
+  const art=artFor(side);
   const pl=computePlacement(photo,side,loc);
   if(art&&pl&&state.calibStep<0){
     const artH=pl.wpx*(art.height/art.width);
@@ -780,7 +821,7 @@ function screensFor(photo,side,loc){
   const pl=computePlacement(photo,side,loc);
   let ub=0;
   if(state.autoUnderbase&&pl){
-    const art=side==='front'?state.artF:state.artB;
+    const art=artFor(side);
     const artH=art?pl.wpx*(art.height/art.width):pl.wpx;
     ub=regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH)?1:0;
   }
@@ -866,19 +907,28 @@ function refreshInkList(){
   $('screensPill').innerHTML=n?`<b>${n} ink${n>1?'s':''}</b> → ${n} screens on lights, ${n+1} on darks (UB)`:'—';
 }
 function refresh(){
+  const gp=garmentPhotos();
+  const pvF=$('pvF'),pvB=$('pvB');
+  const cvF=$('mainCanvas'),cvB=$('backCanvas');
   const photo=activePhoto();
-  const cv=$('mainCanvas');
   if(!photo){
-    cv.width=624;cv.height=400;
-    const ctx=cv.getContext('2d');
+    pvB.style.display='none';pvF.style.display='flex';
+    cvF.width=624;cvF.height=400;
+    const ctx=cvF.getContext('2d');
     ctx.fillStyle='#232327';ctx.fillRect(0,0,624,400);
     ctx.fillStyle='#8E8C85';ctx.font='700 15px "JetBrains Mono", monospace';ctx.textAlign='center';
     ctx.fillText(state.hosted?'Search a garment above to preview':'Drop style photos to begin',312,195);
     $('previewLabel').textContent='';$('previewScreens').textContent='';$('previewPms').innerHTML='';
     return;
   }
+  const overlayOn=state.calibStep>=0||state.showAnchors;
+  if(gp.front){pvF.style.display='flex';renderMock(gp.front,cvF,'front',state.loc.front,overlayOn&&state.side==='front');}
+  else pvF.style.display='none';
+  if(gp.back){pvB.style.display='flex';renderMock(gp.back,cvB,'back',state.loc.back,overlayOn&&state.side==='back');}
+  else pvB.style.display='none';
+  pvF.classList.toggle('edit',state.side==='front'&&!!gp.front);
+  pvB.classList.toggle('edit',state.side==='back'&&!!gp.back);
   const loc=state.loc[state.side];
-  renderMock(photo,cv,state.side,loc,state.calibStep>=0||state.showAnchors);
   const s=STYLES[photo.styleKey]||{name:photo.styleKey};
   const sc=screensFor(photo,state.side,loc);
   $('previewLabel').innerHTML=`<b>${s.name}</b> · ${photo.colorName} · ${state.side} · ${loc}`;
@@ -901,7 +951,7 @@ function refresh(){
 }
 
 /* ================= CALIBRATION FLOW ================= */
-const frame=$('canvasFrame'),mainCv=$('mainCanvas');
+const frame=$('canvasFrame'),mainCv=$('mainCanvas'),backCv=$('backCanvas');
 function startCalib(){
   if(!photosFor(state.styleKey,state.side).length){alert('No photos loaded for '+state.styleKey+' '+state.side+'.');return;}
   state.calibStep=0;calTemp={};calGuide=null;
@@ -916,13 +966,28 @@ function cancelCalib(){
   $('drawBanner').classList.remove('show');
   $('calibChips').style.display='none';
 }
+function goToStep(i){
+  // clear this step and everything after it, then resume there
+  const steps=CAL_STEPS[state.side];
+  for(let k=i;k<steps.length;k++){delete calTemp[steps[k].key];}
+  if(i<=1)delete calTemp.ppi;
+  state.calibStep=i;
+  renderCalibChips();refresh();
+}
 function renderCalibChips(){
   const steps=CAL_STEPS[state.side];
   const el=$('calibChips');el.style.display='flex';el.innerHTML='';
+  if(state.calibStep>0){
+    const u=document.createElement('span');u.className='cchip undo';
+    u.innerHTML='↩ undo';
+    u.onclick=()=>goToStep(state.calibStep-1);
+    el.appendChild(u);
+  }
   steps.forEach((st,i)=>{
     const c=document.createElement('span');
     c.className='cchip'+(i<state.calibStep?' done':i===state.calibStep?' active':'');
     c.innerHTML=`<span class="dot"></span>${st.short}`;
+    if(i<state.calibStep)c.onclick=()=>goToStep(i);
     el.appendChild(c);
   });
   const banner=$('drawBanner');
@@ -932,43 +997,45 @@ function renderCalibChips(){
     banner.classList.add('show');
   } else banner.classList.remove('show');
 }
-function canvasPos(e){
-  const r=mainCv.getBoundingClientRect();
-  return {x:(e.clientX-r.left)*(mainCv.width/r.width), y:(e.clientY-r.top)*(mainCv.height/r.height)};
+function canvasPosOn(cv,e){
+  const r=cv.getBoundingClientRect();
+  return {x:(e.clientX-r.left)*(cv.width/r.width), y:(e.clientY-r.top)*(cv.height/r.height)};
 }
-mainCv.addEventListener('mousemove',e=>{
-  if(state.calibStep<0)return;
-  calGuide=canvasPos(e);refresh();
-});
-mainCv.addEventListener('mouseleave',()=>{
-  if(state.calibStep>=0){calGuide=null;refresh();}
-});
-mainCv.addEventListener('click',e=>{
-  if(state.calibStep<0)return;
-  const steps=CAL_STEPS[state.side];
-  const st=steps[state.calibStep];
-  const pos=canvasPos(e);
-  calTemp[st.key]=pos;
-  if(st.key==='scaleBottom'){
-    const def=STYLES[state.styleKey].bodyLenM||29;
-    const ans=prompt('Body length collar-to-hem in inches (size M spec):',def);
-    const inches=parseFloat(ans)||def;
-    calTemp.ppi=Math.abs(calTemp.scaleBottom.y-calTemp.scaleTop.y)/inches;
-  }
-  state.calibStep++;
-  if(state.calibStep>=steps.length){
-    const cal=CALIB[state.styleKey][state.side];
-    cal.ppi=calTemp.ppi||cal.ppi;
-    if(calTemp.collarY)cal.collarY=calTemp.collarY.y;
-    if(calTemp.centerX)cal.centerX=calTemp.centerX.x;
-    if(calTemp.leftChestX)cal.leftChestX=calTemp.leftChestX.x;
-    cal.default=false;
-    cancelCalib();
-    refreshCalibStatus();refresh();buildBoard();
-    return;
-  }
-  renderCalibChips();refresh();
-});
+function wireCalibCanvas(cv,side){
+  cv.addEventListener('mousemove',e=>{
+    if(state.calibStep<0||state.side!==side)return;
+    calGuide=canvasPosOn(cv,e);refresh();
+  });
+  cv.addEventListener('mouseleave',()=>{
+    if(state.calibStep>=0&&state.side===side){calGuide=null;refresh();}
+  });
+  cv.addEventListener('click',e=>{
+    if(state.calibStep<0||state.side!==side)return;
+    const steps=CAL_STEPS[state.side];
+    const st=steps[state.calibStep];
+    const pos=canvasPosOn(cv,e);
+    calTemp[st.key]=pos;
+    if(st.key==='scaleBottom'){
+      const inches=parseFloat($('bodyLenIn').value)||STYLES[state.styleKey].bodyLenM||29;
+      calTemp.ppi=Math.abs(calTemp.scaleBottom.y-calTemp.scaleTop.y)/inches;
+    }
+    state.calibStep++;
+    if(state.calibStep>=steps.length){
+      const cal=CALIB[state.styleKey][state.side];
+      cal.ppi=calTemp.ppi||cal.ppi;
+      if(calTemp.collarY)cal.collarY=calTemp.collarY.y;
+      if(calTemp.centerX)cal.centerX=calTemp.centerX.x;
+      if(calTemp.leftChestX)cal.leftChestX=calTemp.leftChestX.x;
+      cal.default=false;
+      cancelCalib();markDirty();
+      refreshCalibStatus();refresh();buildBoard();
+      return;
+    }
+    renderCalibChips();refresh();
+  });
+}
+wireCalibCanvas(mainCv,'front');
+wireCalibCanvas(backCv,'back');
 
 /* ================= v6: SEARCH + SET UI ================= */
 function garmentIndex(){
@@ -1045,6 +1112,7 @@ function switchSet(i){
   const nxt=activeSet();
   state.artF=nxt.artF;state.artB=nxt.artB;
   state.artInks=nxt.artInks||[];state.inkAssign=nxt.inkAssign||[];
+  $('dupBack').checked=!!nxt.dupBack;
   renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();refresh();buildBoard();
 }
 function renderSetItems(){
@@ -1071,7 +1139,10 @@ function renderSetItems(){
 }
 function refreshArtNote(){
   const set=activeSet();
-  $('artSetNote').textContent=`art loaded into ${set.name}: front ${state.artF?'✓':'—'} · back ${state.artB?'✓':'—'}`;
+  const back=set.dupBack?'= front (duplicated)':(state.artB?'✓':'—');
+  $('artSetNote').textContent=`art loaded into ${set.name}: front ${state.artF?'✓':'—'} · back ${back}`;
+  $('artDropB').style.opacity=set.dupBack?0.35:1;
+  $('artDropB').style.pointerEvents=set.dupBack?'none':'auto';
 }
 let srHot=0;
 function renderSearchResults(){
@@ -1371,8 +1442,19 @@ $('dlActive').onclick=()=>{
   downloadCanvas(cv,`${slug(STYLES[state.styleKey].name)}-${slug(p.colorName)}-${state.side}.png`);
 };
 $('saveBundle').onclick=saveBundle;
-$('exportManifest').onclick=exportManifest;
-$('calStyleSel').onchange=e=>{state.styleKey=e.target.value;cancelCalib();refreshCalibStatus();refresh();};
+$('exportManifest').onclick=()=>{
+  exportManifest();
+  manifestDirty=false;
+  const b=$('exportManifest');b.classList.remove('dirty');b.textContent='Export styles.json';
+};
+$('calStyleSel').onchange=e=>{state.styleKey=e.target.value;
+  $('bodyLenIn').value=STYLES[state.styleKey].bodyLenM||29;
+  cancelCalib();refreshCalibStatus();refresh();};
+$('dupBack').onchange=e=>{
+  activeSet().dupBack=e.target.checked;
+  reDetect();activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
+  refreshArtNote();refresh();buildBoard();
+};
 $('calibBtn').onclick=()=>{state.calibStep>=0?cancelCalib():startCalib();refresh();};
 $('showAnchors').onclick=()=>{
   state.showAnchors=!state.showAnchors;
