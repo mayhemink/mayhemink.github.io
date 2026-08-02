@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v6.7 — Live Ink</title>
+<title>Mayhem Mockup Lab v7 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -258,28 +258,128 @@
     content:'';position:absolute;top:6px;left:30px;right:30px;height:5px;
     background:repeating-linear-gradient(-45deg,var(--line2) 0 10px,transparent 10px 20px);
   }
+
+  /* ================= v7 SHELL ================= */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;
+    padding:14px 26px;background:linear-gradient(180deg,#131517,#0E0F10);
+    border-bottom:1px solid var(--line2);position:relative;}
+  .topbar::after{content:'';position:absolute;left:0;right:0;bottom:-7px;height:7px;
+    background:repeating-linear-gradient(-45deg,var(--accent) 0 12px,transparent 12px 24px);opacity:.5;z-index:2;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:34px;display:block;}
+  .brand span{font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:.12em;color:var(--ink);}
+  .brand .bl{color:var(--accent);}
+  .tabs{display:flex;gap:6px;border:1px solid var(--line2);padding:4px;border-radius:4px;background:var(--surface);}
+  .tabs button{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:8px 18px;border-radius:3px;
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;letter-spacing:.08em;}
+  .tabs button.active{background:var(--accent);color:#0B1520;}
+  .tabs button:hover:not(.active){color:var(--ink);}
+  .shell{max-width:1900px;margin:26px auto 0;padding:0 26px;display:grid;
+    grid-template-columns:300px minmax(0,1fr) 330px;gap:16px;align-items:start;}
+  body.tab-cal .shell{grid-template-columns:340px minmax(0,1fr);}
+  @media(max-width:1250px){.shell{grid-template-columns:1fr!important;}}
+  .col-l,.col-r{display:flex;flex-direction:column;gap:14px;position:sticky;top:14px;
+    max-height:calc(100vh - 28px);overflow:auto;padding-right:2px;}
+  @media(max-width:1250px){.col-l,.col-r{position:static;max-height:none;}}
+  [hidden]{display:none!important;}
+  .panel h3 .pn{background:var(--surface2);border:1px solid var(--line2);color:var(--accent2);
+    font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 7px;border-radius:2px;}
+
+  /* approval card */
+  .apv-card{border-radius:4px;overflow:hidden;border:1px solid var(--line2);}
+  body.tab-mock .apv-card{background:#fff;border-color:#DDDDDA;}
+  body.tab-cal .apv-card,body.tab-sum .apv-card{background:var(--surface);}
+  .apv-head{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 26px 14px;
+    border-bottom:4px solid #131517;}
+  body.tab-mock .apv-head{border-bottom-color:#131517;}
+  .apv-logo{height:44px;display:block;filter:invert(1);}
+  .apv-logo-txt{font-family:'Archivo Black',sans-serif;font-size:26px;color:#131517;}
+  .apv-sub{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#4B9CD3;margin-top:6px;}
+  .apv-right{text-align:right;}
+  .apv-cust{font-family:'Archivo Black',sans-serif;font-size:20px;color:#131517;text-transform:uppercase;}
+  .apv-quote{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a8a86;margin-top:4px;}
+  body.tab-cal .apv-head,body.tab-sum .apv-head{display:none;}
+  .apv-blue{height:4px;background:var(--accent);}
+  body.tab-cal .apv-blue,body.tab-sum .apv-blue{display:none;}
+  .apv-pager{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:10px 26px 0;}
+  .apv-pager button{background:#fff;border:1px solid #CFCFCB;color:#131517;border-radius:3px;
+    padding:5px 14px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-weight:700;}
+  .apv-pager button:hover{border-color:var(--accent);color:var(--accent);}
+  .apv-pager span{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#666;}
+  body.tab-mock .canvas-frame{background:#fff;border:none;min-height:340px;}
+  body.tab-mock .pvcap{color:#777;}
+  body.tab-mock .pvcell.edit .pvcap{color:#2E7CB8;}
+  .apv-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;
+    padding:12px 26px 18px;border-top:1px solid #E4E4E1;}
+  body.tab-cal .apv-foot,body.tab-sum .apv-foot{display:none;}
+  .apv-foot .af-l{font-family:'JetBrains Mono',monospace;font-size:11px;color:#666;}
+  .apv-foot .af-l b{color:#131517;font-size:13px;display:block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;}
+  .apv-foot .btn{width:auto;padding:10px 18px;}
+  .below-card{margin-top:12px;}
+
+  /* manifest */
+  .mrow{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:10px;}
+  .mfile{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--line2);
+    border-radius:3px;padding:10px 12px;cursor:pointer;text-align:left;}
+  .mfile:hover{border-color:var(--accent);}
+  .mfile .mn{background:#0E0F10;border:1px solid var(--line2);color:var(--accent2);
+    font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:3px 7px;border-radius:2px;}
+  .mfile .mt b{display:block;font-size:12px;color:var(--ink);}
+  .mfile .mt span{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);}
+  .mfile .px{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);}
+
+  /* summary tab */
+  #sumCanvas{width:100%;border:1px solid var(--line2);border-radius:4px;display:block;margin-top:12px;}
+
 </style>
 </head>
-<body>
+<body class="tab-mock">
 
-<header>
-  <div class="head-inner">
-    <div>
-      <p class="eyebrow">Mayhem Ink · Mockup Lab · v6</p>
-      <h1>Smart Search <span class="x">+ Mockup Sets</span></h1>
-      <p class="head-sub">Type "6210 stone" or "dm130 desert tan" and hit enter — garments from ANY style land in the same set, each placed with its own calibration. Build multiple sets side by side, each with its own art. All the v5 true-inch placement underneath.</p>
-    </div>
-    <div class="catalog-badge" id="catalogBadge">catalog: local mode</div>
+<header class="topbar">
+  <div class="brand">
+    <img id="brandLogo" src="assets/mayhem-logo.png" onerror="this.hidden=true;document.getElementById('brandTxt').hidden=false;">
+    <span id="brandTxt" hidden>MAYHEM <span class="bl">INK</span></span>
+    <span style="color:var(--muted);font-size:11px;letter-spacing:.14em;">MOCKUP LAB</span>
   </div>
+  <nav class="tabs">
+    <button id="tabBcal" onclick="setTab('cal')">00 CALIBRATION</button>
+    <button id="tabBmock" class="active" onclick="setTab('mock')">01 MOCKUPS</button>
+    <button id="tabBsum" onclick="setTab('sum')">02 PRINT SUMMARY</button>
+  </nav>
+  <div class="catalog-badge" id="catalogBadge">catalog: local mode</div>
 </header>
 
-<div class="app">
-  <div class="col-left">
+<div class="shell">
+  <!-- LEFT COLUMN -->
+  <aside class="col-l">
+    <div class="panel" data-tabs="mock sum">
+      <h3><span class="pn">01</span> Job identity</h3>
+      <p class="desc">Stamped onto every approval + the print summary.</p>
+      <div class="row2">
+        <div><label class="lbl" style="margin-top:0;">Customer</label><input type="text" id="jobCustomer" placeholder="Customer name"></div>
+        <div><label class="lbl" style="margin-top:0;">Quote #</label><input type="text" id="jobQuote" placeholder="#10482"></div>
+      </div>
+    </div>
 
-    <!-- STEP 0: CATALOG -->
-    <div class="panel">
-      <h3><span class="stepnum">00</span> Catalog</h3>
-      <p class="desc">Hosted mode: photos + calibrations load from <span class="mono">styles.json</span> automatically. Local mode: drop photos / a bundle here. <b>Export styles.json</b> builds the manifest to commit to the site.</p>
+    <div class="panel" data-tabs="mock sum">
+      <h3><span class="pn">02</span> Colorways</h3>
+      <p class="desc">Search any style + color — "6210 stone" — Enter adds it to the run. The set IS the board.</p>
+      <div class="set-tabs" id="setTabs"></div>
+      <div class="searchwrap">
+        <input type="text" id="searchBox" class="searchbox" placeholder="⌕  search any style + color…" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <div class="set-items" id="setItems"></div>
+      <div class="set-empty" id="setEmpty">Set is empty — search above to add garments.</div>
+      <div class="btnrow">
+        <button class="btn ghost sm" id="clearSet">Clear set</button>
+        <button class="btn ghost sm" id="removeSet">Delete set</button>
+      </div>
+    </div>
+
+    <div class="panel" data-tabs="cal">
+      <h3><span class="pn">00</span> Catalog &amp; calibration</h3>
+      <p class="desc">Hosted mode loads photos + calibrations from styles.json automatically. Local mode: drop photos / a bundle.</p>
       <div class="drop" id="baseDrop"><b>Drop style photos or a bundle</b>jpg/png · any count · or bundle/manifest .json<input type="file" id="baseInput" accept="image/*,.json" multiple></div>
       <div class="btnrow">
         <button class="btn ghost sm" id="saveBundle">Save bundle</button>
@@ -302,52 +402,99 @@
         <button class="btn ghost sm" id="showAnchors">Show grid lines</button>
       </div>
       <div class="calib-chips" id="calibChips" style="display:none;"></div>
-      <div class="val" style="margin-top:6px;">No numbers: collar line → center line → left-chest line → then click the LEFT and RIGHT edges of where a 10-inch print would sit. You know what a 10" print looks like — that bar IS the ruler. Back skips left-chest. Undo any click with ↩. When done, <b>Export styles.json</b> lights up — push that file to save forever.</div>
-    </div>
-
-    <!-- STEP 1: SMART SEARCH + SETS -->
-    <div class="panel">
-      <h3><span class="stepnum">01</span> Search &amp; sets</h3>
-      <p class="desc">Type style + color — "6210 stone", "dm130 desert tan" — and hit Enter. Mixed styles live in the same set; each set carries its own art and becomes its own board. Click a chip to preview it.</p>
-      <div class="set-tabs" id="setTabs"></div>
-      <div class="searchwrap">
-        <input type="text" id="searchBox" class="searchbox" placeholder="⌕  search any style + color…" autocomplete="off">
-        <div class="search-results" id="searchResults"></div>
-      </div>
-      <div class="set-items" id="setItems"></div>
-      <div class="set-empty" id="setEmpty">Set is empty — search above to add garments. The set IS the board.</div>
-      <div class="btnrow">
-        <button class="btn ghost sm" id="clearSet">Clear set</button>
-        <button class="btn ghost sm" id="removeSet">Delete set</button>
+      <div class="val" style="margin-top:6px;">No numbers: collar line → center line → left-chest line → DRAG a 10-inch print box where a real 10" print would sit — you know what that looks like; the box IS the ruler. Back skips left-chest. Front rolls into back automatically. When done, <b>Export styles.json</b> lights up — push that file to save forever.</div>
+      <label class="lbl">Side being calibrated</label>
+      <div class="segmented" style="width:100%;display:flex;">
+        <button id="sideFrontCal" style="flex:1;" onclick="document.getElementById('sideFront').click()">FRONT</button>
+        <button id="sideBackCal" style="flex:1;" onclick="document.getElementById('sideBack').click()">BACK</button>
       </div>
     </div>
+  </aside>
 
-    <!-- STEP 2: ARTWORK + INKS -->
-    <div class="panel">
-      <h3><span class="stepnum">02</span> Artwork &amp; inks</h3>
-      <p class="desc">Art belongs to the active set — switch sets and the art, inks and boards switch with it.</p>
-      <div class="row2">
-        <div class="drop" id="artDropF"><b>Front art</b>transparent PNG<input type="file" id="artInputF" accept="image/*"></div>
-        <div class="drop" id="artDropB"><b>Back art</b>transparent PNG<input type="file" id="artInputB" accept="image/*"></div>
+  <!-- CENTER COLUMN -->
+  <main class="col-c">
+    <div class="drawbanner" id="drawBanner"></div>
+    <div class="apv-card" id="apvCard">
+      <div class="apv-head">
+        <div>
+          <img class="apv-logo" src="assets/mayhem-logo.png" onerror="this.hidden=true;document.getElementById('apvLogoTxt').hidden=false;">
+          <div class="apv-logo-txt" id="apvLogoTxt" hidden>MAYHEM INK</div>
+          <div class="apv-sub">CUSTOMER APPROVAL MOCKUP</div>
+        </div>
+        <div class="apv-right">
+          <div class="apv-cust" id="apvCust">Customer name</div>
+          <div class="apv-quote" id="apvQuote">QUOTE —</div>
+        </div>
       </div>
-      <div class="checkline"><input type="checkbox" id="dupBack"><span>Back uses the same art as front (no second upload)</span></div>
-      <div class="checkline"><input type="checkbox" id="liveInk" checked><span>Live ink — art renders in its assigned PMS inks</span></div>
-      <div class="set-artnote" id="artSetNote"></div>
-      <div id="inkList"></div>
-      <div class="screens-pill" id="screensPill">—</div>
-      <div class="checkline"><input type="checkbox" id="fabricBlend" checked><span>Fabric blend — wrinkles show through the ink</span></div>
-      <div class="checkline"><input type="checkbox" id="autoUnderbase" checked><span>Auto white underbase on dark garments (+1 screen)</span></div>
+      <div class="apv-blue"></div>
+      <div class="apv-pager" data-tabs="mock">
+        <button id="pgPrev">←</button><span id="pgInfo">–</span><button id="pgNext">→</button>
+      </div>
+      <div class="canvas-frame" id="canvasFrame">
+        <div class="pv2">
+          <div class="pvcell" id="pvF"><canvas id="mainCanvas" data-side="front"></canvas><div class="pvcap">FRONT</div></div>
+          <div class="pvcell" id="pvB"><canvas id="backCanvas" data-side="back"></canvas><div class="pvcap">BACK</div></div>
+        </div>
+      </div>
+      <div class="apv-foot">
+        <div class="af-l"><b id="afName">—</b><span id="afNote">Approve garment, artwork size, placement, and ink colors before production.</span></div>
+        <button class="btn" id="dlApproval">DOWNLOAD THIS APPROVAL</button>
+      </div>
     </div>
 
-    <!-- STEP 3: PLACEMENT -->
+    <div class="preview-meta below-card">
+      <span class="preview-label" id="previewLabel"></span>
+      <span class="preview-label" id="previewScreens"></span>
+    </div>
+    <div class="pmsline" id="previewPms"></div>
+
+    <div class="panel below-card" data-tabs="sum">
+      <h3>Production print summary <span style="margin-left:auto;"></span></h3>
+      <p class="desc">One clean shop reference — art at size on a contrast background, PMS inks with storage blocks, and the full run. Attach it to the daily rundown.</p>
+      <div class="btnrow"><button class="btn sm" id="dlSummary">DOWNLOAD SUMMARY PNG</button></div>
+      <canvas id="sumCanvas"></canvas>
+    </div>
+
+    <div class="panel below-card" data-tabs="mock">
+      <h3>Export manifest</h3>
+      <p class="desc" id="boardDesc">Add garments to build the run.</p>
+      <div class="mrow" id="manifestRow"></div>
+      <div class="btnrow" style="margin-top:12px;align-items:center;">
+        <select id="boardMode" style="width:auto;">
+          <option value="pair" selected>Front + back pairs</option>
+          <option value="front">Front only</option>
+          <option value="back">Back only</option>
+        </select>
+        <button class="btn ghost sm" id="buildBoard">Rebuild cards</button>
+        <button class="btn ghost sm" id="dlBoard">Board PNG</button>
+        <button class="btn ghost sm" id="dlActive">Active PNG</button>
+      </div>
+      <div class="cards" id="cardGrid"></div>
+    </div>
+  </main>
+
+  <!-- RIGHT COLUMN -->
+  <aside class="col-r" data-tabs="mock sum">
     <div class="panel">
-      <h3><span class="stepnum">03</span> Placement</h3>
-      <p class="desc">Baseline per location is just a line + a drop. Shop standards: fronts start 2&Prime; below the collar; full back 4&Prime; down at 10&Prime;; locker tag 1&Prime; down at 3&Prime;. Type the design's true width; it stays centered on its line and grows downward, never up.</p>
+      <h3><span class="pn">03</span> Print inspector</h3>
+      <p class="desc">One setup applies to every color in the set.</p>
       <label class="lbl" style="margin-top:0;">Side</label>
       <div class="segmented" style="width:100%;display:flex;margin-bottom:10px;">
         <button id="sideFront" class="active" style="flex:1;">FRONT</button>
         <button id="sideBack" style="flex:1;">BACK</button>
       </div>
+      <div class="row2">
+        <div class="drop" id="artDropF"><b>Front art</b>transparent PNG<input type="file" id="artInputF" accept="image/*"></div>
+        <div class="drop" id="artDropB"><b>Back art</b>transparent PNG<input type="file" id="artInputB" accept="image/*"></div>
+      </div>
+      <div class="checkline"><input type="checkbox" id="dupBack"><span>Back uses the same art as front</span></div>
+      <div class="checkline"><input type="checkbox" id="liveInk" checked><span>Live ink — art renders in its PMS inks</span></div>
+      <div class="set-artnote" id="artSetNote"></div>
+      <div id="inkList"></div>
+      <div class="screens-pill" id="screensPill">—</div>
+      <div class="checkline"><input type="checkbox" id="fabricBlend" checked><span>Fabric blend</span></div>
+      <div class="checkline"><input type="checkbox" id="autoUnderbase" checked><span>Auto white underbase on darks (+1 screen)</span></div>
+      <label class="lbl">Placement</label>
       <div class="locbtns" id="locBtns"></div>
       <div class="rulebox">
         <div class="rb-title" id="ruleTitle">rule</div>
@@ -361,81 +508,35 @@
           </div>
           <div>
             <label class="lbl" style="margin-top:0;">Drop below collar (in)</label>
-            <input type="number" id="ruleDrop" step="0.25" value="2.5">
+            <input type="number" id="ruleDrop" step="0.25" value="2">
           </div>
         </div>
       </div>
       <label class="lbl">Design width (in)</label>
-      <input type="number" id="designW" step="0.25" min="0.5" value="3.5">
+      <input type="number" id="designW" step="0.25" min="0.5" value="10">
       <div class="val" id="actualIn">—</div>
       <div class="row2">
-        <div>
-          <label class="lbl">Nudge across (in)</label>
-          <input type="number" id="nudgeX" step="0.125" value="0">
-        </div>
-        <div>
-          <label class="lbl">Nudge down (in)</label>
-          <input type="number" id="nudgeY" step="0.125" value="0">
-        </div>
+        <div><label class="lbl">Nudge across (in)</label><input type="number" id="nudgeX" step="0.125" value="0"></div>
+        <div><label class="lbl">Nudge down (in)</label><input type="number" id="nudgeY" step="0.125" value="0"></div>
       </div>
       <label class="lbl">Rotation (°)</label>
       <input type="range" id="rotDeg" min="-10" max="10" step="0.5" value="0">
       <div class="val"><span id="rotVal">0</span>°</div>
       <div class="btnrow">
         <button class="btn ghost sm" id="resetFit">Reset size &amp; nudge</button>
+        <button class="btn ghost sm" onclick="setTab('sum')">Preview print summary →</button>
       </div>
     </div>
-
-    <!-- STEP 4: BOARD -->
-    <div class="panel">
-      <h3><span class="stepnum">04</span> Board</h3>
-      <p class="desc">The board is the active set — mixed styles welcome, each placed by its own calibration.</p>
-      <label class="lbl">Board layout</label>
-      <select id="boardMode">
-        <option value="pair" selected>Front + back pairs (matched by color)</option>
-        <option value="front">Front only</option>
-        <option value="back">Back only</option>
-      </select>
-      <button class="btn" id="buildBoard" style="margin-top:12px;">Build the board</button>
-      <div class="btnrow">
-        <button class="btn ghost sm" id="dlBoard">Board PNG</button>
-        <button class="btn ghost sm" id="dlActive">Active PNG</button>
-      </div>
-      <div class="note"><b>Catalog workflow:</b> photos live at <span class="mono">styles/{STYLE}/{side}/</span> on the site. Add a folder, calibrate once, export styles.json, commit — that style is ready forever.</div>
-    </div>
-  </div>
-
-  <!-- RIGHT -->
-  <div>
-    <div class="panel preview-panel">
-      <h3 style="margin-bottom:10px;">Live preview</h3>
-      <div class="drawbanner" id="drawBanner"></div>
-      <div class="canvas-frame" id="canvasFrame">
-        <div class="pv2">
-          <div class="pvcell" id="pvF"><canvas id="mainCanvas" data-side="front"></canvas><div class="pvcap">FRONT</div></div>
-          <div class="pvcell" id="pvB"><canvas id="backCanvas" data-side="back"></canvas><div class="pvcap">BACK</div></div>
-        </div>
-      </div>
-      <div class="preview-meta">
-        <span class="preview-label" id="previewLabel"></span>
-        <span class="preview-label" id="previewScreens"></span>
-      </div>
-      <div class="pmsline" id="previewPms"></div>
-    </div>
-    <div class="panel" style="margin-top:14px;">
-      <h3 style="margin-bottom:2px;">Mockup board</h3>
-      <p class="desc" id="boardDesc">Load photos, then build the board.</p>
-      <div class="cards" id="cardGrid"></div>
-    </div>
-  </div>
+  </aside>
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V6 · SMART SEARCH + MOCKUP SETS</span>
+  <span>MAYHEM MOCKUP LAB · V7 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
 <script>
+
 /* ================= MAYHEM PANTONE INK LIBRARY ================= */
 const PMS=[
 ["106","#F9E44C","Std","Yellows"],["107","#FBE21F","B1","Yellows"],["108","#FEDD00","Std","Yellows"],["117","#C99700","B1","Yellows"],
@@ -1711,6 +1812,283 @@ activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
 renderSetTabs();renderSetItems();refreshArtNote();
 
 refresh();buildBoard();
+
+
+/* ================= v7 SHELL LOGIC ================= */
+const LOGO=new Image();LOGO.__ok=false;
+LOGO.onload=()=>{
+  LOGO.__ok=true;
+  // adopt the real logo as the demo art if the user hasn't uploaded their own
+  if(state.artF&&state.artF.__isDemo){
+    const c=document.createElement('canvas');c.width=LOGO.width;c.height=LOGO.height;
+    c.getContext('2d').drawImage(LOGO,0,0);
+    c.__id='art'+(artIdSeq++);
+    state.artF=c;activeSet().artF=c;reDetect();
+    activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
+    refreshArtNote();refresh();buildBoard();
+  }
+};
+LOGO.src='assets/mayhem-logo.png';
+if(state.artF)state.artF.__isDemo=true;
+
+let curTab='mock';
+function setTab(t){
+  curTab=t;
+  document.body.className='tab-'+t;
+  ['cal','mock','sum'].forEach(x=>{
+    const b=document.getElementById('tabB'+x);
+    if(b)b.classList.toggle('active',x===t);
+  });
+  document.querySelectorAll('[data-tabs]').forEach(el=>{
+    el.hidden=!el.dataset.tabs.split(' ').includes(t);
+  });
+  if(t==='sum')renderSummary();
+  refresh();
+}
+
+function jobCustomerName(){return ($('jobCustomer').value||'').trim()||'Customer name';}
+function jobQuoteText(){const q=($('jobQuote').value||'').trim();return q?('QUOTE '+q):'QUOTE —';}
+function syncJob(){
+  $('apvCust').textContent=jobCustomerName();
+  $('apvQuote').textContent=jobQuoteText();
+}
+$('jobCustomer').addEventListener('input',syncJob);
+$('jobQuote').addEventListener('input',syncJob);
+
+/* pager over the active set */
+function pagerItems(){return activeSet().items;}
+function pagerIndex(){
+  const items=pagerItems();
+  if(!items.length||!state.previewGarment)return -1;
+  return items.findIndex(it=>it.styleKey===state.previewGarment.styleKey&&slug(it.colorName)===state.previewGarment.colorSlug);
+}
+function pagerGo(step){
+  const items=pagerItems();if(!items.length)return;
+  let i=pagerIndex();
+  i=(i<0)?0:(i+step+items.length)%items.length;
+  const it=items[i];
+  state.previewGarment={styleKey:it.styleKey,colorSlug:slug(it.colorName)};
+  state.styleKey=it.styleKey;
+  buildStyleTabs();refreshCalibStatus();refresh();
+}
+$('pgPrev').onclick=()=>pagerGo(-1);
+$('pgNext').onclick=()=>pagerGo(1);
+
+function v7AfterRefresh(){
+  const items=pagerItems();
+  const i=pagerIndex();
+  $('pgInfo').textContent=items.length?((i<0?1:i+1)+' / '+items.length):'–';
+  const photo=activePhoto();
+  if(photo){
+    const s=STYLES[photo.styleKey]||{name:photo.styleKey};
+    $('afName').textContent=s.name+' — '+photo.colorName;
+  } else $('afName').textContent='—';
+  syncJob();
+}
+const __v7refresh=refresh;refresh=function(){__v7refresh();v7AfterRefresh();};
+
+/* ---------- export helpers ---------- */
+function drawPageHeader(ctx,W,title){
+  ctx.fillStyle='#131517';ctx.fillRect(0,0,W,1080);
+  if(LOGO.__ok){
+    const h=58,w=LOGO.width*(h/LOGO.height);
+    ctx.drawImage(LOGO,50,38,w,h);
+  } else {
+    ctx.fillStyle='#E8EAEC';ctx.font='900 40px "Archivo Black", Arial Black, sans-serif';
+    ctx.fillText('MAYHEM INK',50,80);
+  }
+  ctx.fillStyle='#4B9CD3';ctx.font='700 12px "JetBrains Mono", monospace';
+  ctx.fillText(title,52,118);
+  ctx.textAlign='right';
+  ctx.fillStyle='#E8EAEC';ctx.font='900 26px "Archivo Black", Arial Black, sans-serif';
+  ctx.fillText(jobCustomerName().toUpperCase(),1450,72);
+  ctx.fillStyle='#98A0A6';ctx.font='500 13px "JetBrains Mono", monospace';
+  ctx.fillText(jobQuoteText()+'  ·  '+new Date().toLocaleDateString(),1450,98);
+  ctx.textAlign='left';
+  ctx.fillStyle='#4B9CD3';ctx.fillRect(50,136,1400,3);
+}
+function drawPageFooter(ctx,W,H,note){
+  ctx.save();
+  ctx.beginPath();ctx.rect(50,H-64,W-100,6);ctx.clip();
+  for(let x=40;x<W-40;x+=24){
+    ctx.fillStyle='#3A4046';
+    ctx.save();ctx.translate(x,H-64);ctx.rotate(-Math.PI/4);ctx.fillRect(0,-8,10,26);ctx.restore();
+  }
+  ctx.restore();
+  ctx.fillStyle='#98A0A6';ctx.font='500 12px "JetBrains Mono", monospace';
+  ctx.fillText(note,50,H-28);
+  ctx.textAlign='right';
+  ctx.fillText('MAYHEM INK · MOCKUP LAB',W-50,H-28);
+  ctx.textAlign='left';
+}
+function drawInkChips(ctx,x,y,dark){
+  let cx=x;
+  state.inkAssign.forEach(a=>{
+    const i=inkIdxFor(a,dark);
+    const p=PMS[i];
+    ctx.fillStyle=p[1];ctx.fillRect(cx,y,26,26);
+    ctx.strokeStyle='#CFCFCB';ctx.lineWidth=1;ctx.strokeRect(cx,y,26,26);
+    ctx.fillStyle='#131517';ctx.font='700 12px "JetBrains Mono", monospace';
+    ctx.fillText('PMS '+p[0],cx+34,y+12);
+    ctx.fillStyle='#888';ctx.font='500 10px "JetBrains Mono", monospace';
+    ctx.fillText(p[2]+((i!==a.idx)?' · swap':''),cx+34,y+25);
+    cx+=44+Math.max(60,ctx.measureText('PMS '+p[0]).width+16);
+  });
+  return cx;
+}
+function locLabel(side){
+  const loc=state.loc[side];
+  const L=LOCATIONS[side].find(l=>l[0]===loc);
+  return L?L[1]:loc;
+}
+function locWidth(side){
+  const loc=state.loc[side];
+  const f=state.fit[side+':'+loc]||{};
+  return f.widthIn||RULES[side][loc].defaultWidth;
+}
+
+/* ---------- customer approval page (one per colorway) ---------- */
+function approvalFor(item){
+  const g=garmentIndex().find(x=>x.styleKey===item.styleKey&&slug(x.colorName)===slug(item.colorName));
+  if(!g)return;
+  const W=1500,H=1080;
+  const pg=document.createElement('canvas');pg.width=W;pg.height=H;
+  const ctx=pg.getContext('2d');
+  drawPageHeader(ctx,W,'CUSTOMER APPROVAL MOCKUP');
+  const sides=[];
+  if(g.front)sides.push(['front',g.front]);
+  if(g.back)sides.push(['back',g.back]);
+  const cardW=sides.length===2?660:820,cardH=680,gap=44;
+  const totalW=cardW*sides.length+gap*(sides.length-1);
+  let x0=(W-totalW)/2;
+  let firstSc=null;
+  sides.forEach(([side,photo])=>{
+    // white card
+    ctx.fillStyle='#FFFFFF';
+    ctx.strokeStyle='#E2E2E0';ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x0,168,cardW,cardH,10);ctx.fill();ctx.stroke();
+    const cv=document.createElement('canvas');
+    renderMock(photo,cv,side,state.loc[side],false);
+    const fitH=470,fitW=fitH*(cv.width/cv.height);
+    ctx.drawImage(cv,x0+(cardW-fitW)/2,196,fitW,fitH);
+    ctx.fillStyle='#4B9CD3';ctx.font='700 13px "JetBrains Mono", monospace';
+    ctx.fillText(side.toUpperCase(),x0+24,196);
+    ctx.fillStyle='#666';ctx.font='500 13px "JetBrains Mono", monospace';
+    ctx.fillText(locLabel(side)+' · '+locWidth(side)+'" wide',x0+80,196);
+    const sc=screensFor(photo,side,state.loc[side]);
+    if(!firstSc)firstSc=sc;
+    drawInkChips(ctx,x0+24,168+cardH-92,sc.dark);
+    if(sc.ub){
+      ctx.fillStyle='#888';ctx.font='500 11px "JetBrains Mono", monospace';
+      ctx.fillText('+ white underbase',x0+24,168+cardH-30);
+    }
+    x0+=cardW+gap;
+  });
+  const s=STYLES[item.styleKey]||{name:item.styleKey,sub:''};
+  ctx.fillStyle='#E8EAEC';ctx.font='900 34px "Archivo Black", Arial Black, sans-serif';
+  ctx.fillText(item.colorName.toUpperCase(),50,930);
+  ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono", monospace';
+  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?firstSc.total+' screens':''),50,960);
+  drawPageFooter(ctx,W,H,'Approve garment, artwork size, placement, and ink colors before production.');
+  downloadCanvas(pg,'approval-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
+}
+$('dlApproval').onclick=()=>{
+  const items=pagerItems();
+  const i=pagerIndex();
+  if(items.length){approvalFor(items[i<0?0:i]);return;}
+  const p=activePhoto();
+  if(p)approvalFor({styleKey:p.styleKey,colorName:p.colorName});
+};
+
+/* ---------- production print summary (for the crew) ---------- */
+function renderSummaryTo(pg){
+  const W=1500,H=1080;pg.width=W;pg.height=H;
+  const ctx=pg.getContext('2d');
+  drawPageHeader(ctx,W,'PRODUCTION PRINT SUMMARY — SCREENS & INKS');
+  const sides=[];
+  if(artFor('front'))sides.push('front');
+  if(artFor('back'))sides.push('back');
+  const cardW=sides.length===2?660:820,cardH=560,gap=44;
+  const totalW=cardW*sides.length+gap*(sides.length-1);
+  let x0=(W-totalW)/2;
+  sides.forEach(side=>{
+    ctx.fillStyle='#FFFFFF';
+    ctx.beginPath();ctx.roundRect(x0,168,cardW,cardH,10);ctx.fill();
+    ctx.fillStyle='#3A4046';
+    ctx.beginPath();ctx.roundRect(x0+14,196,cardW-28,cardH-160,6);ctx.fill();
+    const art=recoloredArtFor(side,true)||artFor(side);
+    if(art){
+      const boxW=cardW-88,boxH=cardH-220;
+      const sc=Math.min(boxW/art.width,boxH/art.height);
+      const aw=art.width*sc,ah=art.height*sc;
+      ctx.drawImage(art,x0+14+(cardW-28-aw)/2,196+(cardH-160-ah)/2,aw,ah);
+    }
+    ctx.fillStyle='#4B9CD3';ctx.font='700 13px "JetBrains Mono", monospace';
+    ctx.fillText(side.toUpperCase()+' · '+locLabel(side).toUpperCase(),x0+24,190);
+    ctx.textAlign='right';
+    ctx.fillStyle='#98A0A6';ctx.fillText(locWidth(side)+'" WIDE',x0+cardW-24,190);
+    ctx.textAlign='left';
+    ctx.fillStyle='#98A0A6';ctx.font='500 9.5px "JetBrains Mono", monospace';
+    ctx.fillText('CONTRAST BACKGROUND FOR REFERENCE ONLY — NOT PRINTED',x0+26,cardH+196-158+cardH-160-8>0?196+cardH-160-10:640);
+    drawInkChips(ctx,x0+24,168+cardH-56,false);
+    x0+=cardW+gap;
+  });
+  // run list
+  const items=activeSet().items;
+  ctx.fillStyle='#E8EAEC';ctx.font='900 20px "Archivo Black", Arial Black, sans-serif';
+  ctx.fillText('RUN — '+(items.length||0)+' COLORWAY'+(items.length===1?'':'S'),50,800);
+  ctx.font='500 13px "JetBrains Mono", monospace';
+  let lx=50;
+  items.forEach((it,i)=>{
+    const label=String(i+1).padStart(2,'0')+'  '+it.colorName+' · '+it.styleKey;
+    const w=ctx.measureText(label).width+36;
+    ctx.strokeStyle='#3A4046';ctx.strokeRect(lx,820,w,34);
+    ctx.fillStyle='#E8EAEC';ctx.fillText(label,lx+18,842);
+    lx+=w+12;
+    if(lx>1250){lx=50;}
+  });
+  const n=state.artInks.length||1;
+  ctx.fillStyle='#98A0A6';ctx.font='500 14px "JetBrains Mono", monospace';
+  ctx.fillText(n+' ink'+(n>1?'s':'')+' · '+(n+1)+' screens on darks (white UB) · '+n+' on lights',50,910);
+  drawPageFooter(ctx,W,H,'Attach to the daily rundown. Burn screens from the PMS list above — blocks are shelf locations.');
+}
+function renderSummary(){renderSummaryTo($('sumCanvas'));}
+$('dlSummary').onclick=()=>{
+  const pg=document.createElement('canvas');
+  renderSummaryTo(pg);
+  downloadCanvas(pg,'production-print-summary.png');
+  renderSummary();
+};
+
+/* ---------- export manifest ---------- */
+function buildManifest(){
+  const row=$('manifestRow');if(!row)return;
+  row.innerHTML='';
+  const items=activeSet().items;
+  items.forEach((it,i)=>{
+    const b=document.createElement('button');b.className='mfile';
+    b.innerHTML='<span class="mn">'+String(i+1).padStart(2,'0')+'</span><span class="mt"><b>'+it.colorName+'</b><span>'+it.styleKey+' · approval page</span></span><span class="px">PNG</span>';
+    b.onclick=()=>approvalFor(it);
+    row.appendChild(b);
+  });
+  const s=document.createElement('button');s.className='mfile';
+  s.innerHTML='<span class="mn">+</span><span class="mt"><b>Production Print Summary</b><span>clean art · sizes · PMS inks</span></span><span class="px">PNG</span>';
+  s.onclick=()=>$('dlSummary').onclick();
+  row.appendChild(s);
+}
+const __v7bb=buildBoard;buildBoard=function(){__v7bb();buildManifest();};
+
+/* calibration-tab side buttons mirror the inspector toggle */
+function syncCalSideBtns(){
+  const f=$('sideFrontCal'),b=$('sideBackCal');
+  if(f&&b){f.classList.toggle('active',state.side==='front');b.classList.toggle('active',state.side==='back');}
+}
+const __v7rcs=refreshCalibStatus;refreshCalibStatus=function(){__v7rcs();syncCalSideBtns();};
+
+setTab('mock');
+buildManifest();
+syncJob();
+
 </script>
 </body>
 </html>
