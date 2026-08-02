@@ -217,54 +217,36 @@
         <button class="btn ghost sm" id="saveBundle">Save bundle</button>
         <button class="btn ghost sm" id="exportManifest">Export styles.json</button>
       </div>
-    </div>
-
-    <!-- STEP 1: GARMENT + CALIBRATION -->
-    <div class="panel">
-      <h3><span class="stepnum">01</span> Garment</h3>
-      <div class="styletabs" id="styleTabs"></div>
-      <div class="row2" style="margin-top:12px;">
-        <div>
-          <label class="lbl">Side</label>
-          <div class="segmented" style="width:100%;display:flex;">
-            <button id="sideFront" class="active" style="flex:1;">FRONT</button>
-            <button id="sideBack" style="flex:1;">BACK</button>
-          </div>
-        </div>
-        <div>
-          <label class="lbl">Calibration</label>
-          <div class="calib-status" id="calibStatus">—</div>
-        </div>
-      </div>
+      <label class="lbl">Calibration (one-time per style + side)</label>
+      <select id="calStyleSel"></select>
+      <div class="calib-status" id="calibStatus" style="margin-top:6px;">—</div>
       <div class="btnrow">
-        <button class="btn ghost sm" id="calibBtn">⌖ Calibrate this style + side</button>
+        <button class="btn ghost sm" id="calibBtn">⌖ Calibrate current side</button>
         <button class="btn ghost sm" id="showAnchors">Show grid lines</button>
       </div>
       <div class="calib-chips" id="calibChips" style="display:none;"></div>
-      <div class="gallery" id="gallery"></div>
-      <div class="gallery-empty" id="galleryEmpty">No photos yet for this style + side.</div>
     </div>
 
-    <!-- STEP 2: SMART SEARCH + SETS -->
+    <!-- STEP 1: SMART SEARCH + SETS -->
     <div class="panel">
-      <h3><span class="stepnum">02</span> Search &amp; sets</h3>
-      <p class="desc">Type style + color — "6210 stone", "dm130 desert tan" — and hit Enter. Mixed styles live in the same set; each set carries its own art and becomes its own board.</p>
+      <h3><span class="stepnum">01</span> Search &amp; sets</h3>
+      <p class="desc">Type style + color — "6210 stone", "dm130 desert tan" — and hit Enter. Mixed styles live in the same set; each set carries its own art and becomes its own board. Click a chip to preview it.</p>
       <div class="set-tabs" id="setTabs"></div>
       <div class="searchwrap">
         <input type="text" id="searchBox" class="searchbox" placeholder="⌕  search any style + color…" autocomplete="off">
         <div class="search-results" id="searchResults"></div>
       </div>
       <div class="set-items" id="setItems"></div>
-      <div class="set-empty" id="setEmpty">Set is empty — search above to add garments. Empty set = board falls back to every color of the current style.</div>
+      <div class="set-empty" id="setEmpty">Set is empty — search above to add garments. The set IS the board.</div>
       <div class="btnrow">
         <button class="btn ghost sm" id="clearSet">Clear set</button>
         <button class="btn ghost sm" id="removeSet">Delete set</button>
       </div>
     </div>
 
-    <!-- STEP 3: ARTWORK + INKS -->
+    <!-- STEP 2: ARTWORK + INKS -->
     <div class="panel">
-      <h3><span class="stepnum">03</span> Artwork &amp; inks</h3>
+      <h3><span class="stepnum">02</span> Artwork &amp; inks</h3>
       <p class="desc">Art belongs to the active set — switch sets and the art, inks and boards switch with it.</p>
       <div class="row2">
         <div class="drop" id="artDropF"><b>Front art</b>transparent PNG<input type="file" id="artInputF" accept="image/*"></div>
@@ -277,10 +259,15 @@
       <div class="checkline"><input type="checkbox" id="autoUnderbase" checked><span>Auto white underbase on dark garments (+1 screen)</span></div>
     </div>
 
-    <!-- STEP 4: PLACEMENT -->
+    <!-- STEP 3: PLACEMENT -->
     <div class="panel">
-      <h3><span class="stepnum">04</span> Placement</h3>
-      <p class="desc">Baseline per location is just a line + a drop — "left chest @ 2.5&Prime; down from the bottom of the collar." Type the design's true width; it stays centered on its line and grows downward, never up. Nudge from there if a job calls for it.</p>
+      <h3><span class="stepnum">03</span> Placement</h3>
+      <p class="desc">Baseline per location is just a line + a drop — "left chest @ 2.5&Prime; down from the bottom of the collar." Type the design's true width; it stays centered on its line and grows downward, never up.</p>
+      <label class="lbl" style="margin-top:0;">Side</label>
+      <div class="segmented" style="width:100%;display:flex;margin-bottom:10px;">
+        <button id="sideFront" class="active" style="flex:1;">FRONT</button>
+        <button id="sideBack" style="flex:1;">BACK</button>
+      </div>
       <div class="locbtns" id="locBtns"></div>
       <div class="rulebox">
         <div class="rb-title" id="ruleTitle">rule</div>
@@ -319,9 +306,9 @@
       </div>
     </div>
 
-    <!-- STEP 5: BOARD -->
+    <!-- STEP 4: BOARD -->
     <div class="panel">
-      <h3><span class="stepnum">05</span> Board</h3>
+      <h3><span class="stepnum">04</span> Board</h3>
       <p class="desc">The board is the active set — mixed styles welcome, each placed by its own calibration.</p>
       <label class="lbl">Board layout</label>
       <select id="boardMode">
@@ -511,7 +498,7 @@ let activeSetIdx=0;
 function activeSet(){return SETS[activeSetIdx];}
 
 const state={
-  styleKey:'DM108', side:'front', activePhotoId:null,
+  styleKey:'DM108', side:'front', activePhotoId:null, previewGarment:null,
   artF:null, artB:null, artInks:[], inkAssign:[],
   loc:{front:'fullFront', back:'fullBack'},
   fit:{}, // per side:loc {widthIn, rot, nudgeX, nudgeY}
@@ -710,9 +697,19 @@ function computePlacement(photo,side,loc){
 
 /* ================= RENDER ================= */
 function photosFor(styleKey,side){return PHOTOS.filter(p=>p.styleKey===styleKey&&p.side===side);}
+function defaultPreviewGarment(){
+  const idx=garmentIndex();
+  return idx.find(g=>slug(g.colorName)==='black')||idx.find(g=>slug(g.colorName).includes('black'))||idx[0]||null;
+}
 function activePhoto(){
-  const list=photosFor(state.styleKey,state.side);
-  return list.find(p=>p.id===state.activePhotoId)||list[0]||null;
+  // calibrating: always show a photo of the style being calibrated
+  if(state.calibStep>=0)return photosFor(state.styleKey,state.side)[0]||null;
+  let g=null;
+  if(state.previewGarment)
+    g=garmentIndex().find(x=>x.styleKey===state.previewGarment.styleKey&&slug(x.colorName)===state.previewGarment.colorSlug);
+  if(!g)g=defaultPreviewGarment();
+  if(!g)return null;
+  return state.side==='front'?(g.front||g.back):(g.back||g.front);
 }
 function renderMock(photo,targetCanvas,side,loc,overlay){
   const W=photo.canvas.width,H=photo.canvas.height;
@@ -797,13 +794,13 @@ function pmsCalloutText(sc){
 
 /* ================= UI ================= */
 function buildStyleTabs(){
-  const el=$('styleTabs');el.innerHTML='';
+  // v6.1: style picker is a compact dropdown in the Catalog panel (calibration only)
+  const sel=$('calStyleSel');if(!sel)return;
+  sel.innerHTML='';
   Object.entries(STYLES).forEach(([key,s])=>{
-    const b=document.createElement('button');
-    b.innerHTML=key.replace('NL','NL ')+`<span class="s">${s.sub}</span>`;
-    if(key===state.styleKey)b.classList.add('active');
-    b.onclick=()=>{state.styleKey=key;state.activePhotoId=null;cancelCalib();buildStyleTabs();buildGallery();refreshCalibStatus();refresh();buildBoard();};
-    el.appendChild(b);
+    const o=document.createElement('option');o.value=key;o.textContent=key+' — '+s.name;
+    if(key===state.styleKey)o.selected=true;
+    sel.appendChild(o);
   });
 }
 function buildLocBtns(){
@@ -837,34 +834,7 @@ function refreshCalibStatus(){
     ?'<span class="noc">defaults — calibrate for accuracy</span>'
     :`<span class="okc">✓ calibrated · 1"=${cal.ppi.toFixed(1)}px</span>`;
 }
-function buildGallery(){
-  const el=$('gallery');el.innerHTML='';
-  const list=photosFor(state.styleKey,state.side);
-  $('galleryEmpty').style.display=list.length?'none':'block';
-  list.forEach(p=>{
-    const cell=document.createElement('div');
-    const d=document.createElement('div');
-    d.className='gph'+((activePhoto()&&activePhoto().id===p.id)?' active':'');
-    const th=document.createElement('canvas');
-    const tw=90,thh=Math.round(tw*p.canvas.height/p.canvas.width);
-    th.width=tw;th.height=thh;
-    th.getContext('2d').drawImage(p.canvas,0,0,tw,thh);
-    d.appendChild(th);
-    const sb=document.createElement('span');sb.className='side-badge';sb.textContent=p.side==='front'?'F':'B';d.appendChild(sb);
-    const del=document.createElement('button');del.className='del';del.textContent='✕';
-    del.onclick=e=>{e.stopPropagation();const i=PHOTOS.indexOf(p);if(i>=0)PHOTOS.splice(i,1);
-      if(state.activePhotoId===p.id)state.activePhotoId=null;buildGallery();refresh();buildBoard();};
-    d.appendChild(del);
-    d.onclick=()=>{state.activePhotoId=p.id;buildGallery();refresh();};
-    cell.appendChild(d);
-    const nm=document.createElement('div');nm.className='gname';nm.textContent=p.colorName;
-    nm.contentEditable=true;nm.spellcheck=false;
-    nm.onblur=()=>{p.colorName=nm.textContent.trim()||p.colorName;nm.textContent=p.colorName;buildBoard();};
-    nm.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();nm.blur();}};
-    cell.appendChild(nm);
-    el.appendChild(cell);
-  });
-}
+function buildGallery(){/* v6.1: gallery removed — search is the picker */}
 function refreshInkList(){
   const el=$('inkList');el.innerHTML='';
   state.artInks.forEach((ink,idx)=>{
@@ -903,13 +873,13 @@ function refresh(){
     const ctx=cv.getContext('2d');
     ctx.fillStyle='#232327';ctx.fillRect(0,0,624,400);
     ctx.fillStyle='#8E8C85';ctx.font='700 15px "JetBrains Mono", monospace';ctx.textAlign='center';
-    ctx.fillText(state.hosted?'Catalog loaded — pick a style with photos':'Drop style photos to begin',312,195);
+    ctx.fillText(state.hosted?'Search a garment above to preview':'Drop style photos to begin',312,195);
     $('previewLabel').textContent='';$('previewScreens').textContent='';$('previewPms').innerHTML='';
     return;
   }
   const loc=state.loc[state.side];
   renderMock(photo,cv,state.side,loc,state.calibStep>=0||state.showAnchors);
-  const s=STYLES[state.styleKey];
+  const s=STYLES[photo.styleKey]||{name:photo.styleKey};
   const sc=screensFor(photo,state.side,loc);
   $('previewLabel').innerHTML=`<b>${s.name}</b> · ${photo.colorName} · ${state.side} · ${loc}`;
   $('previewScreens').textContent=`${sc.inks} ink + ${sc.ub} UB = ${sc.total} screens`;
@@ -933,7 +903,7 @@ function refresh(){
 /* ================= CALIBRATION FLOW ================= */
 const frame=$('canvasFrame'),mainCv=$('mainCanvas');
 function startCalib(){
-  if(!activePhoto()){alert('Load a photo for this style + side first.');return;}
+  if(!photosFor(state.styleKey,state.side).length){alert('No photos loaded for '+state.styleKey+' '+state.side+'.');return;}
   state.calibStep=0;calTemp={};calGuide=null;
   frame.classList.add('calibrating');
   $('calibBtn').classList.add('on');
@@ -1046,9 +1016,9 @@ function addToSet(g){
   if(set.items.some(it=>it.styleKey+'|'+slug(it.colorName)===key))return;
   set.items.push({styleKey:g.styleKey,colorName:g.colorName});
   // jump the preview to what was just added
-  const p=g.front||g.back;
-  if(p){state.styleKey=g.styleKey;state.side=p.side;state.activePhotoId=p.id;
-    buildStyleTabs();buildGallery();refreshCalibStatus();}
+  state.previewGarment={styleKey:g.styleKey,colorSlug:slug(g.colorName)};
+  state.styleKey=g.styleKey;
+  buildStyleTabs();refreshCalibStatus();
   renderSetItems();refresh();buildBoard();
 }
 function renderSetTabs(){
@@ -1083,13 +1053,17 @@ function renderSetItems(){
   $('setEmpty').style.display=set.items.length?'none':'block';
   set.items.forEach((it,idx)=>{
     const g=garmentIndex().find(x=>x.styleKey===it.styleKey&&slug(x.colorName)===slug(it.colorName));
-    const chip=document.createElement('div');chip.className='set-chip';
+    const chip=document.createElement('div');chip.className='set-chip';chip.style.cursor='pointer';
     chip.appendChild(thumbCanvas(g&&(g.front||g.back),26,30));
     const txt=document.createElement('div');txt.className='sc-txt';
     txt.innerHTML=`<div class="sc-name">${it.colorName}</div><div class="sc-style">${it.styleKey}</div>`;
     chip.appendChild(txt);
+    chip.onclick=()=>{
+      state.previewGarment={styleKey:it.styleKey,colorSlug:slug(it.colorName)};
+      state.styleKey=it.styleKey;buildStyleTabs();refreshCalibStatus();refresh();
+    };
     const x=document.createElement('button');x.textContent='✕';
-    x.onclick=()=>{set.items.splice(idx,1);renderSetTabs();renderSetItems();buildBoard();};
+    x.onclick=e=>{e.stopPropagation();set.items.splice(idx,1);renderSetTabs();renderSetItems();buildBoard();};
     chip.appendChild(x);
     el.appendChild(chip);
   });
@@ -1127,8 +1101,7 @@ function boardItems(){
   if(set.items.length){
     garments=set.items.map(it=>garmentIndex().find(x=>x.styleKey===it.styleKey&&slug(x.colorName)===slug(it.colorName))).filter(Boolean);
   } else {
-    // fallback: every color of the current style (v5 behavior)
-    garments=garmentIndex().filter(g=>g.styleKey===state.styleKey);
+    garments=[]; // no fallback: the set IS the board
   }
   const items=[];
   garments.forEach(g=>{
@@ -1142,9 +1115,9 @@ function buildBoard(){
   const grid=$('cardGrid');grid.innerHTML='';
   const set=activeSet();
   const items=boardItems();
-  if(!items.length){$('boardDesc').textContent=set.items.length?'Set garments have no photos for this layout.':'No photos loaded for this style'+(state.boardMode!=='pair'?' + side':'')+'.';return;}
+  if(!items.length){$('boardDesc').textContent=set.items.length?'Set garments have no photos for this layout.':set.name+' is empty — search and add garments; the set IS the board.';return;}
   const styleCount=new Set(items.map(i=>(i.front||i.back).styleKey)).size;
-  const src=set.items.length?`${set.name} · ${styleCount} style${styleCount>1?'s':''}`:STYLES[state.styleKey].name+' (all colors)';
+  const src=`${set.name} · ${styleCount} style${styleCount>1?'s':''}`;
   $('boardDesc').textContent=`${src} · ${items.length} garment${items.length>1?'s':''} · ${state.boardMode==='pair'?'front + back':state.boardMode}`;
   items.forEach(item=>{
     const main=item.front||item.back;
@@ -1399,6 +1372,7 @@ $('dlActive').onclick=()=>{
 };
 $('saveBundle').onclick=saveBundle;
 $('exportManifest').onclick=exportManifest;
+$('calStyleSel').onchange=e=>{state.styleKey=e.target.value;cancelCalib();refreshCalibStatus();refresh();};
 $('calibBtn').onclick=()=>{state.calibStep>=0?cancelCalib():startCalib();refresh();};
 $('showAnchors').onclick=()=>{
   state.showAnchors=!state.showAnchors;
