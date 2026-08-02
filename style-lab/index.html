@@ -285,20 +285,24 @@ function buildPhotoSel(){
   s.onchange=loadSelPhoto;
   loadSelPhoto();
 }
+let pendingAutoCalib=false;
+function maybeAutoCalib(){
+  if(pendingAutoCalib&&curPhotoCanvas){pendingAutoCalib=false;startCalib();}
+}
 function loadSelPhoto(){
   const list=photoEntries();
   list.sort((a,b)=>{const w=x=>/white|natural|sand|cream|silk|light/i.test(x.label)?0:1;return w(a)-w(b);});
   const p=list[+$('photoSel').value||0];
   curPhotoCanvas=null;
-  if(!p){render();return;}
-  if(p.canvas){curPhotoCanvas=p.canvas;render();return;}
+  if(!p){pendingAutoCalib=false;render();return;}
+  if(p.canvas){curPhotoCanvas=p.canvas;render();maybeAutoCalib();return;}
   const img=new Image();
   img.onload=()=>{
     const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
     c.getContext('2d').drawImage(img,0,0);
-    curPhotoCanvas=c;render();
+    curPhotoCanvas=c;render();maybeAutoCalib();
   };
-  img.onerror=()=>render();
+  img.onerror=()=>{pendingAutoCalib=false;render();};
   img.src=p.src;
 }
 function refreshStatus(){
@@ -481,7 +485,7 @@ function startCalib(){
   applyZoom();renderChips();render();
 }
 function cancelCalib(){
-  calStep=-1;calTemp={};calGuide=null;
+  calStep=-1;calTemp={};calGuide=null;pendingAutoCalib=false;
   frame.classList.remove('calibrating');
   $('calibBtn').classList.remove('on');
   $('banner').classList.remove('show');
@@ -525,7 +529,9 @@ function finishCalib(){
   const other=doneSide==='front'?'back':'front';
   const oc=st.calib[other];
   if((!oc||oc.default)&&(CAT.styles[sel.style].photos.some(p=>p.side===other)||NEWPHOTOS.some(p=>p.styleKey===sel.style&&p.side===other))){
-    setSide(other);startCalib();
+    setSide(other);          // (setSide clears any stale pending flag via cancelCalib)
+    pendingAutoCalib=true;   // startCalib fires once the other side's photo finishes loading
+    maybeAutoCalib();        // covers the already-cached synchronous case
   }
 }
 function renderChips(){
