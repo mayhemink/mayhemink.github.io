@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-02T14:18:39.089584+00:00",
+ "generated": "2026-08-02T22:17:27.322Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -48,18 +48,18 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 30.0,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 20.1575,
+     "centerX": 372.800820921074,
+     "collarY": 242.79335995333645,
+     "leftChestX": 461.0128522196212,
+     "default": false
     },
     "back": {
-     "ppi": 30.0,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 20.1575,
+     "centerX": 367.76013341829986,
+     "collarY": 169.70332309293428,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
@@ -305,18 +305,18 @@
    "bodyLenM": 29.25,
    "calib": {
     "front": {
-     "ppi": 30.0,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 20.336859337602366,
+     "centerX": 366.76013341829986,
+     "collarY": 212.54920279136644,
+     "leftChestX": 455.9721647168471,
+     "default": false
     },
     "back": {
-     "ppi": 30.0,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 20.336859337602366,
+     "centerX": 365.1300474804531,
+     "collarY": 134.93880988644148,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
@@ -843,18 +843,18 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 30.0,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 21.320351595452436,
+     "centerX": 374.0203052939934,
+     "collarY": 246.20396620612374,
+     "leftChestX": 453.7810475248391,
+     "default": false
     },
     "back": {
-     "ppi": 30.0,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 21.320351595452436,
+     "centerX": 368.76013341829986,
+     "collarY": 163.1829766627701,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
