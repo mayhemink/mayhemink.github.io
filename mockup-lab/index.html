@@ -232,8 +232,8 @@
       <select id="calStyleSel"></select>
       <div class="row2" style="margin-top:8px;">
         <div>
-          <label class="lbl" style="margin-top:0;">Body length, size M (in)</label>
-          <input type="number" id="bodyLenIn" step="0.25" value="29">
+          <label class="lbl" style="margin-top:0;">"Down" line distance (in)</label>
+          <input type="number" id="calGapIn" step="0.5" min="0.5" value="2">
         </div>
         <div>
           <label class="lbl" style="margin-top:0;">Status</label>
@@ -245,7 +245,7 @@
         <button class="btn ghost sm" id="showAnchors">Show grid lines</button>
       </div>
       <div class="calib-chips" id="calibChips" style="display:none;"></div>
-      <div class="val" style="margin-top:6px;">Pick the side (FRONT/BACK in Placement) → Calibrate → follow the orange banner, one click per step. Undo any click with ↩. When done, <b>Export styles.json</b> lights up — push that file to save forever.</div>
+      <div class="val" style="margin-top:6px;">4 clicks, no numbers: collar line → your eyeballed "2 inches down" line (that gap IS the ruler) → center line → left-chest line. Back is 3 clicks. Undo any click with ↩. When done, <b>Export styles.json</b> lights up — push that file to save forever.</div>
     </div>
 
     <!-- STEP 1: SMART SEARCH + SETS -->
@@ -545,25 +545,21 @@ const state={
    'v' = vertical line preview follows the cursor. */
 const CAL_STEPS={
   front:[
-    {key:'scaleTop',short:'top',guide:'point',label:'1 / 5 — TOP OF COLLAR',
-     how:'Click the very top of the collar.'},
-    {key:'scaleBottom',short:'hem',guide:'point',label:'2 / 5 — BOTTOM HEM',
-     how:'Click the bottom hem, straight below the collar. (Uses the body length from the Catalog panel.)'},
-    {key:'collarY',short:'collar',guide:'h',label:'3 / 5 — COLLAR LINE',
-     how:'Click where the collar meets the body. All "X inches down" measures from here.'},
-    {key:'centerX',short:'center',guide:'v',label:'4 / 5 — CENTER LINE',
+    {key:'collarY',short:'collar',guide:'h',label:'1 / 4 — COLLAR LINE',
+     how:'Click where the collar meets the body. All drops measure from this line.'},
+    {key:'inchLine',short:'2" down',guide:'h',label:'2 / 4 — THE "2 INCHES DOWN" LINE',
+     how:'Eyeball 2 inches below the collar line and click. This gap IS the ruler — everything scales off it.'},
+    {key:'centerX',short:'center',guide:'v',label:'3 / 4 — CENTER LINE',
      how:'Click the vertical center of the shirt.'},
-    {key:'leftChestX',short:'l-chest',guide:'v',label:'5 / 5 — LEFT-CHEST LINE',
+    {key:'leftChestX',short:'l-chest',guide:'v',label:'4 / 4 — LEFT-CHEST LINE',
      how:'Click the middle of the left-chest print area (wearer\'s left = your right).'}
   ],
   back:[
-    {key:'scaleTop',short:'top',guide:'point',label:'1 / 4 — TOP OF COLLAR',
-     how:'Click the very top of the collar.'},
-    {key:'scaleBottom',short:'hem',guide:'point',label:'2 / 4 — BOTTOM HEM',
-     how:'Click the bottom hem, straight below the collar. (Uses the body length from the Catalog panel.)'},
-    {key:'collarY',short:'collar',guide:'h',label:'3 / 4 — COLLAR LINE',
+    {key:'collarY',short:'collar',guide:'h',label:'1 / 3 — COLLAR LINE',
      how:'Click where the base of the back collar meets the body.'},
-    {key:'centerX',short:'center',guide:'v',label:'4 / 4 — CENTER LINE',
+    {key:'inchLine',short:'2" down',guide:'h',label:'2 / 3 — THE "2 INCHES DOWN" LINE',
+     how:'Eyeball 2 inches below the collar line and click. This gap IS the ruler.'},
+    {key:'centerX',short:'center',guide:'v',label:'3 / 3 — CENTER LINE',
      how:'Click the vertical center of the shirt.'}
   ]
 };
@@ -785,9 +781,8 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
       ctx.setLineDash([10,6]);};
     if(state.calibStep>=0){
       // progress so far
-      if(calTemp.scaleTop)mark(calTemp.scaleTop,'#4CC38A');
-      if(calTemp.scaleBottom)mark(calTemp.scaleBottom,'#4CC38A');
-      if(calTemp.collarY)drawH(calTemp.collarY.y,'#FF5A1F','bottom of collar');
+      if(calTemp.collarY)drawH(calTemp.collarY.y,'#FF5A1F','collar');
+      if(calTemp.inchLine)drawH(calTemp.inchLine.y,'#4CC38A',($('calGapIn').value||2)+'" down');
       if(calTemp.centerX)drawV(calTemp.centerX.x,'#4CC38A','center',16);
       if(calTemp.leftChestX)drawV(calTemp.leftChestX.x,'#FFB454','left chest',32);
       // live guide follows the cursor for the current step
@@ -799,7 +794,8 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
       }
     } else {
       drawV(cal.centerX,'#4CC38A','center',16);
-      drawH(cal.collarY,'#FF5A1F','bottom of collar');
+      drawH(cal.collarY,'#FF5A1F','collar');
+      drawH(cal.collarY+2*cal.ppi,'rgba(76,195,138,.6)','2" down');
       if(side==='front'&&cal.leftChestX)drawV(cal.leftChestX,'#FFB454','left chest',32);
       // top-of-design line for the current location's baseline
       if(pl){
@@ -1015,9 +1011,11 @@ function wireCalibCanvas(cv,side){
     const st=steps[state.calibStep];
     const pos=canvasPosOn(cv,e);
     calTemp[st.key]=pos;
-    if(st.key==='scaleBottom'){
-      const inches=parseFloat($('bodyLenIn').value)||STYLES[state.styleKey].bodyLenM||29;
-      calTemp.ppi=Math.abs(calTemp.scaleBottom.y-calTemp.scaleTop.y)/inches;
+    if(st.key==='inchLine'){
+      const gap=Math.abs(pos.y-calTemp.collarY.y);
+      if(gap<4){delete calTemp.inchLine;return;} // ignore a click on top of the collar line
+      const inches=parseFloat($('calGapIn').value)||2;
+      calTemp.ppi=gap/inches;
     }
     state.calibStep++;
     if(state.calibStep>=steps.length){
@@ -1448,7 +1446,6 @@ $('exportManifest').onclick=()=>{
   const b=$('exportManifest');b.classList.remove('dirty');b.textContent='Export styles.json';
 };
 $('calStyleSel').onchange=e=>{state.styleKey=e.target.value;
-  $('bodyLenIn').value=STYLES[state.styleKey].bodyLenM||29;
   cancelCalib();refreshCalibStatus();refresh();};
 $('dupBack').onchange=e=>{
   activeSet().dupBack=e.target.checked;
