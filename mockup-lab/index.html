@@ -545,8 +545,8 @@
         <button id="sideBack" style="flex:1;">BACK</button>
       </div>
       <div class="row2">
-        <div class="drop" id="artDropF"><b>Front art</b>transparent PNG<input type="file" id="artInputF" accept="image/*"></div>
-        <div class="drop" id="artDropB"><b>Back art</b>transparent PNG<input type="file" id="artInputB" accept="image/*"></div>
+        <div class="drop" id="artDropF"><b>Front art</b>SVG (best) or transparent PNG<input type="file" id="artInputF" accept="image/*,.svg"></div>
+        <div class="drop" id="artDropB"><b>Back art</b>SVG (best) or transparent PNG<input type="file" id="artInputB" accept="image/*,.svg"></div>
       </div>
       <div class="checkline"><input type="checkbox" id="dupBack"><span>Same art on the back</span></div>
       <div class="checkline" id="lineLive"><input type="checkbox" id="liveInk" checked><span>Recolor art to the chosen inks</span></div>
@@ -1786,6 +1786,36 @@ function loadImgFile(file,cb){
   r.onload=e=>{const img=new Image();img.onload=()=>cb(img);img.src=e.target.result;};
   r.readAsDataURL(file);
 }
+/* art loader: rasterizes SVG at high resolution (crisp at any print size), passes
+   raster formats straight through. Always calls back with a canvas. */
+function loadArtFile(file,cb){
+  const isSvg=/svg/i.test(file.type)||/\.svg$/i.test(file.name);
+  if(!isSvg){
+    loadImgFile(file,img=>{
+      const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
+      c.getContext('2d').drawImage(img,0,0);
+      cb(c);
+    });
+    return;
+  }
+  file.text().then(t=>{
+    let vw=0,vh=0;
+    const vb=t.match(/viewBox\s*=\s*["']\s*[\d.+-]+[\s,]+[\d.+-]+[\s,]+([\d.+-]+)[\s,]+([\d.+-]+)/i);
+    if(vb){vw=parseFloat(vb[1]);vh=parseFloat(vb[2]);}
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.naturalWidth||vw||1000,h=img.naturalHeight||vh||1000;
+      if(vw&&vh&&(!img.naturalWidth||img.naturalWidth<600)){w=vw;h=vh;}
+      const TARGET=1600,sc=TARGET/Math.max(w,h);
+      w=Math.max(1,Math.round(w*sc));h=Math.max(1,Math.round(h*sc));
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      cb(c);
+    };
+    img.onerror=()=>alert('Could not read that SVG — try exporting it again or use a PNG.');
+    img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(t)));
+  });
+}
 
 buildStyleTabs();buildLocBtns();buildGallery();refreshCalibStatus();syncRuleInputs();
 state.artF=buildDefaultArt();
@@ -1845,17 +1875,13 @@ $('showAnchors').onclick=()=>{
   refresh();
 };
 wireDrop('baseDrop','baseInput',handleFiles,true);
-wireDrop('artDropF','artInputF',f=>loadImgFile(f,img=>{
-  const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
-  c.getContext('2d').drawImage(img,0,0);
+wireDrop('artDropF','artInputF',f=>loadArtFile(f,c=>{
   c.__id='art'+(artIdSeq++);
   state.artF=c;activeSet().artF=c;reDetect();
   activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
   refreshArtNote();refresh();buildBoard();
 }));
-wireDrop('artDropB','artInputB',f=>loadImgFile(f,img=>{
-  const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
-  c.getContext('2d').drawImage(img,0,0);
+wireDrop('artDropB','artInputB',f=>loadArtFile(f,c=>{
   c.__id='art'+(artIdSeq++);
   state.artB=c;activeSet().artB=c;reDetect();
   activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
