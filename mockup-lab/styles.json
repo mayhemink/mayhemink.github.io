@@ -5,22 +5,17 @@
   "front": {
    "fullFront": {
     "line": "center",
-    "drop": 3,
+    "drop": 2,
     "defaultWidth": 10
    },
    "leftChest": {
     "line": "leftChest",
-    "drop": 2.5,
+    "drop": 2,
     "defaultWidth": 3.5
-   },
-   "pocket": {
-    "line": "leftChest",
-    "drop": 6,
-    "defaultWidth": 4
    },
    "customF": {
     "line": "center",
-    "drop": 5,
+    "drop": 2,
     "defaultWidth": 8
    }
   },
@@ -30,19 +25,14 @@
     "drop": 4,
     "defaultWidth": 10
    },
-   "nape": {
+   "lockerTag": {
     "line": "center",
-    "drop": 0.75,
+    "drop": 1,
     "defaultWidth": 3
-   },
-   "upperBack": {
-    "line": "center",
-    "drop": 1.5,
-    "defaultWidth": 10
    },
    "customB": {
     "line": "center",
-    "drop": 5,
+    "drop": 4,
     "defaultWidth": 8
    }
   }
