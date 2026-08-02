@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v6 — Smart Search + Mockup Sets</title>
+<title>Mayhem Mockup Lab v6.7 — Live Ink</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -102,6 +102,9 @@
   .inkdet .match{color:var(--ok);font-weight:700;}
   .inkdet .match.mid{color:var(--accent2);}
   .inkdet .match.low{color:var(--warn);}
+  .darkswap{display:flex;align-items:center;gap:6px;margin-top:4px;}
+  .darkswap .dslbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);white-space:nowrap;}
+  .darkswap select{flex:1;padding:4px 6px;font-size:10.5px;}
   .screens-pill{
     display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--surface2);
     border:1px solid var(--line2);border-left:3px solid var(--accent2);padding:6px 10px;border-radius:3px;margin-top:10px;color:var(--ink);
@@ -328,6 +331,7 @@
         <div class="drop" id="artDropB"><b>Back art</b>transparent PNG<input type="file" id="artInputB" accept="image/*"></div>
       </div>
       <div class="checkline"><input type="checkbox" id="dupBack"><span>Back uses the same art as front (no second upload)</span></div>
+      <div class="checkline"><input type="checkbox" id="liveInk" checked><span>Live ink — art renders in its assigned PMS inks</span></div>
       <div class="set-artnote" id="artSetNote"></div>
       <div id="inkList"></div>
       <div class="screens-pill" id="screensPill">—</div>
@@ -570,13 +574,60 @@ let photoSeq=1;
 
 /* ================= v6: MOCKUP SETS ================= */
 /* a set = a named list of garments (any styles mixed) + its own front/back art */
-const SETS=[{name:'SET A',items:[],artF:null,artB:null,dupBack:false,artInks:[],inkAssign:[]}];
+const SETS=[{name:'SET A',items:[],artF:null,artB:null,dupBack:false,liveInk:true,artInks:[],inkAssign:[]}];
 let activeSetIdx=0;
 function activeSet(){return SETS[activeSetIdx];}
 /* art actually used for a side — honors the "back uses front art" duplicate flag */
 function artFor(side){
   if(side==='front')return state.artF;
   return activeSet().dupBack?state.artF:state.artB;
+}
+/* ===== v6.7 LIVE INK: recolor spot-color art to its assigned PMS inks =====
+   Each opaque pixel maps to its nearest detected ink cluster, then takes that
+   cluster's assigned PMS color (or the "on darks" swap when the garment under
+   the print is dark). Alpha untouched = crisp edges; pixel/cluster luminance
+   ratio preserved = distress & texture survive the swap. */
+let artIdSeq=1;
+const recolorCache=new Map();
+function recolorArt(base,inks,assign,dark){
+  const c=document.createElement('canvas');c.width=base.width;c.height=base.height;
+  const ctx=c.getContext('2d');ctx.drawImage(base,0,0);
+  const img=ctx.getImageData(0,0,c.width,c.height),d=img.data;
+  const targets=inks.map((ink,i)=>{
+    const a=assign[i]||{};
+    const pi=(dark&&a.darkIdx!=null)?a.darkIdx:a.idx;
+    const t=PMS_RGB[pi]||[ink.r,ink.g,ink.b];
+    return {r:ink.r,g:ink.g,b:ink.b,lum:Math.max(0.02,relLum(ink.r,ink.g,ink.b)),tr:t[0],tg:t[1],tb:t[2]};
+  });
+  if(!targets.length)return base;
+  for(let p=0;p<d.length;p+=4){
+    if(d[p+3]===0)continue;
+    const r=d[p],g=d[p+1],b=d[p+2];
+    let bi=0,bd=1e9;
+    for(let i=0;i<targets.length;i++){
+      const t=targets[i];
+      const dist=(r-t.r)*(r-t.r)+(g-t.g)*(g-t.g)+(b-t.b)*(b-t.b);
+      if(dist<bd){bd=dist;bi=i;}
+    }
+    const t=targets[bi];
+    const f=Math.min(1.5,Math.max(0.35,relLum(r,g,b)/t.lum));
+    d[p]=Math.min(255,t.tr*f);d[p+1]=Math.min(255,t.tg*f);d[p+2]=Math.min(255,t.tb*f);
+  }
+  ctx.putImageData(img,0,0);
+  return c;
+}
+function recoloredArtFor(side,dark){
+  const base=artFor(side);
+  if(!base)return null;
+  const set=activeSet();
+  if(set.liveInk===false||!state.artInks.length)return base;
+  if(!base.__id)base.__id='art'+(artIdSeq++);
+  const sig=base.__id+'|'+(dark?'D':'L')+'|'+state.inkAssign.map(a=>a.idx+':'+(a.darkIdx??'-')).join(',');
+  if(recolorCache.has(sig))return recolorCache.get(sig);
+  if(recolorCache.size>16)recolorCache.clear();
+  const out=recolorArt(base,state.artInks,state.inkAssign,dark);
+  recolorCache.set(sig,out);
+  return out;
 }
 let manifestDirty=false;
 function markDirty(){
@@ -809,10 +860,12 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
   const pl=computePlacement(photo,side,loc);
   if(art&&pl&&state.calibStep<0){
     const artH=pl.wpx*(art.height/art.width);
+    const isDk=regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH);
+    const drawArt=recoloredArtFor(side,isDk)||art;
     ctx.save();
     ctx.translate(pl.anchorX,pl.topY+artH/2);ctx.rotate(pl.rot*Math.PI/180);
     ctx.globalAlpha=0.97;
-    ctx.drawImage(art,-pl.wpx/2,-artH/2,pl.wpx,artH);
+    ctx.drawImage(drawArt,-pl.wpx/2,-artH/2,pl.wpx,artH);
     ctx.restore();
     if(state.fabricBlend){
       ctx.save();ctx.globalCompositeOperation='multiply';
@@ -882,16 +935,18 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
 function screensFor(photo,side,loc){
   const inks=state.artInks.length||1;
   const pl=computePlacement(photo,side,loc);
-  let ub=0;
-  if(state.autoUnderbase&&pl){
+  let dark=false;
+  if(pl){
     const art=artFor(side);
     const artH=art?pl.wpx*(art.height/art.width):pl.wpx;
-    ub=regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH)?1:0;
+    dark=regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH);
   }
-  return {inks,ub,total:inks+ub};
+  const ub=(state.autoUnderbase&&dark)?1:0;
+  return {inks,ub,total:inks+ub,dark};
 }
+function inkIdxFor(a,dark){return (dark&&a.darkIdx!=null)?a.darkIdx:a.idx;}
 function pmsCalloutText(sc){
-  const names=state.inkAssign.map(a=>`PMS ${PMS[a.idx][0]} (${PMS[a.idx][2]})`);
+  const names=state.inkAssign.map(a=>{const i=inkIdxFor(a,sc.dark);return `PMS ${PMS[i][0]} (${PMS[i][2]})`;});
   if(sc.ub)names.push('White UB (Std)');
   return names.join(' · ');
 }
@@ -962,7 +1017,25 @@ function refreshInkList(){
     const cls=a.match>=90?'':a.match>=75?'mid':'low';
     const det=document.createElement('div');det.className='inkdet';
     det.innerHTML=`detected ${ink.hex.toUpperCase()} · ${ink.pct}% coverage · <span class="match ${cls}">${a.match}% match</span>${a.auto?' (auto)':''}`;
-    right.appendChild(sel);right.appendChild(det);
+    // v6.7: per-ink dark-garment swap
+    const ds=document.createElement('div');ds.className='darkswap';
+    const dl=document.createElement('span');dl.className='dslbl';dl.textContent='on darks →';
+    const sel2=document.createElement('select');
+    const same=document.createElement('option');same.value='';same.textContent='same ink';sel2.appendChild(same);
+    let lastFam2='',og2=null;
+    PMS.forEach((p,i)=>{
+      if(p[3]!==lastFam2){og2=document.createElement('optgroup');og2.label=p[3];sel2.appendChild(og2);lastFam2=p[3];}
+      const o=document.createElement('option');o.value=i;o.textContent=`PMS ${p[0]} · ${p[2]}`;
+      if(a.darkIdx===i)o.selected=true;
+      og2.appendChild(o);
+    });
+    sel2.onchange=e=>{
+      state.inkAssign[idx].darkIdx=e.target.value===''?null:+e.target.value;
+      activeSet().inkAssign=state.inkAssign;
+      refresh();buildBoard();
+    };
+    ds.appendChild(dl);ds.appendChild(sel2);
+    right.appendChild(sel);right.appendChild(ds);right.appendChild(det);
     row.appendChild(chip);row.appendChild(right);
     el.appendChild(row);
   });
@@ -1004,9 +1077,11 @@ function refresh(){
   } else $('actualIn').textContent='—';
   const plel=$('previewPms');plel.innerHTML='';
   state.inkAssign.forEach(a=>{
-    const p=PMS[a.idx];
+    const i=inkIdxFor(a,sc.dark);
+    const p=PMS[i];
+    const swapped=i!==a.idx;
     const c=document.createElement('span');c.className='pmschip';
-    c.innerHTML=`<i style="background:${p[1]}"></i>PMS ${p[0]} <span class="blk">${p[2]}</span> ${a.match}%`;
+    c.innerHTML=`<i style="background:${p[1]}"></i>PMS ${p[0]} <span class="blk">${p[2]}</span>${swapped?' ⇄':' '+a.match+'%'}`;
     plel.appendChild(c);
   });
   if(sc.ub){const c=document.createElement('span');c.className='pmschip';
@@ -1219,7 +1294,7 @@ function renderSetTabs(){
   });
   const add=document.createElement('button');add.className='addset';add.textContent='+ SET';
   add.onclick=()=>{
-    SETS.push({name:'SET '+String.fromCharCode(65+SETS.length),items:[],artF:null,artB:null,artInks:[],inkAssign:[]});
+    SETS.push({name:'SET '+String.fromCharCode(65+SETS.length),items:[],artF:null,artB:null,dupBack:false,liveInk:true,artInks:[],inkAssign:[]});
     switchSet(SETS.length-1);
   };
   el.appendChild(add);
@@ -1233,6 +1308,7 @@ function switchSet(i){
   state.artF=nxt.artF;state.artB=nxt.artB;
   state.artInks=nxt.artInks||[];state.inkAssign=nxt.inkAssign||[];
   $('dupBack').checked=!!nxt.dupBack;
+  $('liveInk').checked=nxt.liveInk!==false;
   renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();refresh();buildBoard();
 }
 function renderSetItems(){
@@ -1575,6 +1651,10 @@ $('dupBack').onchange=e=>{
   reDetect();activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
   refreshArtNote();refresh();buildBoard();
 };
+$('liveInk').onchange=e=>{
+  activeSet().liveInk=e.target.checked;
+  refresh();buildBoard();
+};
 $('calibBtn').onclick=()=>{state.calibStep>=0?cancelCalib():startCalib();refresh();};
 $('showAnchors').onclick=()=>{
   state.showAnchors=!state.showAnchors;
@@ -1585,6 +1665,7 @@ wireDrop('baseDrop','baseInput',handleFiles,true);
 wireDrop('artDropF','artInputF',f=>loadImgFile(f,img=>{
   const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
   c.getContext('2d').drawImage(img,0,0);
+  c.__id='art'+(artIdSeq++);
   state.artF=c;activeSet().artF=c;reDetect();
   activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
   refreshArtNote();refresh();buildBoard();
@@ -1592,6 +1673,7 @@ wireDrop('artDropF','artInputF',f=>loadImgFile(f,img=>{
 wireDrop('artDropB','artInputB',f=>loadImgFile(f,img=>{
   const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
   c.getContext('2d').drawImage(img,0,0);
+  c.__id='art'+(artIdSeq++);
   state.artB=c;activeSet().artB=c;reDetect();
   activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
   refreshArtNote();refresh();buildBoard();
@@ -1620,6 +1702,8 @@ $('removeSet').onclick=()=>{
   const nxt=activeSet();
   state.artF=nxt.artF;state.artB=nxt.artB;
   state.artInks=nxt.artInks||[];state.inkAssign=nxt.inkAssign||[];
+  $('dupBack').checked=!!nxt.dupBack;
+  $('liveInk').checked=nxt.liveInk!==false;
   renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();refresh();buildBoard();
 };
 activeSet().artF=state.artF; // default demo art belongs to SET A
