@@ -103,6 +103,17 @@
   ::-webkit-scrollbar-track{background:transparent;}
   ::-webkit-scrollbar-thumb{background:#2C3238;border-radius:5px;border:2px solid #0E0F10;}
   ::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+  #pvc{cursor:zoom-in;}
+  #lb{position:fixed;inset:0;background:rgba(10,11,12,.95);z-index:100;display:flex;
+    flex-direction:column;align-items:center;padding:16px;gap:12px;overflow:auto;}
+  #lb[hidden]{display:none;}
+  .lb-top{width:100%;max-width:1200px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  #lbLabel{font-family:'JetBrains Mono',monospace;color:var(--accent2);font-weight:700;font-size:14px;letter-spacing:.08em;}
+  #lbc{background:#fff;border-radius:4px;max-height:72vh;max-width:94vw;width:auto;display:block;}
+  .lb-ctl{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;}
+  .lb-ctl .val{margin:0;}
+  .lb-nav{display:flex;gap:10px;}
+  .lb-nav button{min-width:64px;}
 </style>
 </head>
 <body>
@@ -210,10 +221,24 @@
             </div>
           </div>
         </div>
-        <div class="val">This is exactly what the Mockup Lab will produce. Nudge until every location sits right, then publish.</div>
+        <div class="val">This is exactly what the Mockup Lab will produce. Click any shirt to inspect it full-screen with 1px fine nudges. When every location sits right, publish.</div>
       </div>
     </div>
   </main>
+</div>
+
+<div id="lb" hidden>
+  <div class="lb-top">
+    <span id="lbLabel">—</span>
+    <div class="lb-nav">
+      <button class="btn ghost sm" id="lbPrev">← prev</button>
+      <button class="btn ghost sm" id="lbNext">next →</button>
+      <button class="btn sm" id="lbClose">✕ close</button>
+    </div>
+  </div>
+  <canvas id="lbc"></canvas>
+  <div class="lb-ctl" id="lbCtl"></div>
+  <div class="val">1px per tap · ← → switch placements · Esc closes</div>
 </div>
 
 <footer>
@@ -782,16 +807,80 @@ $('pvBtn').onclick=()=>{
   w.hidden=false;$('pvBtn').classList.add('on');
   loadSidePhoto('front',()=>loadSidePhoto('back',renderPreview));
 };
+function nudgeCal(side,key,d){
+  const st=CAT.styles[sel.style];
+  const cal=st&&st.calib&&st.calib[side];
+  if(!cal||cal.default){alert('Calibrate '+side+' first.');return false;}
+  cal[key]=(+cal[key])+(+d);
+  markDirty(sel.style+' '+side+' nudged — publish to save');
+  renderPreview();render();
+  return true;
+}
 document.querySelectorAll('[data-nudge]').forEach(b=>{
   b.onclick=()=>{
     const [side,key,d]=b.dataset.nudge.split(',');
-    const st=CAT.styles[sel.style];
-    const cal=st&&st.calib&&st.calib[side];
-    if(!cal||cal.default){alert('Calibrate '+side+' first.');return;}
-    cal[key]=(+cal[key])+(+d);
-    markDirty(sel.style+' '+side+' nudged — publish to save');
-    renderPreview();render();
+    nudgeCal(side,key,+d);
   };
+});
+
+/* ================= FULL-SCREEN PLACEMENT INSPECTOR ================= */
+let lbIndex=-1;
+const lbEl=$('lb'),lbc=$('lbc');
+function openLb(i){
+  lbIndex=i;lbEl.hidden=false;renderLb();
+}
+function closeLb(){lbEl.hidden=true;lbIndex=-1;}
+$('lbClose').onclick=closeLb;
+$('lbPrev').onclick=()=>{lbIndex=(lbIndex+PV_CELLS.length-1)%PV_CELLS.length;renderLb();};
+$('lbNext').onclick=()=>{lbIndex=(lbIndex+1)%PV_CELLS.length;renderLb();};
+lbEl.addEventListener('click',e=>{if(e.target===lbEl)closeLb();});
+document.addEventListener('keydown',e=>{
+  if(lbEl.hidden)return;
+  if(e.key==='Escape')closeLb();
+  else if(e.key==='ArrowLeft'){lbIndex=(lbIndex+PV_CELLS.length-1)%PV_CELLS.length;renderLb();}
+  else if(e.key==='ArrowRight'){lbIndex=(lbIndex+1)%PV_CELLS.length;renderLb();}
+});
+function renderLb(){
+  const cell=PV_CELLS[lbIndex];if(!cell)return;
+  const st=CAT.styles[sel.style];
+  const photo=pvPhotos[cell.side];
+  const cal=st&&st.calib&&st.calib[cell.side];
+  $('lbLabel').textContent=sel.style+' · '+cell.label;
+  // full-resolution render for precision
+  if(!photo){lbc.width=700;lbc.height=400;const x=lbc.getContext('2d');
+    x.fillStyle='#fff';x.fillRect(0,0,700,400);x.fillStyle='#999';
+    x.font='700 16px monospace';x.textAlign='center';x.fillText('no '+cell.side+' photo',350,200);x.textAlign='left';
+  } else {
+    lbc.width=photo.width;lbc.height=photo.height;
+    const x=lbc.getContext('2d');
+    x.drawImage(photo,0,0);
+    if(cal&&!cal.default&&LOGO_DARK){
+      const anchorX=(cell.line==='leftChestX'?(cal.leftChestX||cal.centerX):cal.centerX);
+      const wpx=cell.w*cal.ppi;
+      const topY=cal.collarY+cell.drop*cal.ppi;
+      const lh=wpx*(LOGO_DARK.height/LOGO_DARK.width);
+      x.globalAlpha=0.92;
+      x.drawImage(LOGO_DARK,anchorX-wpx/2,topY,wpx,lh);
+      x.globalAlpha=1;
+    }
+  }
+  // fine nudge controls for this cell's side
+  const ctl=$('lbCtl');ctl.innerHTML='';
+  const mk=(label,side,key,d)=>{
+    const b=document.createElement('button');b.className='btn ghost sm';b.textContent=label;
+    b.onclick=()=>{if(nudgeCal(side,key,d))renderLb();};
+    ctl.appendChild(b);
+  };
+  mk('◀ center',cell.side,'centerX',-1);mk('center ▶',cell.side,'centerX',1);
+  mk('▲ collar',cell.side,'collarY',-1);mk('collar ▼',cell.side,'collarY',1);
+  if(cell.line==='leftChestX'){mk('◀ l-chest',cell.side,'leftChestX',-1);mk('l-chest ▶',cell.side,'leftChestX',1);}
+}
+$('pvc').addEventListener('click',e=>{
+  const r=$('pvc').getBoundingClientRect();
+  const px=(e.clientX-r.left)*($('pvc').width/r.width);
+  const CW=340,PAD=14;
+  const i=Math.floor((px-PAD)/(CW+PAD));
+  if(i>=0&&i<PV_CELLS.length)openLb(i);
 });
 $('calibBtn').onclick=()=>{calStep>=0?cancelCalib():startCalib();render();};
 $('showLines').onclick=()=>{showLines=!showLines;$('showLines').classList.toggle('on',showLines);render();};
