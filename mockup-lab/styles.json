@@ -6,7 +6,7 @@
    "fullFront": {
     "line": "center",
     "drop": 3,
-    "defaultWidth": 11
+    "defaultWidth": 10
    },
    "leftChest": {
     "line": "leftChest",
@@ -28,7 +28,7 @@
    "fullBack": {
     "line": "center",
     "drop": 4,
-    "defaultWidth": 11
+    "defaultWidth": 10
    },
    "nape": {
     "line": "center",
@@ -38,7 +38,7 @@
    "upperBack": {
     "line": "center",
     "drop": 1.5,
-    "defaultWidth": 11
+    "defaultWidth": 10
    },
    "customB": {
     "line": "center",
