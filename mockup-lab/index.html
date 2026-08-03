@@ -675,6 +675,53 @@ const PMS=[
 ["XOLB-701","#E68699","B13","Shop Mixes"]
 ];
 const PMS_RGB=PMS.map(p=>{const n=parseInt(p[1].slice(1),16);return [n>>16&255,n>>8&255,n&255];});
+/* v7.4 MAYHEM STANDARD INKS — the shop's pre-mixed standard colors from the
+   11x17 "Standard Ink Colors" poster, keyed by library PMS code.
+   [shop name, allstar] — allstar ★ = most-popular. Always steer jobs to these. */
+const STD_INKS={
+  'White':['WHITE',1],'Cool Gray 8':['SHOP GREY',1],'Black':['BLACK',1],'Cool Gray 4':['SILVER GREY',0],
+  'Cool Gray 11':['CHARCOAL',0],'Cool Gray 6':['MEDIUM GREY',0],'Ninety Ten (426)':['90 BLK-10 WHITE',0],
+  'Warm Gray 5':['WARM GREY 5C',0],'Warm Gray 8':['WARM GREY 8C',0],'Warm Gray 11':['WARM GREY 11C',0],
+  '2112':['TEAM PURPLE',0],'272':['LIGHT PURPLE',0],'669':['DARK PURPLE',0],'268':['VIOLET',1],
+  '295':['LIGHT NAVY',0],'286':['UK BLUE',0],'300':['LIGHT ROYAL',1],'282':['NAVY',1],'294':['DARK BLUE',0],
+  '801':['LIGHT BLUE',1],'2195':['CYAN',0],'2985':['SKY BLUE',0],'284':['CAROLINA BLUE',0],'2184':['CONTACT BLUE',0],
+  '2738':['ROYAL',1],'2372':['COBALT BLUE',0],'312':['TURQUOISE',0],'313':['CARIBBEAN BLUE',0],'659':['ARCTIC BLUE',0],
+  'Orange 021':['ORANGE',1],'151':['PUMPKIN',0],'7585':['BURNT ORANGE',0],'1795':['RED ORANGE',0],'1645':['TANGERINE',0],
+  '348':['KELLY GREEN',1],'7739':['GRASS GREEN',0],'3435':['DARK GREEN',0],'360':['LIME GREEN',0],'2397':['AQUA',0],
+  '3262':['TEAL',1],'376':['GRANNY SMITH',0],'337':['MINT',0],'567':['PINE GREEN',1],'341':['SHAMROCK',0],
+  '378':['OLIVE GREEN',0],'364':['LEAF GREEN',0],'373':['PISTACHIO',0],
+  '2039':['HOT PINK',0],'210':['LIGHT PINK',0],'1775':['COTTON CANDY',0],'219':['FUCHSIA',1],
+  '200':['RED',0],'7644':['MAROON',0],'186':['BRIGHT RED',1],'202':['SCARLET',0],'209':['CRANBERRY',0],
+  'Red 032':['WATERMELON',0],'7421':['GARNET',0],'4975':['RED BROWN',0],'187':['RUBY RED',1],'7642':['BURGUNDY',0],
+  '7641':['BLACK CHERRY',0],
+  '130':['GOLDEN YELLOW',1],'108':['LEMON YELLOW',1],'1375':['GOLD',0],'106':['LIGHT YELLOW',0],
+  '7499':['CREAM',0],'4515':['VEGAS GOLD',0],'7533':['CHOCOLATE BROWN',0],'2309':['BONE WHITE',0],
+  '7589':['BROWN',0],'731':['DERBY BROWN',0],'482':['FLESH',0],'4675':['TAN',0],'117':['OLD GOLD',0],
+  '483':['BURNT UMBER',0],'7502':['PRO VEGAS GOLD',0],'1685':['RUST',0]
+};
+function stdInfo(i){const p=PMS[i];return p?(STD_INKS[p[0]]||null):null;}
+/* shared ink <select> builder: Mayhem standards on top (allstars first), full library below */
+function buildInkOptions(sel,selIdx){
+  const og0=document.createElement('optgroup');og0.label='★ MAYHEM STANDARDS';
+  const stds=[];PMS.forEach((p,i)=>{const s=STD_INKS[p[0]];if(s)stds.push([i,s]);});
+  stds.sort((a,b)=>(b[1][1]-a[1][1])||a[1][0].localeCompare(b[1][0]));
+  stds.forEach(([i,s])=>{
+    const o=document.createElement('option');o.value=i;
+    o.textContent=(s[1]?'★ ':'')+s[0]+' · PMS '+PMS[i][0];
+    if(i===selIdx)o.selected=true;
+    og0.appendChild(o);
+  });
+  sel.appendChild(og0);
+  let lastFam='',og=null;
+  PMS.forEach((p,i)=>{
+    if(p[3]!==lastFam){og=document.createElement('optgroup');og.label=p[3];sel.appendChild(og);lastFam=p[3];}
+    const s=STD_INKS[p[0]];
+    const o=document.createElement('option');o.value=i;
+    o.textContent=`PMS ${p[0]} · ${p[2]}`+(s?` · ${s[0]}`:'');
+    if(i===selIdx&&!s)o.selected=true;
+    og.appendChild(o);
+  });
+}
 function pmsDist(r,g,b,i){
   const[pr,pg,pb]=PMS_RGB[i];
   const rm=(r+pr)/2;
@@ -1130,7 +1177,10 @@ function screensFor(photo,side,loc){
 }
 function inkIdxFor(a,dark){return (dark&&a.darkIdx!=null)?a.darkIdx:a.idx;}
 function pmsCalloutText(sc){
-  const names=state.inkAssign.map(a=>{const i=inkIdxFor(a,sc.dark);return `PMS ${PMS[i][0]} (${PMS[i][2]})`;});
+  const names=state.inkAssign.map(a=>{
+    const i=inkIdxFor(a,sc.dark),s=STD_INKS[PMS[i][0]];
+    return `PMS ${PMS[i][0]}${s?' '+s[0]:''} (${PMS[i][2]})`;
+  });
   if(sc.ub)names.push('White UB (Std)');
   return names.join(' · ');
 }
@@ -1195,13 +1245,7 @@ function refreshInkList(){
     const chip=document.createElement('span');chip.className='inkchip';chip.style.background=ink.hex;
     const right=document.createElement('div');
     const sel=document.createElement('select');
-    let lastFam='',og=null;
-    PMS.forEach((p,i)=>{
-      if(p[3]!==lastFam){og=document.createElement('optgroup');og.label=p[3];sel.appendChild(og);lastFam=p[3];}
-      const o=document.createElement('option');o.value=i;o.textContent=`PMS ${p[0]} · ${p[2]}`;
-      if(i===state.inkAssign[idx].idx)o.selected=true;
-      og.appendChild(o);
-    });
+    buildInkOptions(sel,state.inkAssign[idx].idx);
     sel.onchange=e=>{
       const i=+e.target.value;
       state.inkAssign[idx]={idx:i,match:matchPct(pmsDist(ink.r,ink.g,ink.b,i)),auto:false};
@@ -1216,13 +1260,7 @@ function refreshInkList(){
     const dl=document.createElement('span');dl.className='dslbl';dl.textContent='on darks →';
     const sel2=document.createElement('select');
     const same=document.createElement('option');same.value='';same.textContent='same ink';sel2.appendChild(same);
-    let lastFam2='',og2=null;
-    PMS.forEach((p,i)=>{
-      if(p[3]!==lastFam2){og2=document.createElement('optgroup');og2.label=p[3];sel2.appendChild(og2);lastFam2=p[3];}
-      const o=document.createElement('option');o.value=i;o.textContent=`PMS ${p[0]} · ${p[2]}`;
-      if(a.darkIdx===i)o.selected=true;
-      og2.appendChild(o);
-    });
+    buildInkOptions(sel2,a.darkIdx==null?-1:a.darkIdx);
     sel2.onchange=e=>{
       state.inkAssign[idx].darkIdx=e.target.value===''?null:+e.target.value;
       activeSet().inkAssign=state.inkAssign;
@@ -2144,11 +2182,15 @@ function drawInkChips(ctx,x,y,dark){
     const p=PMS[i];
     ctx.fillStyle=p[1];ctx.fillRect(cx,y,30,30);
     ctx.strokeStyle='#CFCFCB';ctx.lineWidth=1;ctx.strokeRect(cx,y,30,30);
+    const s=STD_INKS[p[0]];
     ctx.fillStyle='#131517';ctx.font='700 13px "JetBrains Mono", monospace';
-    ctx.fillText('PMS '+p[0],cx+38,y+13);
+    const l1=s?(s[1]?'★ ':'')+s[0]:'PMS '+p[0];
+    ctx.fillText(l1,cx+38,y+13);
+    const w1=ctx.measureText(l1).width;
     ctx.fillStyle='#888';ctx.font='500 11px "JetBrains Mono", monospace';
-    ctx.fillText(p[2]+((i!==a.idx)?' · swap':''),cx+38,y+28);
-    cx+=48+Math.max(66,ctx.measureText('PMS '+p[0]).width+18);
+    const l2=(s?'PMS '+p[0]+' · ':'')+p[2]+((i!==a.idx)?' · swap':'');
+    ctx.fillText(l2,cx+38,y+28);
+    cx+=48+Math.max(66,w1+18,ctx.measureText(l2).width+18);
   });
   return cx;
 }
@@ -2285,7 +2327,26 @@ function renderSummaryTo(pg){
     ctx.textAlign='left';
     ctx.fillStyle='#98A0A6';ctx.font='500 9.5px "JetBrains Mono", monospace';
     ctx.fillText('CONTRAST BACKGROUND FOR REFERENCE ONLY — NOT PRINTED',x0+26,cardH+196-158+cardH-160-8>0?196+cardH-160-10:640);
-    drawInkChips(ctx,x0+24,168+cardH-56,false);
+    drawInkChips(ctx,x0+24,168+cardH-78,false);
+    /* v7.4: call out inks that change on dark shirts — the crew needs to know
+       a screen prints a different color depending on the garment */
+    const swaps=state.inkAssign.filter(a=>a.darkIdx!=null&&a.darkIdx!==a.idx);
+    if(swaps.length){
+      let sx=x0+24;const sy=168+cardH-22;
+      ctx.font='700 12px "JetBrains Mono", monospace';
+      swaps.forEach((a,si)=>{
+        const p1=PMS[a.idx],p2=PMS[a.darkIdx];
+        ctx.fillStyle=p2[1];ctx.fillRect(sx,sy-12,14,14);
+        ctx.strokeStyle='#CFCFCB';ctx.lineWidth=1;ctx.strokeRect(sx,sy-12,14,14);
+        ctx.fillStyle='#1A6FB0';
+        const s1=STD_INKS[p1[0]],s2=STD_INKS[p2[0]];
+        const txt=(s1?s1[0]+' (PMS '+p1[0]+')':'PMS '+p1[0])
+          +' CHANGES TO '+(s2?s2[0]+' (PMS '+p2[0]+')':'PMS '+p2[0]+' ('+p2[2]+')')
+          +' ON DARK SHIRTS'+(si<swaps.length-1?'   ·   ':'');
+        ctx.fillText(txt,sx+20,sy);
+        sx+=20+ctx.measureText(txt).width+14;
+      });
+    }
     stampWatermark(ctx,x0+14,196,cardW-28,cardH-160,'rgba(255,255,255,0.05)',24);
     x0+=cardW+gap;
   });
@@ -2376,14 +2437,15 @@ function renderInkSimple(){
   if(!state.artInks.length)return;
   const lab=document.createElement('span');lab.textContent='Printing in:';el.appendChild(lab);
   state.inkAssign.forEach(a=>{
-    const p=PMS[a.idx];
+    const p=PMS[a.idx],s=STD_INKS[p[0]];
     const c=document.createElement('span');c.className='isc';
-    c.innerHTML=`<i style="background:${p[1]}"></i>PMS ${p[0]}`;
+    c.innerHTML=`<i style="background:${p[1]}"></i>${s?(s[1]?'★ ':'')+s[0]:'PMS '+p[0]}`;
+    c.title=s?('Mayhem standard ink · PMS '+p[0]):('PMS '+p[0]+' — custom mix');
     el.appendChild(c);
     if(a.darkIdx!=null){
-      const p2=PMS[a.darkIdx];
+      const p2=PMS[a.darkIdx],s2=STD_INKS[p2[0]];
       const c2=document.createElement('span');c2.className='isc';
-      c2.innerHTML=`<i style="background:${p2[1]}"></i>${p2[0]} on darks`;
+      c2.innerHTML=`<i style="background:${p2[1]}"></i>${s2?s2[0]:'PMS '+p2[0]} on darks`;
       el.appendChild(c2);
     }
   });
