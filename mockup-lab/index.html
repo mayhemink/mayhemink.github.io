@@ -678,44 +678,62 @@ const PMS_RGB=PMS.map(p=>{const n=parseInt(p[1].slice(1),16);return [n>>16&255,n
 /* v7.4 MAYHEM STANDARD INKS — the shop's pre-mixed standard colors from the
    11x17 "Standard Ink Colors" poster, keyed by library PMS code.
    [shop name, allstar] — allstar ★ = most-popular. Always steer jobs to these. */
-const STD_INKS={
-  'White':['WHITE',1],'Cool Gray 8':['SHOP GREY',1],'Black':['BLACK',1],'Cool Gray 4':['SILVER GREY',0],
-  'Cool Gray 11':['CHARCOAL',0],'Cool Gray 6':['MEDIUM GREY',0],'Ninety Ten (426)':['90 BLK-10 WHITE',0],
-  'Warm Gray 5':['WARM GREY 5C',0],'Warm Gray 8':['WARM GREY 8C',0],'Warm Gray 11':['WARM GREY 11C',0],
-  '2112':['TEAM PURPLE',0],'272':['LIGHT PURPLE',0],'669':['DARK PURPLE',0],'268':['VIOLET',1],
-  '295':['LIGHT NAVY',0],'286':['UK BLUE',0],'300':['LIGHT ROYAL',1],'282':['NAVY',1],'294':['DARK BLUE',0],
-  '801':['LIGHT BLUE',1],'2195':['CYAN',0],'2985':['SKY BLUE',0],'284':['CAROLINA BLUE',0],'2184':['CONTACT BLUE',0],
-  '2738':['ROYAL',1],'2372':['COBALT BLUE',0],'312':['TURQUOISE',0],'313':['CARIBBEAN BLUE',0],'659':['ARCTIC BLUE',0],
-  'Orange 021':['ORANGE',1],'151':['PUMPKIN',0],'7585':['BURNT ORANGE',0],'1795':['RED ORANGE',0],'1645':['TANGERINE',0],
-  '348':['KELLY GREEN',1],'7739':['GRASS GREEN',0],'3435':['DARK GREEN',0],'360':['LIME GREEN',0],'2397':['AQUA',0],
-  '3262':['TEAL',1],'376':['GRANNY SMITH',0],'337':['MINT',0],'567':['PINE GREEN',1],'341':['SHAMROCK',0],
-  '378':['OLIVE GREEN',0],'364':['LEAF GREEN',0],'373':['PISTACHIO',0],
-  '2039':['HOT PINK',0],'210':['LIGHT PINK',0],'1775':['COTTON CANDY',0],'219':['FUCHSIA',1],
-  '200':['RED',0],'7644':['MAROON',0],'186':['BRIGHT RED',1],'202':['SCARLET',0],'209':['CRANBERRY',0],
-  'Red 032':['WATERMELON',0],'7421':['GARNET',0],'4975':['RED BROWN',0],'187':['RUBY RED',1],'7642':['BURGUNDY',0],
-  '7641':['BLACK CHERRY',0],
-  '130':['GOLDEN YELLOW',1],'108':['LEMON YELLOW',1],'1375':['GOLD',0],'106':['LIGHT YELLOW',0],
-  '7499':['CREAM',0],'4515':['VEGAS GOLD',0],'7533':['CHOCOLATE BROWN',0],'2309':['BONE WHITE',0],
-  '7589':['BROWN',0],'731':['DERBY BROWN',0],'482':['FLESH',0],'4675':['TAN',0],'117':['OLD GOLD',0],
-  '483':['BURNT UMBER',0],'7502':['PRO VEGAS GOLD',0],'1685':['RUST',0]
-};
+/* STD_LIST is in EXACT 11x17 poster order (Greys → Purples → Blues → Oranges →
+   Greens → Pinks → Reds → Yellows → Neutrals/Browns, card order within each) —
+   the dropdown mirrors the printed sheet so the crew's muscle memory works. */
+const STD_LIST=[
+  ['White','WHITE',1],['Cool Gray 8','SHOP GREY',1],['Black','BLACK',1],['Cool Gray 4','SILVER GREY',0],
+  ['Cool Gray 11','CHARCOAL',0],['Cool Gray 6','MEDIUM GREY',0],['Ninety Ten (426)','90 BLK-10 WHITE',0],
+  ['Warm Gray 5','WARM GREY 5C',0],['Warm Gray 8','WARM GREY 8C',0],['Warm Gray 11','WARM GREY 11C',0],
+  ['2112','TEAM PURPLE',0],['272','LIGHT PURPLE',0],['669','DARK PURPLE',0],['268','VIOLET',1],
+  ['295','LIGHT NAVY',0],['286','UK BLUE',0],['300','LIGHT ROYAL',1],['282','NAVY',1],['294','DARK BLUE',0],
+  ['801','LIGHT BLUE',1],['2195','CYAN',0],['2985','SKY BLUE',0],['284','CAROLINA BLUE',0],['2184','CONTACT BLUE',0],
+  ['2738','ROYAL',1],['2372','COBALT BLUE',0],['312','TURQUOISE',0],['313','CARIBBEAN BLUE',0],['659','ARCTIC BLUE',0],
+  ['Orange 021','ORANGE',1],['151','PUMPKIN',0],['7585','BURNT ORANGE',0],['1795','RED ORANGE',0],['1645','TANGERINE',0],
+  ['348','KELLY GREEN',1],['7739','GRASS GREEN',0],['3435','DARK GREEN',0],['360','LIME GREEN',0],['2397','AQUA',0],
+  ['3262','TEAL',1],['376','GRANNY SMITH',0],['337','MINT',0],['567','PINE GREEN',1],['341','SHAMROCK',0],
+  ['378','OLIVE GREEN',0],['364','LEAF GREEN',0],['373','PISTACHIO',0],
+  ['2039','HOT PINK',0],['210','LIGHT PINK',0],['1775','COTTON CANDY',0],['219','FUCHSIA',1],
+  ['200','RED',0],['7644','MAROON',0],['186','BRIGHT RED',1],['202','SCARLET',0],['209','CRANBERRY',0],
+  ['Red 032','WATERMELON',0],['7421','GARNET',0],['4975','RED BROWN',0],['187','RUBY RED',1],['7642','BURGUNDY',0],
+  ['7641','BLACK CHERRY',0],
+  ['130','GOLDEN YELLOW',1],['108','LEMON YELLOW',1],['1375','GOLD',0],['106','LIGHT YELLOW',0],
+  ['7499','CREAM',0],['4515','VEGAS GOLD',0],['7533','CHOCOLATE BROWN',0],['2309','BONE WHITE',0],
+  ['7589','BROWN',0],['731','DERBY BROWN',0],['482','FLESH',0],['4675','TAN',0],['117','OLD GOLD',0],
+  ['483','BURNT UMBER',0],['7502','PRO VEGAS GOLD',0],['1685','RUST',0]
+];
+const STD_INKS={};STD_LIST.forEach(s=>{STD_INKS[s[0]]=[s[1],s[2]];});
 function stdInfo(i){const p=PMS[i];return p?(STD_INKS[p[0]]||null):null;}
-/* shared ink <select> builder: Mayhem standards on top (allstars first), full library below */
-function buildInkOptions(sel,selIdx){
+/* shared ink <select> builder: Mayhem standards on top (poster order), full
+   library below. Optional query filters everything (name / PMS code / block /
+   family) — the currently-selected ink always stays in the list. */
+function buildInkOptions(sel,selIdx,query){
+  const q=(query||'').trim().toLowerCase();
+  const hit=(p,s)=>{
+    if(!q)return true;
+    return (s&&s[0].toLowerCase().includes(q))
+      ||('pms '+p[0]).toLowerCase().includes(q)
+      ||p[0].toLowerCase().includes(q)
+      ||p[2].toLowerCase()===q
+      ||p[3].toLowerCase().includes(q);
+  };
+  const idxByCode={};PMS.forEach((p,i)=>{idxByCode[p[0]]=i;});
   const og0=document.createElement('optgroup');og0.label='★ MAYHEM STANDARDS';
-  const stds=[];PMS.forEach((p,i)=>{const s=STD_INKS[p[0]];if(s)stds.push([i,s]);});
-  stds.sort((a,b)=>(b[1][1]-a[1][1])||a[1][0].localeCompare(b[1][0]));
-  stds.forEach(([i,s])=>{
+  STD_LIST.forEach(st=>{
+    const i=idxByCode[st[0]];if(i==null)return;
+    const p=PMS[i],s=[st[1],st[2]];
+    if(!hit(p,s)&&i!==selIdx)return;
     const o=document.createElement('option');o.value=i;
-    o.textContent=(s[1]?'★ ':'')+s[0]+' · PMS '+PMS[i][0];
+    o.textContent=(s[1]?'★ ':'')+s[0]+' · PMS '+p[0];
     if(i===selIdx)o.selected=true;
     og0.appendChild(o);
   });
-  sel.appendChild(og0);
+  if(og0.children.length)sel.appendChild(og0);
   let lastFam='',og=null;
   PMS.forEach((p,i)=>{
-    if(p[3]!==lastFam){og=document.createElement('optgroup');og.label=p[3];sel.appendChild(og);lastFam=p[3];}
     const s=STD_INKS[p[0]];
+    if(!hit(p,s)&&i!==selIdx)return;
+    if(p[3]!==lastFam||!og){og=document.createElement('optgroup');og.label=p[3];sel.appendChild(og);lastFam=p[3];}
     const o=document.createElement('option');o.value=i;
     o.textContent=`PMS ${p[0]} · ${p[2]}`+(s?` · ${s[0]}`:'');
     if(i===selIdx&&!s)o.selected=true;
@@ -1244,11 +1262,15 @@ function refreshInkList(){
     const row=document.createElement('div');row.className='inkrow';
     const chip=document.createElement('span');chip.className='inkchip';chip.style.background=ink.hex;
     const right=document.createElement('div');
+    /* v7.4.1: ink search — filters both dropdowns in this row */
+    const fil=document.createElement('input');
+    fil.type='search';fil.placeholder='🔍 find an ink — try "white"';
+    fil.style.cssText='width:100%;margin:0 0 5px;padding:5px 8px;background:#131517;border:1px solid #3A4046;border-radius:4px;color:#E8EAEC;font:500 11px "JetBrains Mono",monospace;outline:none;';
     const sel=document.createElement('select');
     buildInkOptions(sel,state.inkAssign[idx].idx);
     sel.onchange=e=>{
       const i=+e.target.value;
-      state.inkAssign[idx]={idx:i,match:matchPct(pmsDist(ink.r,ink.g,ink.b,i)),auto:false};
+      state.inkAssign[idx]={idx:i,match:matchPct(pmsDist(ink.r,ink.g,ink.b,i)),auto:false,darkIdx:state.inkAssign[idx].darkIdx};
       refreshInkList();refresh();buildBoard();
     };
     const a=state.inkAssign[idx];
@@ -1267,7 +1289,17 @@ function refreshInkList(){
       refresh();buildBoard();
     };
     ds.appendChild(dl);ds.appendChild(sel2);
-    right.appendChild(sel);right.appendChild(ds);right.appendChild(det);
+    fil.oninput=()=>{
+      const q=fil.value;
+      sel.innerHTML='';
+      buildInkOptions(sel,state.inkAssign[idx].idx,q);
+      sel2.innerHTML='';
+      const same2=document.createElement('option');same2.value='';same2.textContent='same ink';
+      if(a.darkIdx==null)same2.selected=true;
+      sel2.appendChild(same2);
+      buildInkOptions(sel2,a.darkIdx==null?-1:a.darkIdx,q);
+    };
+    right.appendChild(fil);right.appendChild(sel);right.appendChild(ds);right.appendChild(det);
     row.appendChild(chip);row.appendChild(right);
     el.appendChild(row);
   });
