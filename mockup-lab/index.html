@@ -2142,13 +2142,13 @@ function drawInkChips(ctx,x,y,dark){
   state.inkAssign.forEach(a=>{
     const i=inkIdxFor(a,dark);
     const p=PMS[i];
-    ctx.fillStyle=p[1];ctx.fillRect(cx,y,26,26);
-    ctx.strokeStyle='#CFCFCB';ctx.lineWidth=1;ctx.strokeRect(cx,y,26,26);
-    ctx.fillStyle='#131517';ctx.font='700 12px "JetBrains Mono", monospace';
-    ctx.fillText('PMS '+p[0],cx+34,y+12);
-    ctx.fillStyle='#888';ctx.font='500 10px "JetBrains Mono", monospace';
-    ctx.fillText(p[2]+((i!==a.idx)?' · swap':''),cx+34,y+25);
-    cx+=44+Math.max(60,ctx.measureText('PMS '+p[0]).width+16);
+    ctx.fillStyle=p[1];ctx.fillRect(cx,y,30,30);
+    ctx.strokeStyle='#CFCFCB';ctx.lineWidth=1;ctx.strokeRect(cx,y,30,30);
+    ctx.fillStyle='#131517';ctx.font='700 13px "JetBrains Mono", monospace';
+    ctx.fillText('PMS '+p[0],cx+38,y+13);
+    ctx.fillStyle='#888';ctx.font='500 11px "JetBrains Mono", monospace';
+    ctx.fillText(p[2]+((i!==a.idx)?' · swap':''),cx+38,y+28);
+    cx+=48+Math.max(66,ctx.measureText('PMS '+p[0]).width+18);
   });
   return cx;
 }
@@ -2163,6 +2163,32 @@ function locWidth(side){
   return f.widthIn||RULES[side][loc].defaultWidth;
 }
 
+/* v7.3.1: find the garment inside a studio photo (near-white background) so
+   approval cards can crop the photo's built-in margins — the shirt, not the
+   whitespace, fills the card. Threshold: any channel below 242 = content. */
+function garmentBBox(cv){
+  const w=cv.width,h=cv.height;
+  let d;
+  try{d=cv.getContext('2d').getImageData(0,0,w,h).data;}catch(e){return {x:0,y:0,w,h};}
+  let minX=w,minY=h,maxX=-1,maxY=-1;
+  const step=3;
+  for(let y=0;y<h;y+=step){
+    const row=y*w;
+    for(let x=0;x<w;x+=step){
+      const p=(row+x)*4;
+      if(d[p+3]>200&&(d[p]<242||d[p+1]<242||d[p+2]<242)){
+        if(x<minX)minX=x;if(x>maxX)maxX=x;
+        if(y<minY)minY=y;if(y>maxY)maxY=y;
+      }
+    }
+  }
+  if(maxX<0)return {x:0,y:0,w,h};
+  const pad=Math.round(Math.max(maxX-minX,maxY-minY)*0.025);
+  minX=Math.max(0,minX-pad);minY=Math.max(0,minY-pad);
+  maxX=Math.min(w-1,maxX+pad);maxY=Math.min(h-1,maxY+pad);
+  return {x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1};
+}
+
 /* ---------- customer approval page (one per colorway) ---------- */
 function approvalFor(item){
   const g=garmentIndex().find(x=>x.styleKey===item.styleKey&&slug(x.colorName)===slug(item.colorName));
@@ -2175,9 +2201,9 @@ function approvalFor(item){
   const sides=[];
   if(g.front)sides.push(['front',g.front]);
   if(g.back)sides.push(['back',g.back]);
-  /* v7.3: shirts fill the page — taller cards, image box ~36% larger, title
-     compacted to one line under the cards */
-  const cardY=160,cardH=790;
+  /* v7.3.1: shirts fill the page — photo whitespace cropped away, image box
+     and text ~10% larger, title compacted to one line under the cards */
+  const cardY=156,cardH=800;
   const cardW=sides.length===2?690:900,gap=40;
   const totalW=cardW*sides.length+gap*(sides.length-1);
   let x0=(W-totalW)/2;
@@ -2189,31 +2215,32 @@ function approvalFor(item){
     ctx.beginPath();ctx.roundRect(x0,cardY,cardW,cardH,10);ctx.fill();ctx.stroke();
     const cv=document.createElement('canvas');
     renderMock(photo,cv,side,state.loc[side],false);
-    const boxW=cardW-36,boxH=640;
-    const scl=Math.min(boxW/cv.width,boxH/cv.height);
-    const fitW=cv.width*scl,fitH=cv.height*scl;
-    ctx.drawImage(cv,x0+(cardW-fitW)/2,190+(boxH-fitH)/2,fitW,fitH);
-    ctx.fillStyle='#4B9CD3';ctx.font='700 13px "JetBrains Mono", monospace';
-    ctx.fillText(side.toUpperCase(),x0+24,182);
-    ctx.fillStyle='#666';ctx.font='500 13px "JetBrains Mono", monospace';
-    ctx.fillText(locLabel(side)+' · '+locWidth(side)+'" wide',x0+80,182);
+    const gb=garmentBBox(cv);
+    const boxW=cardW-36,boxH=660;
+    const scl=Math.min(boxW/gb.w,boxH/gb.h);
+    const fitW=gb.w*scl,fitH=gb.h*scl;
+    ctx.drawImage(cv,gb.x,gb.y,gb.w,gb.h,x0+(cardW-fitW)/2,188+(boxH-fitH)/2,fitW,fitH);
+    ctx.fillStyle='#4B9CD3';ctx.font='700 14px "JetBrains Mono", monospace';
+    ctx.fillText(side.toUpperCase(),x0+24,180);
+    ctx.fillStyle='#666';ctx.font='500 14px "JetBrains Mono", monospace';
+    ctx.fillText(locLabel(side)+' · '+locWidth(side)+'" wide',x0+86,180);
     const sc=screensFor(photo,side,state.loc[side]);
     if(!firstSc)firstSc=sc;
-    drawInkChips(ctx,x0+24,cardY+cardH-92,sc.dark);
+    const cxEnd=drawInkChips(ctx,x0+24,cardY+cardH-70,sc.dark);
     if(sc.ub){
-      ctx.fillStyle='#888';ctx.font='500 11px "JetBrains Mono", monospace';
-      ctx.fillText('+ white underbase',x0+24,cardY+cardH-30);
+      ctx.fillStyle='#888';ctx.font='500 12px "JetBrains Mono", monospace';
+      ctx.fillText('+ white underbase',cxEnd+6,cardY+cardH-70+19);
     }
     stampWatermark(ctx,x0,cardY,cardW,cardH,'rgba(19,21,23,0.05)',24);
     x0+=cardW+gap;
   });
   const s=STYLES[item.styleKey]||{name:item.styleKey,sub:''};
-  ctx.fillStyle='#E8EAEC';ctx.font='900 28px "Archivo Black", Arial Black, sans-serif';
+  ctx.fillStyle='#E8EAEC';ctx.font='900 31px "Archivo Black", Arial Black, sans-serif';
   const nm=item.colorName.toUpperCase();
-  ctx.fillText(nm,50,988);
+  ctx.fillText(nm,50,992);
   const nw=ctx.measureText(nm).width;
-  ctx.fillStyle='#98A0A6';ctx.font='500 14px "JetBrains Mono", monospace';
-  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?firstSc.total+' screens':''),50+nw+28,988);
+  ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono", monospace';
+  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?firstSc.total+' screens':''),50+nw+30,992);
   drawPageFooter(ctx,W,H,'Approve garment, artwork size, placement, and ink colors before production.');
   downloadCanvas(pg,'approval-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
 }
