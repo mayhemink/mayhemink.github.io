@@ -2215,11 +2215,14 @@ function approvalFor(item){
     ctx.beginPath();ctx.roundRect(x0,cardY,cardW,cardH,10);ctx.fill();ctx.stroke();
     const cv=document.createElement('canvas');
     renderMock(photo,cv,side,state.loc[side],false);
+    /* v7.3.2: sweet spot — cropped shirt at ~88% of the card zone, centered
+       with even breathing room between label, shirt, and ink callouts */
     const gb=garmentBBox(cv);
-    const boxW=cardW-36,boxH=660;
+    const zoneTop=192,zoneBot=862;
+    const boxW=cardW-76,boxH=576;
     const scl=Math.min(boxW/gb.w,boxH/gb.h);
     const fitW=gb.w*scl,fitH=gb.h*scl;
-    ctx.drawImage(cv,gb.x,gb.y,gb.w,gb.h,x0+(cardW-fitW)/2,188+(boxH-fitH)/2,fitW,fitH);
+    ctx.drawImage(cv,gb.x,gb.y,gb.w,gb.h,x0+(cardW-fitW)/2,zoneTop+(zoneBot-zoneTop-fitH)/2,fitW,fitH);
     ctx.fillStyle='#4B9CD3';ctx.font='700 14px "JetBrains Mono", monospace';
     ctx.fillText(side.toUpperCase(),x0+24,180);
     ctx.fillStyle='#666';ctx.font='500 14px "JetBrains Mono", monospace';
