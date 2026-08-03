@@ -516,8 +516,9 @@
       <h3><span class="pn">4</span> Downloads</h3>
       <p class="desc" id="boardDesc">Add shirts to build the job.</p>
       <div class="bigdl">
-        <button class="btn" id="dlAllApprovals">⬇ CUSTOMER APPROVAL PAGES</button>
-        <button class="btn ghost" id="dlShopSheet">⬇ SHOP PRINT SHEET</button>
+        <button class="btn" id="dlJobZip">⬇ SAVE THE WHOLE JOB — ONE FILE</button>
+        <button class="btn ghost" id="dlAllApprovals">⬇ APPROVAL PAGES ONLY</button>
+        <button class="btn ghost" id="dlShopSheet">⬇ SHOP PRINT SHEET ONLY</button>
       </div>
       <div class="mrow" id="manifestRow"></div>
       <div class="btnrow" id="boardCtl" style="margin-top:12px;align-items:center;">
@@ -2264,7 +2265,7 @@ function garmentBBox(cv){
 }
 
 /* ---------- customer approval page (one per colorway) ---------- */
-function approvalFor(item){
+function approvalFor(item,ret){
   const g=garmentIndex().find(x=>x.styleKey===item.styleKey&&slug(x.colorName)===slug(item.colorName));
   if(!g)return;
   const W=1500,H=1080;
@@ -2319,6 +2320,7 @@ function approvalFor(item){
   ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono", monospace';
   ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?firstSc.total+' screens':''),50+nw+30,992);
   drawPageFooter(ctx,W,H,'Approve garment, artwork size, placement, and ink colors before production.');
+  if(ret)return pg;
   downloadCanvas(pg,'approval-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
 }
 $('dlApproval').onclick=()=>{
@@ -2525,6 +2527,85 @@ $('dlAllApprovals').onclick=()=>{
   items.forEach((it,i)=>setTimeout(()=>approvalFor(it),i*450));
 };
 $('dlShopSheet').onclick=()=>$('dlSummary').onclick();
+
+/* ============ v7.5 ONE-CLICK JOB ZIP ============ */
+/* Store-mode ZIP writer (no compression — PNGs are already compressed). */
+const CRC_TABLE=(()=>{const t=new Uint32Array(256);
+  for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[n]=c;}
+  return t;})();
+function crc32(u8){
+  let c=0xFFFFFFFF;
+  for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&0xFF]^(c>>>8);
+  return (c^0xFFFFFFFF)>>>0;
+}
+function zipStore(entries){
+  const enc=new TextEncoder();
+  const parts=[],central=[];
+  let offset=0;
+  const d=new Date();
+  const dosTime=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1))&0xFFFF;
+  const dosDate=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate())&0xFFFF;
+  entries.forEach(e=>{
+    const name=enc.encode(e.name),data=e.data,crc=crc32(data);
+    const lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);
+    lh.setUint16(8,0,true);lh.setUint16(10,dosTime,true);lh.setUint16(12,dosDate,true);
+    lh.setUint32(14,crc,true);lh.setUint32(18,data.length,true);lh.setUint32(22,data.length,true);
+    lh.setUint16(26,name.length,true);lh.setUint16(28,0,true);
+    parts.push(lh.buffer,name,data);
+    const ch=new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);
+    ch.setUint16(10,0,true);ch.setUint16(12,dosTime,true);ch.setUint16(14,dosDate,true);
+    ch.setUint32(16,crc,true);ch.setUint32(20,data.length,true);ch.setUint32(24,data.length,true);
+    ch.setUint16(28,name.length,true);
+    ch.setUint32(42,offset,true);
+    central.push(ch.buffer,name);
+    offset+=30+name.length+data.length;
+  });
+  let cdSize=0;central.forEach(b=>cdSize+=(b.byteLength!==undefined?b.byteLength:b.length));
+  const end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true);
+  end.setUint16(8,entries.length,true);end.setUint16(10,entries.length,true);
+  end.setUint32(12,cdSize,true);end.setUint32(16,offset,true);
+  return new Blob([...parts,...central,end.buffer],{type:'application/zip'});
+}
+function jobFolderName(){
+  const cust=($('jobCustomer').value||'').trim()||'Mayhem Job';
+  const q=($('jobQuote').value||'').trim();
+  return (cust+(q?' - Quote '+q:'')).replace(/[\\/:*?"<>|]/g,'').trim();
+}
+async function buildJobZip(){
+  const items=activeSet().items;
+  if(!items.length)return null;
+  const folder=jobFolderName();
+  const toU8=cv=>new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/png'));
+  const entries=[];
+  for(const it of items){
+    const pg=approvalFor(it,true);
+    if(pg)entries.push({name:folder+'/approval-'+slug(it.styleKey)+'-'+slug(it.colorName)+'.png',data:await toU8(pg)});
+  }
+  const sum=document.createElement('canvas');
+  renderSummaryTo(sum);
+  entries.push({name:folder+'/shop-print-sheet.png',data:await toU8(sum)});
+  return {name:folder+'.zip',blob:zipStore(entries),count:entries.length};
+}
+$('dlJobZip').onclick=async()=>{
+  const items=activeSet().items;
+  if(!items.length){alert('Add shirts to the job first (step 2).');return;}
+  const b=$('dlJobZip'),orig=b.textContent;
+  b.disabled=true;b.textContent='BUILDING '+(items.length+1)+' FILES…';
+  try{
+    const z=await buildJobZip();
+    const a=document.createElement('a');a.download=z.name;
+    a.href=URL.createObjectURL(z.blob);a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+    b.textContent='✓ SAVED — '+z.count+' FILES';
+    setTimeout(()=>{b.textContent=orig;b.disabled=false;},2200);
+  }catch(e){
+    b.textContent=orig;b.disabled=false;
+    alert('Could not build the job file — try again or use the single downloads.');
+  }
+};
 
 const __v72ril=refreshInkList;refreshInkList=function(){__v72ril();renderInkSimple();updateFlipBanner();};
 const __v72rf=refresh;refresh=function(){__v72rf();updateStepper();updateFlipBanner();};
