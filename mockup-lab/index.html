@@ -921,6 +921,19 @@ function regionIsDark(photo,x,y,w,h){
   return (sum/n)<0.42;
 }
 
+/* v7.3 per-shirt ink override: each set item can force which ink palette it
+   prints in — 'auto' (decide by shirt darkness, the old behavior), 'light'
+   (main colors), or 'dark' (the on-darks alternates + underbase). */
+function itemFor(photo){
+  if(!photo)return null;
+  return activeSet().items.find(it=>it.styleKey===photo.styleKey&&slug(it.colorName)===slug(photo.colorName));
+}
+function inkModeFor(photo){const it=itemFor(photo);return (it&&it.inkMode)||'auto';}
+function effectiveDark(photo,detected){
+  const m=inkModeFor(photo);
+  return m==='auto'?detected:m==='dark';
+}
+
 /* ================= DEFAULT ART ================= */
 function buildDefaultArt(){
   const c=document.createElement('canvas');c.width=800;c.height=560;
@@ -1030,7 +1043,7 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
   const pl=computePlacement(photo,side,loc);
   if(art&&pl&&state.calibStep<0){
     const artH=pl.wpx*(art.height/art.width);
-    const isDk=regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH);
+    const isDk=effectiveDark(photo,regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH));
     const drawArt=recoloredArtFor(side,isDk)||art;
     ctx.save();
     ctx.translate(pl.anchorX,pl.topY+artH/2);ctx.rotate(pl.rot*Math.PI/180);
@@ -1111,6 +1124,7 @@ function screensFor(photo,side,loc){
     const artH=art?pl.wpx*(art.height/art.width):pl.wpx;
     dark=regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH);
   }
+  dark=effectiveDark(photo,dark);
   const ub=(state.autoUnderbase&&dark)?1:0;
   return {inks,ub,total:inks+ub,dark};
 }
@@ -1506,6 +1520,22 @@ function renderSetItems(){
       state.previewGarment={styleKey:it.styleKey,colorSlug:slug(it.colorName)};
       state.styleKey=it.styleKey;buildStyleTabs();refreshCalibStatus();refresh();
     };
+    /* v7.3: per-shirt ink palette toggle — AUTO → LIGHT → DARK */
+    const m=it.inkMode||'auto';
+    const im=document.createElement('button');
+    im.textContent=m==='auto'?'AUTO':m==='light'?'LIGHT':'DARK';
+    im.title='Ink colors for THIS shirt — AUTO decides by shirt darkness · LIGHT = main colors · DARK = the on-darks colors (+ white underbase)';
+    im.style.cssText='font:700 8.5px "JetBrains Mono",monospace;letter-spacing:.4px;padding:3px 6px;margin-right:2px;border:1px solid '
+      +(m==='auto'?'#3A4046':'#4B9CD3')+';border-radius:3px;cursor:pointer;background:'
+      +(m==='auto'?'transparent':m==='dark'?'#131517':'#E8EAEC')+';color:'
+      +(m==='auto'?'#98A0A6':m==='dark'?'#7BAFD4':'#131517')+';';
+    im.onclick=e=>{
+      e.stopPropagation();
+      const ms=['auto','light','dark'];
+      it.inkMode=ms[(ms.indexOf(m)+1)%3];
+      renderSetItems();refresh();buildBoard();
+    };
+    chip.appendChild(im);
     const x=document.createElement('button');x.textContent='✕';
     x.onclick=e=>{e.stopPropagation();set.items.splice(idx,1);renderSetTabs();renderSetItems();buildBoard();};
     chip.appendChild(x);
@@ -1582,7 +1612,19 @@ function buildBoard(){
       <div class="csub">${s.name} · ${s.sub}<br>${pmsCalloutText(sc)}<br>${sc.inks} ink${sc.inks>1?'s':''}${sc.ub?' + <span class="ub">white UB</span>':''} = ${sc.total} screens</div>`;
     const dl=document.createElement('button');dl.className='btn ghost sm cdl';dl.textContent='PNG';
     dl.onclick=()=>downloadCanvas(cvs[0],`${slug(s.name)}-${slug(main.colorName)}.png`);
-    body.appendChild(dl);card.appendChild(body);
+    body.appendChild(dl);
+    /* v7.3: swap ink palette straight from the board card */
+    const bm=(itemFor(main)||{}).inkMode||'auto';
+    const sw=document.createElement('button');sw.className='btn ghost sm cdl';
+    sw.textContent='INKS: '+(bm==='auto'?'AUTO · '+(sc.dark?'dark':'light'):bm.toUpperCase());
+    sw.title='Swap which ink colors THIS shirt prints in (AUTO → LIGHT → DARK)';
+    sw.onclick=()=>{
+      const it=itemFor(main);if(!it)return;
+      const ms=['auto','light','dark'];
+      it.inkMode=ms[(ms.indexOf(bm)+1)%3];
+      renderSetItems();refresh();buildBoard();
+    };
+    body.appendChild(sw);card.appendChild(body);
     grid.appendChild(card);
   });
 }
@@ -2133,7 +2175,10 @@ function approvalFor(item){
   const sides=[];
   if(g.front)sides.push(['front',g.front]);
   if(g.back)sides.push(['back',g.back]);
-  const cardW=sides.length===2?660:820,cardH=680,gap=44;
+  /* v7.3: shirts fill the page — taller cards, image box ~36% larger, title
+     compacted to one line under the cards */
+  const cardY=160,cardH=790;
+  const cardW=sides.length===2?690:900,gap=40;
   const totalW=cardW*sides.length+gap*(sides.length-1);
   let x0=(W-totalW)/2;
   let firstSc=null;
@@ -2141,30 +2186,34 @@ function approvalFor(item){
     // white card
     ctx.fillStyle='#FFFFFF';
     ctx.strokeStyle='#E2E2E0';ctx.lineWidth=2;
-    ctx.beginPath();ctx.roundRect(x0,168,cardW,cardH,10);ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.roundRect(x0,cardY,cardW,cardH,10);ctx.fill();ctx.stroke();
     const cv=document.createElement('canvas');
     renderMock(photo,cv,side,state.loc[side],false);
-    const fitH=470,fitW=fitH*(cv.width/cv.height);
-    ctx.drawImage(cv,x0+(cardW-fitW)/2,196,fitW,fitH);
+    const boxW=cardW-36,boxH=640;
+    const scl=Math.min(boxW/cv.width,boxH/cv.height);
+    const fitW=cv.width*scl,fitH=cv.height*scl;
+    ctx.drawImage(cv,x0+(cardW-fitW)/2,190+(boxH-fitH)/2,fitW,fitH);
     ctx.fillStyle='#4B9CD3';ctx.font='700 13px "JetBrains Mono", monospace';
-    ctx.fillText(side.toUpperCase(),x0+24,196);
+    ctx.fillText(side.toUpperCase(),x0+24,182);
     ctx.fillStyle='#666';ctx.font='500 13px "JetBrains Mono", monospace';
-    ctx.fillText(locLabel(side)+' · '+locWidth(side)+'" wide',x0+80,196);
+    ctx.fillText(locLabel(side)+' · '+locWidth(side)+'" wide',x0+80,182);
     const sc=screensFor(photo,side,state.loc[side]);
     if(!firstSc)firstSc=sc;
-    drawInkChips(ctx,x0+24,168+cardH-92,sc.dark);
+    drawInkChips(ctx,x0+24,cardY+cardH-92,sc.dark);
     if(sc.ub){
       ctx.fillStyle='#888';ctx.font='500 11px "JetBrains Mono", monospace';
-      ctx.fillText('+ white underbase',x0+24,168+cardH-30);
+      ctx.fillText('+ white underbase',x0+24,cardY+cardH-30);
     }
-    stampWatermark(ctx,x0,168,cardW,cardH,'rgba(19,21,23,0.05)',24);
+    stampWatermark(ctx,x0,cardY,cardW,cardH,'rgba(19,21,23,0.05)',24);
     x0+=cardW+gap;
   });
   const s=STYLES[item.styleKey]||{name:item.styleKey,sub:''};
-  ctx.fillStyle='#E8EAEC';ctx.font='900 34px "Archivo Black", Arial Black, sans-serif';
-  ctx.fillText(item.colorName.toUpperCase(),50,930);
-  ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono", monospace';
-  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?firstSc.total+' screens':''),50,960);
+  ctx.fillStyle='#E8EAEC';ctx.font='900 28px "Archivo Black", Arial Black, sans-serif';
+  const nm=item.colorName.toUpperCase();
+  ctx.fillText(nm,50,988);
+  const nw=ctx.measureText(nm).width;
+  ctx.fillStyle='#98A0A6';ctx.font='500 14px "JetBrains Mono", monospace';
+  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?firstSc.total+' screens':''),50+nw+28,988);
   drawPageFooter(ctx,W,H,'Approve garment, artwork size, placement, and ink colors before production.');
   downloadCanvas(pg,'approval-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
 }
@@ -2184,7 +2233,7 @@ function renderSummaryTo(pg){
   const sides=[];
   if(artFor('front'))sides.push('front');
   if(artFor('back'))sides.push('back');
-  const cardW=sides.length===2?660:820,cardH=560,gap=44;
+  const cardW=sides.length===2?660:820,cardH=600,gap=44;
   const totalW=cardW*sides.length+gap*(sides.length-1);
   let x0=(W-totalW)/2;
   sides.forEach(side=>{
