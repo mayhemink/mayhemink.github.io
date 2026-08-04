@@ -1,0 +1,116 @@
+{
+ "day": "2026-08-03",
+ "_note": "Export posted 2026-08-03 15:40 MDT from an iPad still carrying the 2026-07-31 card set (no Monday repush). This file contains only the runs actually printed Mon 2026-08-03; the 6359-bolts-front entry in the raw export ran Fri 7/31 and is archived in data/2026-07-31.json.",
+ "rows": [
+  {
+   "id": "6359-tsgb-front",
+   "job": "6359",
+   "url": "",
+   "customer": "K9-Ops (cust. supplied)",
+   "location": "Front — Talk Shit Get Bit (center chest 4\", 1 color)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 74
+  },
+  {
+   "id": "6359-tsgb-back",
+   "job": "6359",
+   "url": "",
+   "customer": "K9-Ops (cust. supplied)",
+   "location": "Back — Talk Shit Get Bit (12\", 1 color)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 74
+  },
+  {
+   "id": "6359-ryd-front",
+   "job": "6359",
+   "url": "",
+   "customer": "K9-Ops (cust. supplied)",
+   "location": "Front LC — Run Your Dog (3.75\", 2 color)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 72
+  },
+  {
+   "id": "6359-ryd-back",
+   "job": "6359",
+   "url": "",
+   "customer": "K9-Ops (cust. supplied)",
+   "location": "Back yoke — Run Your Dog (10\", 2 color)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 72
+  }
+ ],
+ "times": {
+  "6359-tsgb-back": {
+   "printer": "Corey",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1785774108227,
+   "setupDone": 1785774110278,
+   "jobDone": 1785775915703,
+   "pauses": [],
+   "notes": ""
+  },
+  "6359-tsgb-front": {
+   "printer": "Corey",
+   "colors": 1,
+   "screens": 1,
+   "setupStart": 1785776489385,
+   "setupDone": 1785776658885,
+   "jobDone": 1785778307703,
+   "pauses": [
+    {
+     "start": 1785777923655,
+     "end": 1785777990549,
+     "reason": "Waiting on ink"
+    }
+   ],
+   "notes": ""
+  },
+  "6359-ryd-back": {
+   "printer": "Corey",
+   "colors": 2,
+   "screens": 2,
+   "setupStart": 1785778685866,
+   "setupDone": 1785779780036,
+   "jobDone": 1785788666327,
+   "pauses": [
+    {
+     "start": 1785779787653,
+     "end": 1785782303237,
+     "reason": "Lunch"
+    },
+    {
+     "start": 1785783485947,
+     "end": 1785784648158,
+     "reason": "Press problem"
+    }
+   ],
+   "notes": "Setup time was long due to changing to long pallets "
+  },
+  "6359-ryd-front": {
+   "printer": "Corey",
+   "colors": 2,
+   "screens": 2,
+   "setupStart": 1785789019180,
+   "setupDone": 1785789371564,
+   "jobDone": 1785793192170,
+   "pauses": [
+    {
+     "start": 1785789376197,
+     "end": 1785789793325,
+     "reason": "Other"
+    },
+    {
+     "start": 1785790650458,
+     "end": 1785790841922,
+     "reason": "Press problem"
+    }
+   ],
+   "notes": ""
+  }
+ }
+}
