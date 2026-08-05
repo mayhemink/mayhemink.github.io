@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-02T22:17:27.322Z",
+ "generated": "2026-08-05 (autopilot: +PC340)",
  "rules": {
   "front": {
    "fullFront": {
@@ -1286,6 +1286,232 @@
     {
      "file": "styles/NL6210/front/nl6210-white-front.jpg",
      "side": "front",
+     "color": "White"
+    }
+   ]
+  },
+  "PC340": {
+   "name": "Port & Company PC340",
+   "sub": "CVC Tee",
+   "tokens": [
+    "pc340"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 33.4426,
+     "centerX": 548.0,
+     "collarY": 211.2,
+     "leftChestX": 725.84,
+     "default": true
+    },
+    "back": {
+     "ppi": 33.4426,
+     "centerX": 548.0,
+     "collarY": 180.6,
+     "leftChestX": 548.0,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/PC340/front/pc340-athletic-heather-front.jpg",
+     "side": "front",
+     "color": "Athletic Heather"
+    },
+    {
+     "file": "styles/PC340/back/pc340-athletic-heather-back.jpg",
+     "side": "back",
+     "color": "Athletic Heather"
+    },
+    {
+     "file": "styles/PC340/front/pc340-athletic-kelly-green-heather-front.jpg",
+     "side": "front",
+     "color": "Athletic Kelly Green Heather"
+    },
+    {
+     "file": "styles/PC340/back/pc340-athletic-kelly-green-heather-back.jpg",
+     "side": "back",
+     "color": "Athletic Kelly Green Heather"
+    },
+    {
+     "file": "styles/PC340/front/pc340-awareness-pink-front.jpg",
+     "side": "front",
+     "color": "Awareness Pink"
+    },
+    {
+     "file": "styles/PC340/back/pc340-awareness-pink-back.jpg",
+     "side": "back",
+     "color": "Awareness Pink"
+    },
+    {
+     "file": "styles/PC340/front/pc340-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/PC340/back/pc340-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/PC340/front/pc340-charcoal-front.jpg",
+     "side": "front",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/PC340/back/pc340-charcoal-back.jpg",
+     "side": "back",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/PC340/front/pc340-charge-green-front.jpg",
+     "side": "front",
+     "color": "Charge Green"
+    },
+    {
+     "file": "styles/PC340/back/pc340-charge-green-back.jpg",
+     "side": "back",
+     "color": "Charge Green"
+    },
+    {
+     "file": "styles/PC340/front/pc340-dark-heather-grey-front.jpg",
+     "side": "front",
+     "color": "Dark Heather Grey"
+    },
+    {
+     "file": "styles/PC340/back/pc340-dark-heather-grey-back.jpg",
+     "side": "back",
+     "color": "Dark Heather Grey"
+    },
+    {
+     "file": "styles/PC340/front/pc340-deep-navy-front.jpg",
+     "side": "front",
+     "color": "Deep Navy"
+    },
+    {
+     "file": "styles/PC340/back/pc340-deep-navy-back.jpg",
+     "side": "back",
+     "color": "Deep Navy"
+    },
+    {
+     "file": "styles/PC340/front/pc340-desert-tan-heather-front.jpg",
+     "side": "front",
+     "color": "Desert Tan Heather"
+    },
+    {
+     "file": "styles/PC340/back/pc340-desert-tan-heather-back.jpg",
+     "side": "back",
+     "color": "Desert Tan Heather"
+    },
+    {
+     "file": "styles/PC340/front/pc340-forest-green-front.jpg",
+     "side": "front",
+     "color": "Forest Green"
+    },
+    {
+     "file": "styles/PC340/back/pc340-forest-green-back.jpg",
+     "side": "back",
+     "color": "Forest Green"
+    },
+    {
+     "file": "styles/PC340/front/pc340-heather-royal-front.jpg",
+     "side": "front",
+     "color": "Heather Royal"
+    },
+    {
+     "file": "styles/PC340/back/pc340-heather-royal-back.jpg",
+     "side": "back",
+     "color": "Heather Royal"
+    },
+    {
+     "file": "styles/PC340/front/pc340-mountain-blue-heather-front.jpg",
+     "side": "front",
+     "color": "Mountain Blue Heather"
+    },
+    {
+     "file": "styles/PC340/back/pc340-mountain-blue-heather-back.jpg",
+     "side": "back",
+     "color": "Mountain Blue Heather"
+    },
+    {
+     "file": "styles/PC340/front/pc340-red-front.jpg",
+     "side": "front",
+     "color": "Red"
+    },
+    {
+     "file": "styles/PC340/back/pc340-red-back.jpg",
+     "side": "back",
+     "color": "Red"
+    },
+    {
+     "file": "styles/PC340/front/pc340-royal-front.jpg",
+     "side": "front",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/PC340/back/pc340-royal-back.jpg",
+     "side": "back",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/PC340/front/pc340-silver-front.jpg",
+     "side": "front",
+     "color": "Silver"
+    },
+    {
+     "file": "styles/PC340/back/pc340-silver-back.jpg",
+     "side": "back",
+     "color": "Silver"
+    },
+    {
+     "file": "styles/PC340/front/pc340-smoky-amethyst-front.jpg",
+     "side": "front",
+     "color": "Smoky Amethyst"
+    },
+    {
+     "file": "styles/PC340/back/pc340-smoky-amethyst-back.jpg",
+     "side": "back",
+     "color": "Smoky Amethyst"
+    },
+    {
+     "file": "styles/PC340/front/pc340-team-cardinal-heather-front.jpg",
+     "side": "front",
+     "color": "Team Cardinal Heather"
+    },
+    {
+     "file": "styles/PC340/back/pc340-team-cardinal-heather-back.jpg",
+     "side": "back",
+     "color": "Team Cardinal Heather"
+    },
+    {
+     "file": "styles/PC340/front/pc340-team-navy-heather-front.jpg",
+     "side": "front",
+     "color": "Team Navy Heather"
+    },
+    {
+     "file": "styles/PC340/back/pc340-team-navy-heather-back.jpg",
+     "side": "back",
+     "color": "Team Navy Heather"
+    },
+    {
+     "file": "styles/PC340/front/pc340-tundra-blue-front.jpg",
+     "side": "front",
+     "color": "Tundra Blue"
+    },
+    {
+     "file": "styles/PC340/back/pc340-tundra-blue-back.jpg",
+     "side": "back",
+     "color": "Tundra Blue"
+    },
+    {
+     "file": "styles/PC340/front/pc340-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/PC340/back/pc340-white-back.jpg",
+     "side": "back",
      "color": "White"
     }
    ]
