@@ -229,33 +229,49 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ==DATA-START== (everything between the markers is regenerated daily — do not hand-edit)
+// The app itself never changes day to day. The day's cards live in data/today.json —
+// pushing a new day = replacing that ONE small file. A bad data push can't brick this
+// app; worst case the NO DATA bar shows. (Managed by the mayhem-timecards skill.)
 
-const DAY = "2026-08-06";
-const PRINTERS = ["Jalen","Corey","Spencer"];
-const COUNTS = [1,2,3,4,5,6];
-const ROWS = [
-  {"id": "6389-front", "job": "6389", "url": "", "customer": "DC Pub \u2014 Rock On Sasquatch (Titan)", "location": "Full front \u2014 Rock On Sasquatch (5 color) (cust. supplied)", "colors": 5, "screens": 5, "qty": 45},
-  {"id": "6390-front", "job": "6390", "url": "", "customer": "DC Pub \u2014 Don't Owe You Shit (Titan)", "location": "Front (2 color) (cust. supplied)", "colors": 2, "screens": 2, "qty": 45},
-  {"id": "6325-front", "job": "6325", "url": "", "customer": "TJ's Rentals \u2014 Rimer's", "location": "Full front \u2014 Rimer's (5 color)", "colors": 5, "screens": 5, "qty": 78},
-  {"id": "6325-slv-tjs", "job": "6325", "url": "", "customer": "TJ's Rentals \u2014 Rimer's", "location": "Sleeve \u2014 TJ's logo (2 color)", "colors": 2, "screens": 2, "qty": 78},
-  {"id": "6325-slv-flag", "job": "6325", "url": "", "customer": "TJ's Rentals \u2014 Rimer's", "location": "Sleeve \u2014 US Flag (1 color)", "colors": 1, "screens": 1, "qty": 78},
-  {"id": "6329-front", "job": "6329", "url": "", "customer": "Independence Garage Doors", "location": "Front (3 color)", "colors": 3, "screens": 3, "qty": 24}
-];
-const FLAGS = [
-  ["", "RUN ORDER: 6389 and 6390 FIRST. 6325 and 6329 run later today."],
-  ["6389", "45 customer-supplied garments (25 tees + 20 hoodies, black). Count them in before you start and flag any shortage \u2014 misprints are on the client. Log the tee\u2192hoodie changeover as a stop."],
-  ["6390", "45 customer-supplied garments (25 shirts + 20 hoodies, black). Count them in first. Log the shirt\u2192hoodie changeover as a stop."],
-  ["6325", "78 pieces across 8 garment styles, 3 locations. Tanks/V-necks in the mix \u2014 check sleeve prints fit before you run them. The 24 embroidered Otto caps on this order are NOT press work."],
-  ["6329", "VERIFY: imprint had no work type set in Printavo \u2014 details say Front / 3-color. Confirm with Kolton before you burn screens."],
-  ["", "More cards may be added later today \u2014 a repush won't erase progress already logged on your iPad."]
-];
-// ==DATA-END==
-
-const KEY = "mayhem_timing_" + DAY;
-let state = load();
+let DAY = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], ROWS = [], FLAGS = [], IMG = {};
+let KEY = null;
+let state = {};
 let currentRow = null;
 let ticker = null;
+
+function boot(data){
+  DAY = data.day;
+  PRINTERS = data.printers || PRINTERS;
+  COUNTS = data.counts || COUNTS;
+  ROWS = data.rows || [];
+  FLAGS = data.flags || [];
+  IMG = data.img || {};
+  KEY = "mayhem_timing_" + DAY;
+  state = load();
+  currentRow = null;
+  const lg = document.getElementById("crewlogo");
+  if(IMG.logo){ lg.src = IMG.logo; lg.style.display = "block"; } else { lg.style.display = "none"; }
+  document.getElementById("hdrdate").textContent = new Date(DAY + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+  showList();
+}
+function loadDay(){
+  fetch("data/today.json?v=" + Date.now(), {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(boot)
+    .catch(function(e){
+      document.getElementById("groups").innerHTML =
+        '<div class="flagbar"><div class="tag">NO DATA</div><div class="txt">Couldn&#39;t load today&#39;s cards (' + esc(e.message) + '). Check wifi and reload — if it keeps happening, tell Kolton.</div></div>';
+    });
+}
+// If an iPad wakes up on a new day with yesterday's board still open, refresh itself.
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "visible" && !currentRow && DAY){
+    fetch("data/today.json?v=" + Date.now(), {cache:"no-store"})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ if(d && d.day !== DAY) boot(d); })
+      .catch(function(){});
+  }
+});
 
 function load(){
   try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; }
@@ -368,6 +384,7 @@ function renderList(){
     }
     html += '</div>';
   }
+  if(!ROWS.length) html = '<div class="flagbar"><div class="tag" style="background:var(--green)">ALL CLEAR</div><div class="txt">No press cards on the board for ' + esc(DAY) + '.</div></div>';
   document.getElementById("groups").innerHTML = html;
   document.getElementById("flags").innerHTML = FLAGS.map(f =>
     '<div class="flagbar"><div class="tag">' + esc(f[0]) + '</div><div class="txt">' + f[1] + '</div></div>').join("");
@@ -738,12 +755,7 @@ function toast(msg){
   toastTimer = setTimeout(()=>{ el.style.display = "none"; }, 2200);
 }
 
-if(typeof IMG !== "undefined" && IMG.logo){
-  const lg = document.getElementById("crewlogo");
-  lg.src = IMG.logo; lg.style.display = "block";
-}
-document.getElementById("hdrdate").textContent = new Date(DAY + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
-showList();
+loadDay();
 </script>
 
 <div id="lightbox" onclick="if(event.target===this)hideLightbox()">
