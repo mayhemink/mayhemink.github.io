@@ -1,0 +1,32 @@
+{
+ "week": "2026-08-10",
+ "printers": ["Jalen", "Corey", "Spencer"],
+ "counts": [1, 2, 3, 4, 5, 6],
+ "days": [
+  {
+   "day": "2026-08-10",
+   "rows": [
+    {"id": "test1-front", "job": "TEST1", "url": "", "customer": "TEST JOB — do not print", "location": "Full front — sample (3 color)", "colors": 3, "screens": 3, "qty": 48, "note": "THIS IS THE NEW WEEKLY BOARD TEST — tap around, nothing counts"},
+    {"id": "test1-back", "job": "TEST1", "url": "", "customer": "TEST JOB — do not print", "location": "Back — sample (1 color)", "colors": 1, "screens": 1, "qty": 48}
+   ],
+   "flags": [["TEST", "This is the v3 WEEKLY board test page. Day tabs up top, search box finds any job all week, crew clock below — tap IN when you hit the floor. Real board is still the normal one."]]
+  },
+  {
+   "day": "2026-08-11",
+   "rows": [
+    {"id": "test2-lc", "job": "TEST2", "url": "", "customer": "TEST JOB TUESDAY", "location": "LC — sample logo (2 color)", "colors": 2, "screens": 2, "qty": 120}
+   ],
+   "flags": []
+  },
+  {"day": "2026-08-12", "rows": [], "flags": []},
+  {"day": "2026-08-13", "rows": [], "flags": []},
+  {
+   "day": "2026-08-14",
+   "rows": [
+    {"id": "test3-front", "job": "TEST3", "url": "", "customer": "TEST JOB FRIDAY", "location": "Front — sample (6 color)", "colors": 6, "screens": 6, "qty": 36}
+   ],
+   "flags": []
+  }
+ ],
+ "img": {}
+}
