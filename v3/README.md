@@ -1,1 +1,1 @@
-v3 weekly board test page — deployed 2026-08-06 (retrigger 20:08)
+v3 weekly board test page — deploy verify retrigger 2026-08-06T21:35 UTC
