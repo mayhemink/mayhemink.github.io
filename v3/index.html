@@ -381,8 +381,9 @@ function save(){
 function rec(id){
   var row = findRow(id);
   var st = stateFor(row);
-  if(!st[id]) st[id] = {printer:null, press:null, colors:row.colors, screens:row.screens, setupStart:null, setupDone:null, jobDone:null, pauses:[], notes:""};
+  if(!st[id]) st[id] = {printer:null, press:null, setupBy:null, printBy:null, colors:row.colors, screens:row.screens, setupStart:null, setupDone:null, jobDone:null, pauses:[], handoffs:[], notes:""};
   if(!st[id].pauses) st[id].pauses = [];
+  if(!st[id].handoffs) st[id].handoffs = [];
   if(st[id].colors == null) st[id].colors = row.colors;
   if(st[id].screens == null) st[id].screens = row.screens;
   return st[id];
@@ -419,6 +420,59 @@ function pausedMsBetween(r, a, b){
   }
   return t;
 }
+// ---------- handoffs (v3) ----------
+// A run can change hands mid-job. Each handoff stamps the time, who took over, and the
+// CUMULATIVE piece count at that moment — that's what lets each printer get an honest
+// pcs/hr instead of one guy eating the whole run. Skipping the count is allowed; the run
+// still totals correctly, it just can't be split per printer.
+function printHandoffs(r){
+  return (r.handoffs || []).filter(function(h){ return h.phase === "print"; });
+}
+function setupHandoffs(r){
+  return (r.handoffs || []).filter(function(h){ return h.phase === "setup"; });
+}
+function priorCum(r){
+  var hs = printHandoffs(r);
+  for(var i = hs.length-1; i >= 0; i--){ if(hs[i].pieces != null) return hs[i].pieces; }
+  return 0;
+}
+function crewStr(r){
+  if(!r) return "?";
+  var names = [];
+  if(r.printBy) names.push(r.printBy);
+  else if(r.printer) names.push(r.printer);
+  var hs = printHandoffs(r);
+  for(var i = 0; i < hs.length; i++){ if(names.indexOf(hs[i].to) === -1 || names[names.length-1] !== hs[i].to) names.push(hs[i].to); }
+  return names.length ? names.join(" → ") : (r.printer || "?");
+}
+// Split the print phase into per-printer segments, pauses removed from each.
+function printSegments(row){
+  var r = STATES[row._day][row.id] || {};
+  if(!r.setupDone) return [];
+  var hs = printHandoffs(r);
+  var endTs = r.jobDone || now();
+  var pts = [];
+  var who = r.printBy || r.printer || "?";
+  var t0 = r.setupDone, cum0 = 0;
+  for(var i = 0; i < hs.length; i++){
+    pts.push({printer: who, start: t0, end: hs[i].at, cumFrom: cum0, cumTo: hs[i].pieces});
+    who = hs[i].to; t0 = hs[i].at; cum0 = hs[i].pieces;
+  }
+  pts.push({printer: who, start: t0, end: endTs, cumFrom: cum0, cumTo: r.jobDone ? row.qty : null});
+  var out = [];
+  for(var j = 0; j < pts.length; j++){
+    var p = pts[j];
+    var ms = (p.end - p.start) - pausedMsBetween(r, p.start, p.end);
+    var pieces = (p.cumTo != null && p.cumFrom != null) ? (p.cumTo - p.cumFrom) : null;
+    out.push({
+      printer: p.printer, start: p.start, end: p.end, min: mins(ms), pieces: pieces,
+      pph: (pieces != null && ms > 0) ? Math.round(pieces / (ms/3600000)) : null,
+      open: !r.jobDone && j === pts.length - 1
+    });
+  }
+  return out;
+}
+
 function status(r){
   if(!r) return "idle";
   if(r.jobDone) return "done";
@@ -540,7 +594,8 @@ function renderGroups(){
         done:'<span class="badge done">Done</span>'
       }[st];
       var whoBits = [];
-      if(r2 && r2.printer) whoBits.push(esc(r2.printer));
+      if(r2 && (r2.handoffs||[]).length) whoBits.push(esc(crewStr(r2)));
+      else if(r2 && r2.printer) whoBits.push(esc(r2.printer));
       if(r2 && r2.press) whoBits.push(esc(r2.press));
       var who = whoBits.length ? '<div class="who">' + whoBits.join(" · ") + '</div>' : "";
       var cc = r2 && r2.colors != null ? r2.colors : row2.colors;
@@ -682,6 +737,8 @@ function renderNag(){
 function openRow(id){
   currentRow = findRow(id);
   editingField = null;
+  handoffPicking = false;
+  handoffDraft = {to:null, pieces:null};
   pausePicking = false;
   editingPause = null;
   pauseDraft = null;
@@ -741,16 +798,60 @@ function renderDetail(){
     html += '<div class="field"><label>Why did the job stop?</label><div class="segs" style="flex-wrap:wrap">' +
       PAUSE_REASONS.map(function(x){ return '<div class="seg" style="min-width:44%" onclick="pickPause(\'' + x + '\')">' + x + '</div>'; }).join("") +
       '<div class="seg" style="min-width:44%" onclick="cancelPause()">Cancel</div></div></div>';
+  } else if(handoffPicking){
+    var inPrint = !!r.setupDone;
+    var others = PRINTERS.filter(function(p){ return p !== r.printer; });
+    html += '<div class="field"><label>Who&#39;s taking over?</label><div class="segs">' +
+      others.map(function(p){ return '<div class="seg ' + (handoffDraft.to===p?"on":"") + '" onclick="setHandoffTo(\'' + p + '\')">' + p + '</div>'; }).join("") +
+      '</div>';
+    if(inPrint){
+      var prev = priorCum(r);
+      html += '<label style="margin-top:16px">Pieces done so far</label>' +
+        '<input type="number" id="hopieces" inputmode="numeric" value="' + (handoffDraft.pieces === null ? "" : handoffDraft.pieces) + '" placeholder="out of ' + row.qty + '"' +
+        ' style="width:100%;font-size:22px;font-weight:800;padding:14px;border:2px solid var(--line);border-radius:10px;-webkit-user-select:text;user-select:text">' +
+        '<div style="font-size:12px;color:var(--gray);font-weight:600;margin-top:8px;line-height:1.5">Count what&#39;s off the press right now' +
+        (prev ? ' (total for the whole run, not just since the last handoff — last count was ' + prev + ')' : '') +
+        '. Don&#39;t know? Leave it blank — the job still logs fine, it just won&#39;t split pcs/hr between you.</div>';
+    }
+    html += '<div style="display:flex;gap:8px;margin-top:14px">' +
+      '<button onclick="confirmHandoff()" style="flex:1;padding:15px;border:none;border-radius:10px;background:var(--green);color:#fff;font-weight:800;font-size:16px;cursor:pointer">HAND OFF</button>' +
+      '<button onclick="cancelHandoff()" style="padding:15px 18px;border:none;border-radius:10px;background:#ececee;color:var(--gray);font-weight:800;font-size:16px;cursor:pointer">Cancel</button>' +
+      '</div></div>';
   } else if(st === "idle"){
     var ready = !!r.printer;
     html += '<button class="bigbtn b-setup" ' + (ready?"":"disabled") + ' onclick="stamp(\'setupStart\')">' +
       (ready ? "START SETUP" : "Pick your name first") + '</button>';
   } else if(st === "setup"){
     html += '<div class="btnrow"><button class="bigbtn b-print" onclick="stamp(\'setupDone\')">SETUP DONE &#8594; PRINTING <span id="live"></span></button>' +
-      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>';
+      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>' + handoffBtn();
   } else if(st === "print"){
     html += '<div class="btnrow"><button class="bigbtn b-done" onclick="stamp(\'jobDone\')">JOB DONE <span id="live"></span></button>' +
-      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>';
+      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>' + handoffBtn();
+  }
+
+  // handoff log
+  if((r.handoffs||[]).length){
+    html += '<div class="field"><label>Handoffs</label>';
+    var segs = printSegments(row);
+    for(var hi = 0; hi < r.handoffs.length; hi++){
+      var h = r.handoffs[hi];
+      html += '<div class="pauselog" style="padding:6px 0;border-bottom:1px solid var(--line)"><b>' + fmt(h.at) + '</b> · ' +
+        esc(h.from || "?") + ' &#8594; ' + esc(h.to) +
+        (h.phase === "setup" ? ' <span style="color:var(--gray)">(during setup)</span>' :
+          (h.pieces != null ? ' · ' + h.pieces + ' pcs done' : ' <span style="color:var(--amber)">· pieces not counted</span>')) +
+        '</div>';
+    }
+    if(segs.length > 1){
+      html += '<div style="margin-top:10px;font-size:13px;font-weight:700;color:var(--gray)">';
+      for(var si = 0; si < segs.length; si++){
+        var s = segs[si];
+        html += '<div style="padding:3px 0">' + esc(s.printer) + ': ' + s.min + ' min' +
+          (s.pieces != null ? ' · ' + s.pieces + ' pcs · ' + s.pph + ' pcs/hr' : ' · not counted') +
+          (s.open ? ' <span style="color:var(--blue)">(running)</span>' : '') + '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
   }
 
   // stops (pause log) — editable
@@ -841,8 +942,56 @@ function stamp(field){
     if(!confirm("Print ran under 2 minutes — is the job really done?")) return;
   }
   r[field] = now();
+  // whoever finishes setup owns the setup minutes; whoever starts printing owns the print
+  // minutes from here until a handoff says otherwise
+  if(field === "setupDone"){
+    if(!r.setupBy) r.setupBy = r.printer;
+    if(!r.printBy) r.printBy = r.printer;
+  }
   save(); renderDetail();
   toast(field === "jobDone" ? "Job done — nice." : "Time logged " + fmt(now()));
+}
+
+// ---------- handoff actions (v3) ----------
+var handoffPicking = false;
+var handoffDraft = {to:null, pieces:null};
+function handoffBtn(){
+  return '<button onclick="startHandoff()" style="width:100%;padding:15px;border:2px solid var(--line);background:var(--card);' +
+    'border-radius:12px;font-size:16px;font-weight:800;color:var(--ink);cursor:pointer;margin-bottom:12px">' +
+    '&#8644; HAND OFF — someone else is taking over</button>';
+}
+function startHandoff(){
+  handoffDraft = {to:null, pieces:null};
+  handoffPicking = true;
+  renderDetail();
+}
+function cancelHandoff(){ handoffPicking = false; handoffDraft = {to:null, pieces:null}; renderDetail(); }
+function setHandoffTo(p){
+  var el = document.getElementById("hopieces");
+  if(el && el.value !== "" && !isNaN(Number(el.value))) handoffDraft.pieces = Math.round(Number(el.value));
+  handoffDraft.to = p;
+  renderDetail();
+}
+function confirmHandoff(){
+  var r = rec(currentRow.id);
+  if(!handoffDraft.to){ toast("Pick who's taking over"); return; }
+  var el = document.getElementById("hopieces");
+  var pieces = null;
+  if(el && el.value !== "" && !isNaN(Number(el.value))) pieces = Math.round(Number(el.value));
+  else if(handoffDraft.pieces != null) pieces = handoffDraft.pieces;
+  var phase = r.setupDone ? "print" : "setup";
+  if(phase === "print" && pieces != null){
+    var prev = priorCum(r);
+    if(pieces <= prev || pieces > currentRow.qty){
+      if(!confirm("Pieces so far (" + pieces + ") looks off — it should be between " + (prev+1) + " and " + currentRow.qty + " for the whole run. Save it anyway?")) return;
+    }
+  }
+  r.handoffs = r.handoffs || [];
+  r.handoffs.push({at: now(), from: r.printer, to: handoffDraft.to, pieces: (phase === "print" ? pieces : null), phase: phase});
+  r.printer = handoffDraft.to;
+  handoffPicking = false; handoffDraft = {to:null, pieces:null};
+  save(); renderDetail();
+  toast("Handed off to " + r.printer);
 }
 var PAUSE_REASONS = ["Lunch","Ink change","Broke a screen","Waiting on ink","Waiting on approval","Press problem","Other"];
 var NEW_PAUSE = -1;
@@ -1006,11 +1155,25 @@ function buildExport(){
         var ed = r.edits || {};
         var mk = function(f){ return ed[f] ? "*" : ""; };
         if(Object.keys(ed).length) anyEdits = true;
-        t += "\n    " + (r.printer||"?") + (r.press ? " on " + r.press : "") +
+        var sHand = setupHandoffs(r);
+        t += "\n    " + crewStr(r) + (r.press ? " on " + r.press : "") +
           " · setup " + fmt(r.setupStart) + mk("setupStart") + "–" + (r.setupDone?fmt(r.setupDone)+mk("setupDone"):"?") +
-          (m.setupMin!=null ? " (" + m.setupMin + "m)" : "") +
+          (m.setupMin!=null ? " (" + m.setupMin + "m" + (r.setupBy ? ", " + r.setupBy : "") + ")" : "") +
           " · done " + (r.jobDone?fmt(r.jobDone)+mk("jobDone"):"NOT FINISHED") +
           (m.printMin!=null ? " (" + m.printMin + "m print, " + m.pph + " pcs/hr)" : "") + "\n";
+        for(var shi = 0; shi < sHand.length; shi++){
+          t += "    SETUP HANDOFF " + fmt(sHand[shi].at) + ": " + (sHand[shi].from||"?") + " -> " + sHand[shi].to + " (setup time is shared)\n";
+        }
+        var psegs = printHandoffs(r).length ? printSegments(row2) : [];
+        if(psegs.length > 1){
+          t += "    HANDOFF RUN — print split:\n";
+          for(var pi2 = 0; pi2 < psegs.length; pi2++){
+            var sg = psegs[pi2];
+            t += "      " + sg.printer + " " + fmt(sg.start) + "–" + (sg.open ? "still running" : fmt(sg.end)) +
+              " (" + sg.min + "m" +
+              (sg.pieces != null ? ", " + sg.pieces + " pcs, " + sg.pph + " pcs/hr" : ", PIECES NOT COUNTED — don't split this one") + ")\n";
+          }
+        }
         if((r.pauses||[]).length){
           for(var qi = 0; qi < r.pauses.length; qi++){
             var p = r.pauses[qi];
