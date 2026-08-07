@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v7 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v7.6 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -428,6 +428,18 @@
       </div>
     </div>
 
+    <div class="panel" data-tabs="mock sum" id="pArt">
+      <h3><span class="pn">3</span> Logos</h3>
+      <p class="desc">Drop the art in. SVG is best — one setup covers every shirt in the job.</p>
+      <div class="row2">
+        <div class="drop" id="artDropF"><b>Front art</b>SVG (best) or transparent PNG<input type="file" id="artInputF" accept="image/*,.svg"></div>
+        <div class="drop" id="artDropB"><b>Back art</b>SVG (best) or transparent PNG<input type="file" id="artInputB" accept="image/*,.svg"></div>
+      </div>
+      <div class="checkline"><input type="checkbox" id="dupBack"><span>Same art on the back</span></div>
+      <div class="checkline" id="lineLive"><input type="checkbox" id="liveInk" checked><span>Recolor art to the chosen inks</span></div>
+      <div class="set-artnote" id="artSetNote"></div>
+    </div>
+
     <div class="panel" data-tabs="cal">
       <h3><span class="pn">00</span> Catalog &amp; calibration</h3>
       <p class="desc">Hosted mode loads photos + calibrations from styles.json automatically. Local mode: drop photos / a bundle.</p>
@@ -467,8 +479,9 @@
     <div class="stepper" id="stepper" data-tabs="mock">
       <span data-step="1">1 · JOB</span><i>→</i>
       <span data-step="2">2 · SHIRTS</span><i>→</i>
-      <span data-step="3">3 · ARTWORK</span><i>→</i>
-      <span data-step="4">4 · DOWNLOAD</span>
+      <span data-step="3">3 · LOGOS</span><i>→</i>
+      <span data-step="4">4 · INKS</span><i>→</i>
+      <span data-step="5">5 · DOWNLOAD</span>
     </div>
     <div class="drawbanner" id="drawBanner"></div>
     <div class="apv-card" id="apvCard">
@@ -513,7 +526,7 @@
     </div>
 
     <div class="panel below-card" data-tabs="mock" id="pDownloads">
-      <h3><span class="pn">4</span> Downloads</h3>
+      <h3><span class="pn">5</span> Downloads</h3>
       <p class="desc" id="boardDesc">Add shirts to build the job.</p>
       <div class="bigdl">
         <button class="btn" id="dlJobZip">⬇ SAVE THE WHOLE JOB — ONE FILE</button>
@@ -538,20 +551,13 @@
   <!-- RIGHT COLUMN -->
   <aside class="col-r" data-tabs="mock sum">
     <div class="panel" id="pInspect">
-      <h3><span class="pn">3</span> Artwork &amp; placement</h3>
-      <p class="desc">One setup applies to every shirt in the job.</p>
+      <h3><span class="pn">4</span> Ink colors &amp; placement</h3>
+      <p class="desc">Pick the inks and where the print sits. Applies to every shirt in the job.</p>
       <label class="lbl" style="margin-top:0;">Side</label>
       <div class="segmented" style="width:100%;display:flex;margin-bottom:10px;">
         <button id="sideFront" class="active" style="flex:1;">FRONT</button>
         <button id="sideBack" style="flex:1;">BACK</button>
       </div>
-      <div class="row2">
-        <div class="drop" id="artDropF"><b>Front art</b>SVG (best) or transparent PNG<input type="file" id="artInputF" accept="image/*,.svg"></div>
-        <div class="drop" id="artDropB"><b>Back art</b>SVG (best) or transparent PNG<input type="file" id="artInputB" accept="image/*,.svg"></div>
-      </div>
-      <div class="checkline"><input type="checkbox" id="dupBack"><span>Same art on the back</span></div>
-      <div class="checkline" id="lineLive"><input type="checkbox" id="liveInk" checked><span>Recolor art to the chosen inks</span></div>
-      <div class="set-artnote" id="artSetNote"></div>
       <div class="flip-banner" id="flipBanner" hidden>
         <span id="flipMsg">1-color logo — print it in <b>WHITE</b> on the dark shirts?</span>
         <button class="btn sm" id="flipYes">Yes</button>
@@ -601,7 +607,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V7 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V7.6 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2101,7 +2107,8 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>setTimeout
 let curTab='mock';
 function setTab(t){
   curTab=t;
-  document.body.className='tab-'+t;
+  /* v7.6 fix: keep the simple/advanced mode class — switching tabs used to wipe it */
+  document.body.className='tab-'+t+' mode-'+(uiMode||'simple');
   ['cal','mock','sum'].forEach(x=>{
     const b=document.getElementById('tabB'+x);
     if(b)b.classList.toggle('active',x===t);
@@ -2437,7 +2444,7 @@ function syncCalSideBtns(){
 const __v7rcs=refreshCalibStatus;refreshCalibStatus=function(){__v7rcs();syncCalSideBtns();};
 
 /* ================= v7.2 SIMPLE MODE ================= */
-let uiMode='simple';
+var uiMode='simple'; /* var, not let: setTab() reads it before this line runs */
 function setMode(m){
   uiMode=m;
   document.body.classList.toggle('mode-simple',m==='simple');
@@ -2448,10 +2455,14 @@ function setMode(m){
 }
 $('modeToggle').onclick=()=>setMode(uiMode==='simple'?'adv':'simple');
 
+/* v7.6: art upload lives in the LEFT column (step 3), inks + placement on the
+   right (step 4), downloads last (step 5). __inkTouched flips once the user
+   actually works the ink/placement panel, so the coaching glow moves on. */
 function currentStep(){
   if(!activeSet().items.length)return 2;
   if(!window.__userArt)return 3;
-  return 4;
+  if(!window.__inkTouched)return 4;
+  return 5;
 }
 function updateStepper(){
   const cur=currentStep();
@@ -2460,10 +2471,20 @@ function updateStepper(){
     el.classList.toggle('now',n===cur);
     el.classList.toggle('done',n<cur);
   });
-  [['pColors',2],['pInspect',3],['pDownloads',4]].forEach(([id,n])=>{
+  [['pColors',2],['pArt',3],['pInspect',4],['pDownloads',5]].forEach(([id,n])=>{
     const el=$(id);if(el)el.classList.toggle('glow',uiMode==='simple'&&n===cur);
   });
 }
+/* any real interaction inside the ink/placement panel advances the coaching */
+(function(){
+  const p=document.getElementById('pInspect');if(!p)return;
+  const mark=e=>{
+    if(!e.target.closest('button,select,input'))return;
+    if(!window.__inkTouched){window.__inkTouched=true;updateStepper();}
+  };
+  p.addEventListener('change',mark);
+  p.addEventListener('click',mark);
+})();
 
 function renderInkSimple(){
   const el=$('inkSimple');if(!el)return;
