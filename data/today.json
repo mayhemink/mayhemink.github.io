@@ -47,7 +47,7 @@
    "colors": 2,
    "screens": 2,
    "qty": 99,
-   "img": "6328a",
+   "img": "",
    "note": ""
   },
   {
@@ -59,7 +59,7 @@
    "colors": 2,
    "screens": 2,
    "qty": 99,
-   "img": "6328b",
+   "img": "",
    "note": ""
   },
   {
@@ -106,6 +106,10 @@
   ],
   [
    "6328",
+   "Mockup did not make it onto the board — pull the front + back art from the Printavo job before you burn screens."
+  ],
+  [
+   "6328",
    "May still need FILM time — check the films are burned before calling setup."
   ],
   [
@@ -126,8 +130,6 @@
   ]
  ],
  "img": {
-  "6328a": "data/mocks/2026-08-07/6328_1.jpg",
-  "6328b": "data/mocks/2026-08-07/6328_2.jpg",
   "6329a": "data/mocks/2026-08-07/6329_1.jpg",
   "6334a": "data/mocks/2026-08-07/6334_1.jpg"
  }
