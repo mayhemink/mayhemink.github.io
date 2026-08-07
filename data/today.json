@@ -1,5 +1,5 @@
 {
- "day": "2026-08-06",
+ "day": "2026-08-07",
  "printers": [
   "Jalen",
   "Corey",
@@ -15,91 +15,120 @@
  ],
  "rows": [
   {
-   "id": "6389-front",
-   "job": "6389",
+   "id": "6358-lsleeve",
+   "job": "6358",
    "url": "",
-   "customer": "DC Pub — Rock On Sasquatch (Titan)",
-   "location": "Full front — Rock On Sasquatch (5 color) (cust. supplied)",
-   "colors": 5,
-   "screens": 5,
-   "qty": 45
-  },
-  {
-   "id": "6390-front",
-   "job": "6390",
-   "url": "",
-   "customer": "DC Pub — Don't Owe You Shit (Titan)",
-   "location": "Front (2 color) (cust. supplied)",
-   "colors": 2,
-   "screens": 2,
-   "qty": 45
-  },
-  {
-   "id": "6325-front",
-   "job": "6325",
-   "url": "",
-   "customer": "TJ's Rentals — Rimer's",
-   "location": "Full front — Rimer's (5 color)",
-   "colors": 5,
-   "screens": 5,
-   "qty": 78
-  },
-  {
-   "id": "6325-slv-tjs",
-   "job": "6325",
-   "url": "",
-   "customer": "TJ's Rentals — Rimer's",
-   "location": "Sleeve — TJ's logo (2 color)",
-   "colors": 2,
-   "screens": 2,
-   "qty": 78
-  },
-  {
-   "id": "6325-slv-flag",
-   "job": "6325",
-   "url": "",
-   "customer": "TJ's Rentals — Rimer's",
-   "location": "Sleeve — US Flag (1 color)",
+   "customer": "Whitaker Studio (Lattitude)",
+   "location": "L Sleeve — Whitaker logo 3.5\" WHITE ink (shared scrn) (cust. supplied)",
    "colors": 1,
    "screens": 1,
-   "qty": 78
+   "qty": 51,
+   "img": "",
+   "note": "Film is DONE — this one leads the day."
+  },
+  {
+   "id": "6358-lc",
+   "job": "6358",
+   "url": "",
+   "customer": "Whitaker Studio (Lattitude)",
+   "location": "LC — Whitaker logo 3.5\" WHITE ink (shared scrn) (cust. supplied)",
+   "colors": 1,
+   "screens": 1,
+   "qty": 51,
+   "img": "",
+   "note": ""
+  },
+  {
+   "id": "6328-front",
+   "job": "6328",
+   "url": "",
+   "customer": "St. George Sports — Site Supervisor",
+   "location": "Full front — SITE SUPERVISOR (White + Gold)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 99,
+   "img": "6328a",
+   "note": ""
+  },
+  {
+   "id": "6328-back",
+   "job": "6328",
+   "url": "",
+   "customer": "St. George Sports — Site Supervisor",
+   "location": "Full back — circle seal (White + Gold)",
+   "colors": 2,
+   "screens": 2,
+   "qty": 99,
+   "img": "6328b",
+   "note": ""
   },
   {
    "id": "6329-front",
    "job": "6329",
    "url": "",
    "customer": "Independence Garage Doors",
-   "location": "Front (3 color)",
+   "location": "Full front — shield logo (3 color)",
    "colors": 3,
    "screens": 3,
-   "qty": 24
+   "qty": 24,
+   "img": "6329a",
+   "note": ""
+  },
+  {
+   "id": "6334-front",
+   "job": "6334",
+   "url": "",
+   "customer": "MJ Shirts",
+   "location": "Full front — Pepsi/MJ Tour 1988 (4 color)",
+   "colors": 4,
+   "screens": 4,
+   "qty": 77,
+   "img": "6334a",
+   "note": "Blanks arrive today — LAST job of the day."
   }
  ],
  "flags": [
   [
    "",
-   "RUN ORDER: 6389 and 6390 FIRST. 6325 and 6329 run later today."
+   "RUN ORDER: 6358 → 6328 → 6329 → 6334 LAST. 6358 leads because its film is already done — art side burns 6328 + 6329 while it runs."
   ],
   [
-   "6389",
-   "45 customer-supplied garments (25 tees + 20 hoodies, black). Count them in before you start and flag any shortage — misprints are on the client. Log the tee→hoodie changeover as a stop."
+   "6358",
+   "VERIFY: customer-supplied blanks (Reno + Seattle) — confirm they are physically in the shop and counted before setup."
   ],
   [
-   "6390",
-   "45 customer-supplied garments (25 shirts + 20 hoodies, black). Count them in first. Log the shirt→hoodie changeover as a stop."
+   "6358",
+   "WHITE ink on ALL 6 shirt colors — approved, incl. True Celadon, Laurel Green, Yellow. No hold."
   ],
   [
-   "6325",
-   "78 pieces across 8 garment styles, 3 locations. Tanks/V-necks in the mix — check sleeve prints fit before you run them. The 24 embroidered Otto caps on this order are NOT press work."
+   "6358",
+   "ONE screen runs BOTH locations (L Sleeve + Left Chest) — same 3.5\" logo."
+  ],
+  [
+   "6328",
+   "May still need FILM time — check the films are burned before calling setup."
   ],
   [
    "6329",
-   "VERIFY: imprint had no work type set in Printavo — details say Front / 3-color. Confirm with Kolton before you burn screens."
+   "May still need FILM time — check the films are burned before calling setup."
   ],
   [
-   "",
-   "More cards may be added later today — a repush won't erase progress already logged on your iPad."
+   "6329",
+   "Logo colorway changes by garment (white-heavy on dark, navy-heavy on light) — same 3 screens, confirm ink order on the first shirt of each color."
+  ],
+  [
+   "6334",
+   "Blanks on the truck today (UPS/FedEx). Do NOT start until the boxes land and are counted. The 24 caps on this order are EMBROIDERY — not press work."
+  ],
+  [
+   "6325",
+   "Running over from yesterday — intentionally NOT on this board. Times stay on yesterday's card until it's done."
   ]
  ],
- "img": {}
+ "img": {
+  "6328a": "data/mocks/2026-08-07/6328_1.jpg",
+  "6328b": "data/mocks/2026-08-07/6328_2.jpg",
+  "6329a": "data/mocks/2026-08-07/6329_1.jpg",
+  "6334a": "data/mocks/2026-08-07/6334_1.jpg"
+ }
 }
