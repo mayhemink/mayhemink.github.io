@@ -137,7 +137,8 @@
      "colors": 1,
      "screens": 1,
      "qty": 15,
-     "note": "CUSTOMER-SUPPLIED \u2014 COUNT IN FIRST"
+     "note": "CUSTOMER-SUPPLIED \u2014 COUNT IN FIRST",
+     "noest": true
     },
     {
      "id": "6365-wht",
@@ -147,7 +148,8 @@
      "location": "Full chest \u2014 WHITE ink (Heather Navy) (cust. supplied)",
      "colors": 1,
      "screens": 1,
-     "qty": 15
+     "qty": 15,
+     "noest": true
     },
     {
      "id": "6366-youth",
@@ -313,7 +315,8 @@
      "colors": 5,
      "screens": 5,
      "qty": 24,
-     "img": "6362a"
+     "img": "6362a",
+     "noest": true
     },
     {
      "id": "6362-2",
@@ -324,7 +327,8 @@
      "colors": 5,
      "screens": 5,
      "qty": 24,
-     "img": "6362a"
+     "img": "6362a",
+     "noest": true
     }
    ],
    "flags": [
@@ -401,7 +405,8 @@
      "colors": 3,
      "screens": 3,
      "qty": 84,
-     "note": "NO UNDERLAYS \u2014 RAYCO LOOK"
+     "note": "NO UNDERLAYS \u2014 RAYCO LOOK",
+     "noest": true
     },
     {
      "id": "6386-back",
@@ -467,7 +472,8 @@
      "colors": 1,
      "screens": 1,
      "qty": 162,
-     "img": "6342d"
+     "img": "6342d",
+     "noest": true
     },
     {
      "id": "6342-raven",
@@ -522,5 +528,23 @@
   "6342c": "/data/mocks/2026-08-10/6342_3.jpg",
   "6342d": "/data/mocks/2026-08-10/6342_4.jpg",
   "6342e": "/data/mocks/2026-08-10/6342_5.jpg"
+ },
+ "stats": {
+  "pph": {
+   "1": 118,
+   "2": 70,
+   "3": 59,
+   "4": 52,
+   "5": 42,
+   "6": 32
+  },
+  "setup": {
+   "1": 4.2,
+   "2": 4.9,
+   "3": 6.2,
+   "4": 8.5,
+   "5": 7.0,
+   "6": 5.7
+  }
  }
 }

@@ -66,6 +66,22 @@
   .cbtn.lunch{background:#fdf0dd; color:var(--amber);}
   .cbtn.out{background:var(--ink); color:#fff;}
 
+  /* ---- between-jobs strip + run estimate (v3.1) ---- */
+  .gaprow{background:#f7f7f8; border-radius:10px; padding:10px 12px; margin:6px 0 2px;}
+  .gaphead{font-size:13px; font-weight:700; color:var(--ink);}
+  .gaphead b{font-weight:800;}
+  .gapreason{color:var(--gray); font-weight:600;}
+  .gapask{font-size:12px; color:var(--gray); font-weight:600; margin:6px 0 8px; line-height:1.45;}
+  .gapchips{display:flex; flex-wrap:wrap; gap:6px;}
+  .gapchip{background:#fff; border:2px solid var(--line); border-radius:999px; padding:8px 12px;
+           font-size:13px; font-weight:700; cursor:pointer;}
+  .gapchip:active{background:var(--ink); color:#fff;}
+  .est{color:var(--gray); font-weight:700;}
+  .esthead{margin-top:10px; padding-top:10px; border-top:1px solid var(--line);
+           font-size:13px; font-weight:600; color:var(--gray); line-height:1.5;}
+  .esthead b{color:var(--ink); font-weight:800;}
+  .esthead small{display:block; font-size:11px; color:var(--gray); margin-top:3px; font-weight:600;}
+
   /* ---- summary strip ---- */
   .strip{
     display:flex; gap:10px; margin-bottom:16px;
@@ -292,6 +308,29 @@ var searchQuery = "";
 var currentRow = null;
 var ticker = null;
 var PRESSES = ["Press 1","Press 2"];
+// Shop averages from the Press Stats sheet, shipped in week.json so the estimate
+// recalculates when a printer corrects colors/screens on the card. Fallback only.
+var STATS = {pph:{1:118,2:70,3:59,4:52,5:42,6:32}, setup:{1:4.2,2:4.9,3:6.2,4:8.5,5:7.0,6:5.7}};
+
+// ---------- run-time estimate (v3.1) ----------
+// This is INFORMATION, not a target: what a run like this usually takes, so a printer can
+// tell a quick job from an all-afternoon one. Never scored, never colored red. Rows built
+// with "noest":true (puff, heavy ink changes, color counts with no logged runs) show
+// nothing — a visibly wrong estimate teaches the crew to ignore all of them.
+function estFor(row, r){
+  if(row.noest) return null;
+  var c = (r && r.colors != null) ? r.colors : row.colors;
+  var s = (r && r.screens != null) ? r.screens : row.screens;
+  var pph = STATS.pph[c], sm = STATS.setup[c];
+  if(!pph || !sm || !row.qty) return null;
+  return {setup: Math.round(s*sm), print: Math.round(row.qty/pph*60)};
+}
+function fmtDur(m){
+  if(m == null) return "";
+  if(m < 60) return m + "m";
+  var h = Math.floor(m/60), mm = m%60;
+  return h + "h" + (mm ? " " + mm + "m" : "");
+}
 
 function todayStr(){
   var d = new Date();
@@ -303,6 +342,7 @@ function boot(data){
   PRINTERS = data.printers || PRINTERS;
   COUNTS = data.counts || COUNTS;
   IMG = data.img || {};
+  if(data.stats && data.stats.pph && data.stats.setup) STATS = data.stats;
   DAYSARR = []; ALLROWS = []; ROWSBY = {}; FLAGSBY = {}; STATES = {}; CLOCKS = {};
   var days = data.days || [];
   for(var i = 0; i < days.length; i++){
@@ -600,9 +640,11 @@ function renderGroups(){
       var who = whoBits.length ? '<div class="who">' + whoBits.join(" · ") + '</div>' : "";
       var cc = r2 && r2.colors != null ? r2.colors : row2.colors;
       var ss = r2 && r2.screens != null ? r2.screens : row2.screens;
+      var e = estFor(row2, r2);
+      var estBit = (e && st !== "done") ? ' · <span class="est">~' + fmtDur(e.setup + e.print) + '</span>' : '';
       html += '<div class="card ' + stCls + '" onclick="openRow(\'' + row2.id + '\')">' +
         '<div class="loc"><div class="l1">' + esc(row2.location) + '</div>' +
-        '<div class="l2">' + cc + ' color · ' + ss + ' screen' + (ss>1?"s":"") + ' · ' + row2.qty + ' pcs</div></div>' +
+        '<div class="l2">' + cc + ' color · ' + ss + ' screen' + (ss>1?"s":"") + ' · ' + row2.qty + ' pcs' + estBit + '</div></div>' +
         '<div class="stat">' + badge + who + '</div></div>';
     }
     html += '</div>';
@@ -639,11 +681,55 @@ function renderStrip(){
 // This is the denominator for utilization — press time ÷ floor time.
 function clockFor(day, p){
   var c = CLOCKS[day] || (CLOCKS[day] = {});
-  if(!c[p]) c[p] = {in:null, out:null, lunches:[]};
+  if(!c[p]) c[p] = {in:null, out:null, lunches:[], gaps:[]};
   if(!c[p].lunches) c[p].lunches = [];
+  if(!c[p].gaps) c[p].gaps = [];
   return c[p];
 }
 function lunchOpen(k){ var l = k.lunches[k.lunches.length-1]; return l && !l.end; }
+
+// ---------- between-jobs time (v3.1) ----------
+// The clock starts when a job is finished and stops when the next setup starts. Teardown,
+// reclaiming, staging and a breather are all real work-day time — the point isn't to
+// eliminate the gap, it's to know WHY it happened. A 40-minute wait on screens is a process
+// problem; a 40-minute gap with no reason is worth a conversation. Lunch is subtracted, not
+// counted. Nothing here is scored on the iPad.
+var GAP_REASONS = ["Teardown","Reclaiming screens","Staging next job","Waiting on screens","Waiting on art/approval","Cleanup","Break","Other"];
+var GAP_ASK_MIN = 15;   // under this it's just teardown; don't nag
+function gapOpen(k){ var g = k.gaps[k.gaps.length-1]; return g && !g.end; }
+function lunchMsBetween(k, a, b){
+  var t = 0;
+  for(var i = 0; i < k.lunches.length; i++){
+    var l = k.lunches[i];
+    var s = Math.max(l.start, a), e = Math.min(l.end || now(), b);
+    if(e > s) t += e - s;
+  }
+  return t;
+}
+function gapMins(k, g){
+  var end = g.end || now();
+  return mins((end - g.start) - lunchMsBetween(k, g.start, end));
+}
+function startGap(printer, day){
+  if(!printer) return;
+  var k = clockFor(day, printer);
+  if(gapOpen(k)) return;
+  k.gaps.push({start: now(), end: null, reason: null});
+  saveClock(day);
+}
+function endGap(printer, day){
+  if(!printer) return;
+  var k = clockFor(day, printer);
+  var g = k.gaps[k.gaps.length-1];
+  if(g && !g.end){ g.end = now(); saveClock(day); }
+}
+function setGapReason(p, reason){
+  var k = clockFor(curDay, p);
+  var g = k.gaps[k.gaps.length-1];
+  if(g) g.reason = reason;
+  saveClock(curDay); renderClock();
+  toast("Logged: " + reason);
+}
 function renderClock(){
   if(searchQuery || curDay !== todayStr()){ document.getElementById("clock").innerHTML = ""; return; }
   var html = '<div class="clockcard"><h3>Crew clock — tap IN when you hit the floor</h3>';
@@ -668,6 +754,19 @@ function renderClock(){
     }
     html += '<div class="clockrow"><div class="cname">' + esc(p) + '</div><div class="ctimes">' +
       (bits.length ? bits.join(" · ") : "Not clocked in") + '</div>' + btns + '</div>';
+    // between-jobs strip — only while a gap is actually open
+    if(k.in && !k.out && gapOpen(k) && !lunchOpen(k)){
+      var g = k.gaps[k.gaps.length-1];
+      var gm = gapMins(k, g);
+      html += '<div class="gaprow"><div class="gaphead"><b>Between jobs — ' + gm + ' min</b>' +
+        (g.reason ? ' <span class="gapreason">' + esc(g.reason) + '</span>' : '') + '</div>';
+      if(gm >= GAP_ASK_MIN && !g.reason){
+        html += '<div class="gapask">What&#39;s going on? One tap — it&#39;s how we spot what actually slows the floor down.</div><div class="gapchips">' +
+          GAP_REASONS.map(function(x){ return '<span class="gapchip" onclick="setGapReason(\'' + p + '\',\'' + x + '\')">' + x + '</span>'; }).join("") +
+          '</div>';
+      }
+      html += '</div>';
+    }
   }
   html += '</div>';
   document.getElementById("clock").innerHTML = html;
@@ -687,6 +786,7 @@ function clockLunch(p){
 function clockOut(p){
   var k = clockFor(curDay, p);
   if(lunchOpen(k)) k.lunches[k.lunches.length-1].end = now();
+  if(gapOpen(k)) k.gaps[k.gaps.length-1].end = now();   // don't let a gap run overnight
   k.out = now();
   saveClock(curDay); renderClock();
   toast(p + " off the floor " + fmt(now()));
@@ -760,9 +860,15 @@ function renderDetail(){
     html += '<div class="flagbar"><div class="tag">' + dayLabel(row._day) + ' ' + dayNum(row._day) + '</div><div class="txt">Heads up — this card is scheduled for ' + dayLabel(row._day) + '. Running it today is fine, just double-check it&#39;s the right job.</div></div>';
   }
   if(row.img && IMG[row.img]) html += '<div class="dmock"><img src="' + IMG[row.img] + '" onclick="showLightbox(this.src)"></div>';
+  var est = estFor(row, r);
   html += '<div class="dhead"><div class="jn">' + (row.url ? '<a class="jlink" href="' + row.url + '" target="_blank">JOB #' + esc(row.job) + '</a>' : 'JOB #' + esc(row.job)) + '</div>' +
     '<div class="cu">' + esc(row.customer) + ' — ' + esc(row.location) + '</div>' +
-    '<div class="meta">' + row.qty + ' pieces</div></div>';
+    '<div class="meta">' + row.qty + ' pieces</div>' +
+    (est && st !== "done" ? '<div class="esthead">Shop average for ' +
+       ((r.colors != null ? r.colors : row.colors)) + ' color / ' + row.qty + ' pcs: about <b>' +
+       fmtDur(est.setup) + '</b> setup, <b>' + fmtDur(est.print) + '</b> print' +
+       '<small>What a run like this usually takes — not a target. Plenty of reasons a job runs longer.</small></div>' : '') +
+    '</div>';
 
   // printer picker
   html += '<div class="field"><label>Printer</label><div class="segs">' +
@@ -948,6 +1054,9 @@ function stamp(field){
     if(!r.setupBy) r.setupBy = r.printer;
     if(!r.printBy) r.printBy = r.printer;
   }
+  // between-jobs clock: stops when work starts again, starts when a job finishes
+  if(field === "setupStart") endGap(r.printer, currentRow._day);
+  if(field === "jobDone") startGap(r.printer, currentRow._day);
   save(); renderDetail();
   toast(field === "jobDone" ? "Job done — nice." : "Time logged " + fmt(now()));
 }
@@ -1128,8 +1237,22 @@ function buildExport(){
       var pn = PRINTERS[pi];
       var k = c[pn];
       if(k && k.in){
-        var lun = (k.lunches||[]).map(function(l){ return fmt(l.start) + "-" + (l.end?fmt(l.end):"?") ; }).join(", ");
-        t += "CLOCK " + pn + ": in " + fmt(k.in) + (lun ? " · lunch " + lun : "") + (k.out ? " · out " + fmt(k.out) : " · STILL ON FLOOR") + "\n";
+        var lun = (k.lunches||[]).map(function(l){
+          var lm = l.end ? mins(l.end - l.start) : null;
+          return fmt(l.start) + "-" + (l.end?fmt(l.end):"?") + (lm!=null ? " (" + lm + "m)" : "");
+        }).join(", ");
+        t += "CLOCK " + pn + ": in " + fmt(k.in) + (lun ? " · lunch " + lun : " · NO LUNCH LOGGED") + (k.out ? " · out " + fmt(k.out) : " · STILL ON FLOOR") + "\n";
+        var gs = k.gaps || [];
+        if(gs.length){
+          var gtot = 0;
+          for(var gi = 0; gi < gs.length; gi++) gtot += gapMins(k, gs[gi]);
+          t += "  BETWEEN JOBS " + pn + ": " + gtot + "m total across " + gs.length + " gap(s)\n";
+          for(var gj = 0; gj < gs.length; gj++){
+            var g = gs[gj];
+            t += "    " + fmt(g.start) + "-" + (g.end?fmt(g.end):"still open") +
+              " (" + gapMins(k, g) + "m)" + (g.reason ? ": " + g.reason : ": NO REASON GIVEN") + "\n";
+          }
+        }
       }
     }
     var byJob = {};
