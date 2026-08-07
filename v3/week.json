@@ -1,32 +1,504 @@
 {
  "week": "2026-08-10",
- "printers": ["Jalen", "Corey", "Spencer"],
- "counts": [1, 2, 3, 4, 5, 6],
+ "printers": [
+  "Jalen",
+  "Corey",
+  "Spencer"
+ ],
+ "counts": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
  "days": [
   {
    "day": "2026-08-10",
    "rows": [
-    {"id": "test1-front", "job": "TEST1", "url": "", "customer": "TEST JOB — do not print", "location": "Full front — sample (3 color)", "colors": 3, "screens": 3, "qty": 48, "note": "THIS IS THE NEW WEEKLY BOARD TEST — tap around, nothing counts"},
-    {"id": "test1-back", "job": "TEST1", "url": "", "customer": "TEST JOB — do not print", "location": "Back — sample (1 color)", "colors": 1, "screens": 1, "qty": 48}
+    {
+     "id": "6361-ff-white",
+     "job": "6361",
+     "url": "",
+     "customer": "St George Youth Sports \u2014 Flag Football",
+     "location": "Front \u2014 Flag Football, WHITE ink (8 colorways)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 436,
+     "img": "6361a",
+     "note": "BURN 2 SCREENS \u2014 RUN ON BOTH PRESSES"
+    },
+    {
+     "id": "6361-ff-p289",
+     "job": "6361",
+     "url": "",
+     "customer": "St George Youth Sports \u2014 Flag Football",
+     "location": "Front \u2014 Flag Football, PANTONE 289 (5 colorways)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 303,
+     "img": "6361a"
+    },
+    {
+     "id": "6361-fund-front",
+     "job": "6361",
+     "url": "",
+     "customer": "St George Youth Sports \u2014 Flag Football",
+     "location": "Front \u2014 FUNDAMENTALS, white ink",
+     "colors": 1,
+     "screens": 1,
+     "qty": 77,
+     "img": "6361b"
+    },
+    {
+     "id": "6361-fund-back",
+     "job": "6361",
+     "url": "",
+     "customer": "St George Youth Sports \u2014 Flag Football",
+     "location": "Back \u2014 Intermountain Sports Perf (Fundamentals)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 77,
+     "img": "6361b"
+    }
    ],
-   "flags": [["TEST", "This is the v3 WEEKLY board test page. Day tabs up top, search box finds any job all week, crew clock below — tap IN when you hit the floor. Real board is still the normal one."]]
+   "flags": [
+    [
+     "CREW",
+     "Jalen + Spencer \u2014 Jalen's last day this week."
+    ],
+    [
+     "6361",
+     "BURN 2 SCREENS of the Flag Football front so BOTH presses run it. One screen = a 6.5 hr single-press day."
+    ],
+    [
+     "6361",
+     "Batch by ink: WHITE on Maroon/Navy/Coyote/Red/Royal/Charcoal/Kelly/Black/Purple (436). PANTONE 289 on White/Neon Orange/Neon Blue/Gold/Silver (303)."
+    ],
+    [
+     "6361",
+     "FUNDAMENTALS has a BACK print (Intermountain Sports Performance) \u2014 it is NOT on the packing list. 77 pcs, don't miss it."
+    ],
+    [
+     "",
+     "816 pcs total. In-hands today \u2014 this is the whole day."
+    ]
+   ]
   },
   {
    "day": "2026-08-11",
    "rows": [
-    {"id": "test2-lc", "job": "TEST2", "url": "", "customer": "TEST JOB TUESDAY", "location": "LC — sample logo (2 color)", "colors": 2, "screens": 2, "qty": 120}
+    {
+     "id": "6354-front",
+     "job": "6354",
+     "url": "",
+     "customer": "Munson Woodworking",
+     "location": "Front \u2014 dove tail logo",
+     "colors": 2,
+     "screens": 2,
+     "qty": 38,
+     "img": "6354a"
+    },
+    {
+     "id": "6354-back",
+     "job": "6354",
+     "url": "",
+     "customer": "Munson Woodworking",
+     "location": "Back \u2014 dove tail logo",
+     "colors": 2,
+     "screens": 2,
+     "qty": 38,
+     "img": "6354a"
+    },
+    {
+     "id": "6365-blk",
+     "job": "6365",
+     "url": "",
+     "customer": "Mutton Busting (Lattitude)",
+     "location": "Full chest \u2014 BLACK ink (Ath Heather) (cust. supplied)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 15,
+     "note": "CUSTOMER-SUPPLIED \u2014 COUNT IN FIRST"
+    },
+    {
+     "id": "6365-wht",
+     "job": "6365",
+     "url": "",
+     "customer": "Mutton Busting (Lattitude)",
+     "location": "Full chest \u2014 WHITE ink (Heather Navy) (cust. supplied)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 15
+    },
+    {
+     "id": "6366-youth",
+     "job": "6366",
+     "url": "",
+     "customer": "2026 Rodeo (Lattitude)",
+     "location": "Youth full chest \u2014 VTR 8in (cust. supplied)",
+     "colors": 3,
+     "screens": 3,
+     "qty": 50
+    }
    ],
-   "flags": []
+   "flags": [
+    [
+     "CREW",
+     "Spencer solo today \u2014 Jalen out Tue\u2013Fri."
+    ],
+    [
+     "VERIFY",
+     "6365 + 6366 are CUSTOMER-SUPPLIED blanks. Confirm they're physically in the shop before starting."
+    ],
+    [
+     "6365",
+     "Same logo, 2 ink colors \u2014 Black on Athletic Heather, White on Heather Navy. One ink change."
+    ],
+    [
+     "",
+     "Zach 7/30: REMOVE the established date from the prints (kids shirt fronts / mutton busting sides)."
+    ]
+   ]
   },
-  {"day": "2026-08-12", "rows": [], "flags": []},
-  {"day": "2026-08-13", "rows": [], "flags": []},
+  {
+   "day": "2026-08-12",
+   "rows": [
+    {
+     "id": "6356-lc",
+     "job": "6356",
+     "url": "",
+     "customer": "Swell Soda (Dillon)",
+     "location": "LC \u2014 NAVY ink (Flint Blue Heather)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 60,
+     "img": "6356a"
+    },
+    {
+     "id": "6356-back",
+     "job": "6356",
+     "url": "",
+     "customer": "Swell Soda (Dillon)",
+     "location": "Back \u2014 NAVY ink (Flint Blue Heather)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 60,
+     "img": "6356a"
+    },
+    {
+     "id": "6356-box",
+     "job": "6356",
+     "url": "",
+     "customer": "Swell Soda (Dillon)",
+     "location": "Front \u2014 BOX BROWN ink (Tultex Natural)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 90,
+     "img": "6356b"
+    },
+    {
+     "id": "6356-tan",
+     "job": "6356",
+     "url": "",
+     "customer": "Swell Soda (Dillon)",
+     "location": "Front \u2014 baby pink & cream (Desert Tan)",
+     "colors": 3,
+     "screens": 3,
+     "qty": 58,
+     "img": "6356c"
+    },
+    {
+     "id": "6356-bay",
+     "job": "6356",
+     "url": "",
+     "customer": "Swell Soda (Dillon)",
+     "location": "Front \u2014 3 color (Comfort Colors Bay)",
+     "colors": 3,
+     "screens": 3,
+     "qty": 24,
+     "img": "6356d"
+    }
+   ],
+   "flags": [
+    [
+     "CREW",
+     "Spencer solo today."
+    ],
+    [
+     "6356",
+     "3 ink changes across the day \u2014 navy, box brown, then pink/cream. Group the two navy runs together."
+    ],
+    [
+     "",
+     "Heaviest solo day of the week (~4 hr press time). If it slips, the Comfort Colors Bay run is the one to push to Thursday."
+    ]
+   ]
+  },
+  {
+   "day": "2026-08-13",
+   "rows": [
+    {
+     "id": "6366-lc",
+     "job": "6366",
+     "url": "",
+     "customer": "2026 Rodeo (Lattitude)",
+     "location": "LC \u2014 VTR 4in (cust. supplied)",
+     "colors": 3,
+     "screens": 3,
+     "qty": 105,
+     "note": "IN-HANDS TODAY"
+    },
+    {
+     "id": "6366-back",
+     "job": "6366",
+     "url": "",
+     "customer": "2026 Rodeo (Lattitude)",
+     "location": "Full back \u2014 VTR 10in (cust. supplied)",
+     "colors": 3,
+     "screens": 3,
+     "qty": 105
+    },
+    {
+     "id": "6371-front",
+     "job": "6371",
+     "url": "",
+     "customer": "Mount Rushmore (Brand Makers)",
+     "location": "Front 3.5in \u2014 7527c (cust. supplied)",
+     "colors": 1,
+     "screens": 2,
+     "qty": 114,
+     "img": "6371a",
+     "note": "PRESS CHECK FOR APPROVAL \u2014 BRENT"
+    },
+    {
+     "id": "6371-back",
+     "job": "6371",
+     "url": "",
+     "customer": "Mount Rushmore (Brand Makers)",
+     "location": "Back 10in \u2014 7527c (cust. supplied)",
+     "colors": 1,
+     "screens": 2,
+     "qty": 114,
+     "img": "6371a"
+    },
+    {
+     "id": "6362-1",
+     "job": "6362",
+     "url": "",
+     "customer": "Simply Sharp (Keith)",
+     "location": "Imprint 1 \u2014 Simply Sharp",
+     "colors": 5,
+     "screens": 5,
+     "qty": 24,
+     "img": "6362a"
+    },
+    {
+     "id": "6362-2",
+     "job": "6362",
+     "url": "",
+     "customer": "Simply Sharp (Keith)",
+     "location": "Imprint 2 \u2014 Simply Sharp",
+     "colors": 5,
+     "screens": 5,
+     "qty": 24,
+     "img": "6362a"
+    }
+   ],
+   "flags": [
+    [
+     "CREW",
+     "Spencer + Corey \u2014 Corey's first day back."
+    ],
+    [
+     "HEAVY",
+     "~8.7 hr across both presses. Run 6366 first (in-hands today), then 6371, then Simply Sharp."
+    ],
+    [
+     "6371",
+     "PRESS CHECK FOR APPROVAL \u2014 Brent needs to see it before the run. Blanks supplied by Brand Makers."
+    ],
+    [
+     "6371",
+     "Proof shows 1 color (7527c) with an underlay option on Espresso / Pigment Army / Lieutenant. Card says 1c/2s \u2014 correct it if you don't shoot an underlay."
+    ]
+   ]
+  },
   {
    "day": "2026-08-14",
    "rows": [
-    {"id": "test3-front", "job": "TEST3", "url": "", "customer": "TEST JOB FRIDAY", "location": "Front — sample (6 color)", "colors": 6, "screens": 6, "qty": 36}
+    {
+     "id": "6364-front",
+     "job": "6364",
+     "url": "",
+     "customer": "Ken Garff Mesquite (Lattitude)",
+     "location": "Front \u2014 MSQ desert 10in, white (cust. supplied)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 53,
+     "note": "RUN FIRST \u2014 IN-HANDS TODAY"
+    },
+    {
+     "id": "6364-back",
+     "job": "6364",
+     "url": "",
+     "customer": "Ken Garff Mesquite (Lattitude)",
+     "location": "Back \u2014 MSQ desert 11in, white (cust. supplied)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 53
+    },
+    {
+     "id": "6168-1",
+     "job": "6168",
+     "url": "",
+     "customer": "T-shirt samples",
+     "location": "Imprint 1",
+     "colors": 1,
+     "screens": 1,
+     "qty": 8,
+     "img": "6168a"
+    },
+    {
+     "id": "6168-2",
+     "job": "6168",
+     "url": "",
+     "customer": "T-shirt samples",
+     "location": "Imprint 2",
+     "colors": 1,
+     "screens": 1,
+     "qty": 8,
+     "img": "6168a"
+    },
+    {
+     "id": "6386-front",
+     "job": "6386",
+     "url": "",
+     "customer": "Longhaul / Fieldcraft",
+     "location": "Front chest 11in \u2014 3c puff matte, NO underbase",
+     "colors": 3,
+     "screens": 3,
+     "qty": 84,
+     "note": "NO UNDERLAYS \u2014 RAYCO LOOK"
+    },
+    {
+     "id": "6386-back",
+     "job": "6386",
+     "url": "",
+     "customer": "Longhaul / Fieldcraft",
+     "location": "Back neck vertical \u2014 1c, scale as tall as possible",
+     "colors": 1,
+     "screens": 1,
+     "qty": 84
+    },
+    {
+     "id": "6342-yucca",
+     "job": "6342",
+     "url": "",
+     "customer": "Joshua Tree",
+     "location": "Full front \u2014 Yucca Rocks (flash white)",
+     "colors": 2,
+     "screens": 2,
+     "qty": 13,
+     "img": "6342a",
+     "note": "STRETCH \u2014 customer date is Aug 19"
+    },
+    {
+     "id": "6342-rocks",
+     "job": "6342",
+     "url": "",
+     "customer": "Joshua Tree",
+     "location": "Full front \u2014 Joshua Tree Rocks (2 ink colors)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 52,
+     "img": "6342b"
+    },
+    {
+     "id": "6342-og-f",
+     "job": "6342",
+     "url": "",
+     "customer": "Joshua Tree",
+     "location": "Front \u2014 OG Joshua Tree",
+     "colors": 3,
+     "screens": 3,
+     "qty": 89,
+     "img": "6342c"
+    },
+    {
+     "id": "6342-og-b",
+     "job": "6342",
+     "url": "",
+     "customer": "Joshua Tree",
+     "location": "Back \u2014 OG Joshua Tree",
+     "colors": 3,
+     "screens": 3,
+     "qty": 89,
+     "img": "6342c"
+    },
+    {
+     "id": "6342-round",
+     "job": "6342",
+     "url": "",
+     "customer": "Joshua Tree",
+     "location": "Front \u2014 Round Joshua Tree (ink per garment)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 162,
+     "img": "6342d"
+    },
+    {
+     "id": "6342-raven",
+     "job": "6342",
+     "url": "",
+     "customer": "Joshua Tree",
+     "location": "Front \u2014 Raven logo",
+     "colors": 2,
+     "screens": 2,
+     "qty": 68,
+     "img": "6342e"
+    }
    ],
-   "flags": []
+   "flags": [
+    [
+     "CREW",
+     "Spencer + Corey."
+    ],
+    [
+     "RUN ORDER",
+     "6364 Ken Garff FIRST (in-hands today), then samples, then Longhaul, then Joshua Tree."
+    ],
+    [
+     "STRETCH",
+     "Joshua Tree (6342) is staged in case there's time \u2014 customer date is Aug 19 and the due dates in Printavo are placeholders. Longhaul (6386) is customer-due Aug 26. Neither has to finish today."
+    ],
+    [
+     "6342",
+     "Pinstripe oiled-brown cap (20) is still TBD \u2014 not press work, ignore it here."
+    ],
+    [
+     "",
+     "NOT PRESS WORK this week: 72 rodeo caps (embroidery), 38 Joshua Tree caps (heat press), 50 Munson woven patches (heat press)."
+    ]
+   ]
   }
  ],
- "img": {}
+ "img": {
+  "6361a": "data/mocks/2026-08-10/6361_1.jpg",
+  "6361b": "data/mocks/2026-08-10/6361_2.jpg",
+  "6354a": "data/mocks/2026-08-10/6354_1.jpg",
+  "6356a": "data/mocks/2026-08-10/6356_1.jpg",
+  "6356b": "data/mocks/2026-08-10/6356_2.jpg",
+  "6356c": "data/mocks/2026-08-10/6356_3.jpg",
+  "6356d": "data/mocks/2026-08-10/6356_4.jpg",
+  "6371a": "data/mocks/2026-08-10/6371_1.jpg",
+  "6362a": "data/mocks/2026-08-10/6362_1.jpg",
+  "6168a": "data/mocks/2026-08-10/6168_1.jpg",
+  "6342a": "data/mocks/2026-08-10/6342_1.jpg",
+  "6342b": "data/mocks/2026-08-10/6342_2.jpg",
+  "6342c": "data/mocks/2026-08-10/6342_3.jpg",
+  "6342d": "data/mocks/2026-08-10/6342_4.jpg",
+  "6342e": "data/mocks/2026-08-10/6342_5.jpg"
+ }
 }
