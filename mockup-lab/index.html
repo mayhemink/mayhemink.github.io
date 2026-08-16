@@ -96,7 +96,7 @@
   .gallery-empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);padding:10px 0;}
 
   /* v8.0 — one line per ink: swatch (click = on/off) + shop name + CHANGE */
-  .inkrow{display:grid;grid-template-columns:20px 1fr auto;gap:9px;margin-top:7px;align-items:center;
+  .inkrow{display:grid;grid-template-columns:20px 1fr auto auto;gap:9px;margin-top:7px;align-items:center;
     background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:8px 10px;}
   .inkchip{width:20px;height:20px;border-radius:3px;border:1px solid rgba(255,255,255,.25);cursor:pointer;flex:none;}
   .inkrow.inkoff{opacity:.5;}
@@ -108,29 +108,33 @@
   .inkchg{background:none;border:1px solid var(--line2);color:var(--muted);cursor:pointer;border-radius:3px;
     font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.07em;padding:5px 9px;}
   .inkchg:hover{border-color:var(--accent);color:var(--accent);}
-  /* setup tabs */
-  .setup-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;}
-  .setup-tabs .stab{display:block;text-align:left;background:var(--surface2);border:1px solid var(--line2);
-    border-radius:4px;padding:8px 10px;cursor:pointer;color:var(--muted);}
-  .setup-tabs .stab .st-name{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;
-    font-weight:700;letter-spacing:.06em;color:var(--ink);}
-  .setup-tabs .stab .st-n{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;margin-top:2px;}
-  .setup-tabs .stab.on{border-color:var(--accent);background:#131C24;}
-  .setup-tabs .stab.on .st-name{color:var(--accent);}
-  /* which shirts print this setup */
-  .shirt-assign{margin-top:10px;}
-  .sa-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
-  .sa-wrap{display:flex;flex-wrap:wrap;gap:5px;}
-  .sa-chip{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--line2);
-    border-radius:3px;padding:3px 8px 3px 3px;cursor:pointer;color:var(--muted);font-size:10.5px;opacity:.4;}
-  .sa-chip canvas{width:24px;height:28px;border-radius:2px;border:1px solid var(--line2);}
-  .sa-chip.on{opacity:1;border-color:var(--accent);color:var(--ink);background:#131C24;}
-  .sa-chip:hover{opacity:1;}
-  .sa-chip .sa-pin{font-style:normal;color:var(--accent2);font-size:13px;line-height:1;}
-  .sa-reset{background:none;border:none;color:var(--muted);cursor:pointer;margin-top:7px;padding:0;
-    font-family:'JetBrains Mono',monospace;font-size:9.5px;text-decoration:underline;}
+  /* v8.2 ink setup buckets — both always visible, drag shirts between them */
+  .bucket-board{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+  .bucket{border:1px solid var(--line2);border-radius:5px;background:var(--surface2);display:flex;flex-direction:column;min-height:96px;transition:border-color .12s,box-shadow .12s;}
+  .bucket.on{border-color:var(--accent);background:#10161C;}
+  .bucket.drop{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok);}
+  .bk-head{display:flex;align-items:center;gap:5px;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--line2);padding:7px 8px;cursor:pointer;min-width:0;}
+  .bk-name{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.05em;color:var(--muted);white-space:nowrap;}
+  .bucket.on .bk-name{color:var(--accent);}
+  .bk-n{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-left:auto;white-space:nowrap;}
+  .bk-edit{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#0B1520;background:var(--accent);border-radius:2px;padding:1px 5px;}
+  .bucket:not(.on) .bk-edit{visibility:hidden;}
+  .bk-body{display:flex;flex-wrap:wrap;gap:5px;padding:8px;flex:1;align-content:flex-start;}
+  .bk-hint{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--line2);padding:4px 2px;}
+  .bk-chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line2);border-radius:3px;padding:3px 6px 3px 3px;cursor:grab;color:var(--ink);font-size:10.5px;}
+  .bk-chip:active{cursor:grabbing;}
+  .bk-chip.dragging{opacity:.35;}
+  .bk-chip canvas{width:24px;height:28px;border-radius:2px;border:1px solid var(--line2);}
+  .bk-chip.pv{border-color:var(--accent2);}
+  .bk-chip .bk-pin{font-style:normal;color:var(--accent2);font-size:13px;line-height:1;}
+  .bk-chip .bk-move{background:none;border:1px solid var(--line2);border-radius:2px;color:var(--muted);cursor:pointer;font-size:10px;line-height:1;padding:2px 4px;}
+  .bk-chip .bk-move:hover{border-color:var(--accent);color:var(--accent);}
+  .bucket-board .sa-reset{grid-column:1/-1;justify-self:start;}
+  .sa-reset{background:none;border:1px solid var(--line2);border-radius:3px;color:var(--muted);cursor:pointer;margin-top:2px;padding:4px 9px;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;line-height:1.3;}
   .sa-reset:hover{color:var(--accent);}
-  .sa-empty{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);}
+  .inkonoff{background:none;border:1px solid var(--line2);border-radius:3px;color:var(--ok);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.05em;padding:3px 7px;}
+  .inkonoff.isoff{color:var(--warn);border-color:var(--warn);}
   /* ink picker overlay */
   #inkPickWrap{position:fixed;inset:0;background:rgba(6,7,8,.82);z-index:90;display:flex;
     align-items:center;justify-content:center;padding:20px;}
@@ -646,14 +650,13 @@
 
     <div class="panel" id="pInks">
       <h3><span class="pn">5</span> Ink colors</h3>
-      <p class="desc">Two ink setups per job. Click a shirt to move it to the other setup · click a swatch to turn that ink OFF.</p>
+      <p class="desc">Two ink setups. Drag a shirt into the other bucket to change how it prints · click a shirt to see it on the mockup.</p>
       <div class="flip-banner" id="flipBanner" hidden>
         <span id="flipMsg">1-color logo — print it in <b>WHITE</b> on the dark shirts?</span>
         <button class="btn sm" id="flipYes">Yes</button>
         <button class="btn ghost sm" id="flipUndo" hidden>Undo</button>
       </div>
-      <div class="setup-tabs" id="setupTabs"></div>
-      <div class="shirt-assign" id="shirtAssign"></div>
+      <div class="bucket-board" id="bucketBoard"></div>
       <div id="inkList"></div>
       <div class="screens-pill" id="screensPill">—</div>
       <div class="checkline" id="lineNoUB"><input type="checkbox" id="noUnderbase"><span><b>NO UNDERBASE</b> — soft-hand / vintage look (ink soaks into the shirt)</span></div>
@@ -685,7 +688,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.2 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1405,63 +1408,97 @@ function setupCounts(){
   activeSet().items.forEach(it=>{itemUsesDark(it)?d++:l++;});
   return {light:l,dark:d};
 }
-function renderSetupTabs(){
-  const el=$('setupTabs');if(!el)return;
-  const c=setupCounts();el.innerHTML='';
-  [['light','STANDARD',c.light],['dark','ON DARK SHIRTS',c.dark]].forEach(function(t){
-    const b=document.createElement('button');
-    b.className='stab'+(inkView===t[0]?' on':'');
-    b.innerHTML='<span class="st-name">'+t[1]+'</span><span class="st-n">'+t[2]+' shirt'+(t[2]===1?'':'s')+'</span>';
-    b.title=t[0]==='dark'
-      ?'The alternate inks for shirts the art would disappear on'
-      :'The inks most of the job prints in';
-    b.onclick=function(){inkView=t[0];refreshInkList();};
-    el.appendChild(b);
-  });
+/* v8.2 BUCKET BOARD — both setups always visible. Drag a shirt between buckets
+   to change how it prints (or its ⇄ button on touch). CLICK previews — it never
+   moves anything. Bucket header = edit that setup's inks + jump the preview.
+   Data-driven so a third setup can slot in later without a rebuild. */
+const INK_SETUPS=[
+  {key:'light',label:'STANDARD',hint:'The inks most of the job prints in'},
+  {key:'dark',label:'DARK SHIRTS',hint:'These shirts print the alternate inks — the art would disappear in the standard colors'}
+];
+function itemInSetup(it,key){return (key==='dark')===itemUsesDark(it);}
+function previewSetup(key){
+  const items=activeSet().items.filter(function(it){return itemInSetup(it,key);});
+  if(!items.length)return;
+  const cur=state.previewGarment;
+  if(cur&&items.some(function(it){return it.styleKey===cur.styleKey&&slug(it.colorName)===cur.colorSlug;}))return;
+  state.previewGarment={styleKey:items[0].styleKey,colorSlug:slug(items[0].colorName)};
+  refresh();renderShirtAssign();
 }
+function moveItemToSetup(it,key){
+  const g=itemGarment(it);const p=g&&(g.front||g.back);
+  let autoDark=false,canAuto=false;
+  if(p&&p.canvas){
+    canAuto=true;
+    const m=it.inkMode;it.inkMode='auto';autoDark=itemUsesDark(it);it.inkMode=m;
+  }
+  it.inkMode=(canAuto&&(key==='dark')===autoDark)?'auto':(key==='dark'?'dark':'light');
+  renderSetItems();refreshInkList();refresh();buildBoard();
+}
+function renderSetupTabs(){}
 let __saWaiting=false;
+let __dragItem=null;
 function renderShirtAssign(){
-  const el=$('shirtAssign');if(!el)return;
+  const el=$('bucketBoard');if(!el)return;
   el.innerHTML='';
   const items=activeSet().items;
-  /* darkness is read off the decoded photo — if any are still loading, redraw
-     the setups once they land or the counts stay stale (all "standard"). */
+  /* darkness is read off the decoded photo — redraw once pending photos land */
   if(items.some(function(it){const p=itemPhoto(it);return p&&!p.canvas&&!p.__err;})&&!__saWaiting){
     __saWaiting=true;
-    ensureSetPhotos().then(function(){__saWaiting=false;renderSetupTabs();renderShirtAssign();})
+    ensureSetPhotos().then(function(){__saWaiting=false;renderShirtAssign();})
       .catch(function(){__saWaiting=false;});
   }
-  if(!items.length){el.innerHTML='<div class="sa-empty">Add shirts in step 3 — they show up here.</div>';return;}
-  const lab=document.createElement('div');lab.className='sa-lbl';
-  lab.textContent=inkView==='dark'?'SHIRTS PRINTING THE DARK-SHIRT INKS':'SHIRTS PRINTING THE STANDARD INKS';
-  el.appendChild(lab);
-  const wrap=document.createElement('div');wrap.className='sa-wrap';
   let forced=0;
-  items.forEach(function(it){
-    const isDark=itemUsesDark(it);
-    const mine=(inkView==='dark')===isDark;
-    const mode=it.inkMode||'auto';
-    if(mode!=='auto')forced++;
-    const c=document.createElement('button');
-    c.className='sa-chip'+(mine?' on':'');
-    c.appendChild(thumbCanvas(itemPhoto(it),24,28));
-    const t=document.createElement('span');t.textContent=it.colorName;c.appendChild(t);
-    if(mode!=='auto'){const pin=document.createElement('i');pin.className='sa-pin';pin.textContent='\u2022';c.appendChild(pin);}
-    c.title=mine
-      ?(mode==='auto'
-        ?'Using these inks automatically (this shirt reads '+(isDark?'dark':'light')+') — click to move it to the other setup'
-        :'Set by hand to this setup — click to move it to the other setup')
-      :'Printing the other setup — click to move it here';
-    c.onclick=function(){
-      it.inkMode=mine?(inkView==='dark'?'light':'dark'):(inkView==='dark'?'dark':'light');
-      renderSetItems();refreshInkList();refresh();buildBoard();
-    };
-    wrap.appendChild(c);
+  INK_SETUPS.forEach(function(su){
+    const mine=items.filter(function(it){return itemInSetup(it,su.key);});
+    const bk=document.createElement('div');
+    bk.className='bucket'+(inkView===su.key?' on':'');
+    bk.dataset.setup=su.key;
+    const hd=document.createElement('button');hd.className='bk-head';
+    hd.title=su.hint+' — click to edit these inks (the mockup follows)';
+    hd.innerHTML='<span class="bk-name">'+su.label+'</span><span class="bk-edit">EDITING</span>'
+      +'<span class="bk-n">'+mine.length+'</span>';
+    hd.onclick=function(){inkView=su.key;refreshInkList();previewSetup(su.key);};
+    bk.appendChild(hd);
+    const body=document.createElement('div');body.className='bk-body';
+    if(!items.length){body.innerHTML='<div class="bk-hint">add shirts in step 4</div>';}
+    else if(!mine.length){body.innerHTML='<div class="bk-hint">drag a shirt here</div>';}
+    mine.forEach(function(it){
+      const mode=it.inkMode||'auto';
+      if(mode!=='auto')forced++;
+      const c=document.createElement('div');
+      const isPv=state.previewGarment&&state.previewGarment.styleKey===it.styleKey&&state.previewGarment.colorSlug===slug(it.colorName);
+      c.className='bk-chip'+(isPv?' pv':'');
+      c.draggable=true;
+      c.appendChild(thumbCanvas(itemPhoto(it),24,28));
+      const t=document.createElement('span');t.textContent=it.colorName;c.appendChild(t);
+      if(mode!=='auto'){const pin=document.createElement('i');pin.className='bk-pin';pin.title='Moved by hand — "↺ back to automatic" resets';pin.textContent='•';c.appendChild(pin);}
+      const mv=document.createElement('button');mv.className='bk-move';mv.textContent='⇄';
+      mv.title='Move to the other setup';
+      mv.onclick=function(e){e.stopPropagation();moveItemToSetup(it,su.key==='dark'?'light':'dark');};
+      c.appendChild(mv);
+      c.title='Click to see this shirt on the mockup · drag it to the other bucket to change how it prints';
+      c.onclick=function(){state.previewGarment={styleKey:it.styleKey,colorSlug:slug(it.colorName)};refresh();renderShirtAssign();};
+      c.addEventListener('dragstart',function(e){__dragItem=it;c.classList.add('dragging');
+        try{e.dataTransfer.setData('text/plain',it.styleKey);}catch(x){}
+        e.dataTransfer.effectAllowed='move';});
+      c.addEventListener('dragend',function(){__dragItem=null;c.classList.remove('dragging');
+        document.querySelectorAll('.bucket.drop').forEach(function(b){b.classList.remove('drop');});});
+      body.appendChild(c);
+    });
+    bk.appendChild(body);
+    bk.addEventListener('dragover',function(e){if(!__dragItem)return;e.preventDefault();e.dataTransfer.dropEffect='move';bk.classList.add('drop');});
+    bk.addEventListener('dragleave',function(){bk.classList.remove('drop');});
+    bk.addEventListener('drop',function(e){
+      if(!__dragItem)return;e.preventDefault();bk.classList.remove('drop');
+      const it=__dragItem;__dragItem=null;
+      if(!itemInSetup(it,su.key))moveItemToSetup(it,su.key);
+    });
+    el.appendChild(bk);
   });
-  el.appendChild(wrap);
   if(forced){
     const r=document.createElement('button');r.className='sa-reset';
-    r.textContent='\u21ba back to automatic';
+    r.textContent='↺ back to automatic';
     r.title='Let the app decide again from how dark each shirt is';
     r.onclick=function(){items.forEach(function(it){it.inkMode='auto';});
       renderSetItems();refreshInkList();refresh();buildBoard();};
@@ -1488,7 +1525,11 @@ function refreshInkList(){
     const btn=document.createElement('button');btn.className='inkchg';btn.textContent='CHANGE';
     btn.title=dv?'Pick what this ink becomes on the dark shirts':'Pick this ink';
     btn.onclick=function(){openInkPicker(idx);};
-    row.appendChild(chip);row.appendChild(nm);row.appendChild(btn);
+    const oo=document.createElement('button');oo.className='inkonoff'+(a.off?' isoff':'');
+    oo.textContent=a.off?'OFF':'ON';
+    oo.title=a.off?'Not printing — click to turn this ink back on':'Printing — click to turn OFF (goes transparent, drops a screen)';
+    oo.onclick=function(){toggleInkOff(idx);};
+    row.appendChild(chip);row.appendChild(nm);row.appendChild(oo);row.appendChild(btn);
     el.appendChild(row);
   });
   const tot=state.artInks.length;
@@ -2940,6 +2981,7 @@ $('flipYes').onclick=()=>{
   inkView='dark';
   recolorCache.clear();
   refreshInkList();refresh();buildBoard();
+  previewSetup('dark');
 };
 $('flipUndo').onclick=()=>{
   const a=enabledAssign()[0];if(a)a.darkIdx=null;
