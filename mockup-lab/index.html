@@ -139,6 +139,9 @@
   .drawbanner{display:none;background:var(--accent);color:#0B1520;
     font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:9px 16px;border-radius:3px;margin-bottom:12px;text-align:center;}
   .drawbanner.show{display:block;}
+  .resumebar{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--accent);
+    border-radius:4px;padding:10px 14px;margin-bottom:12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);}
+  .resumebar span{flex:1;}
   .drawbanner .how{display:block;font-weight:500;font-size:10px;margin-top:2px;letter-spacing:0;}
   .preview-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px;}
   .preview-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
@@ -281,6 +284,9 @@
   .shell{max-width:1900px;margin:26px auto 0;padding:0 26px;display:grid;
     grid-template-columns:300px minmax(0,1fr) 330px;gap:16px;align-items:start;}
   body.tab-cal .shell{grid-template-columns:340px minmax(0,1fr);}
+  body.tab-sum .shell{grid-template-columns:minmax(0,1fr);}
+  body.tab-sum .col-c{max-width:1560px;width:100%;margin:0 auto;}
+  #sumCanvas{width:100%;height:auto;border:1px solid var(--line2);border-radius:6px;}
   @media(max-width:1250px){.shell{grid-template-columns:1fr!important;}}
   .col-l,.col-r{display:flex;flex-direction:column;gap:14px;position:sticky;top:14px;
     max-height:calc(100vh - 28px);overflow:auto;padding-right:2px;}
@@ -307,7 +313,7 @@
   body.tab-cal .apv-blue,body.tab-sum .apv-blue{display:none;}
   .apv-pager{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:10px 26px 0;}
   .apv-pager button{background:#fff;border:1px solid #CFCFCB;color:#131517;border-radius:3px;
-    padding:5px 14px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-weight:700;}
+    padding:8px 20px;font-size:15px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-weight:700;}
   .apv-pager button:hover{border-color:var(--accent);color:var(--accent);}
   .apv-pager span{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#666;}
   body.tab-mock .canvas-frame{background:#fff;border:none;min-height:340px;}
@@ -396,14 +402,14 @@
   </nav>
   <div style="display:flex;align-items:center;gap:12px;">
     <button class="btn ghost sm" id="modeToggle">⚙ Advanced</button>
-    <div class="catalog-badge" id="catalogBadge">catalog: local mode</div>
+    <div class="catalog-badge" id="catalogBadge">OFFLINE — drop photos to start</div>
   </div>
 </header>
 
 <div class="shell">
   <!-- LEFT COLUMN -->
   <aside class="col-l">
-    <div class="panel" data-tabs="mock sum" id="pJob">
+    <div class="panel" data-tabs="mock" id="pJob">
       <h3><span class="pn">1</span> Job</h3>
       <p class="desc">Who's this for? Goes on every page you download.</p>
       <div class="row2">
@@ -412,7 +418,7 @@
       </div>
     </div>
 
-    <div class="panel" data-tabs="mock sum" id="pArt">
+    <div class="panel" data-tabs="mock" id="pArt">
       <h3><span class="pn">2</span> Logos</h3>
       <p class="desc">Drop the art in. SVG is best — one setup covers every shirt in the job.</p>
       <div class="row2">
@@ -424,7 +430,7 @@
       <div class="set-artnote" id="artSetNote"></div>
     </div>
 
-    <div class="panel" data-tabs="mock sum" id="pColors">
+    <div class="panel" data-tabs="mock" id="pColors">
       <h3><span class="pn">3</span> Shirts</h3>
       <p class="desc">Type a style + color — like "6210 stone" — and hit Enter to add it.</p>
       <div class="set-tabs" id="setTabs"></div>
@@ -484,7 +490,12 @@
       <span data-step="5">5 · DOWNLOAD</span>
     </div>
     <div class="drawbanner" id="drawBanner"></div>
-    <div class="apv-card" id="apvCard">
+    <div class="resumebar" id="resumeBar" hidden data-tabs="mock">
+      <span id="resumeTxt"></span>
+      <button class="btn sm" id="resumeYes">RESUME</button>
+      <button class="btn ghost sm" id="resumeNo">START FRESH</button>
+    </div>
+    <div class="apv-card" id="apvCard" data-tabs="mock cal">
       <div class="apv-head">
         <div>
           <img class="apv-logo" src="assets/mayhem-logo.png" onerror="this.hidden=true;document.getElementById('apvLogoTxt').hidden=false;">
@@ -512,11 +523,11 @@
       </div>
     </div>
 
-    <div class="preview-meta below-card">
+    <div class="preview-meta below-card" data-tabs="mock cal">
       <span class="preview-label" id="previewLabel"></span>
       <span class="preview-label" id="previewScreens"></span>
     </div>
-    <div class="pmsline" id="previewPms"></div>
+    <div class="pmsline" id="previewPms" data-tabs="mock cal"></div>
 
     <div class="panel below-card" data-tabs="sum">
       <h3>Production print summary <span style="margin-left:auto;"></span></h3>
@@ -549,7 +560,7 @@
   </main>
 
   <!-- RIGHT COLUMN -->
-  <aside class="col-r" data-tabs="mock sum">
+  <aside class="col-r" data-tabs="mock">
     <div class="panel" id="pInks">
       <h3><span class="pn">4</span> Ink colors</h3>
       <p class="desc">Applies to every shirt in the job. Click a swatch to turn an ink OFF — it goes transparent and won't print or count as a screen.</p>
@@ -582,8 +593,8 @@
           <div>
             <label class="lbl" style="margin-top:0;">On line</label>
             <select id="ruleAnchor">
-              <option value="center">Center of apparel</option>
-              <option value="leftChest">Left chest line</option>
+              <option value="center">Center</option>
+              <option value="leftChest">Left chest</option>
             </select>
           </div>
           <div>
@@ -596,6 +607,7 @@
 
     <div class="panel" id="pSize">
       <h3>Size &amp; fine-tune</h3>
+      <p class="desc">Or work right on the shirt: drag the logo to move it · scroll over it to resize · double-click to snap back.</p>
       <label class="lbl" style="margin-top:0;">How wide? (inches)</label>
       <input type="number" id="designW" step="0.25" min="0.5" value="10">
       <div class="val" id="actualIn">—</div>
@@ -617,7 +629,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V7.8 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V7.9 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -826,7 +838,7 @@ let photoSeq=1;
 
 /* ================= v6: MOCKUP SETS ================= */
 /* a set = a named list of garments (any styles mixed) + its own front/back art */
-const SETS=[{name:'SET A',items:[],artF:null,artB:null,dupBack:false,liveInk:true,artInks:[],inkAssign:[]}];
+const SETS=[{name:'GROUP A',items:[],artF:null,artB:null,dupBack:false,liveInk:true,artInks:[],inkAssign:[]}];
 let activeSetIdx=0;
 function activeSet(){return SETS[activeSetIdx];}
 /* art actually used for a side — honors the "back uses front art" duplicate flag */
@@ -1092,7 +1104,7 @@ function reDetect(){
    ~6% (back), left-chest line ~4.3" right of center. Render-only — never
    written to styles.json; Style Lab calibration replaces them for real. */
 function smartizeCalib(cal,photo,side){
-  if(!cal||!cal.default||!photo)return cal;
+  if(!cal||!cal.default||!photo||!photo.canvas)return cal;
   const key=photo.canvas.width+'x'+photo.canvas.height;
   if(cal.__smart===key)return cal;
   const bb=garmentBBox(photo.canvas);
@@ -1105,6 +1117,7 @@ function smartizeCalib(cal,photo,side){
   return cal;
 }
 function computePlacement(photo,side,loc){
+  if(!photo||!photo.canvas)return null;
   const cal=smartizeCalib(CALIB[photo.styleKey][side],photo,side);
   const rule=RULES[side][loc];
   if(!cal||!rule)return null;
@@ -1148,6 +1161,7 @@ function activePhoto(){
   return state.side==='front'?(gp.front||gp.back):(gp.back||gp.front);
 }
 function renderMock(photo,targetCanvas,side,loc,overlay){
+  if(!photo||!photo.canvas)return targetCanvas;
   const W=photo.canvas.width,H=photo.canvas.height;
   targetCanvas.width=W;targetCanvas.height=H;
   const ctx=targetCanvas.getContext('2d');
@@ -1376,17 +1390,29 @@ function refresh(){
     $('previewLabel').textContent='';$('previewScreens').textContent='';$('previewPms').innerHTML='';
     return;
   }
+  const pend=[gp.front,gp.back].filter(pp=>pp&&!pp.canvas&&!pp.__err);
+  if(pend.length)pend.forEach(pp=>ensurePhoto(pp).then(()=>refresh()));
+  if(!photo.canvas){
+    pvB.style.display='none';pvF.style.display='flex';
+    cvF.width=624;cvF.height=400;
+    const ctx=cvF.getContext('2d');
+    ctx.fillStyle='#1E2124';ctx.fillRect(0,0,624,400);
+    ctx.fillStyle='#98A0A6';ctx.font='700 15px "JetBrains Mono", monospace';ctx.textAlign='center';
+    ctx.fillText('Loading photos…',312,195);
+    $('previewLabel').textContent='';$('previewScreens').textContent='';$('previewPms').innerHTML='';
+    return;
+  }
   const overlayOn=state.calibStep>=0||state.showAnchors;
-  if(gp.front){pvF.style.display='flex';renderMock(gp.front,cvF,'front',state.loc.front,overlayOn&&state.side==='front');}
+  if(gp.front&&gp.front.canvas){pvF.style.display='flex';renderMock(gp.front,cvF,'front',state.loc.front,overlayOn&&state.side==='front');}
   else pvF.style.display='none';
-  if(gp.back){pvB.style.display='flex';renderMock(gp.back,cvB,'back',state.loc.back,overlayOn&&state.side==='back');}
+  if(gp.back&&gp.back.canvas){pvB.style.display='flex';renderMock(gp.back,cvB,'back',state.loc.back,overlayOn&&state.side==='back');}
   else pvB.style.display='none';
   pvF.classList.toggle('edit',state.side==='front'&&!!gp.front);
   pvB.classList.toggle('edit',state.side==='back'&&!!gp.back);
   const loc=state.loc[state.side];
   const s=STYLES[photo.styleKey]||{name:photo.styleKey};
   const sc=screensFor(photo,state.side,loc);
-  $('previewLabel').innerHTML=`<b>${s.name}</b> · ${photo.colorName} · ${state.side} · ${loc}`;
+  $('previewLabel').innerHTML=`<b>${s.name}</b> · ${photo.colorName} · ${state.side==='front'?'Front':'Back'} · ${locLabel(state.side)}`;
   $('previewScreens').textContent=`${sc.inks} ink + ${sc.ub} UB = ${sc.total} screens`;
   const pl=computePlacement(photo,state.side,loc);
   if(pl){
@@ -1542,6 +1568,77 @@ function wireCalibCanvas(cv,side){
 }
 wireCalibCanvas(mainCv,'front');
 wireCalibCanvas(backCv,'back');
+
+/* ============ v7.9 DRAG-TO-PLACE ART ============
+   Drag the art on the shirt to move it · scroll over it to resize ·
+   double-click to snap back to the preset. Inches update live. */
+function artRectOn(side){
+  const gp=garmentPhotos();
+  const photo=side==='front'?gp.front:gp.back;
+  if(!photo||!photo.canvas)return null;
+  const art=artFor(side);if(!art)return null;
+  const pl=computePlacement(photo,side,state.loc[side]);if(!pl)return null;
+  const artH=pl.wpx*(art.height/art.width);
+  return {photo,pl,x:pl.anchorX-pl.wpx/2,y:pl.topY,w:pl.wpx,h:artH};
+}
+function fitForSide(side){
+  const fk=side+':'+state.loc[side];
+  if(!state.fit[fk])state.fit[fk]={widthIn:RULES[side][state.loc[side]].defaultWidth,rot:0,nudgeX:0,nudgeY:0};
+  return state.fit[fk];
+}
+function wireArtDrag(cv,side){
+  let drag=null;
+  cv.addEventListener('mousemove',e=>{
+    if(state.calibStep>=0)return;
+    const r=artRectOn(side);
+    if(!r){cv.style.cursor='';return;}
+    const p=canvasPosOn(cv,e);
+    if(drag){
+      const cal=CALIB[r.photo.styleKey][side];
+      const f=fitForSide(side);
+      f.nudgeX=+(drag.nx0+(p.x-drag.x0)/cal.ppi).toFixed(3);
+      f.nudgeY=+(drag.ny0+(p.y-drag.y0)/cal.ppi).toFixed(3);
+      if(state.side===side)syncFitInputs();
+      refresh();
+      return;
+    }
+    const over=p.x>=r.x&&p.x<=r.x+r.w&&p.y>=r.y&&p.y<=r.y+r.h;
+    cv.style.cursor=over?'move':'';
+  });
+  cv.addEventListener('mousedown',e=>{
+    if(state.calibStep>=0)return;
+    const r=artRectOn(side);if(!r)return;
+    const p=canvasPosOn(cv,e);
+    if(!(p.x>=r.x&&p.x<=r.x+r.w&&p.y>=r.y&&p.y<=r.y+r.h))return;
+    e.preventDefault();
+    const f=fitForSide(side);
+    drag={x0:p.x,y0:p.y,nx0:f.nudgeX||0,ny0:f.nudgeY||0};
+  });
+  window.addEventListener('mouseup',()=>{if(drag){drag=null;buildBoard();}});
+  cv.addEventListener('wheel',e=>{
+    if(state.calibStep>=0)return;
+    const r=artRectOn(side);if(!r)return;
+    const p=canvasPosOn(cv,e);
+    if(!(p.x>=r.x&&p.x<=r.x+r.w&&p.y>=r.y&&p.y<=r.y+r.h))return;
+    e.preventDefault();
+    const f=fitForSide(side);
+    f.widthIn=Math.max(0.5,Math.min(16,+(((f.widthIn||RULES[side][state.loc[side]].defaultWidth))+(e.deltaY<0?0.25:-0.25)).toFixed(2)));
+    if(state.side===side)syncFitInputs();
+    refresh();
+    clearTimeout(cv.__wt);cv.__wt=setTimeout(buildBoard,400);
+  },{passive:false});
+  cv.addEventListener('dblclick',e=>{
+    if(state.calibStep>=0)return;
+    const r=artRectOn(side);if(!r)return;
+    const p=canvasPosOn(cv,e);
+    if(!(p.x>=r.x&&p.x<=r.x+r.w&&p.y>=r.y&&p.y<=r.y+r.h))return;
+    state.fit[side+':'+state.loc[side]]={widthIn:RULES[side][state.loc[side]].defaultWidth,rot:0,nudgeX:0,nudgeY:0};
+    if(state.side===side)syncFitInputs();
+    refresh();buildBoard();
+  });
+}
+wireArtDrag(mainCv,'front');
+wireArtDrag(backCv,'back');
 window.addEventListener('mouseup',()=>{
   if(!barDragging)return;
   barDragging=false;
@@ -1551,6 +1648,29 @@ window.addEventListener('mouseup',()=>{
   delete calTemp.barLive;
   renderCalibChips();refresh();
 });
+
+/* ================= v7.9 LAZY PHOTO LOADING ================= */
+const __photoLoads=new Map();
+function ensurePhoto(p){
+  if(!p||p.canvas||!p.__url||p.__err)return Promise.resolve(p);
+  if(__photoLoads.has(p.id))return __photoLoads.get(p.id);
+  const pr=new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{const c=processPhoto(img);c.__id='p'+p.id;p.canvas=c;__photoLoads.delete(p.id);res(p);};
+    img.onerror=()=>{p.__err=true;__photoLoads.delete(p.id);res(p);};
+    img.src=p.__url;
+  });
+  __photoLoads.set(p.id,pr);
+  return pr;
+}
+function ensureSetPhotos(){
+  const ps=[];
+  activeSet().items.forEach(it=>{
+    const g=garmentIndex().find(x=>x.styleKey===it.styleKey&&slug(x.colorName)===slug(it.colorName));
+    if(g){if(g.front)ps.push(g.front);if(g.back)ps.push(g.back);}
+  });
+  return Promise.all(ps.filter(p=>!p.canvas&&!p.__err).map(ensurePhoto));
+}
 
 /* ================= v6: SEARCH + SET UI ================= */
 function garmentIndex(){
@@ -1585,10 +1705,14 @@ function searchGarments(q){
 }
 function thumbCanvas(photo,w,h){
   const c=document.createElement('canvas');c.width=w;c.height=h;
-  if(photo){
+  const draw=()=>{
     const sc=Math.max(w/photo.canvas.width,h/photo.canvas.height);
     const dw=photo.canvas.width*sc,dh=photo.canvas.height*sc;
     c.getContext('2d').drawImage(photo.canvas,(w-dw)/2,(h-dh)/2,dw,dh);
+  };
+  if(photo){
+    if(photo.canvas)draw();
+    else ensurePhoto(photo).then(()=>{if(photo.canvas)draw();});
   }
   return c;
 }
@@ -1612,9 +1736,9 @@ function renderSetTabs(){
     b.onclick=()=>{switchSet(i);};
     el.appendChild(b);
   });
-  const add=document.createElement('button');add.className='addset';add.textContent='+ SET';
+  const add=document.createElement('button');add.className='addset';add.textContent='+ GROUP';
   add.onclick=()=>{
-    SETS.push({name:'SET '+String.fromCharCode(65+SETS.length),items:[],artF:null,artB:null,dupBack:false,liveInk:true,artInks:[],inkAssign:[]});
+    SETS.push({name:'GROUP '+String.fromCharCode(65+SETS.length),items:[],artF:null,artB:null,dupBack:false,liveInk:true,artInks:[],inkAssign:[]});
     switchSet(SETS.length-1);
   };
   el.appendChild(add);
@@ -1681,7 +1805,12 @@ function renderSearchResults(){
   const box=$('searchBox'),el=$('searchResults');
   const results=searchGarments(box.value);
   el.innerHTML='';
-  if(!box.value.trim()||!results.length){el.classList.remove('show');return;}
+  if(!box.value.trim()){el.classList.remove('show');return;}
+  if(!results.length){
+    const d=document.createElement('div');d.className='sr-item';d.style.cursor='default';
+    d.innerHTML=`<div><div class="sr-name">No match</div><div class="sr-style">That style isn't in the catalog yet — it can be added through Style Lab.</div></div>`;
+    el.appendChild(d);el.classList.add('show');return;
+  }
   results.forEach((g,i)=>{
     const d=document.createElement('div');d.className='sr-item'+(i===srHot?' hot':'');
     d.appendChild(thumbCanvas(g.front||g.back,34,40));
@@ -1718,7 +1847,14 @@ function buildBoard(){
   const grid=$('cardGrid');grid.innerHTML='';
   const set=activeSet();
   const items=boardItems();
-  if(!items.length){$('boardDesc').textContent=set.items.length?'Set garments have no photos for this layout.':set.name+' is empty — search and add garments; the set IS the board.';return;}
+  if(!items.length){$('boardDesc').textContent=set.items.length?'Set garments have no photos for this layout.':set.name+' is empty — search above to add shirts.';return;}
+  const pend=[];
+  items.forEach(it=>{['front','back'].forEach(k=>{const pp=it[k];if(pp&&!pp.canvas&&!pp.__err)pend.push(pp);});});
+  if(pend.length){
+    $('boardDesc').textContent='Loading photos…';
+    Promise.all(pend.map(ensurePhoto)).then(()=>buildBoard());
+    return;
+  }
   const styleCount=new Set(items.map(i=>(i.front||i.back).styleKey)).size;
   const src=`${set.name} · ${styleCount} style${styleCount>1?'s':''}`;
   $('boardDesc').textContent=`${src} · ${items.length} garment${items.length>1?'s':''} · ${state.boardMode==='pair'?'front + back':state.boardMode}`;
@@ -1826,7 +1962,7 @@ function calibExport(){
   return out;
 }
 function saveBundle(){
-  const out={v:5,rules:RULES,calib:calibExport(),fit:state.fit,photos:PHOTOS.map(p=>({
+  const out={v:5,rules:RULES,calib:calibExport(),fit:state.fit,photos:PHOTOS.filter(p=>p.canvas).map(p=>({
     styleKey:p.styleKey,side:p.side,colorName:p.colorName,origName:p.origName||'',url:p.canvas.toDataURL('image/jpeg',0.88)
   }))};
   const blob=new Blob([JSON.stringify(out)],{type:'application/json'});
@@ -1852,7 +1988,6 @@ function applyManifest(data,baseUrl){
   if(data.rules)Object.entries(data.rules).forEach(([side,locs])=>{
     Object.entries(locs).forEach(([loc,r])=>{if(RULES[side]&&RULES[side][loc])RULES[side][loc]=normRule(r);});
   });
-  let loaded=0,total=0;
   Object.entries(data.styles||{}).forEach(([key,sd])=>{
     if(!STYLES[key])STYLES[key]={name:sd.name||key,sub:sd.sub||'',tokens:sd.tokens||[key.toLowerCase()],bodyLenM:sd.bodyLenM||29};
     if(!CALIB[key])CALIB[key]={front:defCalib('front'),back:defCalib('back')};
@@ -1860,20 +1995,15 @@ function applyManifest(data,baseUrl){
       if(sd.calib.front)CALIB[key].front=normCalib(sd.calib.front,'front');
       if(sd.calib.back)CALIB[key].back=normCalib(sd.calib.back,'back');
     }
+    /* v7.9 LAZY CATALOG: photos are stubs until a garment is actually searched,
+       previewed, added, or exported — the app opens instantly instead of
+       downloading the whole catalog. ensurePhoto() fills in the canvas. */
     (sd.photos||[]).forEach(meta=>{
-      total++;
-      const img=new Image();
-      img.onload=()=>{
-        const c=processPhoto(img);
-        c.__id='p'+photoSeq;
-        PHOTOS.push({id:photoSeq++,styleKey:key,side:meta.side,colorName:meta.color,canvas:c,origName:meta.file.split('/').pop()});
-        if(++loaded===total){buildStyleTabs();buildGallery();refreshCalibStatus();renderSetItems();refresh();buildBoard();}
-      };
-      img.onerror=()=>{if(++loaded===total){buildStyleTabs();buildGallery();refreshCalibStatus();refresh();buildBoard();}};
-      img.src=(baseUrl||'')+meta.file;
+      PHOTOS.push({id:photoSeq++,styleKey:key,side:meta.side,colorName:meta.color,canvas:null,
+        origName:meta.file.split('/').pop(),__url:(baseUrl||'')+meta.file});
     });
   });
-  if(total===0){buildStyleTabs();buildGallery();refreshCalibStatus();refresh();buildBoard();}
+  buildStyleTabs();buildGallery();refreshCalibStatus();renderSetItems();refresh();buildBoard();
 }
 function loadBundleOrManifest(file){
   const r=new FileReader();
@@ -1935,9 +2065,9 @@ fetch('styles.json').then(r=>{
   return r.json();
 }).then(data=>{
   state.hosted=true;
-  $('catalogBadge').textContent='catalog: hosted · live';
-  $('catalogBadge').classList.add('live');
   applyManifest(data,'');
+  $('catalogBadge').textContent='LIVE CATALOG · '+Object.keys(data.styles||{}).length+' STYLES';
+  $('catalogBadge').classList.add('live');
 }).catch(()=>{/* local mode — fine */});
 
 /* ================= WIRING ================= */
@@ -2070,7 +2200,7 @@ $('noUnderbase').onchange=e=>{
 };
 $('boardMode').onchange=e=>{state.boardMode=e.target.value;buildBoard();};
 $('buildBoard').onclick=buildBoard;
-$('dlBoard').onclick=downloadBoard;
+$('dlBoard').onclick=()=>ensureSetPhotos().then(downloadBoard);
 $('dlActive').onclick=()=>{
   const p=activePhoto();if(!p)return;
   const cv=document.createElement('canvas');renderMock(p,cv,state.side,state.loc[state.side],false);
@@ -2408,11 +2538,13 @@ function approvalFor(item,ret){
   downloadCanvas(pg,'approval-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
 }
 $('dlApproval').onclick=()=>{
-  const items=pagerItems();
-  const i=pagerIndex();
-  if(items.length){approvalFor(items[i<0?0:i]);return;}
-  const p=activePhoto();
-  if(p)approvalFor({styleKey:p.styleKey,colorName:p.colorName});
+  ensureSetPhotos().then(()=>{
+    const items=pagerItems();
+    const i=pagerIndex();
+    if(items.length){approvalFor(items[i<0?0:i]);return;}
+    const p=activePhoto();
+    if(p)approvalFor({styleKey:p.styleKey,colorName:p.colorName});
+  });
 };
 
 /* ---------- production print summary (for the crew) ---------- */
@@ -2643,7 +2775,7 @@ $('flipUndo').onclick=()=>{
 $('dlAllApprovals').onclick=()=>{
   const items=activeSet().items;
   if(!items.length){alert('Add shirts to the job first (step 3).');return;}
-  items.forEach((it,i)=>setTimeout(()=>approvalFor(it),i*450));
+  ensureSetPhotos().then(()=>items.forEach((it,i)=>setTimeout(()=>approvalFor(it),i*450)));
 };
 $('dlShopSheet').onclick=()=>$('dlSummary').onclick();
 
@@ -2696,6 +2828,7 @@ function jobFolderName(){
 async function buildJobZip(){
   const items=activeSet().items;
   if(!items.length)return null;
+  await ensureSetPhotos();
   const folder=jobFolderName();
   const toU8=cv=>new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/png'));
   const entries=[];
@@ -2727,7 +2860,88 @@ $('dlJobZip').onclick=async()=>{
 };
 
 const __v72ril=refreshInkList;refreshInkList=function(){__v72ril();renderInkSimple();updateFlipBanner();};
-const __v72rf=refresh;refresh=function(){__v72rf();updateStepper();updateFlipBanner();};
+const __v72rf=refresh;refresh=function(){__v72rf();updateStepper();updateFlipBanner();if(typeof scheduleAutosave==='function')scheduleAutosave();};
+
+/* ============ v7.9 JOB AUTOSAVE + RESUME ============ */
+const JOBKEY='mockuplab.job.v1';
+let __bootRestored=false,__saveTimer=null;
+function jobHasContent(){
+  return SETS.some(st=>st.items.length)||!!window.__userArt||($('jobCustomer').value||'').trim()!==''||($('jobQuote').value||'').trim()!=='';
+}
+function serializeJob(){
+  const cur=activeSet();cur.artF=state.artF;cur.artB=state.artB;cur.artInks=state.artInks;cur.inkAssign=state.inkAssign;
+  return {v:1,when:Date.now(),
+    customer:$('jobCustomer').value,quote:$('jobQuote').value,
+    activeSetIdx,loc:state.loc,fit:state.fit,
+    fabricBlend:state.fabricBlend,autoUnderbase:state.autoUnderbase,
+    userArt:!!window.__userArt,
+    sets:SETS.map(st=>({name:st.name,items:st.items,dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
+      artInks:st.artInks||[],
+      inkAssign:(st.inkAssign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,off:!!a.off,match:a.match,auto:!!a.auto})),
+      artF:(window.__userArt&&st.artF)?st.artF.toDataURL('image/png'):null,
+      artB:(window.__userArt&&st.artB)?st.artB.toDataURL('image/png'):null}))};
+}
+function autosaveNow(){
+  if(!__bootRestored)return;
+  try{
+    if(!jobHasContent()){localStorage.removeItem(JOBKEY);return;}
+    localStorage.setItem(JOBKEY,JSON.stringify(serializeJob()));
+  }catch(e){
+    try{const j=serializeJob();j.sets.forEach(st=>{st.artF=null;st.artB=null;});localStorage.setItem(JOBKEY,JSON.stringify(j));}catch(e2){}
+  }
+}
+function scheduleAutosave(){
+  if(!__bootRestored){
+    if(!jobHasContent())return;
+    __bootRestored=true;
+    const b=$('resumeBar');if(b&&!b.hidden){b.hidden=true;localStorage.removeItem(JOBKEY);}
+  }
+  clearTimeout(__saveTimer);__saveTimer=setTimeout(autosaveNow,900);
+}
+function loadCanvasFrom(url){return new Promise(res=>{if(!url)return res(null);
+  const img=new Image();
+  img.onload=()=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0);c.__id='art'+(artIdSeq++);res(c);};
+  img.onerror=()=>res(null);img.src=url;});}
+async function restoreJob(j){
+  $('jobCustomer').value=j.customer||'';$('jobQuote').value=j.quote||'';syncJob();
+  state.loc=j.loc||state.loc;state.fit=j.fit||{};
+  state.fabricBlend=!!j.fabricBlend;$('fabricBlend').checked=state.fabricBlend;
+  state.autoUnderbase=j.autoUnderbase!==false;$('autoUnderbase').checked=state.autoUnderbase;
+  $('noUnderbase').checked=!state.autoUnderbase;
+  window.__userArt=!!j.userArt;
+  SETS.length=0;
+  for(const st of (j.sets||[])){
+    const artF=await loadCanvasFrom(st.artF),artB=await loadCanvasFrom(st.artB);
+    SETS.push({name:st.name,items:st.items||[],dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
+      artInks:st.artInks||[],inkAssign:st.inkAssign||[],artF,artB});
+  }
+  if(!SETS.length)SETS.push({name:'GROUP A',items:[],artF:null,artB:null,dupBack:false,liveInk:true,artInks:[],inkAssign:[]});
+  activeSetIdx=Math.min(j.activeSetIdx||0,SETS.length-1);
+  const cur=activeSet();
+  state.artF=cur.artF;state.artB=cur.artB;state.artInks=cur.artInks||[];state.inkAssign=cur.inkAssign||[];
+  $('dupBack').checked=!!cur.dupBack;$('liveInk').checked=cur.liveInk!==false;
+  if(cur.items.length)state.previewGarment={styleKey:cur.items[0].styleKey,colorSlug:slug(cur.items[0].colorName)};
+  recolorCache.clear();
+  if(!window.__userArt)adoptLogoAsDemo();
+  renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();syncRuleInputs();syncFitInputs();refresh();buildBoard();
+}
+(function(){
+  let saved=null;
+  try{saved=JSON.parse(localStorage.getItem(JOBKEY)||'null');}catch(e){}
+  const bar=$('resumeBar');
+  if(saved&&saved.sets&&(saved.sets.some(st=>(st.items||[]).length)||saved.userArt||saved.customer||saved.quote)){
+    const n=saved.sets.reduce((a,st)=>a+(st.items||[]).length,0);
+    const mins=Math.max(1,Math.round((Date.now()-(saved.when||Date.now()))/60000));
+    const agoTxt=mins<60?mins+' min ago':mins<1440?Math.round(mins/60)+' hr ago':Math.round(mins/1440)+' day'+(Math.round(mins/1440)>1?'s':'')+' ago';
+    $('resumeTxt').innerHTML=`<b>Pick up where you left off?</b> ${saved.customer||'Untitled job'} · ${n} shirt${n===1?'':'s'} · saved ${agoTxt}`;
+    bar.hidden=false;
+    $('resumeYes').onclick=async()=>{bar.hidden=true;await restoreJob(saved);__bootRestored=true;};
+    $('resumeNo').onclick=()=>{bar.hidden=true;localStorage.removeItem(JOBKEY);__bootRestored=true;};
+  } else {__bootRestored=true;}
+})();
+$('jobCustomer').addEventListener('input',scheduleAutosave);
+$('jobQuote').addEventListener('input',scheduleAutosave);
+const __bb9=buildBoard;buildBoard=function(){__bb9();scheduleAutosave();};
 
 setTab('mock');
 buildManifest();
