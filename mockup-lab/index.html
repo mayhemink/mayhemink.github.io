@@ -95,13 +95,75 @@
   .gname[contenteditable]:focus{color:var(--ink);outline:1px solid var(--accent);border-radius:2px;}
   .gallery-empty{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);padding:10px 0;}
 
-  .inkrow{display:grid;grid-template-columns:22px 1fr;gap:8px;margin-top:8px;align-items:center;}
+  /* v8.0 — one line per ink: swatch (click = on/off) + shop name + CHANGE */
+  .inkrow{display:grid;grid-template-columns:20px 1fr auto;gap:9px;margin-top:7px;align-items:center;
+    background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:8px 10px;}
   .inkchip{width:20px;height:20px;border-radius:3px;border:1px solid rgba(255,255,255,.25);cursor:pointer;flex:none;}
-  .inkrow.inkoff{opacity:.45;}
+  .inkrow.inkoff{opacity:.5;}
   .inkrow.inkoff .inkchip{background-image:linear-gradient(45deg,transparent 40%,#E8EAEC 46%,#E8EAEC 54%,transparent 60%);}
-  #inkSimple .isc{cursor:pointer;}
-  #inkSimple .isc.off{opacity:.5;text-decoration:line-through;}
-  .inkrow select{padding:5px 6px;font-size:11px;}
+  .inkname{font-size:12.5px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;}
+  .inkname .star{color:var(--accent2);font-weight:700;}
+  .inkname .offtag{color:var(--warn);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;}
+  .inkname .samet{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);font-weight:500;}
+  .inkchg{background:none;border:1px solid var(--line2);color:var(--muted);cursor:pointer;border-radius:3px;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.07em;padding:5px 9px;}
+  .inkchg:hover{border-color:var(--accent);color:var(--accent);}
+  /* setup tabs */
+  .setup-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;}
+  .setup-tabs .stab{display:block;text-align:left;background:var(--surface2);border:1px solid var(--line2);
+    border-radius:4px;padding:8px 10px;cursor:pointer;color:var(--muted);}
+  .setup-tabs .stab .st-name{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;
+    font-weight:700;letter-spacing:.06em;color:var(--ink);}
+  .setup-tabs .stab .st-n{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;margin-top:2px;}
+  .setup-tabs .stab.on{border-color:var(--accent);background:#131C24;}
+  .setup-tabs .stab.on .st-name{color:var(--accent);}
+  /* which shirts print this setup */
+  .shirt-assign{margin-top:10px;}
+  .sa-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
+  .sa-wrap{display:flex;flex-wrap:wrap;gap:5px;}
+  .sa-chip{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--line2);
+    border-radius:3px;padding:3px 8px 3px 3px;cursor:pointer;color:var(--muted);font-size:10.5px;opacity:.4;}
+  .sa-chip canvas{width:24px;height:28px;border-radius:2px;border:1px solid var(--line2);}
+  .sa-chip.on{opacity:1;border-color:var(--accent);color:var(--ink);background:#131C24;}
+  .sa-chip:hover{opacity:1;}
+  .sa-chip .sa-pin{font-style:normal;color:var(--accent2);font-size:13px;line-height:1;}
+  .sa-reset{background:none;border:none;color:var(--muted);cursor:pointer;margin-top:7px;padding:0;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;text-decoration:underline;}
+  .sa-reset:hover{color:var(--accent);}
+  .sa-empty{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);}
+  /* ink picker overlay */
+  #inkPickWrap{position:fixed;inset:0;background:rgba(6,7,8,.82);z-index:90;display:flex;
+    align-items:center;justify-content:center;padding:20px;}
+  #inkPickWrap[hidden]{display:none;}
+  #inkPickBox{background:var(--surface);border:1px solid var(--line2);border-radius:5px;width:min(620px,96vw);
+    max-height:88vh;display:flex;flex-direction:column;box-shadow:0 18px 60px rgba(0,0,0,.6);}
+  .ipk-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--line2);}
+  .ipk-head .ipk-title{font-family:'Archivo Black',sans-serif;font-size:13px;letter-spacing:.06em;}
+  .ipk-head button{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;}
+  .ipk-ctx{padding:10px 15px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line2);}
+  .ipk-ctx b{color:var(--ink);}
+  .ipk-sw{width:14px;height:14px;border-radius:2px;border:1px solid rgba(255,255,255,.3);display:inline-block;flex:none;}
+  #ipkSearch{margin:12px 15px 4px;padding:9px 11px;background:#131517;border:1px solid var(--line2);border-radius:4px;
+    color:var(--ink);font:500 12px 'JetBrains Mono',monospace;outline:none;}
+  #ipkSearch:focus{border-color:var(--accent);}
+  #ipkGrid{overflow:auto;padding:6px 15px 15px;}
+  .ipk-sec{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--muted);
+    margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line2);}
+  .ipk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:5px;}
+  .ipk-chip{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--line2);
+    border-radius:3px;padding:6px 8px;cursor:pointer;text-align:left;color:var(--ink);overflow:hidden;}
+  .ipk-chip:hover{border-color:var(--accent);}
+  .ipk-chip.on{border-color:var(--accent);background:#131C24;}
+  .ipk-chip .ipk-sw{width:18px;height:18px;}
+  .ipk-nm{font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ipk-sub{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--muted);white-space:nowrap;}
+  .ipk-chip>span:nth-child(2){display:flex;flex-direction:column;overflow:hidden;}
+  .ipk-same{display:block;width:100%;margin-top:12px;background:var(--surface2);border:1px solid var(--line2);
+    border-radius:3px;padding:10px;cursor:pointer;color:var(--ink);
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;}
+  .ipk-same.on{border-color:var(--accent);color:var(--accent);background:#131C24;}
+  .ipk-none{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);padding:16px 0;}
   .inkdet{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:2px;}
   .inkdet .match{color:var(--ok);font-weight:700;}
   .inkdet .match.mid{color:var(--accent2);}
@@ -347,7 +409,6 @@
   body.mode-simple #lineFabric,
   body.mode-simple #lineUB,
   body.mode-simple #artSetNote,
-  body.mode-simple #inkList,
   body.mode-simple .rulebox,
   body.mode-simple #advFit,
   body.mode-simple #resetFit,
@@ -358,8 +419,7 @@
   body.mode-simple #cardGrid,
   body.mode-simple #saveBundle,
   body.mode-simple #exportManifest{display:none!important;}
-  body.mode-adv #stepper,body.mode-adv .flip-banner{display:none!important;}
-  body.mode-adv #inkSimple{display:none!important;}
+  body.mode-adv #stepper{display:none!important;}
 
   .stepper{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;
     background:var(--surface);border:1px solid var(--line2);border-radius:4px;padding:10px;}
@@ -376,12 +436,6 @@
     border:1px solid var(--accent);border-radius:4px;padding:10px 12px;margin-top:10px;font-size:12.5px;}
   .flip-banner b{color:var(--accent2);}
   .flip-banner .btn{width:auto;}
-  #inkSimple{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;
-    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
-  #inkSimple .isc{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);
-    border:1px solid var(--line2);border-radius:3px;padding:4px 9px;color:var(--ink);}
-  #inkSimple .isc i{width:12px;height:12px;border-radius:2px;border:1px solid rgba(255,255,255,.3);display:inline-block;}
-  #inkSimple .link{margin-left:4px;}
   body.mode-simple .locbtns{grid-template-columns:1fr 1fr 1fr;}
   body.mode-simple .locbtns button{padding:10px 6px;}
 
@@ -563,13 +617,14 @@
   <aside class="col-r" data-tabs="mock">
     <div class="panel" id="pInks">
       <h3><span class="pn">4</span> Ink colors</h3>
-      <p class="desc">Applies to every shirt in the job. Click a swatch to turn an ink OFF — it goes transparent and won't print or count as a screen.</p>
+      <p class="desc">Two ink setups per job. Click a shirt to move it to the other setup · click a swatch to turn that ink OFF.</p>
       <div class="flip-banner" id="flipBanner" hidden>
         <span id="flipMsg">1-color logo — print it in <b>WHITE</b> on the dark shirts?</span>
         <button class="btn sm" id="flipYes">Yes</button>
         <button class="btn ghost sm" id="flipUndo" hidden>Undo</button>
       </div>
-      <div id="inkSimple"></div>
+      <div class="setup-tabs" id="setupTabs"></div>
+      <div class="shirt-assign" id="shirtAssign"></div>
       <div id="inkList"></div>
       <div class="screens-pill" id="screensPill">—</div>
       <div class="checkline" id="lineNoUB"><input type="checkbox" id="noUnderbase"><span><b>NO UNDERBASE</b> — soft-hand / vintage look (ink soaks into the shirt)</span></div>
@@ -629,9 +684,19 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V7.9 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.0 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
+
+<div id="inkPickWrap" hidden>
+  <div id="inkPickBox">
+    <div class="ipk-head"><div class="ipk-title" id="ipkTitle">PICK AN INK</div>
+      <button id="ipkClose" title="Close">&#10005;</button></div>
+    <div class="ipk-ctx" id="ipkCtx"></div>
+    <input id="ipkSearch" type="search" placeholder="&#128269; search — try &quot;white&quot;, &quot;navy&quot;, &quot;PMS 186&quot;">
+    <div id="ipkGrid"></div>
+  </div>
+</div>
 
 <script>
 
@@ -1283,7 +1348,8 @@ function buildLocBtns(){
     const r=RULES[state.side][key];
     b.innerHTML=label+`<span class="st">@ ${r.drop}" down</span>`;
     if(state.loc[state.side]===key)b.classList.add('active');
-    b.onclick=()=>{state.loc[state.side]=key;buildLocBtns();syncRuleInputs();syncFitInputs();refresh();};
+    b.onclick=()=>{state.loc[state.side]=key;buildLocBtns();syncRuleInputs();syncFitInputs();refresh();
+      renderSetupTabs();renderShirtAssign();};   /* placement can flip which shirts read dark */
     el.appendChild(b);
   });
 }
@@ -1318,63 +1384,199 @@ function toggleInkOff(idx){
   recolorCache.clear();
   refreshInkList();refresh();buildBoard();
 }
+/* ================= v8.0 INK SETUPS =================
+   A job has TWO named ink setups: STANDARD and ON DARK SHIRTS. Under the hood
+   they are still inkAssign[].idx and inkAssign[].darkIdx — what changed is that
+   the user no longer thinks in "light / dark / auto". They pick a setup, see the
+   actual shirts printing it, and move a shirt across with one click. */
+let inkView='light';
+function itemGarment(it){
+  return garmentIndex().find(x=>x.styleKey===it.styleKey&&slug(x.colorName)===slug(it.colorName));
+}
+function itemPhoto(it){const g=itemGarment(it);return g?(g.front||g.back):null;}
+function itemUsesDark(it){
+  const g=itemGarment(it);const p=g&&(g.front||g.back);if(!p)return false;
+  const side=g.front?'front':'back';
+  return screensFor(p,side,state.loc[side]).dark;   /* screensFor already applies effectiveDark */
+}
+function setupCounts(){
+  let l=0,d=0;
+  activeSet().items.forEach(it=>{itemUsesDark(it)?d++:l++;});
+  return {light:l,dark:d};
+}
+function renderSetupTabs(){
+  const el=$('setupTabs');if(!el)return;
+  const c=setupCounts();el.innerHTML='';
+  [['light','STANDARD',c.light],['dark','ON DARK SHIRTS',c.dark]].forEach(function(t){
+    const b=document.createElement('button');
+    b.className='stab'+(inkView===t[0]?' on':'');
+    b.innerHTML='<span class="st-name">'+t[1]+'</span><span class="st-n">'+t[2]+' shirt'+(t[2]===1?'':'s')+'</span>';
+    b.title=t[0]==='dark'
+      ?'The alternate inks for shirts the art would disappear on'
+      :'The inks most of the job prints in';
+    b.onclick=function(){inkView=t[0];refreshInkList();};
+    el.appendChild(b);
+  });
+}
+let __saWaiting=false;
+function renderShirtAssign(){
+  const el=$('shirtAssign');if(!el)return;
+  el.innerHTML='';
+  const items=activeSet().items;
+  /* darkness is read off the decoded photo — if any are still loading, redraw
+     the setups once they land or the counts stay stale (all "standard"). */
+  if(items.some(function(it){const p=itemPhoto(it);return p&&!p.canvas&&!p.__err;})&&!__saWaiting){
+    __saWaiting=true;
+    ensureSetPhotos().then(function(){__saWaiting=false;renderSetupTabs();renderShirtAssign();})
+      .catch(function(){__saWaiting=false;});
+  }
+  if(!items.length){el.innerHTML='<div class="sa-empty">Add shirts in step 3 — they show up here.</div>';return;}
+  const lab=document.createElement('div');lab.className='sa-lbl';
+  lab.textContent=inkView==='dark'?'SHIRTS PRINTING THE DARK-SHIRT INKS':'SHIRTS PRINTING THE STANDARD INKS';
+  el.appendChild(lab);
+  const wrap=document.createElement('div');wrap.className='sa-wrap';
+  let forced=0;
+  items.forEach(function(it){
+    const isDark=itemUsesDark(it);
+    const mine=(inkView==='dark')===isDark;
+    const mode=it.inkMode||'auto';
+    if(mode!=='auto')forced++;
+    const c=document.createElement('button');
+    c.className='sa-chip'+(mine?' on':'');
+    c.appendChild(thumbCanvas(itemPhoto(it),24,28));
+    const t=document.createElement('span');t.textContent=it.colorName;c.appendChild(t);
+    if(mode!=='auto'){const pin=document.createElement('i');pin.className='sa-pin';pin.textContent='\u2022';c.appendChild(pin);}
+    c.title=mine
+      ?(mode==='auto'
+        ?'Using these inks automatically (this shirt reads '+(isDark?'dark':'light')+') — click to move it to the other setup'
+        :'Set by hand to this setup — click to move it to the other setup')
+      :'Printing the other setup — click to move it here';
+    c.onclick=function(){
+      it.inkMode=mine?(inkView==='dark'?'light':'dark'):(inkView==='dark'?'dark':'light');
+      renderSetItems();refreshInkList();refresh();buildBoard();
+    };
+    wrap.appendChild(c);
+  });
+  el.appendChild(wrap);
+  if(forced){
+    const r=document.createElement('button');r.className='sa-reset';
+    r.textContent='\u21ba back to automatic';
+    r.title='Let the app decide again from how dark each shirt is';
+    r.onclick=function(){items.forEach(function(it){it.inkMode='auto';});
+      renderSetItems();refreshInkList();refresh();buildBoard();};
+    el.appendChild(r);
+  }
+}
 function refreshInkList(){
+  renderSetupTabs();renderShirtAssign();
   const el=$('inkList');el.innerHTML='';
-  state.artInks.forEach((ink,idx)=>{
-    const row=document.createElement('div');row.className='inkrow'+(state.inkAssign[idx].off?' inkoff':'');
-    const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=ink.hex;
-    chip.title=state.inkAssign[idx].off?'Ink is OFF — click to turn it back on':'Click to turn this ink OFF (transparent — not printed)';
-    chip.onclick=()=>toggleInkOff(idx);
-    const right=document.createElement('div');
-    /* v7.4.1: ink search — filters both dropdowns in this row */
-    const fil=document.createElement('input');
-    fil.type='search';fil.placeholder='🔍 find an ink — try "white"';
-    fil.style.cssText='width:100%;margin:0 0 5px;padding:5px 8px;background:#131517;border:1px solid #3A4046;border-radius:4px;color:#E8EAEC;font:500 11px "JetBrains Mono",monospace;outline:none;';
-    const sel=document.createElement('select');
-    buildInkOptions(sel,state.inkAssign[idx].idx);
-    sel.onchange=e=>{
-      const i=+e.target.value;
-      state.inkAssign[idx]={idx:i,match:matchPct(pmsDist(ink.r,ink.g,ink.b,i)),auto:false,darkIdx:state.inkAssign[idx].darkIdx};
-      refreshInkList();refresh();buildBoard();
-    };
-    const a=state.inkAssign[idx];
-    const cls=a.match>=90?'':a.match>=75?'mid':'low';
-    const det=document.createElement('div');det.className='inkdet';
-    det.innerHTML=`detected ${ink.hex.toUpperCase()} · ${ink.pct}% coverage · <span class="match ${cls}">${a.match}% match</span>${a.auto?' (auto)':''}${a.off?' · <b style="color:var(--warn);">OFF — not printed</b>':''}`;
-    // v6.7: per-ink dark-garment swap
-    const ds=document.createElement('div');ds.className='darkswap';
-    const dl=document.createElement('span');dl.className='dslbl';dl.textContent='on darks →';
-    const sel2=document.createElement('select');
-    const same=document.createElement('option');same.value='';same.textContent='same ink';sel2.appendChild(same);
-    buildInkOptions(sel2,a.darkIdx==null?-1:a.darkIdx);
-    sel2.onchange=e=>{
-      state.inkAssign[idx].darkIdx=e.target.value===''?null:+e.target.value;
-      activeSet().inkAssign=state.inkAssign;
-      refresh();buildBoard();
-    };
-    ds.appendChild(dl);ds.appendChild(sel2);
-    fil.oninput=()=>{
-      const q=fil.value;
-      sel.innerHTML='';
-      buildInkOptions(sel,state.inkAssign[idx].idx,q);
-      sel2.innerHTML='';
-      const same2=document.createElement('option');same2.value='';same2.textContent='same ink';
-      if(a.darkIdx==null)same2.selected=true;
-      sel2.appendChild(same2);
-      buildInkOptions(sel2,a.darkIdx==null?-1:a.darkIdx,q);
-    };
-    right.appendChild(fil);right.appendChild(sel);right.appendChild(ds);right.appendChild(det);
-    row.appendChild(chip);row.appendChild(right);
+  const dv=inkView==='dark';
+  state.artInks.forEach(function(ink,idx){
+    const a=state.inkAssign[idx];if(!a)return;
+    const useIdx=dv?(a.darkIdx==null?a.idx:a.darkIdx):a.idx;
+    const p=PMS[useIdx],s=STD_INKS[p[0]];
+    const row=document.createElement('div');row.className='inkrow'+(a.off?' inkoff':'');
+    const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=p[1];
+    chip.title=a.off?'OFF — click to print this ink again':'Click to turn this ink OFF (transparent — not printed, not a screen)';
+    chip.onclick=function(){toggleInkOff(idx);};
+    const nm=document.createElement('div');nm.className='inkname';
+    nm.innerHTML=(s?(s[1]?'<b class="star">\u2605</b> ':'')+s[0]:'PMS '+p[0])
+      +(a.off?' <b class="offtag">OFF</b>':'')
+      +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'');
+    nm.title=s?('Mayhem standard ink \u00b7 PMS '+p[0]):('PMS '+p[0]+' \u2014 custom mix');
+    const btn=document.createElement('button');btn.className='inkchg';btn.textContent='CHANGE';
+    btn.title=dv?'Pick what this ink becomes on the dark shirts':'Pick this ink';
+    btn.onclick=function(){openInkPicker(idx);};
+    row.appendChild(chip);row.appendChild(nm);row.appendChild(btn);
     el.appendChild(row);
   });
   const tot=state.artInks.length;
   const en=tot?enabledAssign().length:0;
   const offN=tot-en;
   $('screensPill').innerHTML=tot?(en?(state.autoUnderbase
-    ?`<b>${en} ink${en>1?'s':''}</b>${offN?` (${offN} off)`:''} → ${en} screens on lights, ${en+1} on darks (UB)`
-    :`<b>${en} ink${en>1?'s':''}</b>${offN?` (${offN} off)`:''} → ${en} screen${en>1?'s':''} · no underbase (soft-hand)`)
-    :'<b>all inks off</b> — nothing prints'):'—';
+    ?'<b>'+en+' ink'+(en>1?'s':'')+'</b>'+(offN?' ('+offN+' off)':'')+' \u2192 '+en+' screen'+(en>1?'s':'')+' standard \u00b7 '+(en+1)+' on dark shirts (white underbase)'
+    :'<b>'+en+' ink'+(en>1?'s':'')+'</b>'+(offN?' ('+offN+' off)':'')+' \u2192 '+en+' screen'+(en>1?'s':'')+' \u00b7 no underbase (soft-hand)')
+    :'<b>all inks off</b> \u2014 nothing prints'):'\u2014';
 }
+/* ---- ink picker overlay: search + Mayhem standards + full library ---- */
+let __pickIdx=-1;
+function openInkPicker(idx){
+  __pickIdx=idx;
+  const ink=state.artInks[idx],a=state.inkAssign[idx];
+  if(!ink||!a)return;
+  $('ipkTitle').textContent=inkView==='dark'?'PICK THE DARK-SHIRT INK':'PICK THE STANDARD INK';
+  $('ipkCtx').innerHTML='<span class="ipk-sw" style="background:'+ink.hex+'"></span>'
+    +'in your art: <b>'+ink.hex.toUpperCase()+'</b> \u00b7 '+ink.pct+'% of the design'
+    +(a.match!=null?' \u00b7 closest standard <b>'+a.match+'%</b> match':'');
+  $('ipkSearch').value='';
+  renderPickGrid('');
+  $('inkPickWrap').hidden=false;
+  setTimeout(function(){$('ipkSearch').focus();},30);
+}
+function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;}
+function applyPick(i){
+  const a=state.inkAssign[__pickIdx],ink=state.artInks[__pickIdx];
+  if(!a||!ink){closeInkPicker();return;}
+  if(inkView==='dark'){a.darkIdx=(i==null||i===a.idx)?null:i;}
+  else{a.idx=i;a.auto=false;a.match=matchPct(pmsDist(ink.r,ink.g,ink.b,i));}
+  activeSet().inkAssign=state.inkAssign;
+  recolorCache.clear();
+  closeInkPicker();refreshInkList();refresh();buildBoard();
+}
+function pickChip(i,name,star,cur,sub){
+  const p=PMS[i];
+  const b=document.createElement('button');b.className='ipk-chip'+(i===cur?' on':'');
+  b.innerHTML='<span class="ipk-sw" style="background:'+p[1]+'"></span>'
+    +'<span><span class="ipk-nm">'+(star?'\u2605 ':'')+name+'</span>'
+    +'<span class="ipk-sub">'+(sub||('PMS '+p[0]))+'</span></span>';
+  b.onclick=function(){applyPick(i);};
+  return b;
+}
+function renderPickGrid(query){
+  const el=$('ipkGrid');el.innerHTML='';
+  const q=(query||'').trim().toLowerCase();
+  const a=state.inkAssign[__pickIdx]||{};
+  const cur=inkView==='dark'?(a.darkIdx==null?-1:a.darkIdx):a.idx;
+  const hit=function(p,s){
+    if(!q)return true;
+    return (s&&s[0].toLowerCase().includes(q))||('pms '+p[0]).toLowerCase().includes(q)
+      ||p[0].toLowerCase().includes(q)||p[2].toLowerCase()===q||p[3].toLowerCase().includes(q);
+  };
+  const hdr=function(t){const h=document.createElement('div');h.className='ipk-sec';h.textContent=t;el.appendChild(h);};
+  const grid=function(){const g=document.createElement('div');g.className='ipk-grid';el.appendChild(g);return g;};
+  if(inkView==='dark'){
+    const b=document.createElement('button');
+    b.className='ipk-same'+(a.darkIdx==null?' on':'');
+    b.textContent='SAME AS THE STANDARD INK';
+    b.title='These shirts print exactly what the standard setup prints';
+    b.onclick=function(){applyPick(null);};
+    el.appendChild(b);
+  }
+  const idxByCode={};PMS.forEach(function(p,i){idxByCode[p[0]]=i;});
+  const stds=[];
+  STD_LIST.forEach(function(st){
+    const i=idxByCode[st[0]];if(i==null)return;
+    if(hit(PMS[i],[st[1],st[2]]))stds.push([i,st[1],st[2]]);
+  });
+  if(stds.length){
+    hdr('\u2605 MAYHEM STANDARDS');
+    const g=grid();
+    stds.forEach(function(s){g.appendChild(pickChip(s[0],s[1],s[2],cur));});
+  }
+  let lastFam='',g=null,n=0;
+  PMS.forEach(function(p,i){
+    const s=STD_INKS[p[0]];
+    if(!hit(p,s))return;
+    n++;
+    if(p[3]!==lastFam){hdr(p[3].toUpperCase());g=grid();lastFam=p[3];}
+    g.appendChild(pickChip(i,s?s[0]:'PMS '+p[0],0,cur));
+  });
+  if(!stds.length&&!n)el.innerHTML='<div class="ipk-none">nothing matches that search</div>';
+}
+$('ipkClose').onclick=closeInkPicker;
+$('inkPickWrap').onclick=function(e){if(e.target===$('inkPickWrap'))closeInkPicker();};
+$('ipkSearch').oninput=function(e){renderPickGrid(e.target.value);};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('inkPickWrap').hidden)closeInkPicker();});
 function refresh(){
   const gp=garmentPhotos();
   const pvF=$('pvF'),pvB=$('pvB');
@@ -1770,28 +1972,14 @@ function renderSetItems(){
       state.previewGarment={styleKey:it.styleKey,colorSlug:slug(it.colorName)};
       state.styleKey=it.styleKey;buildStyleTabs();refreshCalibStatus();refresh();
     };
-    /* v7.3: per-shirt ink palette toggle — AUTO → LIGHT → DARK */
-    const m=it.inkMode||'auto';
-    const im=document.createElement('button');
-    im.textContent=m==='auto'?'AUTO':m==='light'?'LIGHT':'DARK';
-    im.title='Ink colors for THIS shirt — AUTO decides by shirt darkness · LIGHT = main colors · DARK = the on-darks colors (+ white underbase)';
-    im.style.cssText='font:700 8.5px "JetBrains Mono",monospace;letter-spacing:.4px;padding:3px 6px;margin-right:2px;border:1px solid '
-      +(m==='auto'?'#3A4046':'#4B9CD3')+';border-radius:3px;cursor:pointer;background:'
-      +(m==='auto'?'transparent':m==='dark'?'#131517':'#E8EAEC')+';color:'
-      +(m==='auto'?'#98A0A6':m==='dark'?'#7BAFD4':'#131517')+';';
-    im.onclick=e=>{
-      e.stopPropagation();
-      const ms=['auto','light','dark'];
-      it.inkMode=ms[(ms.indexOf(m)+1)%3];
-      renderSetItems();refresh();buildBoard();
-    };
-    chip.appendChild(im);
+    /* v8.0: ink setup is assigned in the ink panel (step 4), not here */
     const x=document.createElement('button');x.textContent='✕';
     x.onclick=e=>{e.stopPropagation();set.items.splice(idx,1);renderSetTabs();renderSetItems();buildBoard();};
     chip.appendChild(x);
     el.appendChild(chip);
   });
   renderSetTabs();
+  renderSetupTabs();renderShirtAssign();   /* v8.0: the shirt list drives the ink setups */
 }
 function refreshArtNote(){
   const set=activeSet();
@@ -1875,16 +2063,15 @@ function buildBoard(){
     const dl=document.createElement('button');dl.className='btn ghost sm cdl';dl.textContent='PNG';
     dl.onclick=()=>downloadCanvas(cvs[0],`${slug(s.name)}-${slug(main.colorName)}.png`);
     body.appendChild(dl);
-    /* v7.3: swap ink palette straight from the board card */
+    /* v8.0: move this shirt to the other ink setup, straight from the card */
     const bm=(itemFor(main)||{}).inkMode||'auto';
     const sw=document.createElement('button');sw.className='btn ghost sm cdl';
-    sw.textContent='INKS: '+(bm==='auto'?'AUTO · '+(sc.dark?'dark':'light'):bm.toUpperCase());
-    sw.title='Swap which ink colors THIS shirt prints in (AUTO → LIGHT → DARK)';
+    sw.textContent='INKS: '+(sc.dark?'ON DARKS':'STANDARD')+(bm==='auto'?' (auto)':'');
+    sw.title='Which ink setup this shirt prints — click to move it to the other setup';
     sw.onclick=()=>{
       const it=itemFor(main);if(!it)return;
-      const ms=['auto','light','dark'];
-      it.inkMode=ms[(ms.indexOf(bm)+1)%3];
-      renderSetItems();refresh();buildBoard();
+      it.inkMode=sc.dark?'light':'dark';
+      renderSetItems();refreshInkList();refresh();buildBoard();
     };
     body.appendChild(sw);card.appendChild(body);
     grid.appendChild(card);
@@ -2714,29 +2901,6 @@ function updateStepper(){
   });
 })();
 
-function renderInkSimple(){
-  const el=$('inkSimple');if(!el)return;
-  el.innerHTML='';
-  if(!state.artInks.length)return;
-  const lab=document.createElement('span');lab.textContent='Printing in:';el.appendChild(lab);
-  state.inkAssign.forEach((a,ai)=>{
-    const p=PMS[a.idx],s=STD_INKS[p[0]];
-    const c=document.createElement('span');c.className='isc'+(a.off?' off':'');
-    c.innerHTML=`<i style="background:${p[1]}"></i>${s?(s[1]?'★ ':'')+s[0]:'PMS '+p[0]}${a.off?' — OFF':''}`;
-    c.title=a.off?'OFF — click to print this ink again':(s?('Mayhem standard ink · PMS '+p[0]):('PMS '+p[0]+' — custom mix'))+' · click to turn OFF';
-    c.onclick=()=>toggleInkOff(ai);
-    el.appendChild(c);
-    if(a.darkIdx!=null&&!a.off){
-      const p2=PMS[a.darkIdx],s2=STD_INKS[p2[0]];
-      const c2=document.createElement('span');c2.className='isc';
-      c2.innerHTML=`<i style="background:${p2[1]}"></i>${s2?s2[0]:'PMS '+p2[0]} on darks`;
-      el.appendChild(c2);
-    }
-  });
-  const chg=document.createElement('button');chg.className='btn ghost sm';chg.style.marginLeft='auto';chg.textContent='CHANGE INKS →';
-  chg.onclick=()=>setMode('adv');
-  el.appendChild(chg);
-}
 function setHasDarkGarment(){
   return activeSet().items.some(it=>{
     const g=garmentIndex().find(x=>x.styleKey===it.styleKey&&slug(x.colorName)===slug(it.colorName));
@@ -2748,15 +2912,16 @@ function setHasDarkGarment(){
 function updateFlipBanner(){
   const el=$('flipBanner');if(!el)return;
   const en=enabledAssign();
-  if(uiMode!=='simple'||en.length!==1||!activeSet().items.length){el.hidden=true;return;}
+  const c=setupCounts();
+  if(en.length!==1||!activeSet().items.length||!c.dark){el.hidden=true;return;}
   const a=en[0];
-  const isWhiteAlready=PMS[a.idx][0]==='White';
-  if(isWhiteAlready||!setHasDarkGarment()){el.hidden=true;return;}
+  if(PMS[a.idx][0]==='White'){el.hidden=true;return;}
   el.hidden=false;
   const applied=a.darkIdx!=null&&PMS[a.darkIdx][0]==='White';
+  const n=c.dark+' dark shirt'+(c.dark===1?'':'s');
   $('flipMsg').innerHTML=applied
-    ?'✓ Printing <b>WHITE</b> on the dark shirts.'
-    :'1-color logo — print it in <b>WHITE</b> on the dark shirts?';
+    ?'\u2713 The '+n+' print in <b>WHITE</b>.'
+    :'1-color logo \u00b7 '+n+' in this job \u2014 print it <b>WHITE</b> on those?';
   $('flipYes').hidden=applied;
   $('flipUndo').hidden=!applied;
 }
@@ -2764,11 +2929,14 @@ $('flipYes').onclick=()=>{
   const w=PMS.findIndex(p=>p[0]==='White');
   const a=enabledAssign()[0];if(a)a.darkIdx=w;
   activeSet().inkAssign=state.inkAssign;
+  inkView='dark';
+  recolorCache.clear();
   refreshInkList();refresh();buildBoard();
 };
 $('flipUndo').onclick=()=>{
   const a=enabledAssign()[0];if(a)a.darkIdx=null;
   activeSet().inkAssign=state.inkAssign;
+  recolorCache.clear();
   refreshInkList();refresh();buildBoard();
 };
 
@@ -2859,7 +3027,7 @@ $('dlJobZip').onclick=async()=>{
   }
 };
 
-const __v72ril=refreshInkList;refreshInkList=function(){__v72ril();renderInkSimple();updateFlipBanner();};
+const __v72ril=refreshInkList;refreshInkList=function(){__v72ril();updateFlipBanner();};
 const __v72rf=refresh;refresh=function(){__v72rf();updateStepper();updateFlipBanner();if(typeof scheduleAutosave==='function')scheduleAutosave();};
 
 /* ============ v7.9 JOB AUTOSAVE + RESUME ============ */
@@ -2947,7 +3115,7 @@ setTab('mock');
 buildManifest();
 syncJob();
 setMode('simple');
-renderInkSimple();
+refreshInkList();
 
 </script>
 </body>
