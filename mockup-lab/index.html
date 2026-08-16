@@ -616,7 +616,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V7.7.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V7.7.2 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1806,7 +1806,7 @@ function downloadBoard(){
     ctx.fillText(line1,x+14,y+drawH+66);
     if(line2)ctx.fillText(line2,x+14,y+drawH+84);
     ctx.fillText(`${sc.total} screens`,x+14,y+drawH+(line2?102:84));
-    stampWatermark(ctx,x,y,cellW,cellH,'rgba(19,21,23,0.05)',20);
+    stampWatermark(ctx,x,y,cellW,cellH,'rgba(19,21,23,0.0375)',20);
   });
   ctx.fillStyle='#666';ctx.font='500 14px "JetBrains Mono", monospace';
   ctx.fillText('MOCKUPS © MAYHEM INK SCREEN PRINTING · mayhemink.net — not for production by outside printers',pad,b.height-14);
@@ -2376,7 +2376,7 @@ function approvalFor(item,ret){
     ctx.fillStyle='#666';ctx.font='500 14px "JetBrains Mono", monospace';
     ctx.fillText(locLabel(side)+' · '+locWidth(side)+'" wide',x0+86,180);
     drawInkChipsL(ctx,x0+24,chipTop,lay);
-    stampWatermark(ctx,x0,cardY,cardW,cardH,'rgba(19,21,23,0.05)',24);
+    stampWatermark(ctx,x0,cardY,cardW,cardH,'rgba(19,21,23,0.0375)',24);
     x0+=cardW+gap;
   });
   const s=STYLES[item.styleKey]||{name:item.styleKey,sub:''};
