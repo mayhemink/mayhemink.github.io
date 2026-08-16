@@ -616,7 +616,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V7.7 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V7.7.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1083,8 +1083,28 @@ function reDetect(){
    apparel or left-chest line) — scaling grows it center-out, it never drifts
    off the line. The design's TOP edge is pinned at drop inches below the
    bottom of the collar — scaling grows it downward, never up the shirt. */
+/* v7.7.1: uncalibrated styles get render-time smart defaults measured from the
+   photo itself (garmentBBox) — stored default numbers can sit in the wrong pixel
+   space (autopilot intake computed them pre-resize; portrait photos pushed the
+   demo logo to ~75% across). Constants fitted to Kolton's real calibrations:
+   flats span sleeve-to-sleeve ~34.5", collar ~16.7% down the bbox (front) /
+   ~6% (back), left-chest line ~4.3" right of center. Render-only — never
+   written to styles.json; Style Lab calibration replaces them for real. */
+function smartizeCalib(cal,photo,side){
+  if(!cal||!cal.default||!photo)return cal;
+  const key=photo.canvas.width+'x'+photo.canvas.height;
+  if(cal.__smart===key)return cal;
+  const bb=garmentBBox(photo.canvas);
+  if(bb.w<20||bb.h<20)return cal;
+  cal.ppi=bb.w/34.5;
+  cal.centerX=bb.x+bb.w/2;
+  cal.collarY=bb.y+bb.h*(side==='back'?0.06:0.167);
+  cal.leftChestX=cal.centerX+4.3*cal.ppi;
+  cal.__smart=key;
+  return cal;
+}
 function computePlacement(photo,side,loc){
-  const cal=CALIB[photo.styleKey][side];
+  const cal=smartizeCalib(CALIB[photo.styleKey][side],photo,side);
   const rule=RULES[side][loc];
   if(!cal||!rule)return null;
   const fk=side+':'+loc;
@@ -1099,8 +1119,16 @@ function computePlacement(photo,side,loc){
 /* ================= RENDER ================= */
 function photosFor(styleKey,side){return PHOTOS.filter(p=>p.styleKey===styleKey&&p.side===side);}
 function defaultPreviewGarment(){
+  /* v7.7.1: open on a CALIBRATED garment — DM130 Black first (Kolton's pick) —
+     so the demo logo always lands right on the very first paint */
   const idx=garmentIndex();
-  return idx.find(g=>slug(g.colorName)==='black')||idx.find(g=>slug(g.colorName).includes('black'))||idx[0]||null;
+  const calOk=g=>{const c=CALIB[g.styleKey];return c&&c.front&&!c.front.default;};
+  return idx.find(g=>g.styleKey==='DM130'&&slug(g.colorName)==='black')
+    ||idx.find(g=>calOk(g)&&slug(g.colorName)==='black')
+    ||idx.find(g=>calOk(g))
+    ||idx.find(g=>slug(g.colorName)==='black')
+    ||idx.find(g=>slug(g.colorName).includes('black'))
+    ||idx[0]||null;
 }
 function garmentPhotos(){
   // calibrating: only show the side being calibrated, using that style's first photo
