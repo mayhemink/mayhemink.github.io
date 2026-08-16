@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<title>Mayhem Ink — Crew Hub</title>
+<title>Mayhem Ink — Crew Hub (WEEK)</title>
 <style>
   :root{
     --ink:#111111; --red:#469BEB; --bg:#f4f4f5; --card:#ffffff;
@@ -28,6 +28,59 @@
   header .brand span{color:var(--red);}
   header .date{font-size:14px; color:#bbb; font-weight:600;}
   .wrap{max-width:820px; margin:0 auto; padding:16px 14px 90px;}
+
+  /* ---- day tabs (v3) ---- */
+  .daytabs{display:flex; gap:8px; margin-bottom:12px; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .daytab{
+    flex:1; min-width:88px; background:var(--card); border-radius:12px; padding:8px 4px;
+    text-align:center; cursor:pointer; border:2px solid transparent;
+    box-shadow:0 1px 3px rgba(0,0,0,.07);
+  }
+  .daytab b{display:block; font-size:15px;}
+  .daytab small{font-size:11px; color:var(--gray); font-weight:700;}
+  .daytab.on{border-color:var(--ink);}
+  .daytab.istoday b{color:var(--red);}
+  .daytab.alldone{opacity:.55;}
+
+  /* ---- search (v3) ---- */
+  .searchrow{margin-bottom:12px;}
+  .searchrow input{
+    width:100%; padding:13px 16px; border:2px solid var(--line); border-radius:12px;
+    font-size:16px; font-weight:600; background:var(--card);
+    -webkit-user-select:text; user-select:text;
+  }
+  .dayhint{font-size:12px; font-weight:800; color:var(--red); letter-spacing:.5px; text-transform:uppercase; margin:2px 4px 6px;}
+
+  /* ---- crew clock (v3) ---- */
+  .clockcard{background:var(--card); border-radius:14px; padding:12px 14px; box-shadow:0 1px 3px rgba(0,0,0,.07); margin-bottom:12px;}
+  .clockcard h3{font-size:12px; color:var(--gray); font-weight:800; letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px;}
+  .clockrow{display:flex; align-items:center; gap:8px; padding:6px 0; border-top:1px solid var(--line);}
+  .clockrow:first-of-type{border-top:none;}
+  .clockrow .cname{font-size:15px; font-weight:800; flex:0 0 74px;}
+  .clockrow .ctimes{flex:1; font-size:12px; color:var(--gray); font-weight:600; line-height:1.4;}
+  .cbtn{
+    padding:9px 12px; border:none; border-radius:9px; font-size:13px; font-weight:800;
+    cursor:pointer; background:#ececee; color:var(--gray); white-space:nowrap;
+  }
+  .cbtn.go{background:var(--green); color:#fff;}
+  .cbtn.lunch{background:#fdf0dd; color:var(--amber);}
+  .cbtn.out{background:var(--ink); color:#fff;}
+
+  /* ---- between-jobs strip + run estimate (v3.1) ---- */
+  .gaprow{background:#f7f7f8; border-radius:10px; padding:10px 12px; margin:6px 0 2px;}
+  .gaphead{font-size:13px; font-weight:700; color:var(--ink);}
+  .gaphead b{font-weight:800;}
+  .gapreason{color:var(--gray); font-weight:600;}
+  .gapask{font-size:12px; color:var(--gray); font-weight:600; margin:6px 0 8px; line-height:1.45;}
+  .gapchips{display:flex; flex-wrap:wrap; gap:6px;}
+  .gapchip{background:#fff; border:2px solid var(--line); border-radius:999px; padding:8px 12px;
+           font-size:13px; font-weight:700; cursor:pointer;}
+  .gapchip:active{background:var(--ink); color:#fff;}
+  .est{color:var(--gray); font-weight:700;}
+  .esthead{margin-top:10px; padding-top:10px; border-top:1px solid var(--line);
+           font-size:13px; font-weight:600; color:var(--gray); line-height:1.5;}
+  .esthead b{color:var(--ink); font-weight:800;}
+  .esthead small{display:block; font-size:11px; color:var(--gray); margin-top:3px; font-weight:600;}
 
   /* ---- summary strip ---- */
   .strip{
@@ -149,6 +202,7 @@
     flex:1; padding:15px; border:none; border-radius:12px; font-size:16px; font-weight:800; cursor:pointer;
   }
   .eod .export{background:var(--ink); color:#fff;}
+  .eod .export.nag{background:#c0392b; color:#fff;}
   #exportview{display:none;}
   #exportview pre{
     background:var(--card); border-radius:14px; padding:16px; font-size:13px;
@@ -169,6 +223,8 @@
   .flagbar{display:flex; gap:0; margin-bottom:10px; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.07);}
   .flagbar .tag{background:var(--red); color:#fff; font-weight:800; font-size:11px; letter-spacing:.5px; padding:12px 10px; display:flex; align-items:center; flex:0 0 108px; justify-content:center; text-transform:uppercase;}
   .flagbar .txt{background:#eaf4fd; color:var(--ink); font-size:13px; font-weight:600; padding:10px 12px; flex:1; line-height:1.45;}
+  .flagbar.warn .tag{background:#c0392b;}
+  .flagbar.warn .txt{background:#fdeaea;}
   .jobhead{background:var(--card); border-radius:14px 14px 0 0; padding:14px 16px 10px; box-shadow:0 1px 3px rgba(0,0,0,.07); margin-bottom:2px;}
   .jobhead .jrow{display:flex; align-items:baseline; gap:10px;}
   .jobhead .jnum{font-size:19px; font-weight:800;}
@@ -200,6 +256,10 @@
 
   <!-- LIST VIEW -->
   <div id="list">
+    <div class="daytabs" id="daytabs"></div>
+    <div class="searchrow"><input id="q" placeholder="Find a job — # / customer / location" oninput="setSearch(this.value)"></div>
+    <div id="nag"></div>
+    <div id="clock"></div>
     <div class="strip">
       <div class="pill"><b id="s-total">0</b><small>Cards</small></div>
       <div class="pill"><b id="s-active">0</b><small>Running</small></div>
@@ -223,101 +283,236 @@
 </div>
 
 <div class="eod" id="eodbar">
-  <button class="export" onclick="showExport()">End of Day — Export Times</button>
+  <button class="export" id="eodbtn" onclick="showExport()">End of Day — Export Week-to-Date</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// The app itself never changes day to day. The day's cards live in data/today.json —
-// pushing a new day = replacing that ONE small file. A bad data push can't brick this
-// app; worst case the NO DATA bar shows. (Managed by the mayhem-timecards skill.)
+// ============================== CREW HUB v3 — WEEKLY BOARD ==============================
+// The app never changes week to week. The week's cards live in ONE json file (DATA_URL) —
+// pushing a new week = replacing that file. A bad data push can't brick this app; worst
+// case the NO DATA bar shows. (Managed by the mayhem-timecards skill.)
+// v3 adds: Mon–Fri day tabs, week-wide job search, per-printer floor clock (start/lunch/
+// end day), a press picker on each card, week-to-date export, and an unexported-times nag.
+var DATA_URL = "data/week.json"; // ROOT app (cutover 2026-08-16). Old test page /v3/ now redirects here.
 
-let DAY = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], ROWS = [], FLAGS = [], IMG = {};
-let KEY = null;
-let state = {};
-let currentRow = null;
-let ticker = null;
+var WEEKID = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], DAYSARR = [], IMG = {};
+var ALLROWS = [];            // every row across the week, each with ._day attached
+var FLAGSBY = {};            // day -> flags
+var ROWSBY = {};             // day -> rows
+var STATES = {};             // day -> { rowId: rec }  (persisted per-day, same keys as v2)
+var CLOCKS = {};             // day -> { printer: {in, out, lunches:[{start,end}]} }
+var curDay = "";             // selected day tab
+var searchQuery = "";
+var currentRow = null;
+var ticker = null;
+var PRESSES = ["Press 1","Press 2"];
+// Shop averages from the Press Stats sheet, shipped in week.json so the estimate
+// recalculates when a printer corrects colors/screens on the card. Fallback only.
+var STATS = {pph:{1:118,2:70,3:59,4:52,5:42,6:32}, setup:{1:4.2,2:4.9,3:6.2,4:8.5,5:7.0,6:5.7}};
+
+// ---------- run-time estimate (v3.1) ----------
+// This is INFORMATION, not a target: what a run like this usually takes, so a printer can
+// tell a quick job from an all-afternoon one. Never scored, never colored red. Rows built
+// with "noest":true (puff, heavy ink changes, color counts with no logged runs) show
+// nothing — a visibly wrong estimate teaches the crew to ignore all of them.
+function estFor(row, r){
+  if(row.noest) return null;
+  var c = (r && r.colors != null) ? r.colors : row.colors;
+  var s = (r && r.screens != null) ? r.screens : row.screens;
+  var pph = STATS.pph[c], sm = STATS.setup[c];
+  if(!pph || !sm || !row.qty) return null;
+  return {setup: Math.round(s*sm), print: Math.round(row.qty/pph*60)};
+}
+function fmtDur(m){
+  if(m == null) return "";
+  if(m < 60) return m + "m";
+  var h = Math.floor(m/60), mm = m%60;
+  return h + "h" + (mm ? " " + mm + "m" : "");
+}
+
+function todayStr(){
+  var d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
 
 function boot(data){
-  DAY = data.day;
+  WEEKID = data.week;
   PRINTERS = data.printers || PRINTERS;
   COUNTS = data.counts || COUNTS;
-  ROWS = data.rows || [];
-  FLAGS = data.flags || [];
   IMG = data.img || {};
-  KEY = "mayhem_timing_" + DAY;
-  state = load();
+  if(data.stats && data.stats.pph && data.stats.setup) STATS = data.stats;
+  DAYSARR = []; ALLROWS = []; ROWSBY = {}; FLAGSBY = {}; STATES = {}; CLOCKS = {};
+  var days = data.days || [];
+  for(var i = 0; i < days.length; i++){
+    var d = days[i];
+    DAYSARR.push(d.day);
+    ROWSBY[d.day] = d.rows || [];
+    FLAGSBY[d.day] = d.flags || [];
+    for(var j = 0; j < ROWSBY[d.day].length; j++){
+      ROWSBY[d.day][j]._day = d.day;
+      ALLROWS.push(ROWSBY[d.day][j]);
+    }
+    STATES[d.day] = loadState(d.day);
+    CLOCKS[d.day] = loadClock(d.day);
+  }
   currentRow = null;
-  const lg = document.getElementById("crewlogo");
+  searchQuery = "";
+  var t = todayStr();
+  curDay = DAYSARR.indexOf(t) > -1 ? t : (DAYSARR.length ? DAYSARR[0] : "");
+  var lg = document.getElementById("crewlogo");
   if(IMG.logo){ lg.src = IMG.logo; lg.style.display = "block"; } else { lg.style.display = "none"; }
-  document.getElementById("hdrdate").textContent = new Date(DAY + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+  updateHdr();
   showList();
 }
-function loadDay(){
-  fetch("data/today.json?v=" + Date.now(), {cache:"no-store"})
+function updateHdr(){
+  var el = document.getElementById("hdrdate");
+  if(curDay) el.textContent = new Date(curDay + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+  else el.textContent = "";
+}
+function loadWeek(){
+  fetch(DATA_URL + "?v=" + Date.now(), {cache:"no-store"})
     .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(boot)
     .catch(function(e){
       document.getElementById("groups").innerHTML =
-        '<div class="flagbar"><div class="tag">NO DATA</div><div class="txt">Couldn&#39;t load today&#39;s cards (' + esc(e.message) + '). Check wifi and reload — if it keeps happening, tell Kolton.</div></div>';
+        '<div class="flagbar"><div class="tag">NO DATA</div><div class="txt">Couldn&#39;t load this week&#39;s cards (' + esc(e.message) + '). Check wifi and reload — if it keeps happening, tell Kolton.</div></div>';
     });
 }
-// If an iPad wakes up on a new day with yesterday's board still open, refresh itself.
+// Wake-up: pull fresh data; if it's a new week, reboot. If it's a new day inside the same
+// week, flip the tab to today (only when nobody is inside a card).
 document.addEventListener("visibilitychange", function(){
-  if(document.visibilityState === "visible" && !currentRow && DAY){
-    fetch("data/today.json?v=" + Date.now(), {cache:"no-store"})
-      .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(d){ if(d && d.day !== DAY) boot(d); })
-      .catch(function(){});
-  }
+  if(document.visibilityState !== "visible") return;
+  if(currentRow) return;
+  fetch(DATA_URL + "?v=" + Date.now(), {cache:"no-store"})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if(!d) return;
+      if(d.week !== WEEKID){ boot(d); return; }
+      var t = todayStr();
+      if(curDay !== t && DAYSARR.indexOf(t) > -1 && !searchQuery){ curDay = t; updateHdr(); showList(); }
+      else if(document.getElementById("list").style.display !== "none"){ renderList(); }
+    })
+    .catch(function(){});
 });
 
-function load(){
-  try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; }
+// ---------- persistence (same per-day keys as v2, so nothing already logged is lost) ----------
+function loadState(day){
+  try{ return JSON.parse(localStorage.getItem("mayhem_timing_" + day)) || {}; }catch(e){ return {}; }
 }
+function saveStateFor(day){
+  try{ localStorage.setItem("mayhem_timing_" + day, JSON.stringify(STATES[day])); }catch(e){}
+}
+function loadClock(day){
+  try{ return JSON.parse(localStorage.getItem("mayhem_clock_" + day)) || {}; }catch(e){ return {}; }
+}
+function saveClock(day){
+  try{ localStorage.setItem("mayhem_clock_" + day, JSON.stringify(CLOCKS[day])); }catch(e){}
+}
+function findRow(id){
+  for(var i = 0; i < ALLROWS.length; i++) if(ALLROWS[i].id === id) return ALLROWS[i];
+  return null;
+}
+function stateFor(row){ return STATES[row._day] || (STATES[row._day] = {}); }
 function save(){
-  try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+  if(currentRow) saveStateFor(currentRow._day);
 }
 function rec(id){
-  const row = ROWS.find(r => r.id === id);
-  if(!state[id]) state[id] = {printer:null, colors:row.colors, screens:row.screens, setupStart:null, setupDone:null, jobDone:null, pauses:[], notes:""};
-  if(!state[id].pauses) state[id].pauses = [];
-  if(state[id].colors == null) state[id].colors = row.colors;
-  if(state[id].screens == null) state[id].screens = row.screens;
-  return state[id];
+  var row = findRow(id);
+  var st = stateFor(row);
+  if(!st[id]) st[id] = {printer:null, press:null, setupBy:null, printBy:null, colors:row.colors, screens:row.screens, setupStart:null, setupDone:null, jobDone:null, pauses:[], handoffs:[], notes:""};
+  if(!st[id].pauses) st[id].pauses = [];
+  if(!st[id].handoffs) st[id].handoffs = [];
+  if(st[id].colors == null) st[id].colors = row.colors;
+  if(st[id].screens == null) st[id].screens = row.screens;
+  return st[id];
 }
 
 // ---------- time helpers ----------
 function now(){ return Date.now(); }
 function fmt(ts){
   if(!ts) return "";
-  const d = new Date(ts);
-  let h = d.getHours(), m = d.getMinutes();
-  const ap = h >= 12 ? "PM" : "AM";
+  var d = new Date(ts);
+  var h = d.getHours(), m = d.getMinutes();
+  var ap = h >= 12 ? "PM" : "AM";
   h = h % 12 || 12;
   return h + ":" + String(m).padStart(2,"0") + " " + ap;
 }
-function toHM(ts){ // for <input type=time>
-  const d = new Date(ts);
+function toHM(ts){
+  var d = new Date(ts);
   return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
 }
-function fromHM(hm, refTs){ // set clock time on same day
-  const d = new Date(refTs || now());
-  const [h,m] = hm.split(":").map(Number);
-  d.setHours(h, m, 0, 0);
+function fromHM(hm, refTs){
+  var d = new Date(refTs || now());
+  var p = hm.split(":");
+  d.setHours(Number(p[0]), Number(p[1]), 0, 0);
   return d.getTime();
 }
 function mins(ms){ return Math.round(ms/60000); }
-function isPaused(r){ const p = r.pauses[r.pauses.length-1]; return p && !p.end; }
+function isPaused(r){ var p = r.pauses[r.pauses.length-1]; return p && !p.end; }
 function pausedMsBetween(r, a, b){
-  let t = 0;
-  for(const p of r.pauses){
-    const s = Math.max(p.start, a), e = Math.min(p.end || now(), b);
+  var t = 0;
+  for(var i = 0; i < r.pauses.length; i++){
+    var p = r.pauses[i];
+    var s = Math.max(p.start, a), e = Math.min(p.end || now(), b);
     if(e > s) t += e - s;
   }
   return t;
 }
+// ---------- handoffs (v3) ----------
+// A run can change hands mid-job. Each handoff stamps the time, who took over, and the
+// CUMULATIVE piece count at that moment — that's what lets each printer get an honest
+// pcs/hr instead of one guy eating the whole run. Skipping the count is allowed; the run
+// still totals correctly, it just can't be split per printer.
+function printHandoffs(r){
+  return (r.handoffs || []).filter(function(h){ return h.phase === "print"; });
+}
+function setupHandoffs(r){
+  return (r.handoffs || []).filter(function(h){ return h.phase === "setup"; });
+}
+function priorCum(r){
+  var hs = printHandoffs(r);
+  for(var i = hs.length-1; i >= 0; i--){ if(hs[i].pieces != null) return hs[i].pieces; }
+  return 0;
+}
+function crewStr(r){
+  if(!r) return "?";
+  var names = [];
+  if(r.printBy) names.push(r.printBy);
+  else if(r.printer) names.push(r.printer);
+  var hs = printHandoffs(r);
+  for(var i = 0; i < hs.length; i++){ if(names.indexOf(hs[i].to) === -1 || names[names.length-1] !== hs[i].to) names.push(hs[i].to); }
+  return names.length ? names.join(" → ") : (r.printer || "?");
+}
+// Split the print phase into per-printer segments, pauses removed from each.
+function printSegments(row){
+  var r = STATES[row._day][row.id] || {};
+  if(!r.setupDone) return [];
+  var hs = printHandoffs(r);
+  var endTs = r.jobDone || now();
+  var pts = [];
+  var who = r.printBy || r.printer || "?";
+  var t0 = r.setupDone, cum0 = 0;
+  for(var i = 0; i < hs.length; i++){
+    pts.push({printer: who, start: t0, end: hs[i].at, cumFrom: cum0, cumTo: hs[i].pieces});
+    who = hs[i].to; t0 = hs[i].at; cum0 = hs[i].pieces;
+  }
+  pts.push({printer: who, start: t0, end: endTs, cumFrom: cum0, cumTo: r.jobDone ? row.qty : null});
+  var out = [];
+  for(var j = 0; j < pts.length; j++){
+    var p = pts[j];
+    var ms = (p.end - p.start) - pausedMsBetween(r, p.start, p.end);
+    var pieces = (p.cumTo != null && p.cumFrom != null) ? (p.cumTo - p.cumFrom) : null;
+    out.push({
+      printer: p.printer, start: p.start, end: p.end, min: mins(ms), pieces: pieces,
+      pph: (pieces != null && ms > 0) ? Math.round(pieces / (ms/3600000)) : null,
+      open: !r.jobDone && j === pts.length - 1
+    });
+  }
+  return out;
+}
+
 function status(r){
   if(!r) return "idle";
   if(r.jobDone) return "done";
@@ -337,74 +532,313 @@ function showList(){
   document.getElementById("eodbar").style.display = "flex";
   renderList();
 }
+function setSearch(v){
+  searchQuery = (v || "").trim().toLowerCase();
+  renderDayTabs();
+  renderGroups();
+  renderStrip();
+}
+function setDay(d){
+  curDay = d;
+  searchQuery = "";
+  var q = document.getElementById("q");
+  if(q) q.value = "";
+  updateHdr();
+  renderList();
+}
 function renderList(){
-  const groups = {};
-  for(const row of ROWS){
-    const k = row.job + " — " + row.customer;
-    (groups[k] = groups[k] || []).push(row);
+  renderDayTabs();
+  renderNag();
+  renderClock();
+  renderFlags();
+  renderGroups();
+  renderStrip();
+}
+function dayLabel(d){
+  return new Date(d + "T12:00:00").toLocaleDateString("en-US", {weekday:"short"}).toUpperCase();
+}
+function dayNum(d){
+  var x = new Date(d + "T12:00:00");
+  return (x.getMonth()+1) + "/" + x.getDate();
+}
+function renderDayTabs(){
+  var t = todayStr();
+  var html = "";
+  for(var i = 0; i < DAYSARR.length; i++){
+    var d = DAYSARR[i];
+    var rows = ROWSBY[d];
+    var done = 0;
+    for(var j = 0; j < rows.length; j++) if(status(STATES[d][rows[j].id]) === "done") done++;
+    var cls = "daytab" + (d === curDay && !searchQuery ? " on" : "") + (d === t ? " istoday" : "") + (rows.length && done === rows.length ? " alldone" : "");
+    html += '<div class="' + cls + '" onclick="setDay(\'' + d + '\')"><b>' + dayLabel(d) + ' ' + dayNum(d) + '</b><small>' +
+      (rows.length ? done + '/' + rows.length + ' done' : 'no cards') + '</small></div>';
   }
-  let html = "";
-  for(const k in groups){
-    const g0 = groups[k][0];
-    const gScreens = groups[k].reduce((a,row)=>{
-      const r = state[row.id];
-      return a + (r && r.screens != null ? r.screens : row.screens);
-    }, 0);
-    const gImgs = [];
-    for(const row of groups[k]){
-      if(row.img && IMG[row.img] && gImgs.indexOf(row.img) === -1) gImgs.push(row.img);
+  document.getElementById("daytabs").innerHTML = html;
+}
+function rowsForView(){
+  if(!searchQuery) return ROWSBY[curDay] || [];
+  var out = [];
+  for(var i = 0; i < ALLROWS.length; i++){
+    var r = ALLROWS[i];
+    var hay = (r.job + " " + r.customer + " " + r.location).toLowerCase();
+    if(hay.indexOf(searchQuery) > -1) out.push(r);
+  }
+  return out;
+}
+function renderGroups(){
+  var rows = rowsForView();
+  var groups = {};
+  var order = [];
+  for(var i = 0; i < rows.length; i++){
+    var row = rows[i];
+    var k = row._day + "|" + row.job + " — " + row.customer;
+    if(!groups[k]){ groups[k] = []; order.push(k); }
+    groups[k].push(row);
+  }
+  var html = "";
+  for(var oi = 0; oi < order.length; oi++){
+    var k = order[oi];
+    var g = groups[k];
+    var g0 = g[0];
+    var st0 = STATES[g0._day];
+    var gScreens = 0;
+    for(var j = 0; j < g.length; j++){
+      var r = st0[g[j].id];
+      gScreens += (r && r.screens != null ? r.screens : g[j].screens);
+    }
+    var gImgs = [];
+    for(var j2 = 0; j2 < g.length; j2++){
+      var im = g[j2].img;
+      if(im && IMG[im] && gImgs.indexOf(im) === -1) gImgs.push(im);
     }
     html += '<div class="jobgroup">';
+    if(searchQuery) html += '<div class="dayhint">' + dayLabel(g0._day) + ' ' + dayNum(g0._day) + '</div>';
     html += '<div class="jobhead"><div class="jrow">' +
       '<div class="jnum"><span>' + (g0.url ? '<a class="jlink" href="' + g0.url + '" target="_blank" onclick="event.stopPropagation()">#' + esc(g0.job) + '</a>' : '#' + esc(g0.job)) + '</span></div>' +
       '<div class="jcust">' + esc(g0.customer) + '</div>' +
       '<div class="jscreens">' + gScreens + ' SCREENS</div></div>' +
-      (function(){ const gNote = groups[k].map(r=>r.note).find(Boolean); return gNote ? '<div class="jobnote">' + esc(gNote) + '</div>' : ''; })() +
-      (gImgs.length ? '<div class="mockstrip">' + gImgs.map(x => '<img src="' + IMG[x] + '" onclick="event.stopPropagation();showLightbox(this.src)">').join('') + '</div>' : '') +
-      '</div>';
-    for(const row of groups[k]){
-      const r = state[row.id];
-      const st = status(r);
-      const stCls = {idle:"", setup:"st-setup", print:"st-print", pause:"st-pause", done:"st-done"}[st];
-      const badge = {
+      (function(){ var gNote = null; for(var x = 0; x < g.length; x++){ if(g[x].note){ gNote = g[x].note; break; } } return gNote ? '<div class="jobnote">' + esc(gNote) + '</div>' : ''; })() +
+      (gImgs.length ? '<div class="mockstrip">' + gImgs.map(function(x){ return '<img src="' + IMG[x] + '" onclick="event.stopPropagation();showLightbox(this.src)">'; }).join('') : '');
+    if(gImgs.length) html += '</div>';
+    html += '</div>';
+    for(var j3 = 0; j3 < g.length; j3++){
+      var row2 = g[j3];
+      var r2 = STATES[row2._day][row2.id];
+      var st = status(r2);
+      var stCls = {idle:"", setup:"st-setup", print:"st-print", pause:"st-pause", done:"st-done"}[st];
+      var badge = {
         idle:'<span class="badge">Not started</span>',
         setup:'<span class="badge setup">Setting up</span>',
         print:'<span class="badge print">Printing</span>',
         pause:'<span class="badge pause">Paused</span>',
         done:'<span class="badge done">Done</span>'
       }[st];
-      const who = r && r.printer
-        ? '<div class="who">' + esc(r.printer) + '</div>' : "";
-      const cc = r && r.colors != null ? r.colors : row.colors;
-      const ss = r && r.screens != null ? r.screens : row.screens;
-      html += '<div class="card ' + stCls + '" onclick="openRow(\'' + row.id + '\')">' +
-        '<div class="loc"><div class="l1">' + esc(row.location) + '</div>' +
-        '<div class="l2">' + cc + ' color · ' + ss + ' screen' + (ss>1?"s":"") + ' · ' + row.qty + ' pcs</div></div>' +
+      var whoBits = [];
+      if(r2 && (r2.handoffs||[]).length) whoBits.push(esc(crewStr(r2)));
+      else if(r2 && r2.printer) whoBits.push(esc(r2.printer));
+      if(r2 && r2.press) whoBits.push(esc(r2.press));
+      var who = whoBits.length ? '<div class="who">' + whoBits.join(" · ") + '</div>' : "";
+      var cc = r2 && r2.colors != null ? r2.colors : row2.colors;
+      var ss = r2 && r2.screens != null ? r2.screens : row2.screens;
+      var e = estFor(row2, r2);
+      var estBit = (e && st !== "done") ? ' · <span class="est">~' + fmtDur(e.setup + e.print) + '</span>' : '';
+      html += '<div class="card ' + stCls + '" onclick="openRow(\'' + row2.id + '\')">' +
+        '<div class="loc"><div class="l1">' + esc(row2.location) + '</div>' +
+        '<div class="l2">' + cc + ' color · ' + ss + ' screen' + (ss>1?"s":"") + ' · ' + row2.qty + ' pcs' + estBit + '</div></div>' +
         '<div class="stat">' + badge + who + '</div></div>';
     }
     html += '</div>';
   }
-  if(!ROWS.length) html = '<div class="flagbar"><div class="tag" style="background:var(--green)">ALL CLEAR</div><div class="txt">No press cards on the board for ' + esc(DAY) + '.</div></div>';
+  if(!rows.length){
+    if(searchQuery) html = '<div class="flagbar"><div class="tag">NO MATCH</div><div class="txt">Nothing on the board this week matches &quot;' + esc(searchQuery) + '&quot;.</div></div>';
+    else html = '<div class="flagbar"><div class="tag" style="background:var(--green)">ALL CLEAR</div><div class="txt">No press cards on the board for ' + esc(curDay) + '.</div></div>';
+  }
   document.getElementById("groups").innerHTML = html;
-  document.getElementById("flags").innerHTML = FLAGS.map(f =>
-    '<div class="flagbar"><div class="tag">' + esc(f[0]) + '</div><div class="txt">' + f[1] + '</div></div>').join("");
-  // summary strip
-  let active = 0, done = 0;
-  for(const row of ROWS){
-    const st = status(state[row.id]);
+}
+function renderFlags(){
+  var flags = searchQuery ? [] : (FLAGSBY[curDay] || []);
+  document.getElementById("flags").innerHTML = flags.map(function(f){
+    return '<div class="flagbar"><div class="tag">' + esc(f[0]) + '</div><div class="txt">' + f[1] + '</div></div>';
+  }).join("");
+}
+function renderStrip(){
+  var rows = rowsForView();
+  var active = 0, done = 0, pieces = 0;
+  for(var i = 0; i < rows.length; i++){
+    var st = status(STATES[rows[i]._day][rows[i].id]);
     if(st === "setup" || st === "print" || st === "pause") active++;
     if(st === "done") done++;
+    pieces += rows[i].qty;
   }
-  document.getElementById("s-total").textContent = ROWS.length;
+  document.getElementById("s-total").textContent = rows.length;
   document.getElementById("s-active").textContent = active;
   document.getElementById("s-done").textContent = done;
-  document.getElementById("s-pieces").textContent = ROWS.reduce((a,r)=>a+r.qty,0);
+  document.getElementById("s-pieces").textContent = pieces;
+}
+
+// ---------- CREW CLOCK (v3) ----------
+// One tap per event: IN when you hit the floor, LUNCH out/in, OUT when you leave.
+// This is the denominator for utilization — press time ÷ floor time.
+function clockFor(day, p){
+  var c = CLOCKS[day] || (CLOCKS[day] = {});
+  if(!c[p]) c[p] = {in:null, out:null, lunches:[], gaps:[]};
+  if(!c[p].lunches) c[p].lunches = [];
+  if(!c[p].gaps) c[p].gaps = [];
+  return c[p];
+}
+function lunchOpen(k){ var l = k.lunches[k.lunches.length-1]; return l && !l.end; }
+
+// ---------- between-jobs time (v3.1) ----------
+// The clock starts when a job is finished and stops when the next setup starts. Teardown,
+// reclaiming, staging and a breather are all real work-day time — the point isn't to
+// eliminate the gap, it's to know WHY it happened. A 40-minute wait on screens is a process
+// problem; a 40-minute gap with no reason is worth a conversation. Lunch is subtracted, not
+// counted. Nothing here is scored on the iPad.
+var GAP_REASONS = ["Teardown","Reclaiming screens","Staging next job","Waiting on screens","Waiting on art/approval","Cleanup","Break","Other"];
+var GAP_ASK_MIN = 15;   // under this it's just teardown; don't nag
+function gapOpen(k){ var g = k.gaps[k.gaps.length-1]; return g && !g.end; }
+function lunchMsBetween(k, a, b){
+  var t = 0;
+  for(var i = 0; i < k.lunches.length; i++){
+    var l = k.lunches[i];
+    var s = Math.max(l.start, a), e = Math.min(l.end || now(), b);
+    if(e > s) t += e - s;
+  }
+  return t;
+}
+function gapMins(k, g){
+  var end = g.end || now();
+  return mins((end - g.start) - lunchMsBetween(k, g.start, end));
+}
+function startGap(printer, day){
+  if(!printer) return;
+  var k = clockFor(day, printer);
+  if(gapOpen(k)) return;
+  k.gaps.push({start: now(), end: null, reason: null});
+  saveClock(day);
+}
+function endGap(printer, day){
+  if(!printer) return;
+  var k = clockFor(day, printer);
+  var g = k.gaps[k.gaps.length-1];
+  if(g && !g.end){ g.end = now(); saveClock(day); }
+}
+function setGapReason(p, reason){
+  var k = clockFor(curDay, p);
+  var g = k.gaps[k.gaps.length-1];
+  if(g) g.reason = reason;
+  saveClock(curDay); renderClock();
+  toast("Logged: " + reason);
+}
+function renderClock(){
+  if(searchQuery || curDay !== todayStr()){ document.getElementById("clock").innerHTML = ""; return; }
+  var html = '<div class="clockcard"><h3>Crew clock — tap IN when you hit the floor</h3>';
+  for(var i = 0; i < PRINTERS.length; i++){
+    var p = PRINTERS[i];
+    var k = clockFor(curDay, p);
+    var bits = [];
+    if(k.in) bits.push("In " + fmt(k.in));
+    for(var j = 0; j < k.lunches.length; j++){
+      var l = k.lunches[j];
+      bits.push("Lunch " + fmt(l.start) + (l.end ? "–" + fmt(l.end) : "–…"));
+    }
+    if(k.out) bits.push("Out " + fmt(k.out));
+    var btns = "";
+    if(!k.in){
+      btns = '<button class="cbtn go" onclick="clockIn(\'' + p + '\')">IN</button>';
+    } else if(!k.out){
+      btns = '<button class="cbtn lunch" onclick="clockLunch(\'' + p + '\')">' + (lunchOpen(k) ? "BACK" : "LUNCH") + '</button>' +
+             '<button class="cbtn out" onclick="clockOut(\'' + p + '\')">OUT</button>';
+    } else {
+      btns = '<button class="cbtn" onclick="clockUndoOut(\'' + p + '\')">BACK IN</button>';
+    }
+    html += '<div class="clockrow"><div class="cname">' + esc(p) + '</div><div class="ctimes">' +
+      (bits.length ? bits.join(" · ") : "Not clocked in") + '</div>' + btns + '</div>';
+    // between-jobs strip — only while a gap is actually open
+    if(k.in && !k.out && gapOpen(k) && !lunchOpen(k)){
+      var g = k.gaps[k.gaps.length-1];
+      var gm = gapMins(k, g);
+      html += '<div class="gaprow"><div class="gaphead"><b>Between jobs — ' + gm + ' min</b>' +
+        (g.reason ? ' <span class="gapreason">' + esc(g.reason) + '</span>' : '') + '</div>';
+      if(gm >= GAP_ASK_MIN && !g.reason){
+        html += '<div class="gapask">What&#39;s going on? One tap — it&#39;s how we spot what actually slows the floor down.</div><div class="gapchips">' +
+          GAP_REASONS.map(function(x){ return '<span class="gapchip" onclick="setGapReason(\'' + p + '\',\'' + x + '\')">' + x + '</span>'; }).join("") +
+          '</div>';
+      }
+      html += '</div>';
+    }
+  }
+  html += '</div>';
+  document.getElementById("clock").innerHTML = html;
+}
+function clockIn(p){
+  var k = clockFor(curDay, p);
+  if(!k.in) k.in = now();
+  saveClock(curDay); renderClock();
+  toast(p + " on the floor " + fmt(now()));
+}
+function clockLunch(p){
+  var k = clockFor(curDay, p);
+  if(lunchOpen(k)){ k.lunches[k.lunches.length-1].end = now(); toast(p + " back from lunch"); }
+  else { k.lunches.push({start: now(), end: null}); toast(p + " at lunch"); }
+  saveClock(curDay); renderClock();
+}
+function clockOut(p){
+  var k = clockFor(curDay, p);
+  if(lunchOpen(k)) k.lunches[k.lunches.length-1].end = now();
+  if(gapOpen(k)) k.gaps[k.gaps.length-1].end = now();   // don't let a gap run overnight
+  k.out = now();
+  saveClock(curDay); renderClock();
+  toast(p + " off the floor " + fmt(now()));
+}
+function clockUndoOut(p){
+  var k = clockFor(curDay, p);
+  k.out = null;
+  saveClock(curDay); renderClock();
+  toast(p + " back on the floor");
+}
+
+// ---------- EXPORT NAG (v3) ----------
+function dayHasTaps(day){
+  var st = STATES[day] || {};
+  for(var id in st){ if(st[id].setupStart) return true; }
+  var c = CLOCKS[day] || {};
+  for(var p in c){ if(c[p].in) return true; }
+  return false;
+}
+function lastExportTs(){
+  try{ return Number(localStorage.getItem("mayhem_lastexport")) || 0; }catch(e){ return 0; }
+}
+function markExported(){
+  try{ localStorage.setItem("mayhem_lastexport", String(now())); }catch(e){}
+}
+function nagDue(){
+  var t = todayStr();
+  if(DAYSARR.indexOf(t) === -1) return false;
+  if(!dayHasTaps(t)) return false;
+  var d = new Date();
+  if(d.getHours() < 15 || (d.getHours() === 15 && d.getMinutes() < 30)) return false;
+  var cutoff = new Date(); cutoff.setHours(15, 0, 0, 0);
+  return lastExportTs() < cutoff.getTime();
+}
+function renderNag(){
+  var el = document.getElementById("nag");
+  var btn = document.getElementById("eodbtn");
+  if(nagDue()){
+    el.innerHTML = '<div class="flagbar warn"><div class="tag">EXPORT!</div><div class="txt">Today&#39;s times haven&#39;t been sent yet — tap <b>End of Day</b> below and copy them to Kolton before you leave.</div></div>';
+    if(btn) btn.className = "export nag";
+  } else {
+    el.innerHTML = "";
+    if(btn) btn.className = "export";
+  }
 }
 
 // ---------- DETAIL VIEW ----------
 function openRow(id){
-  currentRow = ROWS.find(r => r.id === id);
+  currentRow = findRow(id);
   editingField = null;
+  handoffPicking = false;
+  handoffDraft = {to:null, pieces:null};
   pausePicking = false;
   editingPause = null;
   pauseDraft = null;
@@ -417,26 +851,39 @@ function openRow(id){
   startTicker();
 }
 function renderDetail(){
-  const row = currentRow;
-  const r = rec(row.id);
-  const st = status(r);
+  var row = currentRow;
+  var r = rec(row.id);
+  var st = status(r);
 
-  let html = '<button class="back" onclick="showList()">&#8592; All jobs</button>';
+  var html = '<button class="back" onclick="showList()">&#8592; All jobs</button>';
+  if(row._day !== todayStr()){
+    html += '<div class="flagbar"><div class="tag">' + dayLabel(row._day) + ' ' + dayNum(row._day) + '</div><div class="txt">Heads up — this card is scheduled for ' + dayLabel(row._day) + '. Running it today is fine, just double-check it&#39;s the right job.</div></div>';
+  }
   if(row.img && IMG[row.img]) html += '<div class="dmock"><img src="' + IMG[row.img] + '" onclick="showLightbox(this.src)"></div>';
+  var est = estFor(row, r);
   html += '<div class="dhead"><div class="jn">' + (row.url ? '<a class="jlink" href="' + row.url + '" target="_blank">JOB #' + esc(row.job) + '</a>' : 'JOB #' + esc(row.job)) + '</div>' +
     '<div class="cu">' + esc(row.customer) + ' — ' + esc(row.location) + '</div>' +
-    '<div class="meta">' + row.qty + ' pieces</div></div>';
+    '<div class="meta">' + row.qty + ' pieces</div>' +
+    (est && st !== "done" ? '<div class="esthead">Shop average for ' +
+       ((r.colors != null ? r.colors : row.colors)) + ' color / ' + row.qty + ' pcs: about <b>' +
+       fmtDur(est.setup) + '</b> setup, <b>' + fmtDur(est.print) + '</b> print' +
+       '<small>What a run like this usually takes — not a target. Plenty of reasons a job runs longer.</small></div>' : '') +
+    '</div>';
 
   // printer picker
   html += '<div class="field"><label>Printer</label><div class="segs">' +
-    PRINTERS.map(p => '<div class="seg ' + (r.printer===p?"on":"") + '" onclick="setPrinter(\'' + p + '\')">' + p + '</div>').join("") +
+    PRINTERS.map(function(p){ return '<div class="seg ' + (r.printer===p?"on":"") + '" onclick="setPrinter(\'' + p + '\')">' + p + '</div>'; }).join("") +
     '</div></div>';
-  // colors + screens (prefilled from the order — tap to correct, e.g. white/flash-white = 2 colors but 1 screen)
+  // press picker (v3 — which press did this run on)
+  html += '<div class="field"><label>Press</label><div class="segs">' +
+    PRESSES.map(function(p){ return '<div class="seg ' + (r.press===p?"on":"") + '" onclick="setPress(\'' + p + '\')">' + p + '</div>'; }).join("") +
+    '</div></div>';
+  // colors + screens (prefilled from the order — tap to correct)
   html += '<div class="field"><label>Colors' + (r.colors !== row.colors ? ' <span style="color:var(--red)">(order says ' + row.colors + ')</span>' : '') + '</label><div class="segs">' +
-    COUNTS.map(c => '<div class="seg ' + (r.colors===c?"on":"") + '" onclick="setColors(' + c + ')">' + c + '</div>').join("") +
+    COUNTS.map(function(c){ return '<div class="seg ' + (r.colors===c?"on":"") + '" onclick="setColors(' + c + ')">' + c + '</div>'; }).join("") +
     '</div></div>';
   html += '<div class="field"><label>Screens' + (r.screens !== row.screens ? ' <span style="color:var(--red)">(order says ' + row.screens + ')</span>' : '') + '</label><div class="segs">' +
-    COUNTS.map(c => '<div class="seg ' + (r.screens===c?"on":"") + '" onclick="setScreens(' + c + ')">' + c + '</div>').join("") +
+    COUNTS.map(function(c){ return '<div class="seg ' + (r.screens===c?"on":"") + '" onclick="setScreens(' + c + ')">' + c + '</div>'; }).join("") +
     '</div></div>';
 
   // steps
@@ -448,31 +895,75 @@ function renderDetail(){
 
   // live timer / action button
   if(st === "done"){
-    const m = calcRow(row);
+    var m = calcRow(row);
     html += '<div class="donebanner">DONE — ' + m.setupMin + ' min setup · ' + m.printMin + ' min print' +
       '<small>' + m.pph + ' pieces/hour</small></div>';
   } else if(st === "pause"){
     html += '<button class="bigbtn b-resume" onclick="resumeJob()">&#9654; RESUME — job is paused</button>';
   } else if(pausePicking){
     html += '<div class="field"><label>Why did the job stop?</label><div class="segs" style="flex-wrap:wrap">' +
-      PAUSE_REASONS.map(x => '<div class="seg" style="min-width:44%" onclick="pickPause(\'' + x + '\')">' + x + '</div>').join("") +
+      PAUSE_REASONS.map(function(x){ return '<div class="seg" style="min-width:44%" onclick="pickPause(\'' + x + '\')">' + x + '</div>'; }).join("") +
       '<div class="seg" style="min-width:44%" onclick="cancelPause()">Cancel</div></div></div>';
+  } else if(handoffPicking){
+    var inPrint = !!r.setupDone;
+    var others = PRINTERS.filter(function(p){ return p !== r.printer; });
+    html += '<div class="field"><label>Who&#39;s taking over?</label><div class="segs">' +
+      others.map(function(p){ return '<div class="seg ' + (handoffDraft.to===p?"on":"") + '" onclick="setHandoffTo(\'' + p + '\')">' + p + '</div>'; }).join("") +
+      '</div>';
+    if(inPrint){
+      var prev = priorCum(r);
+      html += '<label style="margin-top:16px">Pieces done so far</label>' +
+        '<input type="number" id="hopieces" inputmode="numeric" value="' + (handoffDraft.pieces === null ? "" : handoffDraft.pieces) + '" placeholder="out of ' + row.qty + '"' +
+        ' style="width:100%;font-size:22px;font-weight:800;padding:14px;border:2px solid var(--line);border-radius:10px;-webkit-user-select:text;user-select:text">' +
+        '<div style="font-size:12px;color:var(--gray);font-weight:600;margin-top:8px;line-height:1.5">Count what&#39;s off the press right now' +
+        (prev ? ' (total for the whole run, not just since the last handoff — last count was ' + prev + ')' : '') +
+        '. Don&#39;t know? Leave it blank — the job still logs fine, it just won&#39;t split pcs/hr between you.</div>';
+    }
+    html += '<div style="display:flex;gap:8px;margin-top:14px">' +
+      '<button onclick="confirmHandoff()" style="flex:1;padding:15px;border:none;border-radius:10px;background:var(--green);color:#fff;font-weight:800;font-size:16px;cursor:pointer">HAND OFF</button>' +
+      '<button onclick="cancelHandoff()" style="padding:15px 18px;border:none;border-radius:10px;background:#ececee;color:var(--gray);font-weight:800;font-size:16px;cursor:pointer">Cancel</button>' +
+      '</div></div>';
   } else if(st === "idle"){
-    const ready = !!r.printer;
+    var ready = !!r.printer;
     html += '<button class="bigbtn b-setup" ' + (ready?"":"disabled") + ' onclick="stamp(\'setupStart\')">' +
       (ready ? "START SETUP" : "Pick your name first") + '</button>';
   } else if(st === "setup"){
     html += '<div class="btnrow"><button class="bigbtn b-print" onclick="stamp(\'setupDone\')">SETUP DONE &#8594; PRINTING <span id="live"></span></button>' +
-      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>';
+      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>' + handoffBtn();
   } else if(st === "print"){
     html += '<div class="btnrow"><button class="bigbtn b-done" onclick="stamp(\'jobDone\')">JOB DONE <span id="live"></span></button>' +
-      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>';
+      '<button class="pausebtn" onclick="pauseJob()">&#10073;&#10073; Stopped</button></div>' + handoffBtn();
+  }
+
+  // handoff log
+  if((r.handoffs||[]).length){
+    html += '<div class="field"><label>Handoffs</label>';
+    var segs = printSegments(row);
+    for(var hi = 0; hi < r.handoffs.length; hi++){
+      var h = r.handoffs[hi];
+      html += '<div class="pauselog" style="padding:6px 0;border-bottom:1px solid var(--line)"><b>' + fmt(h.at) + '</b> · ' +
+        esc(h.from || "?") + ' &#8594; ' + esc(h.to) +
+        (h.phase === "setup" ? ' <span style="color:var(--gray)">(during setup)</span>' :
+          (h.pieces != null ? ' · ' + h.pieces + ' pcs done' : ' <span style="color:var(--amber)">· pieces not counted</span>')) +
+        '</div>';
+    }
+    if(segs.length > 1){
+      html += '<div style="margin-top:10px;font-size:13px;font-weight:700;color:var(--gray)">';
+      for(var si = 0; si < segs.length; si++){
+        var s = segs[si];
+        html += '<div style="padding:3px 0">' + esc(s.printer) + ': ' + s.min + ' min' +
+          (s.pieces != null ? ' · ' + s.pieces + ' pcs · ' + s.pph + ' pcs/hr' : ' · not counted') +
+          (s.open ? ' <span style="color:var(--blue)">(running)</span>' : '') + '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
   }
 
   // stops (pause log) — editable
   if(r.setupStart && !pausePicking){
     html += '<div class="field"><label>Stops</label>';
-    r.pauses.forEach((p, i) => {
+    r.pauses.forEach(function(p, i){
       if(editingPause === i){
         html += pauseEditor();
       } else {
@@ -494,22 +985,21 @@ function renderDetail(){
   html += '<div class="field"><label>Notes</label>' +
     '<textarea placeholder="Anything weird about this run..." onblur="setNotes(this.value)">' + esc(r.notes||"") + '</textarea></div>';
 
-  // save & finish — everything already auto-saves; this is the "I'm done here" button
   html += '<button class="bigbtn" style="background:var(--ink);margin-bottom:10px" onclick="saveAndFinish()">&#10003; SAVE &amp; FINISH</button>';
 
   document.getElementById("detail").innerHTML = html;
   updateLive();
 }
-let editingField = null;
+var editingField = null;
 function stepHtml(n, title, sub, ts, field){
-  let timeCell;
+  var timeCell;
   if(editingField === field){
     timeCell = '<input type="time" id="timeedit" value="' + toHM(ts) + '">' +
       '<div style="margin-top:8px;display:flex;gap:6px;justify-content:flex-end">' +
       '<button onclick="saveTime(\'' + field + '\')" style="padding:8px 16px;border:none;border-radius:8px;background:var(--green);color:#fff;font-weight:800;font-size:14px;cursor:pointer">Save</button>' +
       '<button onclick="cancelTime()" style="padding:8px 12px;border:none;border-radius:8px;background:#ececee;color:var(--gray);font-weight:800;font-size:14px;cursor:pointer">X</button></div>';
   } else if(ts){
-    const wasEdited = currentRow && (rec(currentRow.id).edits || {})[field];
+    var wasEdited = currentRow && (rec(currentRow.id).edits || {})[field];
     timeCell = '<span onclick="editTime(\'' + field + '\')" style="cursor:pointer;border-bottom:2px dotted var(--gray)">' + fmt(ts) + '</span>' +
       (wasEdited ? '<div style="font-size:10px;color:var(--amber);font-weight:800">&#9998; EDITED</div>' : '');
   } else {
@@ -521,16 +1011,16 @@ function stepHtml(n, title, sub, ts, field){
     '<div class="time">' + timeCell + '</div></div>';
 }
 function updateLive(){
-  const el = document.getElementById("live");
+  var el = document.getElementById("live");
   if(!el || !currentRow) return;
-  const r = rec(currentRow.id);
-  const st = status(r);
+  var r = rec(currentRow.id);
+  var st = status(r);
   if(st === "setup"){
-    const m = mins(now() - r.setupStart - pausedMsBetween(r, r.setupStart, now()));
+    var m = mins(now() - r.setupStart - pausedMsBetween(r, r.setupStart, now()));
     el.textContent = "· " + m + " min";
   } else if(st === "print"){
-    const m = mins(now() - r.setupDone - pausedMsBetween(r, r.setupDone, now()));
-    el.textContent = "· " + m + " min";
+    var m2 = mins(now() - r.setupDone - pausedMsBetween(r, r.setupDone, now()));
+    el.textContent = "· " + m2 + " min";
   }
 }
 function startTicker(){ stopTicker(); ticker = setInterval(updateLive, 15000); }
@@ -538,18 +1028,19 @@ function stopTicker(){ if(ticker){ clearInterval(ticker); ticker = null; } }
 
 // ---------- actions ----------
 function saveAndFinish(){
-  const ta = document.querySelector("#detail textarea");
+  var ta = document.querySelector("#detail textarea");
   if(ta) setNotes(ta.value);
   save();
   toast("Saved");
   showList();
 }
 function setPrinter(p){ rec(currentRow.id).printer = p; save(); renderDetail(); }
+function setPress(p){ rec(currentRow.id).press = p; save(); renderDetail(); }
 function setColors(c){ rec(currentRow.id).colors = c; save(); renderDetail(); }
 function setScreens(c){ rec(currentRow.id).screens = c; save(); renderDetail(); }
 function setNotes(v){ rec(currentRow.id).notes = v; save(); }
 function stamp(field){
-  const r = rec(currentRow.id);
+  var r = rec(currentRow.id);
   if(field === "setupDone" && r.setupStart && (now() - r.setupStart) < 120000){
     if(!confirm("Setup was under 2 minutes — mis-tap? Press OK only if setup really is done.")) return;
   }
@@ -557,14 +1048,65 @@ function stamp(field){
     if(!confirm("Print ran under 2 minutes — is the job really done?")) return;
   }
   r[field] = now();
+  // whoever finishes setup owns the setup minutes; whoever starts printing owns the print
+  // minutes from here until a handoff says otherwise
+  if(field === "setupDone"){
+    if(!r.setupBy) r.setupBy = r.printer;
+    if(!r.printBy) r.printBy = r.printer;
+  }
+  // between-jobs clock: stops when work starts again, starts when a job finishes
+  if(field === "setupStart") endGap(r.printer, currentRow._day);
+  if(field === "jobDone") startGap(r.printer, currentRow._day);
   save(); renderDetail();
   toast(field === "jobDone" ? "Job done — nice." : "Time logged " + fmt(now()));
 }
-const PAUSE_REASONS = ["Lunch","Ink change","Broke a screen","Waiting on ink","Waiting on approval","Press problem","Other"];
-const NEW_PAUSE = -1;
-let pausePicking = false;
-let editingPause = null;
-let pauseDraft = null;
+
+// ---------- handoff actions (v3) ----------
+var handoffPicking = false;
+var handoffDraft = {to:null, pieces:null};
+function handoffBtn(){
+  return '<button onclick="startHandoff()" style="width:100%;padding:15px;border:2px solid var(--line);background:var(--card);' +
+    'border-radius:12px;font-size:16px;font-weight:800;color:var(--ink);cursor:pointer;margin-bottom:12px">' +
+    '&#8644; HAND OFF — someone else is taking over</button>';
+}
+function startHandoff(){
+  handoffDraft = {to:null, pieces:null};
+  handoffPicking = true;
+  renderDetail();
+}
+function cancelHandoff(){ handoffPicking = false; handoffDraft = {to:null, pieces:null}; renderDetail(); }
+function setHandoffTo(p){
+  var el = document.getElementById("hopieces");
+  if(el && el.value !== "" && !isNaN(Number(el.value))) handoffDraft.pieces = Math.round(Number(el.value));
+  handoffDraft.to = p;
+  renderDetail();
+}
+function confirmHandoff(){
+  var r = rec(currentRow.id);
+  if(!handoffDraft.to){ toast("Pick who's taking over"); return; }
+  var el = document.getElementById("hopieces");
+  var pieces = null;
+  if(el && el.value !== "" && !isNaN(Number(el.value))) pieces = Math.round(Number(el.value));
+  else if(handoffDraft.pieces != null) pieces = handoffDraft.pieces;
+  var phase = r.setupDone ? "print" : "setup";
+  if(phase === "print" && pieces != null){
+    var prev = priorCum(r);
+    if(pieces <= prev || pieces > currentRow.qty){
+      if(!confirm("Pieces so far (" + pieces + ") looks off — it should be between " + (prev+1) + " and " + currentRow.qty + " for the whole run. Save it anyway?")) return;
+    }
+  }
+  r.handoffs = r.handoffs || [];
+  r.handoffs.push({at: now(), from: r.printer, to: handoffDraft.to, pieces: (phase === "print" ? pieces : null), phase: phase});
+  r.printer = handoffDraft.to;
+  handoffPicking = false; handoffDraft = {to:null, pieces:null};
+  save(); renderDetail();
+  toast("Handed off to " + r.printer);
+}
+var PAUSE_REASONS = ["Lunch","Ink change","Broke a screen","Waiting on ink","Waiting on approval","Press problem","Other"];
+var NEW_PAUSE = -1;
+var pausePicking = false;
+var editingPause = null;
+var pauseDraft = null;
 function pauseJob(){ pausePicking = true; renderDetail(); }
 function cancelPause(){ pausePicking = false; renderDetail(); }
 function pickPause(reason){
@@ -583,13 +1125,13 @@ function logEdit(r, field, oldV, newV){
 
 // ---- pause editing ----
 function pauseEditor(){
-  const d = pauseDraft;
+  var d = pauseDraft;
   return '<div style="padding:10px 0">' +
     '<div style="display:flex;gap:14px;margin-bottom:10px">' +
     '<div><small style="font-weight:800;color:var(--gray)">STOPPED AT</small><br><input type="time" id="p-start" value="' + toHM(d.start) + '" style="font-size:16px;padding:8px;border:2px solid var(--line);border-radius:8px"></div>' +
     '<div><small style="font-weight:800;color:var(--gray)">BACK AT</small><br><input type="time" id="p-end" value="' + (d.end ? toHM(d.end) : "") + '" style="font-size:16px;padding:8px;border:2px solid var(--line);border-radius:8px"></div></div>' +
     '<div class="segs" style="margin-bottom:10px">' +
-    PAUSE_REASONS.map(x => '<div class="seg ' + (d.reason===x?"on":"") + '" style="min-width:30%;padding:10px 6px;font-size:13px" onclick="setPauseReason(\'' + x + '\')">' + x + '</div>').join("") +
+    PAUSE_REASONS.map(function(x){ return '<div class="seg ' + (d.reason===x?"on":"") + '" style="min-width:30%;padding:10px 6px;font-size:13px" onclick="setPauseReason(\'' + x + '\')">' + x + '</div>'; }).join("") +
     '</div><div style="display:flex;gap:8px">' +
     '<button onclick="savePause()" style="flex:1;padding:13px;border:none;border-radius:10px;background:var(--green);color:#fff;font-weight:800;font-size:15px;cursor:pointer">Save</button>' +
     '<button onclick="deletePause()" style="padding:13px 16px;border:none;border-radius:10px;background:var(--red);color:#fff;font-weight:800;font-size:15px;cursor:pointer">Delete</button>' +
@@ -597,12 +1139,12 @@ function pauseEditor(){
     '</div></div>';
 }
 function readPauseInputs(){
-  const s = document.getElementById("p-start"), e = document.getElementById("p-end");
+  var s = document.getElementById("p-start"), e = document.getElementById("p-end");
   if(s && /^\d{1,2}:\d{2}$/.test(s.value)) pauseDraft.start = fromHM(s.value, pauseDraft.start);
   if(e && /^\d{1,2}:\d{2}$/.test(e.value)) pauseDraft.end = fromHM(e.value, pauseDraft.start);
 }
 function editPause(i){
-  const p = rec(currentRow.id).pauses[i];
+  var p = rec(currentRow.id).pauses[i];
   pauseDraft = {start: p.start, end: p.end, reason: p.reason};
   editingPause = i; renderDetail();
 }
@@ -614,12 +1156,12 @@ function setPauseReason(x){ readPauseInputs(); pauseDraft.reason = x; renderDeta
 function cancelPauseEdit(){ editingPause = null; pauseDraft = null; renderDetail(); }
 function savePause(){
   readPauseInputs();
-  const r = rec(currentRow.id);
+  var r = rec(currentRow.id);
   if(editingPause === NEW_PAUSE){
     r.pauses.push({start: pauseDraft.start, end: pauseDraft.end, reason: pauseDraft.reason, added: true});
     logEdit(r, "pause added", null, fmt(pauseDraft.start) + "-" + fmt(pauseDraft.end) + " " + pauseDraft.reason);
   } else {
-    const p = r.pauses[editingPause];
+    var p = r.pauses[editingPause];
     if(p.start !== pauseDraft.start || p.end !== pauseDraft.end || p.reason !== pauseDraft.reason){
       logEdit(r, "pause " + (editingPause+1), fmt(p.start) + "-" + (p.end?fmt(p.end):"?") + " " + (p.reason||""), fmt(pauseDraft.start) + "-" + (pauseDraft.end?fmt(pauseDraft.end):"?") + " " + pauseDraft.reason);
       p.start = pauseDraft.start; p.end = pauseDraft.end; p.reason = pauseDraft.reason; p.edited = true;
@@ -629,9 +1171,9 @@ function savePause(){
   save(); renderDetail();
 }
 function deletePause(){
-  const r = rec(currentRow.id);
+  var r = rec(currentRow.id);
   if(editingPause !== NEW_PAUSE){
-    const p = r.pauses[editingPause];
+    var p = r.pauses[editingPause];
     logEdit(r, "pause deleted", fmt(p.start) + "-" + (p.end?fmt(p.end):"?") + " " + (p.reason||""), null);
     r.pauses.splice(editingPause, 1);
   }
@@ -639,18 +1181,18 @@ function deletePause(){
   save(); renderDetail();
 }
 function resumeJob(){
-  const r = rec(currentRow.id);
-  const p = r.pauses[r.pauses.length-1];
+  var r = rec(currentRow.id);
+  var p = r.pauses[r.pauses.length-1];
   if(p && !p.end) p.end = now();
   save(); renderDetail();
 }
 function editTime(field){ editingField = field; renderDetail(); }
 function cancelTime(){ editingField = null; renderDetail(); }
 function saveTime(field){
-  const el = document.getElementById("timeedit");
-  const r = rec(currentRow.id);
+  var el = document.getElementById("timeedit");
+  var r = rec(currentRow.id);
   if(el && /^\d{1,2}:\d{2}$/.test(el.value)){
-    const nv = fromHM(el.value, r[field]);
+    var nv = fromHM(el.value, r[field]);
     if(nv !== r[field]){
       logEdit(r, field, r[field], nv);
       r[field] = nv;
@@ -662,67 +1204,126 @@ function saveTime(field){
 
 // ---------- math ----------
 function calcRow(row){
-  const r = state[row.id] || {};
-  const out = {setupMin:null, printMin:null, pph:null, pauseMin:0};
+  var r = STATES[row._day][row.id] || {};
+  var out = {setupMin:null, printMin:null, pph:null, pauseMin:0};
   if(r.setupStart && r.setupDone){
     out.setupMin = mins((r.setupDone - r.setupStart) - pausedMsBetween(r, r.setupStart, r.setupDone));
   }
   if(r.setupDone && r.jobDone){
-    const printMs = (r.jobDone - r.setupDone) - pausedMsBetween(r, r.setupDone, r.jobDone);
+    var printMs = (r.jobDone - r.setupDone) - pausedMsBetween(r, r.setupDone, r.jobDone);
     out.printMin = mins(printMs);
     if(printMs > 0) out.pph = Math.round(row.qty / (printMs/3600000));
   }
-  out.pauseMin = mins((r.pauses||[]).reduce((a,p)=>a + ((p.end||now()) - p.start), 0));
+  out.pauseMin = mins((r.pauses||[]).reduce(function(a,p){ return a + ((p.end||now()) - p.start); }, 0));
   return out;
 }
 
-// ---------- export ----------
+// ---------- export (v3 — whole week to date) ----------
 function buildExport(){
-  let anyEdits = false;
-  let t = "MAYHEM INK — JOB TIMING " + DAY + "\n";
-  t += "================================\n";
-  const byJob = {};
-  for(const row of ROWS){
-    (byJob[row.job] = byJob[row.job] || []).push(row);
-  }
-  for(const job in byJob){
-    const rows = byJob[job];
-    t += "\n#" + job + " " + rows[0].customer + "\n";
-    for(const row of rows){
-      const r = state[row.id] || {};
-      const m = calcRow(row);
-      const cc = r.colors != null ? r.colors : row.colors;
-      const ss = r.screens != null ? r.screens : row.screens;
-      t += "  " + row.location + " (" + cc + "c/" + ss + "s, " + row.qty + " pcs)";
-      if(cc !== row.colors || ss !== row.screens) t += " [order said " + row.colors + "c/" + row.screens + "s]";
-      if(!r.setupStart){ t += " — NOT RUN\n"; continue; }
-      const ed = r.edits || {};
-      const mk = f => ed[f] ? "*" : "";
-      if(Object.keys(ed).length) anyEdits = true;
-      t += "\n    " + (r.printer||"?") +
-        " · setup " + fmt(r.setupStart) + mk("setupStart") + "–" + (r.setupDone?fmt(r.setupDone)+mk("setupDone"):"?") +
-        (m.setupMin!=null ? " (" + m.setupMin + "m)" : "") +
-        " · done " + (r.jobDone?fmt(r.jobDone)+mk("jobDone"):"NOT FINISHED") +
-        (m.printMin!=null ? " (" + m.printMin + "m print, " + m.pph + " pcs/hr)" : "") + "\n";
-      if((r.pauses||[]).length){
-        for(const p of r.pauses){
-          t += "    STOPPED " + fmt(p.start) + "–" + (p.end?fmt(p.end):"?") +
-            " (" + mins((p.end||now())-p.start) + "m)" + (p.reason ? ": " + p.reason : "") +
-            (p.added ? " *added by hand" : (p.edited ? " *edited" : "")) + "\n";
+  var anyEdits = false;
+  var t = "MAYHEM INK — WEEK TIMING (week of " + WEEKID + ", exported " + todayStr() + ")\n";
+  t += "=============================================\n";
+  var exportDays = [];
+  for(var di = 0; di < DAYSARR.length; di++){
+    var day = DAYSARR[di];
+    var hasData = dayHasTaps(day);
+    if(day > todayStr() && !hasData) continue;   // future days with no taps: nothing to say yet
+    var rows = ROWSBY[day];
+    exportDays.push(day);
+    t += "\n########  " + dayLabel(day) + " " + day + (hasData ? "" : "  — NO TAPS LOGGED") + "  ########\n";
+    // crew clock summary
+    var c = CLOCKS[day] || {};
+    for(var pi = 0; pi < PRINTERS.length; pi++){
+      var pn = PRINTERS[pi];
+      var k = c[pn];
+      if(k && k.in){
+        var lun = (k.lunches||[]).map(function(l){
+          var lm = l.end ? mins(l.end - l.start) : null;
+          return fmt(l.start) + "-" + (l.end?fmt(l.end):"?") + (lm!=null ? " (" + lm + "m)" : "");
+        }).join(", ");
+        t += "CLOCK " + pn + ": in " + fmt(k.in) + (lun ? " · lunch " + lun : " · NO LUNCH LOGGED") + (k.out ? " · out " + fmt(k.out) : " · STILL ON FLOOR") + "\n";
+        var gs = k.gaps || [];
+        if(gs.length){
+          var gtot = 0;
+          for(var gi = 0; gi < gs.length; gi++) gtot += gapMins(k, gs[gi]);
+          t += "  BETWEEN JOBS " + pn + ": " + gtot + "m total across " + gs.length + " gap(s)\n";
+          for(var gj = 0; gj < gs.length; gj++){
+            var g = gs[gj];
+            t += "    " + fmt(g.start) + "-" + (g.end?fmt(g.end):"still open") +
+              " (" + gapMins(k, g) + "m)" + (g.reason ? ": " + g.reason : ": NO REASON GIVEN") + "\n";
+          }
         }
       }
-      if(r.notes) t += "    NOTE: " + r.notes + "\n";
-      if((r.audit||[]).length){
-        for(const a of r.audit){
-          t += "    EDIT LOG: " + a.field + " " + (typeof a.old === "number" ? fmt(a.old) : (a.old==null?"—":a.old)) +
-            " -> " + (typeof a.new === "number" ? fmt(a.new) : (a.new==null?"—":a.new)) + " (changed at " + fmt(a.at) + ")\n";
+    }
+    var byJob = {};
+    var jobOrder = [];
+    for(var ri = 0; ri < rows.length; ri++){
+      var row = rows[ri];
+      if(!byJob[row.job]){ byJob[row.job] = []; jobOrder.push(row.job); }
+      byJob[row.job].push(row);
+    }
+    for(var ji = 0; ji < jobOrder.length; ji++){
+      var job = jobOrder[ji];
+      var jrows = byJob[job];
+      t += "\n#" + job + " " + jrows[0].customer + "\n";
+      for(var ri2 = 0; ri2 < jrows.length; ri2++){
+        var row2 = jrows[ri2];
+        var r = STATES[day][row2.id] || {};
+        var m = calcRow(row2);
+        var cc = r.colors != null ? r.colors : row2.colors;
+        var ss = r.screens != null ? r.screens : row2.screens;
+        t += "  " + row2.location + " (" + cc + "c/" + ss + "s, " + row2.qty + " pcs)";
+        if(cc !== row2.colors || ss !== row2.screens) t += " [order said " + row2.colors + "c/" + row2.screens + "s]";
+        if(!r.setupStart){ t += " — NOT RUN\n"; continue; }
+        var ed = r.edits || {};
+        var mk = function(f){ return ed[f] ? "*" : ""; };
+        if(Object.keys(ed).length) anyEdits = true;
+        var sHand = setupHandoffs(r);
+        t += "\n    " + crewStr(r) + (r.press ? " on " + r.press : "") +
+          " · setup " + fmt(r.setupStart) + mk("setupStart") + "–" + (r.setupDone?fmt(r.setupDone)+mk("setupDone"):"?") +
+          (m.setupMin!=null ? " (" + m.setupMin + "m" + (r.setupBy ? ", " + r.setupBy : "") + ")" : "") +
+          " · done " + (r.jobDone?fmt(r.jobDone)+mk("jobDone"):"NOT FINISHED") +
+          (m.printMin!=null ? " (" + m.printMin + "m print, " + m.pph + " pcs/hr)" : "") + "\n";
+        for(var shi = 0; shi < sHand.length; shi++){
+          t += "    SETUP HANDOFF " + fmt(sHand[shi].at) + ": " + (sHand[shi].from||"?") + " -> " + sHand[shi].to + " (setup time is shared)\n";
+        }
+        var psegs = printHandoffs(r).length ? printSegments(row2) : [];
+        if(psegs.length > 1){
+          t += "    HANDOFF RUN — print split:\n";
+          for(var pi2 = 0; pi2 < psegs.length; pi2++){
+            var sg = psegs[pi2];
+            t += "      " + sg.printer + " " + fmt(sg.start) + "–" + (sg.open ? "still running" : fmt(sg.end)) +
+              " (" + sg.min + "m" +
+              (sg.pieces != null ? ", " + sg.pieces + " pcs, " + sg.pph + " pcs/hr" : ", PIECES NOT COUNTED — don't split this one") + ")\n";
+          }
+        }
+        if((r.pauses||[]).length){
+          for(var qi = 0; qi < r.pauses.length; qi++){
+            var p = r.pauses[qi];
+            t += "    STOPPED " + fmt(p.start) + "–" + (p.end?fmt(p.end):"?") +
+              " (" + mins((p.end||now())-p.start) + "m)" + (p.reason ? ": " + p.reason : "") +
+              (p.added ? " *added by hand" : (p.edited ? " *edited" : "")) + "\n";
+          }
+        }
+        if(r.notes) t += "    NOTE: " + r.notes + "\n";
+        if((r.audit||[]).length){
+          for(var ai = 0; ai < r.audit.length; ai++){
+            var a = r.audit[ai];
+            t += "    EDIT LOG: " + a.field + " " + (typeof a.old === "number" ? fmt(a.old) : (a.old==null?"—":a.old)) +
+              " -> " + (typeof a.new === "number" ? fmt(a.new) : (a.new==null?"—":a.new)) + " (changed at " + fmt(a.at) + ")\n";
+          }
         }
       }
     }
   }
   if(anyEdits) t += "\n* = time was entered or changed by hand, not live-tapped\n";
   t += "\n--- raw data (for Claude) ---\n";
-  t += JSON.stringify({day:DAY, rows:ROWS, times:state});
+  var raw = {week: WEEKID, days: []};
+  for(var di2 = 0; di2 < exportDays.length; di2++){
+    var d2 = exportDays[di2];
+    raw.days.push({day: d2, rows: ROWSBY[d2], times: STATES[d2], clock: CLOCKS[d2] || {}});
+  }
+  t += JSON.stringify(raw);
   return t;
 }
 function showExport(){
@@ -733,13 +1334,14 @@ function showExport(){
   document.getElementById("exporttext").textContent = buildExport();
 }
 function copyExport(){
-  const txt = buildExport();
+  var txt = buildExport();
+  markExported();
   if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(()=>toast("Copied — paste it to Kolton"), ()=>fallbackCopy(txt));
+    navigator.clipboard.writeText(txt).then(function(){ toast("Copied — paste it to Kolton"); }, function(){ fallbackCopy(txt); });
   } else fallbackCopy(txt);
 }
 function fallbackCopy(txt){
-  const ta = document.createElement("textarea");
+  var ta = document.createElement("textarea");
   ta.value = txt; document.body.appendChild(ta);
   ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
   toast("Copied — paste it to Kolton");
@@ -747,15 +1349,19 @@ function fallbackCopy(txt){
 
 // ---------- misc ----------
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-let toastTimer = null;
+var toastTimer = null;
 function toast(msg){
-  const el = document.getElementById("toast");
+  var el = document.getElementById("toast");
   el.textContent = msg; el.style.display = "block";
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>{ el.style.display = "none"; }, 2200);
+  toastTimer = setTimeout(function(){ el.style.display = "none"; }, 2200);
 }
+// re-check the export nag every 5 minutes so it appears without a reload
+setInterval(function(){
+  if(!currentRow && document.getElementById("list").style.display !== "none") renderNag();
+}, 300000);
 
-loadDay();
+loadWeek();
 </script>
 
 <div id="lightbox" onclick="if(event.target===this)hideLightbox()">
