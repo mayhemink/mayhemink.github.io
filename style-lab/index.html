@@ -242,7 +242,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM STYLE LAB · FEEDS THE MOCKUP LAB CATALOG</span>
+  <span>MAYHEM STYLE LAB · V1.4 · CALIBRATES IN MOCKUP-LAB CANVAS SPACE</span>
   <span>calibrations save only when the exported styles.json is pushed to the repo</span>
 </footer>
 
@@ -254,6 +254,17 @@ let dirty=false;
 const NEWPHOTOS=[];        // {styleKey, side, color, fname, blob, canvas}
 let sel={style:null, side:'front'};
 let curPhotoCanvas=null;   // canvas being calibrated/previewed
+/* v1.4 CRITICAL: photos must be calibrated in the SAME pixel space Mockup Lab
+   renders in — max-dimension 1100 (its processPhoto). Loading at natural file
+   size (e.g. 1100x1650) exported calib 1.5x off and put logos half off the
+   shirt (caught live 2026-08-16). Every photo load goes through fitCanvas. */
+function fitCanvas(img){
+  const sc=Math.min(1,1100/Math.max(img.width,img.height));
+  const c=document.createElement('canvas');
+  c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  return c;
+}
 let showLines=false;
 const $=id=>document.getElementById(id);
 function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
@@ -323,9 +334,7 @@ function loadSelPhoto(){
   if(p.canvas){curPhotoCanvas=p.canvas;render();maybeAutoCalib();return;}
   const img=new Image();
   img.onload=()=>{
-    const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
-    c.getContext('2d').drawImage(img,0,0);
-    curPhotoCanvas=c;render();maybeAutoCalib();
+    curPhotoCanvas=fitCanvas(img);render();maybeAutoCalib();
   };
   img.onerror=()=>{pendingAutoCalib=false;render();};
   img.src=p.src;
@@ -386,7 +395,8 @@ async function processImageFile(file,meta){
     r.onload=e=>{
       const img=new Image();
       img.onload=()=>{
-        const H=1100,W=Math.round(img.width*H/img.height);
+        const _sc=Math.min(1,1100/Math.max(img.width,img.height));
+        const W=Math.round(img.width*_sc),H=Math.round(img.height*_sc);
         const c=document.createElement('canvas');c.width=W;c.height=H;
         const ctx=c.getContext('2d');
         ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);   // flatten transparency to white
@@ -750,8 +760,7 @@ function loadSidePhoto(side,cb){
   if(!list.length){pvPhotos[side]=null;cb();return;}
   const img=new Image();
   img.onload=()=>{
-    const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
-    c.getContext('2d').drawImage(img,0,0);
+    const c=fitCanvas(img);
     c.__style=sel.style;pvPhotos[side]=c;cb();
   };
   img.onerror=()=>{pvPhotos[side]=null;cb();};
