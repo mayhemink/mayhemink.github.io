@@ -561,7 +561,8 @@
       <div id="inkSimple"></div>
       <div id="inkList"></div>
       <div class="screens-pill" id="screensPill">—</div>
-      <div class="checkline" id="lineFabric"><input type="checkbox" id="fabricBlend" checked><span>Show fabric texture through the ink</span></div>
+      <div class="checkline" id="lineNoUB"><input type="checkbox" id="noUnderbase"><span><b>NO UNDERBASE</b> — soft-hand / vintage look (ink soaks into the shirt)</span></div>
+      <div class="checkline" id="lineFabric"><input type="checkbox" id="fabricBlend"><span>Show fabric texture through the ink</span></div>
       <div class="checkline" id="lineUB"><input type="checkbox" id="autoUnderbase" checked><span>White underbase on dark shirts (+1 screen)</span></div>
     </div>
 
@@ -616,7 +617,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V7.7.2 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V7.8 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -894,7 +895,7 @@ const state={
   artF:null, artB:null, artInks:[], inkAssign:[],
   loc:{front:'fullFront', back:'fullBack'},
   fit:{}, // per side:loc {widthIn, rot, nudgeX, nudgeY}
-  fabricBlend:true, autoUnderbase:true, boardMode:'pair',
+  fabricBlend:false, autoUnderbase:true, boardMode:'pair',
   calibStep:-1, showAnchors:false, hosted:false
 };
 /* guided calibration walkthrough — each step tells the person exactly what to
@@ -1355,7 +1356,10 @@ function refreshInkList(){
   const tot=state.artInks.length;
   const en=tot?enabledAssign().length:0;
   const offN=tot-en;
-  $('screensPill').innerHTML=tot?(en?`<b>${en} ink${en>1?'s':''}</b>${offN?` (${offN} off)`:''} → ${en} screens on lights, ${en+1} on darks (UB)`:'<b>all inks off</b> — nothing prints'):'—';
+  $('screensPill').innerHTML=tot?(en?(state.autoUnderbase
+    ?`<b>${en} ink${en>1?'s':''}</b>${offN?` (${offN} off)`:''} → ${en} screens on lights, ${en+1} on darks (UB)`
+    :`<b>${en} ink${en>1?'s':''}</b>${offN?` (${offN} off)`:''} → ${en} screen${en>1?'s':''} · no underbase (soft-hand)`)
+    :'<b>all inks off</b> — nothing prints'):'—';
 }
 function refresh(){
   const gp=garmentPhotos();
@@ -2050,7 +2054,20 @@ $('resetFit').onclick=()=>{
   syncFitInputs();refresh();buildBoard();
 };
 $('fabricBlend').onchange=e=>{state.fabricBlend=e.target.checked;refresh();buildBoard();};
-$('autoUnderbase').onchange=e=>{state.autoUnderbase=e.target.checked;refresh();buildBoard();};
+$('autoUnderbase').onchange=e=>{
+  state.autoUnderbase=e.target.checked;
+  $('noUnderbase').checked=!state.autoUnderbase;
+  refresh();buildBoard();
+};
+/* v7.8: NO UNDERBASE = the customer-facing soft-hand toggle. On: no white
+   underbase anywhere + fabric shows through the ink. Off: underbase on darks
+   + bright opaque ink (the new default look). */
+$('noUnderbase').onchange=e=>{
+  const on=e.target.checked;
+  state.autoUnderbase=!on;$('autoUnderbase').checked=!on;
+  state.fabricBlend=on;$('fabricBlend').checked=on;
+  refreshInkList();refresh();buildBoard();
+};
 $('boardMode').onchange=e=>{state.boardMode=e.target.value;buildBoard();};
 $('buildBoard').onclick=buildBoard;
 $('dlBoard').onclick=downloadBoard;
@@ -2482,7 +2499,9 @@ function renderSummaryTo(pg){
   });
   const n=state.artInks.length?enabledAssign().length:1;
   ctx.fillStyle='#98A0A6';ctx.font='500 14px "JetBrains Mono", monospace';
-  ctx.fillText(n+' ink'+(n!==1?'s':'')+' · '+(n+1)+' screens on darks (white UB) · '+n+' on lights',50,Math.max(910,ly+64));
+  ctx.fillText(state.autoUnderbase
+    ?(n+' ink'+(n!==1?'s':'')+' · '+(n+1)+' screens on darks (white UB) · '+n+' on lights')
+    :(n+' ink'+(n!==1?'s':'')+' · '+n+' screen'+(n!==1?'s':'')+' · NO UNDERBASE — soft-hand'),50,Math.max(910,ly+64));
   drawPageFooter(ctx,W,H,'Attach to the daily rundown. Burn screens from the PMS list above — blocks are shelf locations.');
 }
 function renderSummary(){renderSummaryTo($('sumCanvas'));}
@@ -2582,7 +2601,7 @@ function renderInkSimple(){
       el.appendChild(c2);
     }
   });
-  const chg=document.createElement('button');chg.className='link';chg.textContent='change inks';
+  const chg=document.createElement('button');chg.className='btn ghost sm';chg.style.marginLeft='auto';chg.textContent='CHANGE INKS →';
   chg.onclick=()=>setMode('adv');
   el.appendChild(chg);
 }
