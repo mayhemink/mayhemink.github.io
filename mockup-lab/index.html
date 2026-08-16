@@ -484,19 +484,31 @@
       <div class="set-artnote" id="artSetNote"></div>
     </div>
 
-    <div class="panel" data-tabs="mock" id="pColors">
-      <h3><span class="pn">3</span> Shirts</h3>
-      <p class="desc">Type a style + color — like "6210 stone" — and hit Enter to add it.</p>
-      <div class="set-tabs" id="setTabs"></div>
-      <div class="searchwrap">
-        <input type="text" id="searchBox" class="searchbox" placeholder="⌕  search any style + color…" autocomplete="off">
-        <div class="search-results" id="searchResults"></div>
+    <div class="panel" data-tabs="mock" id="pPlace">
+      <h3><span class="pn">3</span> Placement</h3>
+      <p class="desc">Which side you're setting up, and where the print sits. Set this right after the art goes in.</p>
+      <label class="lbl" style="margin-top:0;">Side</label>
+      <div class="segmented" style="width:100%;display:flex;margin-bottom:10px;">
+        <button id="sideFront" class="active" style="flex:1;">FRONT</button>
+        <button id="sideBack" style="flex:1;">BACK</button>
       </div>
-      <div class="set-items" id="setItems"></div>
-      <div class="set-empty" id="setEmpty">Set is empty — search above to add garments.</div>
-      <div class="btnrow">
-        <button class="btn ghost sm" id="clearSet">Clear set</button>
-        <button class="btn ghost sm" id="removeSet">Delete set</button>
+      <label class="lbl">Where does it print?</label>
+      <div class="locbtns" id="locBtns"></div>
+      <div class="rulebox">
+        <div class="rb-title" id="ruleTitle">rule</div>
+        <div class="row2">
+          <div>
+            <label class="lbl" style="margin-top:0;">On line</label>
+            <select id="ruleAnchor">
+              <option value="center">Center</option>
+              <option value="leftChest">Left chest</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl" style="margin-top:0;">Drop below collar (in)</label>
+            <input type="number" id="ruleDrop" step="0.25" value="2">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -539,9 +551,10 @@
     <div class="stepper" id="stepper" data-tabs="mock">
       <span data-step="1">1 · JOB</span><i>→</i>
       <span data-step="2">2 · LOGOS</span><i>→</i>
-      <span data-step="3">3 · SHIRTS</span><i>→</i>
-      <span data-step="4">4 · INKS</span><i>→</i>
-      <span data-step="5">5 · DOWNLOAD</span>
+      <span data-step="3">3 · PLACE</span><i>→</i>
+      <span data-step="4">4 · SHIRTS</span><i>→</i>
+      <span data-step="5">5 · INKS</span><i>→</i>
+      <span data-step="6">6 · DOWNLOAD</span>
     </div>
     <div class="drawbanner" id="drawBanner"></div>
     <div class="resumebar" id="resumeBar" hidden data-tabs="mock">
@@ -591,7 +604,7 @@
     </div>
 
     <div class="panel below-card" data-tabs="mock" id="pDownloads">
-      <h3><span class="pn">5</span> Downloads</h3>
+      <h3><span class="pn">6</span> Downloads</h3>
       <p class="desc" id="boardDesc">Add shirts to build the job.</p>
       <div class="bigdl">
         <button class="btn" id="dlJobZip">⬇ SAVE THE WHOLE JOB — ONE FILE</button>
@@ -615,8 +628,24 @@
 
   <!-- RIGHT COLUMN -->
   <aside class="col-r" data-tabs="mock">
+    <div class="panel" data-tabs="mock" id="pColors">
+      <h3><span class="pn">4</span> Shirts</h3>
+      <p class="desc">Type a style + color — like "6210 stone" — and hit Enter to add it.</p>
+      <div class="set-tabs" id="setTabs"></div>
+      <div class="searchwrap">
+        <input type="text" id="searchBox" class="searchbox" placeholder="⌕  search any style + color…" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <div class="set-items" id="setItems"></div>
+      <div class="set-empty" id="setEmpty">Set is empty — search above to add garments.</div>
+      <div class="btnrow">
+        <button class="btn ghost sm" id="clearSet">Clear set</button>
+        <button class="btn ghost sm" id="removeSet">Delete set</button>
+      </div>
+    </div>
+
     <div class="panel" id="pInks">
-      <h3><span class="pn">4</span> Ink colors</h3>
+      <h3><span class="pn">5</span> Ink colors</h3>
       <p class="desc">Two ink setups per job. Click a shirt to move it to the other setup · click a swatch to turn that ink OFF.</p>
       <div class="flip-banner" id="flipBanner" hidden>
         <span id="flipMsg">1-color logo — print it in <b>WHITE</b> on the dark shirts?</span>
@@ -630,34 +659,6 @@
       <div class="checkline" id="lineNoUB"><input type="checkbox" id="noUnderbase"><span><b>NO UNDERBASE</b> — soft-hand / vintage look (ink soaks into the shirt)</span></div>
       <div class="checkline" id="lineFabric"><input type="checkbox" id="fabricBlend"><span>Show fabric texture through the ink</span></div>
       <div class="checkline" id="lineUB"><input type="checkbox" id="autoUnderbase" checked><span>White underbase on dark shirts (+1 screen)</span></div>
-    </div>
-
-    <div class="panel" id="pPlace">
-      <h3>Placement</h3>
-      <p class="desc">Which side you're setting up, and where the print sits.</p>
-      <label class="lbl" style="margin-top:0;">Side</label>
-      <div class="segmented" style="width:100%;display:flex;margin-bottom:10px;">
-        <button id="sideFront" class="active" style="flex:1;">FRONT</button>
-        <button id="sideBack" style="flex:1;">BACK</button>
-      </div>
-      <label class="lbl">Where does it print?</label>
-      <div class="locbtns" id="locBtns"></div>
-      <div class="rulebox">
-        <div class="rb-title" id="ruleTitle">rule</div>
-        <div class="row2">
-          <div>
-            <label class="lbl" style="margin-top:0;">On line</label>
-            <select id="ruleAnchor">
-              <option value="center">Center</option>
-              <option value="leftChest">Left chest</option>
-            </select>
-          </div>
-          <div>
-            <label class="lbl" style="margin-top:0;">Drop below collar (in)</label>
-            <input type="number" id="ruleDrop" step="0.25" value="2">
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="panel" id="pSize">
@@ -684,7 +685,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.0 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2872,10 +2873,13 @@ $('modeToggle').onclick=()=>setMode(uiMode==='simple'?'adv':'simple');
    right (step 4), downloads last (step 5). __inkTouched flips once the user
    actually works the ink/placement panel, so the coaching glow moves on. */
 function currentStep(){
-  if(!window.__userArt&&!activeSet().items.length)return 2;
-  if(!activeSet().items.length)return 3;
-  if(!window.__inkTouched)return 4;
-  return 5;
+  /* v8.1 flow: art first, then WHERE it prints, then what it prints on. */
+  const hasArt=!!window.__userArt, hasShirts=!!activeSet().items.length;
+  if(!hasArt)return 2;
+  if(!window.__placeTouched&&!hasShirts)return 3;
+  if(!hasShirts)return 4;
+  if(!window.__inkTouched)return 5;
+  return 6;
 }
 function updateStepper(){
   const cur=currentStep();
@@ -2884,21 +2888,25 @@ function updateStepper(){
     el.classList.toggle('now',n===cur);
     el.classList.toggle('done',n<cur);
   });
-  [['pArt',2],['pColors',3],['pInks',4],['pDownloads',5]].forEach(([id,n])=>{
+  [['pArt',2],['pPlace',3],['pColors',4],['pInks',5],['pDownloads',6]].forEach(([id,n])=>{
     const el=$(id);if(el)el.classList.toggle('glow',uiMode==='simple'&&n===cur);
   });
 }
-/* any real interaction inside the ink/placement panel advances the coaching */
+/* v8.1: placement + size advance the PLACE step, the ink panel advances INKS */
 (function(){
-  const mark=e=>{
+  const marker=flag=>e=>{
     if(!e.target.closest('button,select,input'))return;
-    if(!window.__inkTouched){window.__inkTouched=true;updateStepper();}
+    if(!window[flag]){window[flag]=true;updateStepper();}
   };
-  ['pInks','pPlace','pSize'].forEach(id=>{
+  const wire=(id,flag)=>{
     const p=document.getElementById(id);if(!p)return;
-    p.addEventListener('change',mark);
-    p.addEventListener('click',mark);
-  });
+    const m=marker(flag);
+    p.addEventListener('change',m);
+    p.addEventListener('click',m);
+  };
+  wire('pPlace','__placeTouched');
+  wire('pSize','__placeTouched');
+  wire('pInks','__inkTouched');
 })();
 
 function setHasDarkGarment(){
