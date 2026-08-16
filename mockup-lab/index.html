@@ -246,9 +246,11 @@
   .searchbox:focus{border-color:var(--accent);outline:none;}
   .search-results{
     position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0d0d0f;border:1px solid var(--line2);
-    border-radius:4px;z-index:40;max-height:320px;overflow:auto;display:none;box-shadow:0 10px 30px rgba(0,0,0,.6);
+    border-radius:4px;z-index:40;max-height:440px;overflow:auto;display:none;box-shadow:0 10px 30px rgba(0,0,0,.6);
   }
   .search-results.show{display:block;}
+  .sr-count{position:sticky;top:0;background:#0d0d0f;font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:.06em;color:var(--muted);padding:5px 10px;border-bottom:1px solid #202024;z-index:1;}
   .sr-item{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:7px 10px;cursor:pointer;border-bottom:1px solid #202024;}
   .sr-item:last-child{border-bottom:none;}
   .sr-item:hover,.sr-item.hot{background:var(--surface2);}
@@ -688,7 +690,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.2 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.3 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1945,9 +1947,19 @@ function searchGarments(q){
     });
     if(ok)scored.push({g,score});
   });
-  return scored.sort((a,b)=>b.score-a.score||a.g.colorName.localeCompare(b.g.colorName)).slice(0,12).map(x=>x.g);
+  return scored.sort((a,b)=>b.score-a.score||a.g.colorName.localeCompare(b.g.colorName)).slice(0,120).map(x=>x.g);
 }
-function thumbCanvas(photo,w,h){
+/* v8.3: pass lazy=true and the thumb only downloads its photo once it scrolls
+   into view — lets the search dropdown list a whole style (80+ colorways)
+   without fetching every photo up front. */
+const __thumbIO=('IntersectionObserver' in window)?new IntersectionObserver(function(ents){
+  ents.forEach(function(en){
+    if(!en.isIntersecting)return;
+    const fn=en.target.__loadThumb;
+    if(fn){en.target.__loadThumb=null;__thumbIO.unobserve(en.target);fn();}
+  });
+},{rootMargin:'140px'}):null;
+function thumbCanvas(photo,w,h,lazy){
   const c=document.createElement('canvas');c.width=w;c.height=h;
   const draw=()=>{
     const sc=Math.max(w/photo.canvas.width,h/photo.canvas.height);
@@ -1956,7 +1968,11 @@ function thumbCanvas(photo,w,h){
   };
   if(photo){
     if(photo.canvas)draw();
-    else ensurePhoto(photo).then(()=>{if(photo.canvas)draw();});
+    else{
+      const load=()=>ensurePhoto(photo).then(()=>{if(photo.canvas)draw();});
+      if(lazy&&__thumbIO){c.__loadThumb=load;__thumbIO.observe(c);}
+      else load();
+    }
   }
   return c;
 }
@@ -2041,9 +2057,14 @@ function renderSearchResults(){
     d.innerHTML=`<div><div class="sr-name">No match</div><div class="sr-style">That style isn't in the catalog yet — it can be added through Style Lab.</div></div>`;
     el.appendChild(d);el.classList.add('show');return;
   }
+  if(results.length>8){
+    const n=document.createElement('div');n.className='sr-count';
+    n.textContent=results.length+' matches — scroll to browse';
+    el.appendChild(n);
+  }
   results.forEach((g,i)=>{
     const d=document.createElement('div');d.className='sr-item'+(i===srHot?' hot':'');
-    d.appendChild(thumbCanvas(g.front||g.back,34,40));
+    d.appendChild(thumbCanvas(g.front||g.back,34,40,true));
     const mid=document.createElement('div');
     mid.innerHTML=`<div class="sr-name">${g.colorName}</div><div class="sr-style">${(STYLES[g.styleKey]||{}).name||g.styleKey}${g.front&&g.back?' · F+B':g.front?' · F only':' · B only'}</div>`;
     d.appendChild(mid);
@@ -2053,6 +2074,8 @@ function renderSearchResults(){
     el.appendChild(d);
   });
   el.classList.add('show');
+  const hot=el.querySelector('.sr-item.hot');
+  if(hot&&hot.scrollIntoView)hot.scrollIntoView({block:'nearest'});
 }
 
 /* ================= BOARD ================= */
