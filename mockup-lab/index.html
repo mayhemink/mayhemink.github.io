@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v7.6 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.8 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -181,6 +181,16 @@
   }
   .checkline{display:flex;align-items:center;gap:8px;font-size:12.5px;margin-top:10px;color:var(--ink);}
   .checkline input{accent-color:var(--accent);width:15px;height:15px;}
+  /* v8.8 DTF FULL COLOR — printed transfer, no screens, one process-colour swatch */
+  .dtf-line{align-items:flex-start;padding:9px 10px;background:var(--surface2);
+    border:1px solid var(--line2);border-radius:4px;cursor:pointer;margin-bottom:2px;}
+  .dtf-line.on{border-color:var(--accent2);}
+  .dtf-line input{margin-top:1px;flex:none;}
+  .dtf-line small{display:block;color:var(--muted);font-size:11px;margin-top:2px;}
+  .dtf-sw{width:26px;height:19px;border-radius:3px;flex:none;margin-top:0;
+    border:1px solid rgba(255,255,255,.45);
+    background:linear-gradient(118deg,#00AEEF 0%,#EC008C 52%,#FFF200 100%);}
+  body.method-dtf #lineUB,body.method-dtf #lineNoUB{display:none;}
 
   .locbtns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;}
   .locbtns button{
@@ -653,6 +663,11 @@
     <div class="panel" id="pInks">
       <h3><span class="pn">5</span> Ink colors</h3>
       <p class="desc">Two ink setups. Drag a shirt into the other bucket to change how it prints · click a shirt to see it on the mockup.</p>
+      <label class="checkline dtf-line" id="lineDTF" title="Direct-to-film transfer: full process colour, no screens, no separations. Keep setting inks — the mockup obeys them; the print sheet ships one full-colour swatch.">
+        <input type="checkbox" id="dtfMode">
+        <span class="dtf-sw"></span>
+        <span><b>DTF — FULL COLOR</b><small>Printed transfer · no screens. The mockup keeps every ink you set; the print sheet ships one full-color swatch.</small></span>
+      </label>
       <div class="flip-banner" id="flipBanner" hidden>
         <span id="flipMsg">1-color logo — print it in <b>WHITE</b> on the dark shirts?</span>
         <button class="btn sm" id="flipYes">Yes</button>
@@ -979,6 +994,7 @@ const state={
   loc:{front:'fullFront', back:'fullBack'},
   fit:{}, // per side:loc {widthIn, rot, nudgeX, nudgeY}
   fabricBlend:false, autoUnderbase:true, boardMode:'pair',
+  printMethod:'screen',   /* v8.8: 'screen' | 'dtf' — room for vinyl/embroidery later */
   calibStep:-1, showAnchors:false, hosted:false
 };
 /* guided calibration walkthrough — each step tells the person exactly what to
@@ -1337,11 +1353,46 @@ function screensFor(photo,side,loc){
     dark=regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH);
   }
   dark=effectiveDark(photo,dark);
+  /* v8.8: DTF has no screens and no separate underbase — the transfer carries
+     its own white. Ink assignment (and therefore the mockup) is untouched. */
+  if(isDTF())return {inks,ub:0,total:0,dark,dtf:true};
   const ub=(inks>0&&state.autoUnderbase&&dark)?1:0;
   return {inks,ub,total:inks+ub,dark};
 }
 function inkIdxFor(a,dark){return (dark&&a.darkIdx!=null)?a.darkIdx:a.idx;}
+
+/* ================= v8.8 DTF — FULL COLOR =================
+   A print-method switch, not an ink change. Nothing about how the art renders
+   moves: live ink still recolours the design and the dark-shirt setup is still
+   independent. What changes is what the SHOP sees — DTF is one printed transfer,
+   so screens go to zero, the underbase swatch disappears (the film carries its
+   own white), and the swatch strip collapses to ONE process-colour chip.
+   One chip per distinct transfer FILE: normally one for the whole job, two only
+   when the dark-shirt inks were actually changed — because that really is a
+   second file the press operator has to load. */
+function isDTF(){return state.printMethod==='dtf';}
+function dtfVariantsDiffer(){
+  return enabledAssign().some(function(a){return a.darkIdx!=null&&a.darkIdx!==a.idx;});
+}
+/* customer=true on approval pages — the customer doesn't care which transfer
+   file it is, only that it prints in full color. The shop sheet gets the file. */
+function dtfSwatch(dark,customer){
+  return {dtf:true,hex:'#00AEEF',l1:'DTF FULL COLOR',
+    l2:customer?'full-color printed transfer'
+      :(dtfVariantsDiffer()?(dark?'dark-shirt file':'light-shirt file'):'one file · whole job')};
+}
+/* CMY sweep — reads as "process colour" to a printer without going clipart. */
+function dtfGrad(ctx,x,y,w,h){
+  const g=ctx.createLinearGradient(x,y+h,x+w,y);
+  g.addColorStop(0,'#00AEEF');g.addColorStop(0.52,'#EC008C');g.addColorStop(1,'#FFF200');
+  return g;
+}
+function screensText(sc){
+  if(sc&&sc.dtf)return 'DTF full color · no screens';
+  return sc.total+' screen'+(sc.total===1?'':'s');
+}
 function pmsCalloutText(sc){
+  if(sc&&sc.dtf)return 'DTF full color transfer';
   const names=enabledAssign().map(a=>{
     const i=inkIdxFor(a,sc.dark),s=STD_INKS[PMS[i][0]];
     return `PMS ${PMS[i][0]}${s?' '+s[0]:''} (${PMS[i][2]})`;
@@ -1553,6 +1604,13 @@ function refreshInkList(){
   const tot=state.artInks.length;
   const en=tot?enabledAssign().length:0;
   const offN=tot-en;
+  if(isDTF()){
+    $('screensPill').innerHTML=tot&&en
+      ?'<b>DTF — FULL COLOR</b> · no screens · '+(dtfVariantsDiffer()
+        ?'2 transfer files (light + dark shirts)':'1 transfer file for the whole job')
+      :'<b>DTF — FULL COLOR</b> · no screens';
+    return;
+  }
   $('screensPill').innerHTML=tot?(en?(state.autoUnderbase
     ?'<b>'+en+' ink'+(en>1?'s':'')+'</b>'+(offN?' ('+offN+' off)':'')+' \u2192 '+en+' screen'+(en>1?'s':'')+' standard \u00b7 '+(en+1)+' on dark shirts (white underbase)'
     :'<b>'+en+' ink'+(en>1?'s':'')+'</b>'+(offN?' ('+offN+' off)':'')+' \u2192 '+en+' screen'+(en>1?'s':'')+' \u00b7 no underbase (soft-hand)')
@@ -1675,7 +1733,7 @@ function refresh(){
   const s=STYLES[photo.styleKey]||{name:photo.styleKey};
   const sc=screensFor(photo,state.side,loc);
   $('previewLabel').innerHTML=`<b>${s.name}</b> · ${photo.colorName} · ${state.side==='front'?'Front':'Back'} · ${locLabel(state.side)}`;
-  $('previewScreens').textContent=`${sc.inks} ink + ${sc.ub} UB = ${sc.total} screens`;
+  $('previewScreens').textContent=sc.dtf?`${sc.inks} ink${sc.inks===1?'':'s'} · DTF full color · no screens`:`${sc.inks} ink + ${sc.ub} UB = ${sc.total} screens`;
   const pl=computePlacement(photo,state.side,loc);
   if(pl){
     const art=state.side==='front'?state.artF:state.artB;
@@ -2140,7 +2198,7 @@ function buildBoard(){
     const sc=screensFor(main,side,state.loc[side]);
     const body=document.createElement('div');body.className='cbody';
     body.innerHTML=`<div class="cname">${main.colorName}</div>
-      <div class="csub">${s.name} · ${s.sub}<br>${pmsCalloutText(sc)}<br>${sc.inks} ink${sc.inks>1?'s':''}${sc.ub?' + <span class="ub">white UB</span>':''} = ${sc.total} screens</div>`;
+      <div class="csub">${s.name} · ${s.sub}<br>${pmsCalloutText(sc)}<br>${sc.dtf?`${sc.inks} ink${sc.inks>1?'s':''} in the art · <span class="ub">no screens</span>`:`${sc.inks} ink${sc.inks>1?'s':''}${sc.ub?' + <span class="ub">white UB</span>':''} = ${sc.total} screens`}</div>`;
     const dl=document.createElement('button');dl.className='btn ghost sm cdl';dl.textContent='PNG';
     dl.onclick=()=>downloadCanvas(cvs[0],`${slug(s.name)}-${slug(main.colorName)}.png`);
     body.appendChild(dl);
@@ -2251,7 +2309,7 @@ function downloadBoard(){
     }
     ctx.fillText(line1,x+14,y+drawH+66);
     if(line2)ctx.fillText(line2,x+14,y+drawH+84);
-    ctx.fillText(`${sc.total} screens`,x+14,y+drawH+(line2?102:84));
+    ctx.fillText(screensText(sc),x+14,y+drawH+(line2?102:84));
     stampWatermark(ctx,x,y,cellW,cellH,'rgba(19,21,23,0.0375)',20);
   });
   ctx.fillStyle='#666';ctx.font='500 14px "JetBrains Mono", monospace';
@@ -2504,6 +2562,20 @@ $('noUnderbase').onchange=e=>{
   state.fabricBlend=on;$('fabricBlend').checked=on;
   refreshInkList();refresh();buildBoard();
 };
+/* v8.8: DTF FULL COLOR — a print-METHOD switch. It never touches ink assignment,
+   so the mockup renders identically; only the shop-facing counts and swatches
+   change. Screens go to 0, the underbase lines hide, the strip becomes one chip. */
+function syncMethodUI(){
+  const on=isDTF();
+  document.body.classList.toggle('method-dtf',on);
+  const c=$('dtfMode');if(c)c.checked=on;
+  const l=$('lineDTF');if(l)l.classList.toggle('on',on);
+}
+$('dtfMode').onchange=e=>{
+  state.printMethod=e.target.checked?'dtf':'screen';
+  syncMethodUI();refreshInkList();refresh();buildBoard();
+};
+syncMethodUI();
 $('boardMode').onchange=e=>{state.boardMode=e.target.value;buildBoard();};
 $('buildBoard').onclick=buildBoard;
 $('dlBoard').onclick=()=>ensureSetPhotos().then(downloadBoard);
@@ -2718,16 +2790,18 @@ function drawPageFooter(ctx,W,H,note){
    draws; callers anchor the block using lay.rows*lay.rowH. */
 function layoutInkChips(ctx,maxW,dark,ub){
   const list=enabledAssign();
-  const n=list.length+(ub?1:0);
+  const dtf=isDTF();
+  const n=dtf?1:list.length+(ub?1:0);
   const small=n>4;
   const box=small?22:30,f1=small?11:13,f2=small?9.5:11,rowH=small?34:40,gap=small?12:18;
-  const items=list.map(a=>{
+  /* v8.8: DTF collapses the whole strip to one process-colour chip */
+  const items=dtf?[dtfSwatch(dark,true)]:list.map(a=>{
     const i=inkIdxFor(a,dark),p=PMS[i],st=STD_INKS[p[0]];
     const l1=st?(st[1]?'★ ':'')+st[0]:'PMS '+p[0];
     const l2=(st?'PMS '+p[0]+' · ':'')+p[2]+((i!==a.idx)?' · swap':'');
     return {hex:p[1],l1,l2};
   });
-  if(ub)items.push({hex:'#FFFFFF',l1:'WHITE UNDERBASE',l2:'on dark shirts'});
+  if(!dtf&&ub)items.push({hex:'#FFFFFF',l1:'WHITE UNDERBASE',l2:'on dark shirts'});
   const cells=[];let cx=0,cy=0,rows=items.length?1:0;
   items.forEach(it=>{
     ctx.font='700 '+f1+'px "JetBrains Mono", monospace';const w1=ctx.measureText(it.l1).width;
@@ -2741,8 +2815,10 @@ function layoutInkChips(ctx,maxW,dark,ub){
 }
 function drawInkChipsL(ctx,x,y,lay){
   lay.cells.forEach(c=>{
-    ctx.fillStyle=c.hex;ctx.fillRect(x+c.x,y+c.y,lay.box,lay.box);
-    ctx.strokeStyle='#CFCFCB';ctx.lineWidth=1;ctx.strokeRect(x+c.x,y+c.y,lay.box,lay.box);
+    ctx.fillStyle=c.dtf?dtfGrad(ctx,x+c.x,y+c.y,lay.box,lay.box):c.hex;
+    ctx.fillRect(x+c.x,y+c.y,lay.box,lay.box);
+    ctx.strokeStyle=c.dtf?'#4B9CD3':'#CFCFCB';ctx.lineWidth=c.dtf?2:1;
+    ctx.strokeRect(x+c.x,y+c.y,lay.box,lay.box);
     ctx.fillStyle='#131517';ctx.font='700 '+lay.f1+'px "JetBrains Mono", monospace';
     ctx.fillText(c.l1,x+c.x+lay.box+8,y+c.y+(lay.box>24?13:10));
     ctx.fillStyle='#888';ctx.font='500 '+lay.f2+'px "JetBrains Mono", monospace';
@@ -2838,7 +2914,7 @@ function approvalFor(item,ret){
   ctx.fillText(nm,50,992);
   const nw=ctx.measureText(nm).width;
   ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono", monospace';
-  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?firstSc.total+' screens':''),50+nw+30,992);
+  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?screensText(firstSc):''),50+nw+30,992);
   drawPageFooter(ctx,W,H,'Approve garment, artwork size, placement, and ink colors before production.');
   if(ret)return pg;
   downloadCanvas(pg,'approval-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
@@ -2877,13 +2953,15 @@ function shirtTileColor(photo){
 function renderSummaryTo(pg){
   const W=1500,H=1080;pg.width=W;pg.height=H;
   const ctx=pg.getContext('2d');
-  drawPageHeader(ctx,W,'PRODUCTION PRINT SUMMARY — ONE TILE PER PRESS SETUP');
+  drawPageHeader(ctx,W,isDTF()?'PRODUCTION PRINT SUMMARY — DTF FULL COLOR':'PRODUCTION PRINT SUMMARY — ONE TILE PER PRESS SETUP');
   const items=activeSet().items.map(function(it){return {it:it,g:itemGarment(it)};})
     .filter(function(x){return x.g&&(x.g.front||x.g.back);});
   const sides=[];
   if(artFor('front'))sides.push('front');
   if(artFor('back'))sides.push('back');
-  const foot='One tile per press setup · the background stripes are every shirt color in that run · art shown in that setup’s exact inks · underbase swatch first when it prints.';
+  const foot=isDTF()
+    ?'DTF FULL COLOR — printed transfer, no screens and no separations. One tile per transfer file · the background stripes are every shirt color it presses onto · the art is shown exactly as it prints.'
+    :'One tile per press setup · the background stripes are every shirt color in that run · art shown in that setup’s exact inks · underbase swatch first when it prints.';
   if(!items.length||!sides.length){
     ctx.fillStyle='#98A0A6';ctx.font='700 20px "JetBrains Mono", monospace';ctx.textAlign='center';
     ctx.fillText(!sides.length?'Load art to build the print summary':'Add shirts to the job — the press setups show here',W/2,H/2);
@@ -2899,12 +2977,19 @@ function renderSummaryTo(pg){
     Promise.all(pend.map(ensurePhoto)).then(function(){renderSummaryTo(pg);});
     return;
   }
-  /* group by ink setup (same membership as the buckets) */
+  /* group by ink setup (same membership as the buckets).
+     v8.8: on DTF the grouping is by transfer FILE, not press setup — when the
+     dark-shirt inks were never changed there is only one file, so the two
+     buckets collapse into a single tile across every shirt. */
   const groups=[];
   const lightG=items.filter(function(x){return !itemUsesDark(x.it);});
   const darkG=items.filter(function(x){return itemUsesDark(x.it);});
-  if(lightG.length)groups.push({key:'light',label:'STANDARD INKS',items:lightG,dark:false});
-  if(darkG.length)groups.push({key:'dark',label:'DARK-SHIRT INKS',items:darkG,dark:true});
+  if(isDTF()&&!dtfVariantsDiffer()){
+    groups.push({key:'light',label:'DTF — FULL COLOR',items:items,dark:false});
+  }else{
+    if(lightG.length)groups.push({key:'light',label:isDTF()?'DTF — LIGHT-SHIRT FILE':'STANDARD INKS',items:lightG,dark:false});
+    if(darkG.length)groups.push({key:'dark',label:isDTF()?'DTF — DARK-SHIRT FILE':'DARK-SHIRT INKS',items:darkG,dark:true});
+  }
   const gx=50,gy=168,gw=1400,gh=842,gap=16;
   const tileW=groups.length===2?(gw-gap)/2:gw;
   const headH=34,swH=58;
@@ -2920,7 +3005,8 @@ function renderSummaryTo(pg){
     ctx.fillText(gr.label,tx,gy+22);
     ctx.fillStyle='#98A0A6';ctx.font='700 12px "JetBrains Mono", monospace';
     ctx.textAlign='right';
-    ctx.fillText(gr.items.length+' SHIRT'+(gr.items.length===1?'':'S')+' · '+sc.total+' SCREEN'+(sc.total===1?'':'S'),tx+tileW,gy+22);
+    ctx.fillText(gr.items.length+' SHIRT'+(gr.items.length===1?'':'S')+' · '
+      +(sc.dtf?'NO SCREENS':sc.total+' SCREEN'+(sc.total===1?'':'S')),tx+tileW,gy+22);
     ctx.textAlign='left';
     /* striped tile */
     const ty=gy+headH;
@@ -2973,11 +3059,15 @@ function renderSummaryTo(pg){
     /* swatch strip below the tile, on the page background */
     const en=enabledAssign();
     const swatches=[];
-    if(gr.dark&&sc.ub)swatches.push({hex:'#FFFFFF',l1:'UNDERBASE',l2:'prints first',ub:true});
-    en.forEach(function(a){
-      const ii=inkIdxFor(a,gr.dark),p=PMS[ii],st=STD_INKS[p[0]];
-      swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]});
-    });
+    if(isDTF()){
+      swatches.push(dtfSwatch(gr.dark));   /* v8.8: one process-colour chip, that's the whole strip */
+    }else{
+      if(gr.dark&&sc.ub)swatches.push({hex:'#FFFFFF',l1:'UNDERBASE',l2:'prints first',ub:true});
+      en.forEach(function(a){
+        const ii=inkIdxFor(a,gr.dark),p=PMS[ii],st=STD_INKS[p[0]];
+        swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]});
+      });
+    }
     let sx=tx,sy=ty+tileH+14;
     const swz=26;
     swatches.forEach(function(s2){
@@ -2985,8 +3075,8 @@ function renderSummaryTo(pg){
       ctx.font='500 10px "JetBrains Mono", monospace';const w2=ctx.measureText(s2.l2).width;
       const cw=swz+8+Math.max(56,w1+6,w2+6)+16;
       if(sx>tx&&sx+cw>tx+tileW){return;}   /* clip overflow — approval page carries the full list */
-      ctx.fillStyle=s2.hex;ctx.fillRect(sx,sy,swz,swz);
-      ctx.strokeStyle=s2.ub?'#7BAFD4':'rgba(255,255,255,.5)';ctx.lineWidth=s2.ub?2.5:1;
+      ctx.fillStyle=s2.dtf?dtfGrad(ctx,sx,sy,swz,swz):s2.hex;ctx.fillRect(sx,sy,swz,swz);
+      ctx.strokeStyle=(s2.ub||s2.dtf)?'#7BAFD4':'rgba(255,255,255,.5)';ctx.lineWidth=(s2.ub||s2.dtf)?2.5:1;
       ctx.strokeRect(sx,sy,swz,swz);
       ctx.fillStyle='#E8EAEC';ctx.font='700 12px "JetBrains Mono", monospace';
       ctx.fillText(s2.l1,sx+swz+8,sy+11);
@@ -3243,7 +3333,7 @@ function serializeJob(){
   return {v:1,when:Date.now(),
     customer:$('jobCustomer').value,quote:$('jobQuote').value,
     activeSetIdx,loc:state.loc,fit:state.fit,
-    fabricBlend:state.fabricBlend,autoUnderbase:state.autoUnderbase,
+    fabricBlend:state.fabricBlend,autoUnderbase:state.autoUnderbase,printMethod:state.printMethod,
     userArt:!!window.__userArt,
     sets:SETS.map(st=>({name:st.name,items:st.items,dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
       artInks:st.artInks||[],
@@ -3278,6 +3368,7 @@ async function restoreJob(j){
   state.fabricBlend=!!j.fabricBlend;$('fabricBlend').checked=state.fabricBlend;
   state.autoUnderbase=j.autoUnderbase!==false;$('autoUnderbase').checked=state.autoUnderbase;
   $('noUnderbase').checked=!state.autoUnderbase;
+  state.printMethod=(j.printMethod==='dtf')?'dtf':'screen';syncMethodUI();
   window.__userArt=!!j.userArt;
   SETS.length=0;
   for(const st of (j.sets||[])){
