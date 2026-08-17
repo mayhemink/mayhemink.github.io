@@ -242,7 +242,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM STYLE LAB · V1.4 · CALIBRATES IN MOCKUP-LAB CANVAS SPACE</span>
+  <span>MAYHEM STYLE LAB · V1.5 · CALIBRATES IN MOCKUP-LAB CANVAS SPACE</span>
   <span>calibrations save only when the exported styles.json is pushed to the repo</span>
 </footer>
 
@@ -501,20 +501,20 @@ function stepsFor(side){
     {key:'logoScale',short:'10" logo',guide:'logo',label:'4 / 4 — SIZE THE LOGO TO 10 INCHES',how:'Drag the logo onto the chest. Slider or scroll wheel to size it until it looks like a real 10" print, then ✓ confirm.'}
   ];
   const base=[
-    {key:'collarY',short:'collar',guide:'h',label:'1 / '+(frontOK?2:3)+' — COLLAR LINE',how:'Click where the base of the back collar meets the body.'},
+    {key:'collarY',short:'collar',guide:'h',label:'1 / '+(frontOK?2:3)+' — COLLAR LINE',how:'Click where the base of the back collar meets the body. HOODIES: use the bottom edge of the hood — prints measure from there.'},
     {key:'centerX',short:'center',guide:'v',label:'2 / '+(frontOK?2:3)+' — CENTER LINE',how:'Click the vertical center of the shirt.'}
   ];
   if(!frontOK)base.push({key:'logoScale',short:'10" logo',guide:'logo',label:'3 / 3 — SIZE THE LOGO TO 10 INCHES',how:'Drag + size the logo until it looks like a real 10" print, then ✓ confirm.'});
   return base;
 }
 let calSteps=[];
-let calStep=-1,calTemp={},calGuide=null,logoDragging=false,dragOff=null,zoom=1;
+let calStep=-1,calTemp={},calGuide=null,logoDragging=false,dragOff=null,zoom=0.5;   /* v1.5: whole-shirt view is the default */
 const cvEl=$('cv'),frame=$('frame');
 
 function startCalib(){
   if(!sel.style||!curPhotoCanvas){alert('Pick a style (and make sure a photo loads) first.');return;}
   calSteps=stepsFor(sel.side);
-  calStep=0;calTemp={};calGuide=null;zoom=1;
+  calStep=0;calTemp={};calGuide=null;zoom=0.5;
   frame.classList.add('calibrating');
   $('calibBtn').classList.add('on');
   applyZoom();renderChips();render();
@@ -572,10 +572,10 @@ function finishCalib(){
 function renderChips(){
   const steps=calSteps;
   const el=$('chips');el.style.display='flex';el.innerHTML='';
-  [1,2,3].forEach(z=>{
+  [0.5,1,2,3].forEach(z=>{
     const c=document.createElement('span');
     c.className='cchip zoom'+(zoom===z?' zon':'');
-    c.textContent='🔍'+z+'x';
+    c.textContent='🔍'+(z===0.5?'½':z)+'x';
     c.onclick=()=>{zoom=z;applyZoom();renderChips();};
     el.appendChild(c);
   });
