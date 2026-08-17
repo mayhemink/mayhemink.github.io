@@ -614,7 +614,7 @@
       <p class="desc" id="boardDesc">Add shirts to build the job.</p>
       <div class="bigdl">
         <button class="btn" id="dlJobZip">⬇ SAVE THE WHOLE JOB — ONE FILE</button>
-        <button class="btn ghost" id="dlAllApprovals">⬇ APPROVAL PAGES ONLY</button>
+        <button class="btn ghost" id="dlAllApprovals">⬇ CUSTOMER APPROVAL PDF — ONE FILE, A PAGE PER SHIRT</button>
         <button class="btn ghost" id="dlShopSheet">⬇ SHOP PRINT SHEET ONLY</button>
       </div>
       <div class="mrow" id="manifestRow"></div>
@@ -690,7 +690,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.6.2 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.7 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2159,6 +2159,44 @@ function buildBoard(){
   });
 }
 function downloadCanvas(cv,fname){const a=document.createElement('a');a.download=fname;a.href=cv.toDataURL('image/png');a.click();}
+/* ============ v8.7 CUSTOMER APPROVAL PDF ============ */
+/* One PDF per Printavo item group — one page per shirt, the customer scrolls.
+   Vanilla PDF 1.4 writer: JPEG pages embedded via DCTDecode, byte-exact xref. */
+function canvasJpeg(cv){return new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/jpeg',0.92));}
+function pdfFromJpegs(pages){
+  const enc=new TextEncoder();
+  const parts=[];let offset=0;
+  const push=u8=>{parts.push(u8);offset+=u8.length;};
+  const pushS=s=>push(enc.encode(s));
+  const objOff={};
+  pushS('%PDF-1.4\n');
+  push(new Uint8Array([0x25,0xE2,0xE3,0xCF,0xD3,0x0A]));
+  const N=pages.length;
+  objOff[1]=offset;pushS('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+  const kids=pages.map((_,i)=>(3+i*3)+' 0 R').join(' ');
+  objOff[2]=offset;pushS('2 0 obj\n<< /Type /Pages /Kids ['+kids+'] /Count '+N+' >>\nendobj\n');
+  pages.forEach((pg,i)=>{
+    const po=3+i*3,co=4+i*3,io=5+i*3;
+    const W=(pg.w*0.5).toFixed(2),H=(pg.h*0.5).toFixed(2);
+    objOff[po]=offset;
+    pushS(po+' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+W+' '+H+'] /Resources << /XObject << /Im'+i+' '+io+' 0 R >> >> /Contents '+co+' 0 R >>\nendobj\n');
+    const cs='q '+W+' 0 0 '+H+' 0 0 cm /Im'+i+' Do Q';
+    objOff[co]=offset;
+    pushS(co+' 0 obj\n<< /Length '+cs.length+' >>\nstream\n'+cs+'\nendstream\nendobj\n');
+    objOff[io]=offset;
+    pushS(io+' 0 obj\n<< /Type /XObject /Subtype /Image /Width '+pg.w+' /Height '+pg.h+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+pg.data.length+' >>\nstream\n');
+    push(pg.data);
+    pushS('\nendstream\nendobj\n');
+  });
+  const T=2+N*3;
+  const xref=offset;
+  let x='xref\n0 '+(T+1)+'\n0000000000 65535 f \n';
+  for(let n=1;n<=T;n++)x+=String(objOff[n]).padStart(10,'0')+' 00000 n \n';
+  x+='trailer\n<< /Size '+(T+1)+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF\n';
+  pushS(x);
+  return new Blob(parts,{type:'application/pdf'});
+}
+function downloadBlobFile(blob,fname){const a=document.createElement('a');a.download=fname;a.href=URL.createObjectURL(blob);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);}
 function downloadBoard(){
   const set=activeSet();
   const items=boardItems();
@@ -3090,7 +3128,22 @@ $('flipUndo').onclick=()=>{
 $('dlAllApprovals').onclick=()=>{
   const items=activeSet().items;
   if(!items.length){alert('Add shirts to the job first (step 3).');return;}
-  ensureSetPhotos().then(()=>items.forEach((it,i)=>setTimeout(()=>approvalFor(it),i*450)));
+  const b=$('dlAllApprovals'),orig=b.textContent;
+  b.disabled=true;b.textContent='BUILDING THE PDF\u2026';
+  ensureSetPhotos().then(async()=>{
+    try{
+      const pages=[];
+      for(const it of items){
+        const pg=approvalFor(it,true);
+        if(pg)pages.push({data:await canvasJpeg(pg),w:pg.width,h:pg.height});
+      }
+      if(!pages.length)throw 0;
+      const q=($('jobQuote').value||'').trim().replace(/[^0-9A-Za-z]+/g,'-').replace(/(^-|-$)/g,'');
+      downloadBlobFile(pdfFromJpegs(pages),'approvals'+(q?'-'+q:'')+'.pdf');
+      b.textContent='\u2713 ONE FILE \u2014 '+pages.length+' PAGE'+(pages.length>1?'S':'');
+    }catch(e){b.textContent='COULD NOT BUILD \u2014 TRY AGAIN';}
+    setTimeout(()=>{b.textContent=orig;b.disabled=false;},2400);
+  });
 };
 $('dlShopSheet').onclick=()=>$('dlSummary').onclick();
 
@@ -3147,10 +3200,12 @@ async function buildJobZip(){
   const folder=jobFolderName();
   const toU8=cv=>new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/png'));
   const entries=[];
+  const pages=[];
   for(const it of items){
     const pg=approvalFor(it,true);
-    if(pg)entries.push({name:folder+'/approval-'+slug(it.styleKey)+'-'+slug(it.colorName)+'.png',data:await toU8(pg)});
+    if(pg)pages.push({data:await canvasJpeg(pg),w:pg.width,h:pg.height});
   }
+  if(pages.length)entries.push({name:folder+'/customer-approvals.pdf',data:new Uint8Array(await pdfFromJpegs(pages).arrayBuffer())});
   const sum=document.createElement('canvas');
   renderSummaryTo(sum);
   entries.push({name:folder+'/shop-print-sheet.png',data:await toU8(sum)});
@@ -3160,7 +3215,7 @@ $('dlJobZip').onclick=async()=>{
   const items=activeSet().items;
   if(!items.length){alert('Add shirts to the job first (step 3).');return;}
   const b=$('dlJobZip'),orig=b.textContent;
-  b.disabled=true;b.textContent='BUILDING '+(items.length+1)+' FILES…';
+  b.disabled=true;b.textContent='BUILDING\u2026';
   try{
     const z=await buildJobZip();
     const a=document.createElement('a');a.download=z.name;
