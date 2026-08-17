@@ -690,7 +690,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.6.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.6.2 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1577,8 +1577,8 @@ function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;}
 function applyPick(i){
   const a=state.inkAssign[__pickIdx],ink=state.artInks[__pickIdx];
   if(!a||!ink){closeInkPicker();return;}
-  if(inkView==='dark'){a.darkIdx=(i==null||i===a.idx)?null:i;}
-  else{a.idx=i;a.auto=false;a.match=matchPct(pmsDist(ink.r,ink.g,ink.b,i));}
+  if(inkView==='dark'){a.darkIdx=(i==null)?null:i;}
+  else{if(a.darkIdx==null&&i!==a.idx)a.darkIdx=a.idx;a.idx=i;a.auto=false;a.match=matchPct(pmsDist(ink.r,ink.g,ink.b,i));}
   activeSet().inkAssign=state.inkAssign;
   recolorCache.clear();
   closeInkPicker();refreshInkList();refresh();buildBoard();
