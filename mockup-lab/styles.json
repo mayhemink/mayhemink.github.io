@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-17T02:00:00.000Z",
+ "generated": "2026-08-17T04:30:00.000Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -4024,6 +4024,146 @@
      "file": "styles/DM108/front/dm108-white-front.jpg",
      "side": "front",
      "color": "White"
+    },
+    {
+     "file": "styles/DM108/front/dm108-aqua-heather-front.jpg",
+     "side": "front",
+     "color": "Aqua Heather"
+    },
+    {
+     "file": "styles/DM108/back/dm108-aqua-heather-back.jpg",
+     "side": "back",
+     "color": "Aqua Heather"
+    },
+    {
+     "file": "styles/DM108/front/dm108-awareness-pink-heather-front.jpg",
+     "side": "front",
+     "color": "Awareness Pink Heather"
+    },
+    {
+     "file": "styles/DM108/back/dm108-awareness-pink-heather-back.jpg",
+     "side": "back",
+     "color": "Awareness Pink Heather"
+    },
+    {
+     "file": "styles/DM108/front/dm108-deep-orange-heather-front.jpg",
+     "side": "front",
+     "color": "Deep Orange Heather"
+    },
+    {
+     "file": "styles/DM108/back/dm108-deep-orange-heather-back.jpg",
+     "side": "back",
+     "color": "Deep Orange Heather"
+    },
+    {
+     "file": "styles/DM108/front/dm108-duck-brown-heather-front.jpg",
+     "side": "front",
+     "color": "Duck Brown Heather"
+    },
+    {
+     "file": "styles/DM108/back/dm108-duck-brown-heather-back.jpg",
+     "side": "back",
+     "color": "Duck Brown Heather"
+    },
+    {
+     "file": "styles/DM108/front/dm108-electric-purple-heather-front.jpg",
+     "side": "front",
+     "color": "Electric Purple Heather"
+    },
+    {
+     "file": "styles/DM108/back/dm108-electric-purple-heather-back.jpg",
+     "side": "back",
+     "color": "Electric Purple Heather"
+    },
+    {
+     "file": "styles/DM108/front/dm108-flint-blue-heather-front.jpg",
+     "side": "front",
+     "color": "Flint Blue Heather"
+    },
+    {
+     "file": "styles/DM108/back/dm108-flint-blue-heather-back.jpg",
+     "side": "back",
+     "color": "Flint Blue Heather"
+    },
+    {
+     "file": "styles/DM108/front/dm108-gold-heather-front.jpg",
+     "side": "front",
+     "color": "Gold Heather"
+    },
+    {
+     "file": "styles/DM108/back/dm108-gold-heather-back.jpg",
+     "side": "back",
+     "color": "Gold Heather"
+    },
+    {
+     "file": "styles/DM108/front/dm108-grey-frost-front.jpg",
+     "side": "front",
+     "color": "Grey Frost"
+    },
+    {
+     "file": "styles/DM108/back/dm108-grey-frost-back.jpg",
+     "side": "back",
+     "color": "Grey Frost"
+    },
+    {
+     "file": "styles/DM108/front/dm108-heathered-cardinal-front.jpg",
+     "side": "front",
+     "color": "Heathered Cardinal"
+    },
+    {
+     "file": "styles/DM108/back/dm108-heathered-cardinal-back.jpg",
+     "side": "back",
+     "color": "Heathered Cardinal"
+    },
+    {
+     "file": "styles/DM108/front/dm108-heathered-dusty-sage-front.jpg",
+     "side": "front",
+     "color": "Heathered Dusty Sage"
+    },
+    {
+     "file": "styles/DM108/back/dm108-heathered-dusty-sage-back.jpg",
+     "side": "back",
+     "color": "Heathered Dusty Sage"
+    },
+    {
+     "file": "styles/DM108/front/dm108-heathered-forest-green-front.jpg",
+     "side": "front",
+     "color": "Heathered Forest Green"
+    },
+    {
+     "file": "styles/DM108/back/dm108-heathered-forest-green-back.jpg",
+     "side": "back",
+     "color": "Heathered Forest Green"
+    },
+    {
+     "file": "styles/DM108/front/dm108-heathered-kelly-green-front.jpg",
+     "side": "front",
+     "color": "Heathered Kelly Green"
+    },
+    {
+     "file": "styles/DM108/back/dm108-heathered-kelly-green-back.jpg",
+     "side": "back",
+     "color": "Heathered Kelly Green"
+    },
+    {
+     "file": "styles/DM108/front/dm108-heathered-russet-front.jpg",
+     "side": "front",
+     "color": "Heathered Russet"
+    },
+    {
+     "file": "styles/DM108/back/dm108-heathered-russet-back.jpg",
+     "side": "back",
+     "color": "Heathered Russet"
+    },
+    {
+     "file": "styles/DM108/front/dm108-rose-fleck-front.jpg",
+     "side": "front",
+     "color": "Rose Fleck"
+    },
+    {
+     "file": "styles/DM108/back/dm108-rose-fleck-back.jpg",
+     "side": "back",
+     "color": "Rose Fleck"
     }
    ]
   },
