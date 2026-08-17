@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-17T04:04:46.068Z",
+ "generated": "2026-08-17 (S&S channel: +SS4500 SS4500Z, Independent Trading hoodies)",
  "rules": {
   "front": {
    "fullFront": {
@@ -14279,6 +14279,700 @@
      "file": "styles/DT153/back/dt153-wisteria-heather-back.jpg",
      "side": "back",
      "color": "Wisteria Heather"
+    }
+   ]
+  },
+  "SS4500": {
+   "name": "Independent Trading SS4500",
+   "sub": "Midweight Hooded Sweatshirt",
+   "tokens": [
+    "ss4500"
+   ],
+   "bodyLenM": 27,
+   "hood": true,
+   "calib": {
+    "front": {
+     "ppi": 30.303,
+     "centerX": 441.0,
+     "collarY": 180.91,
+     "leftChestX": 581.0,
+     "default": true
+    },
+    "back": {
+     "ppi": 30.303,
+     "centerX": 441.0,
+     "collarY": 300.0,
+     "leftChestX": 441.0,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/SS4500/front/ss4500-alpine-green-front.jpg",
+     "side": "front",
+     "color": "Alpine Green"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-alpine-green-back.jpg",
+     "side": "back",
+     "color": "Alpine Green"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-army-front.jpg",
+     "side": "front",
+     "color": "Army"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-army-back.jpg",
+     "side": "back",
+     "color": "Army"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-army-heather-front.jpg",
+     "side": "front",
+     "color": "Army Heather"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-army-heather-back.jpg",
+     "side": "back",
+     "color": "Army Heather"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-ash-heather-front.jpg",
+     "side": "front",
+     "color": "Ash Heather"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-ash-heather-back.jpg",
+     "side": "back",
+     "color": "Ash Heather"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-black-camo-front.jpg",
+     "side": "front",
+     "color": "Black Camo"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-black-camo-back.jpg",
+     "side": "back",
+     "color": "Black Camo"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-blue-aqua-front.jpg",
+     "side": "front",
+     "color": "Blue Aqua"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-blue-aqua-back.jpg",
+     "side": "back",
+     "color": "Blue Aqua"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-bone-front.jpg",
+     "side": "front",
+     "color": "Bone"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-bone-back.jpg",
+     "side": "back",
+     "color": "Bone"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-brown-front.jpg",
+     "side": "front",
+     "color": "Brown"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-brown-back.jpg",
+     "side": "back",
+     "color": "Brown"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-cement-front.jpg",
+     "side": "front",
+     "color": "Cement"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-cement-back.jpg",
+     "side": "back",
+     "color": "Cement"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-charcoal-front.jpg",
+     "side": "front",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-charcoal-back.jpg",
+     "side": "back",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-charcoal-heather-front.jpg",
+     "side": "front",
+     "color": "Charcoal Heather"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-charcoal-heather-back.jpg",
+     "side": "back",
+     "color": "Charcoal Heather"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-classic-navy-front.jpg",
+     "side": "front",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-classic-navy-back.jpg",
+     "side": "back",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-classic-navy-heather-front.jpg",
+     "side": "front",
+     "color": "Classic Navy Heather"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-classic-navy-heather-back.jpg",
+     "side": "back",
+     "color": "Classic Navy Heather"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-deadwood-tree-camo-front.jpg",
+     "side": "front",
+     "color": "Deadwood Tree Camo"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-deadwood-tree-camo-back.jpg",
+     "side": "back",
+     "color": "Deadwood Tree Camo"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-duck-camo-front.jpg",
+     "side": "front",
+     "color": "Duck Camo"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-duck-camo-back.jpg",
+     "side": "back",
+     "color": "Duck Camo"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-dusty-pink-front.jpg",
+     "side": "front",
+     "color": "Dusty Pink"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-dusty-pink-back.jpg",
+     "side": "back",
+     "color": "Dusty Pink"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-dusty-sage-front.jpg",
+     "side": "front",
+     "color": "Dusty Sage"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-dusty-sage-back.jpg",
+     "side": "back",
+     "color": "Dusty Sage"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-forest-camo-front.jpg",
+     "side": "front",
+     "color": "Forest Camo"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-forest-camo-back.jpg",
+     "side": "back",
+     "color": "Forest Camo"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-forest-green-front.jpg",
+     "side": "front",
+     "color": "Forest Green"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-forest-green-back.jpg",
+     "side": "back",
+     "color": "Forest Green"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-gold-front.jpg",
+     "side": "front",
+     "color": "Gold"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-gold-back.jpg",
+     "side": "back",
+     "color": "Gold"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-grey-heather-front.jpg",
+     "side": "front",
+     "color": "Grey Heather"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-grey-heather-back.jpg",
+     "side": "back",
+     "color": "Grey Heather"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-gunmetal-heather-front.jpg",
+     "side": "front",
+     "color": "Gunmetal Heather"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-gunmetal-heather-back.jpg",
+     "side": "back",
+     "color": "Gunmetal Heather"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-ivory-front.jpg",
+     "side": "front",
+     "color": "Ivory"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-ivory-back.jpg",
+     "side": "back",
+     "color": "Ivory"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-kelly-green-front.jpg",
+     "side": "front",
+     "color": "Kelly Green"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-kelly-green-back.jpg",
+     "side": "back",
+     "color": "Kelly Green"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-kelly-green-heather-front.jpg",
+     "side": "front",
+     "color": "Kelly Green Heather"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-kelly-green-heather-back.jpg",
+     "side": "back",
+     "color": "Kelly Green Heather"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-lavender-front.jpg",
+     "side": "front",
+     "color": "Lavender"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-lavender-back.jpg",
+     "side": "back",
+     "color": "Lavender"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-light-pink-front.jpg",
+     "side": "front",
+     "color": "Light Pink"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-light-pink-back.jpg",
+     "side": "back",
+     "color": "Light Pink"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-light-yellow-front.jpg",
+     "side": "front",
+     "color": "Light Yellow"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-light-yellow-back.jpg",
+     "side": "back",
+     "color": "Light Yellow"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-maroon-front.jpg",
+     "side": "front",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-maroon-back.jpg",
+     "side": "back",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-mint-front.jpg",
+     "side": "front",
+     "color": "Mint"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-mint-back.jpg",
+     "side": "back",
+     "color": "Mint"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-neon-pink-front.jpg",
+     "side": "front",
+     "color": "Neon Pink"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-neon-pink-back.jpg",
+     "side": "back",
+     "color": "Neon Pink"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-orange-front.jpg",
+     "side": "front",
+     "color": "Orange"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-orange-back.jpg",
+     "side": "back",
+     "color": "Orange"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-peach-front.jpg",
+     "side": "front",
+     "color": "Peach"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-peach-back.jpg",
+     "side": "back",
+     "color": "Peach"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-plum-front.jpg",
+     "side": "front",
+     "color": "Plum"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-plum-back.jpg",
+     "side": "back",
+     "color": "Plum"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-purple-front.jpg",
+     "side": "front",
+     "color": "Purple"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-purple-back.jpg",
+     "side": "back",
+     "color": "Purple"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-red-front.jpg",
+     "side": "front",
+     "color": "Red"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-red-back.jpg",
+     "side": "back",
+     "color": "Red"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-royal-front.jpg",
+     "side": "front",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-royal-back.jpg",
+     "side": "back",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-royal-heather-front.jpg",
+     "side": "front",
+     "color": "Royal Heather"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-royal-heather-back.jpg",
+     "side": "back",
+     "color": "Royal Heather"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-saddle-front.jpg",
+     "side": "front",
+     "color": "Saddle"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-saddle-back.jpg",
+     "side": "back",
+     "color": "Saddle"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-safety-orange-front.jpg",
+     "side": "front",
+     "color": "Safety Orange"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-safety-orange-back.jpg",
+     "side": "back",
+     "color": "Safety Orange"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-safety-yellow-front.jpg",
+     "side": "front",
+     "color": "Safety Yellow"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-safety-yellow-back.jpg",
+     "side": "back",
+     "color": "Safety Yellow"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-sandstone-front.jpg",
+     "side": "front",
+     "color": "Sandstone"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-sandstone-back.jpg",
+     "side": "back",
+     "color": "Sandstone"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-smoke-front.jpg",
+     "side": "front",
+     "color": "Smoke"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-smoke-back.jpg",
+     "side": "back",
+     "color": "Smoke"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-storm-blue-front.jpg",
+     "side": "front",
+     "color": "Storm Blue"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-storm-blue-back.jpg",
+     "side": "back",
+     "color": "Storm Blue"
+    },
+    {
+     "file": "styles/SS4500/front/ss4500-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/SS4500/back/ss4500-white-back.jpg",
+     "side": "back",
+     "color": "White"
+    }
+   ]
+  },
+  "SS4500Z": {
+   "name": "Independent Trading SS4500Z",
+   "sub": "Midweight Full-Zip Hooded Sweatshirt",
+   "tokens": [
+    "ss4500z"
+   ],
+   "bodyLenM": 27,
+   "hood": true,
+   "calib": {
+    "front": {
+     "ppi": 30.303,
+     "centerX": 439.0,
+     "collarY": 180.91,
+     "leftChestX": 579.0,
+     "default": true
+    },
+    "back": {
+     "ppi": 30.303,
+     "centerX": 439.0,
+     "collarY": 300.0,
+     "leftChestX": 439.0,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/SS4500Z/front/ss4500z-alpine-green-front.jpg",
+     "side": "front",
+     "color": "Alpine Green"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-alpine-green-back.jpg",
+     "side": "back",
+     "color": "Alpine Green"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-army-front.jpg",
+     "side": "front",
+     "color": "Army"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-army-back.jpg",
+     "side": "back",
+     "color": "Army"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-army-heather-front.jpg",
+     "side": "front",
+     "color": "Army Heather"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-army-heather-back.jpg",
+     "side": "back",
+     "color": "Army Heather"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-ash-heather-front.jpg",
+     "side": "front",
+     "color": "Ash Heather"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-charcoal-front.jpg",
+     "side": "front",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-charcoal-back.jpg",
+     "side": "back",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-charcoal-heather-front.jpg",
+     "side": "front",
+     "color": "Charcoal Heather"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-charcoal-heather-back.jpg",
+     "side": "back",
+     "color": "Charcoal Heather"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-classic-navy-front.jpg",
+     "side": "front",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-classic-navy-back.jpg",
+     "side": "back",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-classic-navy-heather-front.jpg",
+     "side": "front",
+     "color": "Classic Navy Heather"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-classic-navy-heather-back.jpg",
+     "side": "back",
+     "color": "Classic Navy Heather"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-forest-camo-front.jpg",
+     "side": "front",
+     "color": "Forest Camo"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-grey-heather-front.jpg",
+     "side": "front",
+     "color": "Grey Heather"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-grey-heather-back.jpg",
+     "side": "back",
+     "color": "Grey Heather"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-gunmetal-heather-front.jpg",
+     "side": "front",
+     "color": "Gunmetal Heather"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-gunmetal-heather-back.jpg",
+     "side": "back",
+     "color": "Gunmetal Heather"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-maroon-front.jpg",
+     "side": "front",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-maroon-back.jpg",
+     "side": "back",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-navy-front.jpg",
+     "side": "front",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-navy-back.jpg",
+     "side": "back",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-royal-front.jpg",
+     "side": "front",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-royal-back.jpg",
+     "side": "back",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-safety-yellow-front.jpg",
+     "side": "front",
+     "color": "Safety Yellow"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-safety-yellow-back.jpg",
+     "side": "back",
+     "color": "Safety Yellow"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-sandstone-front.jpg",
+     "side": "front",
+     "color": "Sandstone"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-sandstone-back.jpg",
+     "side": "back",
+     "color": "Sandstone"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-storm-blue-front.jpg",
+     "side": "front",
+     "color": "Storm Blue"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-storm-blue-back.jpg",
+     "side": "back",
+     "color": "Storm Blue"
+    },
+    {
+     "file": "styles/SS4500Z/front/ss4500z-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/SS4500Z/back/ss4500z-white-back.jpg",
+     "side": "back",
+     "color": "White"
     }
    ]
   }
