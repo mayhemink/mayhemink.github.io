@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-17T04:30:00.000Z",
+ "generated": "2026-08-17T04:04:46.068Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -14165,18 +14165,18 @@
    "bodyLenM": 26,
    "calib": {
     "front": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 19.64883603036896,
+     "centerX": 366.49988561110456,
+     "collarY": 254.05235404494297,
+     "leftChestX": 440.2163603274133,
+     "default": false
     },
     "back": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 19.64883603036896,
+     "centerX": 362.7515902865465,
+     "collarY": 175.33776434190773,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
