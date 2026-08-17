@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-17 (S&S channel: +SS4500 SS4500Z, Independent Trading hoodies)",
+ "generated": "2026-08-17T19:04:57.890Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -14292,18 +14292,18 @@
    "hood": true,
    "calib": {
     "front": {
-     "ppi": 30.303,
-     "centerX": 441.0,
-     "collarY": 180.91,
-     "leftChestX": 581.0,
-     "default": true
+     "ppi": 29.233108748810913,
+     "centerX": 432.3743500866551,
+     "collarY": 225.71923743500867,
+     "leftChestX": 551.3344887348353,
+     "default": false
     },
     "back": {
-     "ppi": 30.303,
-     "centerX": 441.0,
-     "collarY": 300.0,
-     "leftChestX": 441.0,
-     "default": true
+     "ppi": 29.233108748810913,
+     "centerX": 441.525129982669,
+     "collarY": 274.52339688041593,
+     "leftChestX": 441,
+     "default": false
     }
    },
    "photos": [
@@ -14779,18 +14779,18 @@
    "hood": true,
    "calib": {
     "front": {
-     "ppi": 30.303,
-     "centerX": 439.0,
-     "collarY": 180.91,
-     "leftChestX": 579.0,
-     "default": true
+     "ppi": 27.5079374323622,
+     "centerX": 443.05025996533794,
+     "collarY": 266.89774696707104,
+     "leftChestX": 552.8596187175043,
+     "default": false
     },
     "back": {
-     "ppi": 30.303,
-     "centerX": 439.0,
-     "collarY": 300.0,
-     "leftChestX": 439.0,
-     "default": true
+     "ppi": 27.5079374323622,
+     "centerX": 444.57538994800694,
+     "collarY": 263.8474870017331,
+     "leftChestX": 439,
+     "default": false
     }
    },
    "photos": [
