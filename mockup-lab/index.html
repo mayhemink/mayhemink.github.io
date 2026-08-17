@@ -604,7 +604,7 @@
 
     <div class="panel below-card" data-tabs="sum">
       <h3>Production print summary <span style="margin-left:auto;"></span></h3>
-      <p class="desc">One tile per shirt — the tile IS the shirt color, the art shows in the exact inks that shirt prints, underbase included. Attach it to the daily rundown.</p>
+      <p class="desc">One tile per press setup — the background is split into every shirt color in that run, the art shows once in that setup's exact inks, underbase included. Attach it to the daily rundown.</p>
       <div class="btnrow"><button class="btn sm" id="dlSummary">DOWNLOAD SUMMARY PNG</button></div>
       <canvas id="sumCanvas"></canvas>
     </div>
@@ -690,7 +690,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.5 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.6 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2816,10 +2816,12 @@ $('dlApproval').onclick=()=>{
 };
 
 /* ---------- production print summary (for the crew) ---------- */
-/* v8.4 TILE PRODUCTION SHEET — one tile per shirt, tile background = the real
-   shirt color (sampled off its photo), art drawn in the exact inks THAT shirt
-   prints, per-tile swatch strip with the WHITE UNDERBASE swatch leading when it
-   prints. Built so a printer who reads nothing still prints it right. */
+/* v8.6 SETUP-GROUPED PRINT SHEET — the press runs per INK SETUP, so the sheet
+   shows ONE TILE PER SETUP (max two: STANDARD / DARK SHIRTS). The tile's
+   background is split into stripes — one stripe per shirt color in that run —
+   and the art is drawn ONCE, big, across all of them in that setup's exact
+   inks. Swatch strip below, WHITE UNDERBASE first on the darks tile. Built so
+   the printers see everything without reading anything. */
 function shirtTileColor(photo){
   if(!photo||!photo.canvas)return [120,124,128];
   if(photo.__tileRGB)return photo.__tileRGB;
@@ -2837,16 +2839,16 @@ function shirtTileColor(photo){
 function renderSummaryTo(pg){
   const W=1500,H=1080;pg.width=W;pg.height=H;
   const ctx=pg.getContext('2d');
-  drawPageHeader(ctx,W,'PRODUCTION PRINT SUMMARY — WHAT PRINTS ON EACH SHIRT');
+  drawPageHeader(ctx,W,'PRODUCTION PRINT SUMMARY — ONE TILE PER PRESS SETUP');
   const items=activeSet().items.map(function(it){return {it:it,g:itemGarment(it)};})
     .filter(function(x){return x.g&&(x.g.front||x.g.back);});
   const sides=[];
   if(artFor('front'))sides.push('front');
   if(artFor('back'))sides.push('back');
-  const foot='One tile per shirt · background = the shirt color · art shown in the exact inks that shirt prints · underbase swatch shown when it prints first.';
+  const foot='One tile per press setup · the background stripes are every shirt color in that run · art shown in that setup’s exact inks · underbase swatch first when it prints.';
   if(!items.length||!sides.length){
     ctx.fillStyle='#98A0A6';ctx.font='700 20px "JetBrains Mono", monospace';ctx.textAlign='center';
-    ctx.fillText(!sides.length?'Load art to build the print summary':'Add shirts to the job — one tile per shirt shows here',W/2,H/2);
+    ctx.fillText(!sides.length?'Load art to build the print summary':'Add shirts to the job — the press setups show here',W/2,H/2);
     ctx.textAlign='left';
     drawPageFooter(ctx,W,H,foot);
     return;
@@ -2859,95 +2861,107 @@ function renderSummaryTo(pg){
     Promise.all(pend.map(ensurePhoto)).then(function(){renderSummaryTo(pg);});
     return;
   }
-  const n=items.length;
-  const cols=n<=2?n:(n<=4?2:(n<=9?3:4));
-  const rows=Math.ceil(n/cols);
-  const gx=50,gy=168,gw=1400,gh=842,gap=14;
-  const tw=(gw-gap*(cols-1))/cols, th=(gh-gap*(rows-1))/rows;
-  const big=tw>420;
-  items.forEach(function(x,i){
-    const col=i%cols,row=(i/cols)|0;
-    const tx=gx+col*(tw+gap),ty=gy+row*(th+gap);
-    const photo=x.g.front||x.g.back;
-    const rgb=shirtTileColor(photo);
-    const lum=relLum(rgb[0],rgb[1],rgb[2]);
-    const darkBg=lum<0.45;
-    const inkCol=darkBg?'#F2F4F6':'#15181B';
-    const subCol=darkBg?'rgba(255,255,255,.78)':'rgba(0,0,0,.66)';
-    const lineCol=darkBg?'rgba(255,255,255,.30)':'rgba(0,0,0,.30)';
-    ctx.fillStyle='rgb('+Math.round(rgb[0])+','+Math.round(rgb[1])+','+Math.round(rgb[2])+')';
-    ctx.strokeStyle=lineCol;ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.roundRect(tx,ty,tw,th,10);ctx.fill();ctx.stroke();
-    const side0=x.g.front?'front':'back';
-    const sc=screensFor(photo,side0,state.loc[side0]);
-    ctx.fillStyle=inkCol;ctx.font='900 '+(big?24:16)+'px "Archivo Black", Arial Black, sans-serif';
-    ctx.fillText(x.it.colorName.toUpperCase(),tx+16,ty+(big?34:26),tw-(big?150:100));
-    ctx.fillStyle=subCol;ctx.font='500 '+(big?12:9.5)+'px "JetBrains Mono", monospace';
-    ctx.fillText(x.it.styleKey,tx+16,ty+(big?52:40));
+  /* group by ink setup (same membership as the buckets) */
+  const groups=[];
+  const lightG=items.filter(function(x){return !itemUsesDark(x.it);});
+  const darkG=items.filter(function(x){return itemUsesDark(x.it);});
+  if(lightG.length)groups.push({key:'light',label:'STANDARD INKS',items:lightG,dark:false});
+  if(darkG.length)groups.push({key:'dark',label:'DARK-SHIRT INKS',items:darkG,dark:true});
+  const gx=50,gy=168,gw=1400,gh=842,gap=16;
+  const tileW=groups.length===2?(gw-gap)/2:gw;
+  const headH=34,swH=58;
+  const tileH=gh-headH-swH-14;
+  groups.forEach(function(gr,gi){
+    const tx=gx+gi*(tileW+gap);
+    const rep=gr.items[0];
+    const repPhoto=rep.g.front||rep.g.back;
+    const side0=rep.g.front?'front':'back';
+    const sc=screensFor(repPhoto,side0,state.loc[side0]);
+    /* header bar (page background — neutral) */
+    ctx.fillStyle='#E8EAEC';ctx.font='900 19px "Archivo Black", Arial Black, sans-serif';
+    ctx.fillText(gr.label,tx,gy+22);
+    ctx.fillStyle='#98A0A6';ctx.font='700 12px "JetBrains Mono", monospace';
     ctx.textAlign='right';
-    ctx.fillStyle=inkCol;ctx.font='700 '+(big?13:10)+'px "JetBrains Mono", monospace';
-    ctx.fillText(sc.total+' SCREEN'+(sc.total===1?'':'S'),tx+tw-14,ty+(big?32:24));
+    ctx.fillText(gr.items.length+' SHIRT'+(gr.items.length===1?'':'S')+' · '+sc.total+' SCREEN'+(sc.total===1?'':'S'),tx+tileW,gy+22);
     ctx.textAlign='left';
-    /* swatch strip — UNDERBASE first when it prints */
+    /* striped tile */
+    const ty=gy+headH;
+    ctx.save();
+    ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.clip();
+    const n=gr.items.length;
+    const stW=tileW/n;
+    gr.items.forEach(function(x,si){
+      const rgb=shirtTileColor(x.g.front||x.g.back);
+      ctx.fillStyle='rgb('+Math.round(rgb[0])+','+Math.round(rgb[1])+','+Math.round(rgb[2])+')';
+      ctx.fillRect(tx+si*stW,ty,stW+1,tileH);
+      const lum=relLum(rgb[0],rgb[1],rgb[2]);
+      const inkCol=lum<0.45?'#F2F4F6':'#15181B';
+      const subCol=lum<0.45?'rgba(255,255,255,.75)':'rgba(0,0,0,.62)';
+      const big=stW>150;
+      ctx.textAlign='center';
+      ctx.fillStyle=inkCol;ctx.font='900 '+(big?17:12)+'px "Archivo Black", Arial Black, sans-serif';
+      ctx.fillText(x.it.colorName.toUpperCase(),tx+si*stW+stW/2,ty+(big?28:22),stW-10);
+      ctx.fillStyle=subCol;ctx.font='500 '+(big?11:8.5)+'px "JetBrains Mono", monospace';
+      ctx.fillText(x.it.styleKey,tx+si*stW+stW/2,ty+(big?46:36),stW-10);
+      ctx.textAlign='left';
+      if(si>0){
+        ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(tx+si*stW,ty);ctx.lineTo(tx+si*stW,ty+tileH);ctx.stroke();
+      }
+    });
+    /* the art — once per side, BIG, spanning ACROSS every stripe in this
+       setup's inks (front stacked over back so each crosses all the colors) */
+    const azTop=ty+58,azBot=ty+tileH-16;
+    const rowH=(azBot-azTop-(sides.length-1)*10)/sides.length;
+    sides.forEach(function(sd,si){
+      const art=recoloredArtFor(sd,gr.dark)||artFor(sd);
+      if(!art)return;
+      const ry=azTop+si*(rowH+10);
+      const lab=sides.length>1;
+      const labH=lab?18:0;
+      if(lab){
+        ctx.fillStyle='rgba(14,15,16,.75)';
+        ctx.beginPath();ctx.roundRect(tx+16,ry,54,15,3);ctx.fill();
+        ctx.fillStyle='#E8EAEC';ctx.font='700 9px "JetBrains Mono", monospace';
+        ctx.textAlign='center';ctx.fillText(sd.toUpperCase(),tx+16+27,ry+11);ctx.textAlign='left';
+      }
+      const scl=Math.min((tileW-44)/art.width,(rowH-labH)/art.height)*0.94;
+      const aw=art.width*scl,ah=art.height*scl;
+      ctx.drawImage(art,tx+(tileW-aw)/2,ry+labH+(rowH-labH-ah)/2,aw,ah);
+    });
+    ctx.restore();
+    ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.stroke();
+    /* swatch strip below the tile, on the page background */
     const en=enabledAssign();
     const swatches=[];
-    if(sc.ub)swatches.push({hex:'#FFFFFF',l1:'UNDERBASE',l2:'prints first',ub:true});
+    if(gr.dark&&sc.ub)swatches.push({hex:'#FFFFFF',l1:'UNDERBASE',l2:'prints first',ub:true});
     en.forEach(function(a){
-      const ii=inkIdxFor(a,sc.dark),p=PMS[ii],st=STD_INKS[p[0]];
+      const ii=inkIdxFor(a,gr.dark),p=PMS[ii],st=STD_INKS[p[0]];
       swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]});
     });
-    const swz=big?26:20, srh=big?46:36;
-    ctx.font='700 '+(big?11:9)+'px "JetBrains Mono", monospace';
-    let sx=0,srows=1;
-    const cells=[];
+    let sx=tx,sy=ty+tileH+14;
+    const swz=26;
     swatches.forEach(function(s2){
-      ctx.font='500 '+(big?9.5:8)+'px "JetBrains Mono", monospace';
-      const w2=ctx.measureText(s2.l2).width;
-      ctx.font='700 '+(big?11:9)+'px "JetBrains Mono", monospace';
-      const wname=Math.max(ctx.measureText(s2.l1).width,w2);
-      const cw=swz+8+Math.max(big?54:40,wname+6)+(big?14:10);
-      if(sx>0&&sx+cw>tw-28){sx=0;srows++;}
-      cells.push({x:sx,row:srows,s:s2});
+      ctx.font='700 12px "JetBrains Mono", monospace';const w1=ctx.measureText(s2.l1).width;
+      ctx.font='500 10px "JetBrains Mono", monospace';const w2=ctx.measureText(s2.l2).width;
+      const cw=swz+8+Math.max(56,w1+6,w2+6)+16;
+      if(sx>tx&&sx+cw>tx+tileW){return;}   /* clip overflow — approval page carries the full list */
+      ctx.fillStyle=s2.hex;ctx.fillRect(sx,sy,swz,swz);
+      ctx.strokeStyle=s2.ub?'#7BAFD4':'rgba(255,255,255,.5)';ctx.lineWidth=s2.ub?2.5:1;
+      ctx.strokeRect(sx,sy,swz,swz);
+      ctx.fillStyle='#E8EAEC';ctx.font='700 12px "JetBrains Mono", monospace';
+      ctx.fillText(s2.l1,sx+swz+8,sy+11);
+      ctx.fillStyle='#98A0A6';ctx.font='500 10px "JetBrains Mono", monospace';
+      ctx.fillText(s2.l2,sx+swz+8,sy+25);
       sx+=cw;
     });
-    const stripH=srows*srh;
-    const stripY=ty+th-stripH-10;
-    cells.forEach(function(c2){
-      const yy=stripY+(c2.row-1)*srh;
-      ctx.fillStyle=c2.s.hex;ctx.fillRect(tx+16+c2.x,yy,swz,swz);
-      ctx.strokeStyle=darkBg?'rgba(255,255,255,.65)':'rgba(0,0,0,.6)';
-      ctx.lineWidth=c2.s.ub?2.5:1;
-      ctx.strokeRect(tx+16+c2.x,yy,swz,swz);
-      ctx.fillStyle=inkCol;ctx.font='700 '+(big?11:9)+'px "JetBrains Mono", monospace';
-      ctx.fillText(c2.s.l1,tx+16+c2.x+swz+8,yy+(big?12:9));
-      ctx.fillStyle=subCol;ctx.font='500 '+(big?9.5:8)+'px "JetBrains Mono", monospace';
-      ctx.fillText(c2.s.l2,tx+16+c2.x+swz+8,yy+(big?26:20));
-    });
-    /* art zone — the art in THIS shirt's inks, straight on the shirt color */
-    const azTop=ty+(big?64:48), azBot=stripY-8;
-    const azH=azBot-azTop;
-    if(azH>26){
-      const per=(tw-32-(sides.length-1)*10)/sides.length;
-      sides.forEach(function(sd,si){
-        const ax=tx+16+si*(per+10);
-        const art=recoloredArtFor(sd,sc.dark)||artFor(sd);
-        if(!art)return;
-        const lab=sides.length>1;
-        const labH=lab?13:0;
-        const scl=Math.min(per/art.width,(azH-labH)/art.height)*0.92;
-        const aw=art.width*scl,ah=art.height*scl;
-        if(lab){
-          ctx.fillStyle=subCol;ctx.font='700 9px "JetBrains Mono", monospace';
-          ctx.fillText(sd.toUpperCase(),ax,azTop+9);
-        }
-        ctx.drawImage(art,ax+(per-aw)/2,azTop+labH+(azH-labH-ah)/2,aw,ah);
-      });
-    }
   });
   stampWatermark(ctx,gx,gy,gw,gh,'rgba(127,127,127,0.05)',26);
   drawPageFooter(ctx,W,H,foot);
 }
 function renderSummary()
+
 {renderSummaryTo($('sumCanvas'));}
 $('dlSummary').onclick=()=>{
   const pg=document.createElement('canvas');
