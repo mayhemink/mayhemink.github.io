@@ -120,10 +120,18 @@ a.tile:hover::before{opacity:1}
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-.secondary{
+.sec-label{
   margin-top:30px;
   border-top:1px solid var(--line2);
   padding-top:18px;
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--blue2);
+  letter-spacing:.18em;
+}
+.secondary{
+  margin-top:12px;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
@@ -159,12 +167,6 @@ footer{
 </header>
 <main>
   <div class="grid">
-    <a class="tile" href="/" target="_blank" rel="noopener">
-      <span class="tag">Production</span>
-      <h2>Weekly Board</h2>
-      <p>Mon–Fri press schedule, timecards, and the daily rundown on the floor iPads.</p>
-      <span class="url">mayhemink.github.io</span>
-    </a>
     <a class="tile" href="/ops/" target="_blank" rel="noopener">
       <span class="tag">Prep</span>
       <h2>Ops Board</h2>
@@ -177,19 +179,32 @@ footer{
       <p>Garment mockups with live ink, customer approval PDFs, and press setup sheets.</p>
       <span class="url">mayhemink.github.io/mockup-lab</span>
     </a>
-    <a class="tile" href="/style-lab/" target="_blank" rel="noopener">
-      <span class="tag">Catalog</span>
-      <h2>Style Lab</h2>
-      <p>Catalog intake and calibration — feeds new garment styles into the Mockup Lab.</p>
-      <span class="url">mayhemink.github.io/style-lab</span>
-    </a>
     <a class="tile" href="/patch-lab/" target="_blank" rel="noopener">
       <span class="tag">Patches</span>
       <h2>Patch Lab</h2>
       <p>Hat-patch designer — UV print files for the eufyMake E1, cut files for the xTool P3.</p>
       <span class="url">mayhemink.github.io/patch-lab</span>
     </a>
+    <a class="tile" href="/inkmatch/" target="_blank" rel="noopener">
+      <span class="tag">Inks</span>
+      <h2>Ink Picker</h2>
+      <p>Ink color matching — dial in the right PMS for the job.</p>
+      <span class="url">mayhemink.github.io/inkmatch</span>
+    </a>
+    <a class="tile" href="/style-lab/" target="_blank" rel="noopener">
+      <span class="tag">Catalog</span>
+      <h2>Style Lab</h2>
+      <p>Catalog intake and calibration — feeds new garment styles into the Mockup Lab.</p>
+      <span class="url">mayhemink.github.io/style-lab</span>
+    </a>
+    <a class="tile" href="/" target="_blank" rel="noopener">
+      <span class="tag">Production</span>
+      <h2>Weekly Board</h2>
+      <p>Mon–Fri press schedule, timecards, and the daily rundown on the floor iPads.</p>
+      <span class="url">mayhemink.github.io</span>
+    </a>
   </div>
+  <div class="sec-label">COMMON SITES</div>
   <div class="secondary">
     <a href="https://mayheminkscreenprinting.printavo.com" target="_blank" rel="noopener">PRINTAVO STOREFRONT ↗</a>
     <a href="https://straightmayhem.com" target="_blank" rel="noopener">STRAIGHT MAYHEM ↗</a>
