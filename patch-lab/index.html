@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.3 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets</title>
+<title>Mayhem Patch Lab v0.4 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -89,6 +89,13 @@
   .gang-item .gi-dim{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:11px;white-space:nowrap;}
   .gang-item input.gi-qty{width:54px;padding:4px 6px;}
   .gang-item button.gi-x{background:transparent;border:none;color:var(--warn);cursor:pointer;font-size:15px;padding:0 4px;line-height:1;}
+  .lea-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:8px;max-height:200px;overflow:auto;padding:2px;}
+  .lea-sw{position:relative;height:34px;border-radius:4px;border:2px solid var(--line2);cursor:pointer;overflow:hidden;}
+  .lea-sw:hover{border-color:var(--accent2);}
+  .lea-sw.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+  .lea-sw .rev{position:absolute;right:0;bottom:0;width:45%;height:45%;border-top-left-radius:4px;}
+  .lea-cat{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);margin:10px 0 2px;}
+  details.cfg summary{font-size:11px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;}
 </style>
 </head>
 <body>
@@ -96,7 +103,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.3</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.4</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -122,11 +129,40 @@
       <input type="file" id="artFile" accept=".svg,.png,.webp,.jpg,.jpeg,image/*">
       <div class="val" id="artInfo"></div>
       <div class="note warn" id="dpiWarn" hidden></div>
+      <div class="btnrow"><button class="btn sm ghost" id="vecBtn" disabled>✦ VECTORIZE ART — vectorizer.ai</button></div>
+      <div class="val" id="vecStatus"></div>
+      <details class="cfg" style="margin-top:8px;">
+        <summary>vectorizer.ai API credentials</summary>
+        <label class="lbl">API ID</label>
+        <input type="text" id="vecId" autocomplete="off">
+        <label class="lbl">API Secret</label>
+        <input type="text" id="vecSecret" autocomplete="off">
+        <label class="checkline"><input type="checkbox" id="vecTest"> Test mode (free, preview quality)</label>
+        <div class="btnrow"><button class="btn sm" id="vecSave">SAVE KEYS</button></div>
+      </details>
     </div>
 
     <div class="panel">
       <h3><span class="stepnum">3</span> PATCH</h3>
       <p class="desc">Real inches. The cut line is what the P3 cuts; the print file matches it 1:1.</p>
+      <label class="lbl">Method</label>
+      <div class="segmented" id="modeSeg">
+        <button data-mode="print" class="on">UV PRINT</button>
+        <button data-mode="engrave">LASER ENGRAVE</button>
+      </div>
+      <div id="engBox" hidden>
+        <label class="lbl">Material — top / engrave reveal</label>
+        <input type="text" id="leaSearch" placeholder="Search materials…">
+        <div id="leaGrid"></div>
+        <div class="val" id="leaSel"></div>
+        <label class="lbl">Engrave color override</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="color" id="engColor" value="#C8A24B">
+          <button class="btn sm ghost" id="engReset">RESET TO MATERIAL</button>
+        </div>
+        <label class="checkline"><input type="checkbox" id="engInvert"> Invert — engrave the background, art stays top color</label>
+        <div class="note" id="engNote"></div>
+      </div>
       <label class="lbl">Cut shape</label>
       <div class="segmented" id="shapeSeg">
         <button data-shape="contour" class="on">CONTOUR</button>
@@ -309,8 +345,15 @@ const state={
   cut:null,            /* {polys:[[{x,y}in]], w,h, art:{x,y,w,h}, blobCount} */
   tab:'patch',
   hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true},
-  gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0}
+  gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0},
+  eng:{on:false,cat:'',name:'',top:'#151515',engC:'#C8A24B',override:false,invert:false,settings:''}
 };
+function styleSnap(){
+  return state.eng.on
+    ?{mode:'engrave',top:state.eng.top,engC:state.eng.engC,invert:state.eng.invert,
+      matName:state.eng.cat+' '+state.eng.name,settings:state.eng.settings,bgOn:false,bgColor:'#000'}
+    :{mode:'print',bgOn:state.bgOn,bgColor:state.bgColor,top:'',engC:'',invert:false,matName:'',settings:''};
+}
 
 /* ---------- art loading (Mockup Lab pattern: trim to alpha bbox, SVG rasterized big) ---------- */
 function alphaBBox(c){
@@ -643,13 +686,87 @@ function cutSvgD(){
 }
 
 /* ---------- patch compositor (shared by preview / print / mockup / approval) ---------- */
-function renderPatchG(cut,art,bgOn,bgColor,scalePxPerIn,forPrint){
+let _grainTile=null;
+function grainTile(){
+  if(_grainTile)return _grainTile;
+  const c=document.createElement('canvas');c.width=128;c.height=128;
+  const ctx=c.getContext('2d');
+  const img=ctx.createImageData(128,128);
+  for(let i=0;i<img.data.length;i+=4){
+    const v=118+Math.random()*44|0;
+    img.data[i]=v;img.data[i+1]=v;img.data[i+2]=v;img.data[i+3]=255;
+  }
+  ctx.putImageData(img,0,0);
+  _grainTile=c;
+  return c;
+}
+function artSilhouette(cut,art,color,scalePxPerIn){
+  /* art rendered as a single flat color (what the laser engraves) */
+  const c=document.createElement('canvas');
+  c.width=Math.max(2,Math.round(cut.w*scalePxPerIn));
+  c.height=Math.max(2,Math.round(cut.h*scalePxPerIn));
+  const ctx=c.getContext('2d');
+  const a=cut.art;
+  ctx.imageSmoothingQuality='high';
+  ctx.drawImage(art,a.x*scalePxPerIn,a.y*scalePxPerIn,a.w*scalePxPerIn,a.h*scalePxPerIn);
+  ctx.globalCompositeOperation='source-in';
+  ctx.fillStyle=color;
+  ctx.fillRect(0,0,c.width,c.height);
+  return c;
+}
+function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
   const c=document.createElement('canvas');
   c.width=Math.max(2,Math.round(cut.w*scalePxPerIn));
   c.height=Math.max(2,Math.round(cut.h*scalePxPerIn));
   const ctx=c.getContext('2d');
   const path=cutPath2DG(cut,scalePxPerIn);
-  if(bgOn){ctx.save();ctx.fillStyle=bgColor;ctx.fill(path);ctx.restore();}
+
+  if(sty.mode==='engrave'){
+    if(forPrint){
+      /* PRODUCTION ENGRAVE FORM: black = what the laser engraves, transparent elsewhere.
+         normal: engrave the art. invert: engrave the field, art stays top color. */
+      ctx.save();ctx.clip(path);
+      if(sty.invert){
+        ctx.fillStyle='#000';ctx.fill(path);
+        ctx.globalCompositeOperation='destination-out';
+        ctx.drawImage(artSilhouette(cut,art,'#000',scalePxPerIn),0,0);
+      }else{
+        ctx.drawImage(artSilhouette(cut,art,'#000',scalePxPerIn),0,0);
+      }
+      ctx.restore();
+      return c;
+    }
+    /* PREVIEW: leatherette top color + grain, engraved area in reveal color w/ depth */
+    ctx.save();ctx.fillStyle=sty.top;ctx.fill(path);
+    ctx.clip(path);
+    ctx.globalAlpha=0.10;ctx.globalCompositeOperation='overlay';
+    ctx.fillStyle=ctx.createPattern(grainTile(),'repeat');
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.restore();
+    const d=Math.max(1,scalePxPerIn*0.008);
+    ctx.save();ctx.clip(path);
+    if(sty.invert){
+      /* engraved field, art raised in top color */
+      const field=document.createElement('canvas');field.width=c.width;field.height=c.height;
+      const fx=field.getContext('2d');
+      fx.fillStyle=sty.engC;
+      fx.fill(cutPath2DG(cut,scalePxPerIn));
+      fx.globalCompositeOperation='destination-out';
+      fx.drawImage(artSilhouette(cut,art,'#000',scalePxPerIn),0,0);
+      ctx.save();ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=d*2;ctx.shadowOffsetX=-d;ctx.shadowOffsetY=-d;
+      ctx.drawImage(field,0,0);ctx.restore();
+    }else{
+      /* recessed art: dark rim above-left, reveal color art */
+      ctx.drawImage(artSilhouette(cut,art,'rgba(0,0,0,0.45)',scalePxPerIn),-d,-d);
+      ctx.drawImage(artSilhouette(cut,art,sty.engC,scalePxPerIn),0,0);
+    }
+    ctx.restore();
+    ctx.save();ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=Math.max(1,scalePxPerIn*0.012);ctx.stroke(path);ctx.restore();
+    return c;
+  }
+
+  /* UV PRINT mode (original) */
+  if(sty.bgOn){ctx.save();ctx.fillStyle=sty.bgColor;ctx.fill(path);ctx.restore();}
   ctx.save();ctx.clip(path);
   const a=cut.art;
   ctx.imageSmoothingQuality='high';
@@ -661,7 +778,7 @@ function renderPatchG(cut,art,bgOn,bgColor,scalePxPerIn,forPrint){
   return c;
 }
 function renderPatch(scalePxPerIn,forPrint){
-  return renderPatchG(state.cut,state.art,state.bgOn,state.bgColor,scalePxPerIn,forPrint);
+  return renderPatchG(state.cut,state.art,styleSnap(),scalePxPerIn,forPrint);
 }
 
 /* ---------- stage rendering ---------- */
@@ -743,6 +860,7 @@ function refresh(){
   $('gsAdd').disabled=!ready;
   const gready=!!(state.gang.placed&&state.gang.placed.length);
   ['gsDlPrint','gsDlSvg','gsDlDxf','gsDlPC','gsDlZip'].forEach(id=>$(id).disabled=!gready);
+  updateVecBtn();
   $('statusBadge').textContent=state.art
     ?(state.cut?('PATCH '+state.cut.w.toFixed(2)+'" × '+state.cut.h.toFixed(2)+'"'):'COMPUTING…')
     :'NO ART LOADED';
@@ -843,6 +961,10 @@ function buildApprovalCanvas(){
   }
   ctx.fillStyle='#7BAFD4';ctx.font='700 22px "JetBrains Mono",monospace';ctx.textAlign='center';
   ctx.fillText('TRUE SIZE: '+state.cut.w.toFixed(2)+'" × '+state.cut.h.toFixed(2)+'"  ·  DASHED LINE = CUT LINE',W/2,Hh-96);
+  if(state.eng.on){
+    ctx.fillStyle='#98A0A6';ctx.font='700 18px "JetBrains Mono",monospace';
+    ctx.fillText('LASER ENGRAVED · '+(state.eng.cat+' — '+state.eng.name).toUpperCase(),W/2,Hh-64);
+  }
   watermarkTile(ctx,W,Hh);
   ctx.globalAlpha=1;ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono",monospace';
   ctx.textAlign='left';
@@ -894,8 +1016,10 @@ function zipStore(entries){
 
 /* ---------- download handlers ---------- */
 $('dlPrint').onclick=async()=>{
-  const cv=buildPrintCanvas();
-  cv.toBlob(b=>downloadBlobFile(b,fileBase()+'-print-'+state.cut.w.toFixed(2)+'x'+state.cut.h.toFixed(2)+'in.png'),'image/png');
+  const eng=state.eng.on;
+  const cv=eng?buildEngraveCanvas():buildPrintCanvas();
+  const tag=eng?'-engrave-':'-print-';
+  cv.toBlob(b=>downloadBlobFile(b,fileBase()+tag+state.cut.w.toFixed(2)+'x'+state.cut.h.toFixed(2)+'in.png'),'image/png');
 };
 $('dlSvg').onclick=()=>{
   downloadBlobFile(new Blob([buildCutSvg()],{type:'image/svg+xml'}),fileBase()+'-cutline.svg');
@@ -910,16 +1034,32 @@ $('dlZip').onclick=async()=>{
   const enc=new TextEncoder();
   const entries=[];
   const folder=fileBase();
-  entries.push({name:folder+'/'+folder+'-print.png',data:await canvasPngU8(buildPrintCanvas())});
+  const eng=state.eng.on;
+  if(eng){
+    entries.push({name:folder+'/'+folder+'-engrave.png',data:await canvasPngU8(buildEngraveCanvas())});
+  }else{
+    entries.push({name:folder+'/'+folder+'-print.png',data:await canvasPngU8(buildPrintCanvas())});
+  }
   entries.push({name:folder+'/'+folder+'-cutline.svg',data:enc.encode(buildCutSvg())});
   entries.push({name:folder+'/'+folder+'-cutline.dxf',data:enc.encode(buildCutDxf())});
   entries.push({name:folder+'/'+folder+'-approval.png',data:await canvasPngU8(buildApprovalCanvas())});
-  entries.push({name:folder+'/README.txt',data:enc.encode(
-    'MAYHEM PATCH LAB EXPORT\n'+
-    'Patch true size: '+state.cut.w.toFixed(3)+'" x '+state.cut.h.toFixed(3)+'"\n\n'+
-    'PRINT (eufyMake E1): import the -print.png (transparent, 300 DPI, exact size).\n'+
-    'CUT (xTool P3 / XCS): import -cutline.svg (true size) or -cutline.dxf (inch units).\n'+
-    'Print file and cut files share the same frame: align by outer bounds.\n')});
+  const readme=eng
+    ?('MAYHEM PATCH LAB EXPORT — LASER ENGRAVED PATCH\n'+
+      'Material: '+state.eng.cat+' — '+state.eng.name+(state.eng.invert?'  (INVERTED: field engraves, art stays top color)':'')+'\n'+
+      'Patch true size: '+state.cut.w.toFixed(3)+'" x '+state.cut.h.toFixed(3)+'"\n\n'+
+      'ENGRAVE (xTool P3 / XCS): import -engrave.png at exact size. BLACK = engrave.\n'+
+      '  '+state.eng.settings+'\n'+
+      (state.eng.cutSet?('CUT: -cutline.svg (true size) or -cutline.dxf. '+state.eng.cutSet+'\n'):'CUT: -cutline.svg (true size) or -cutline.dxf (inch units).\n')+
+      'CLEANUP: '+state.eng.clean+'\n'+
+      (state.eng.press?(state.eng.press+'\n'):'')+
+      '\nEngrave file and cut files share the same frame: align by outer bounds.\n'+
+      'Never run at threshold - take one step up in energy. Validate on a real-size piece.\n')
+    :('MAYHEM PATCH LAB EXPORT\n'+
+      'Patch true size: '+state.cut.w.toFixed(3)+'" x '+state.cut.h.toFixed(3)+'"\n\n'+
+      'PRINT (eufyMake E1): import the -print.png (transparent, 300 DPI, exact size).\n'+
+      'CUT (xTool P3 / XCS): import -cutline.svg (true size) or -cutline.dxf (inch units).\n'+
+      'Print file and cut files share the same frame: align by outer bounds.\n');
+  entries.push({name:folder+'/README.txt',data:enc.encode(readme)});
   downloadBlobFile(zipStore(entries),folder+'.zip');
 };
 
@@ -1049,6 +1189,188 @@ $('viewSeg').querySelectorAll('button').forEach(b=>{
 });
 catInit();
 
+/* ---------- ENGRAVE MODE (v0.4) ----------
+   Materials = what Mayhem actually stocks (JDS / Lonestar / HydBond),
+   each colorway = top color / engrave reveal, with the PROVEN P3 settings
+   attached so every export carries its own run sheet.                    */
+const MATERIALS=[
+  {cat:'JDS Leatherette',
+   set:'Engrave 28-29% @ 800-1000 mm/s · 140 lpc · min air · 1 pass',
+   cutSet:'Cut 35% @ 20 mm/s · 1 pass · air on · clamp it (curls when hot)',
+   clean:"LA's Totally Awesome + soft brush. Metallic reveals: masking tape FIRST to lift glitter, then clean.",
+   press:'',
+   items:[
+    {n:'Grey / Black',t:'#8E9296',e:'#2B2B2B'},
+    {n:'Black / Silver',t:'#161616',e:'#C7CBD1'},
+    {n:'Black / Gold',t:'#161616',e:'#C9A24B'},
+    {n:'Dark Brown / Gold',t:'#4A342A',e:'#C9A24B'},
+    {n:'Rawhide / Black',t:'#C9A87C',e:'#2A2118'},
+    {n:'Rustic / Gold',t:'#8B5A2B',e:'#D4B26A'},
+    {n:'Bamboo / Black',t:'#D9B98A',e:'#241B10'},
+    {n:'Cream / Black',t:'#EFE6D4',e:'#2B241C'},
+    {n:'Light Brown / Black',t:'#A97C50',e:'#241B10'},
+    {n:'Blue / Black',t:'#2C4A73',e:'#101820'},
+    {n:'Teal / Black',t:'#2E6E71',e:'#10201F'},
+    {n:'Red / Black',t:'#A6342E',e:'#201211'},
+    {n:'Pink / Black',t:'#D98CA6',e:'#241318'},
+    {n:'Purple / Black',t:'#5A3E6B',e:'#170F1D'},
+    {n:'Green / Black',t:'#3E6B4F',e:'#101B13'},
+    {n:'White / Black',t:'#F2F2EF',e:'#222222'}
+   ]},
+  {cat:'Lonestar Silicone',
+   set:'Engrave 26% @ 400 mm/s · 160 lpc · min air · bidirectional · 1 pass',
+   cutSet:'',
+   clean:"LA's Totally Awesome + brush (silicone doesn't char brown — skip the Dawn trick).",
+   press:'Press: 260°F top / 320°F bottom · 45s (single platen: preheat hat, 300°F · 45s). Cool before flexing.',
+   items:[
+    {n:'Black / White',t:'#141414',e:'#EDEDEA'},
+    {n:'Charcoal / White',t:'#3A3D40',e:'#EDEDEA'},
+    {n:'Black / Charcoal',t:'#141414',e:'#3A3D40'},
+    {n:'White / Black',t:'#EDEDEA',e:'#1A1A1A'},
+    {n:'Navy / White',t:'#1F2D4A',e:'#EDEDEA'},
+    {n:'Red / White',t:'#A6342E',e:'#EDEDEA'},
+    {n:'Olive / Black',t:'#5C5B38',e:'#191910'},
+    {n:'Grey / Black',t:'#909398',e:'#1C1C1C'}
+   ]},
+  {cat:'HydBond UV Leatherette',
+   set:'Engrave start 28% @ 1000 (dark/light) or 29-35% @ 800 (patterned) · 140 lpc — VALIDATE on a real patch',
+   cutSet:'Canvas Flex / Poly Pro: start cut 40% @ 35 mm/s',
+   clean:"LA's Totally Awesome + soft brush. Pale halo at engraving edge on camo = ADD power, not less.",
+   press:'',
+   items:[
+    {n:'Stealth Topo Black / White',t:'#1C1E1F',e:'#E8E6E0'},
+    {n:'Matte Black / White',t:'#181818',e:'#E8E6E0'},
+    {n:'Concrete / Black',t:'#9B9B94',e:'#1E1D1A'},
+    {n:'Realtree APX / Black',t:'#6E6653',e:'#1E1D1A'}
+   ]}
+];
+function renderLeaGrid(q){
+  const box=$('leaGrid');box.innerHTML='';
+  const ql=(q||'').toLowerCase();
+  MATERIALS.forEach((m,mi)=>{
+    const hits=m.items.map((it,ii)=>({it,ii})).filter(o=>!ql||o.it.n.toLowerCase().includes(ql)||m.cat.toLowerCase().includes(ql));
+    if(!hits.length)return;
+    const h=document.createElement('div');h.className='lea-cat';h.textContent=m.cat;
+    box.appendChild(h);
+    const grid=document.createElement('div');grid.className='lea-grid';
+    hits.forEach(o=>{
+      const d=document.createElement('div');
+      d.className='lea-sw'+(state.eng.cat===m.cat&&state.eng.name===o.it.n?' on':'');
+      d.title=o.it.n;
+      d.style.background=o.it.t;
+      const r=document.createElement('div');r.className='rev';r.style.background=o.it.e;
+      d.appendChild(r);
+      d.onclick=()=>selectLea(mi,o.ii);
+      grid.appendChild(d);
+    });
+    box.appendChild(grid);
+  });
+}
+function selectLea(mi,ii){
+  const m=MATERIALS[mi],it=m.items[ii];
+  state.eng.cat=m.cat;state.eng.name=it.n;state.eng.top=it.t;
+  state.eng.settings=m.set;state.eng.cutSet=m.cutSet;state.eng.clean=m.clean;state.eng.press=m.press;
+  if(!state.eng.override){state.eng.engC=it.e;$('engColor').value=it.e;}
+  $('leaSel').textContent=m.cat+' — '+it.n;
+  $('engNote').textContent='P3: '+m.set+(m.cutSet?' · '+m.cutSet:'');
+  renderLeaGrid($('leaSearch').value);
+  refresh();
+}
+function updateModeUI(){
+  const eng=state.eng.on;
+  const card=$('dlPrint').closest('.dl-card');
+  const ps=card.querySelectorAll('p');
+  card.querySelector('h4').textContent=eng?'ENGRAVE FILE (PNG)':'PRINT FILE (PNG)';
+  ps[0].textContent=eng?'xTool P3 · raster engrave':'eufyMake E1';
+  ps[1].textContent=eng?'Black = engrave, white bg, 300 DPI exact size.':'Transparent PNG @ 300 DPI, exact size.';
+}
+$('modeSeg').querySelectorAll('button').forEach(b=>{
+  b.onclick=()=>{
+    $('modeSeg').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    state.eng.on=b.dataset.mode==='engrave';
+    $('engBox').hidden=!state.eng.on;
+    if(state.eng.on&&!state.eng.name)selectLea(0,0);
+    updateModeUI();
+    refresh();
+  };
+});
+$('leaSearch').oninput=()=>renderLeaGrid($('leaSearch').value);
+$('engColor').oninput=()=>{state.eng.engC=$('engColor').value;state.eng.override=true;refresh();};
+$('engReset').onclick=()=>{
+  state.eng.override=false;
+  const m=MATERIALS.find(x=>x.cat===state.eng.cat);
+  const it=m?m.items.find(x=>x.n===state.eng.name):null;
+  if(it){state.eng.engC=it.e;$('engColor').value=it.e;}
+  refresh();
+};
+$('engInvert').onchange=()=>{state.eng.invert=$('engInvert').checked;refresh();};
+function buildEngraveCanvas(){
+  const prod=renderPatch(DPI,true); /* black-on-transparent engrave form */
+  const c=document.createElement('canvas');c.width=prod.width;c.height=prod.height;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,c.width,c.height);
+  ctx.drawImage(prod,0,0);
+  return c;
+}
+
+/* ---------- vectorizer.ai (paid account; keys live only in this browser) ---------- */
+const VEC_KEY='mayhemVecAuth';
+function vecAuth(){try{return JSON.parse(localStorage.getItem(VEC_KEY)||'null');}catch(e){return null;}}
+function updateVecBtn(){
+  const a=vecAuth();
+  $('vecBtn').disabled=!(state.art&&a&&a.id&&a.secret);
+}
+(function vecInit(){
+  const a=vecAuth();
+  if(a){$('vecId').value=a.id||'';$('vecSecret').value=a.secret||'';$('vecTest').checked=!!a.test;}
+  else $('vecStatus').textContent='Add API keys below to enable.';
+  updateVecBtn();
+})();
+$('vecSave').onclick=()=>{
+  localStorage.setItem(VEC_KEY,JSON.stringify({id:$('vecId').value.trim(),secret:$('vecSecret').value.trim(),test:$('vecTest').checked}));
+  $('vecStatus').textContent='Keys saved (stored only in this browser).';
+  updateVecBtn();
+};
+$('vecTest').onchange=()=>{
+  const a=vecAuth()||{id:'',secret:''};
+  a.test=$('vecTest').checked;
+  localStorage.setItem(VEC_KEY,JSON.stringify(a));
+};
+$('vecBtn').onclick=async()=>{
+  const a=vecAuth();
+  if(!a||!state.art)return;
+  $('vecBtn').disabled=true;
+  $('vecStatus').textContent='Vectorizing…';
+  try{
+    const blob=await new Promise(r=>state.art.toBlob(r,'image/png'));
+    const fd=new FormData();
+    fd.append('image',blob,'art.png');
+    if(a.test)fd.append('mode','test');
+    const resp=await fetch('https://api.vectorizer.ai/api/v1/vectorize',{
+      method:'POST',
+      headers:{'Authorization':'Basic '+btoa(a.id+':'+a.secret)},
+      body:fd
+    });
+    if(!resp.ok)throw new Error('HTTP '+resp.status);
+    const svg=await resp.text();
+    downloadBlobFile(new Blob([svg],{type:'image/svg+xml'}),(state.artName||'art').replace(/\.[a-z0-9]+$/i,'')+'-vector.svg');
+    const f=new File([svg],'vectorized.svg',{type:'image/svg+xml'});
+    loadArtFile(f,(canvas)=>{
+      state.art=canvas;state.artName='vectorized.svg';
+      $('artInfo').textContent='vectorized.svg · '+canvas.width+'×'+canvas.height+'px (vector, rasterized hi-res)';
+      $('dpiWarn').hidden=true;
+      recompute();
+    });
+    $('vecStatus').textContent='✓ Vectorized — art replaced with the clean vector (SVG also downloaded).';
+  }catch(e){
+    $('vecStatus').textContent='✗ '+(String(e).includes('Failed to fetch')
+      ?'Browser blocked the API call (CORS) — needs a proxy; tell Claude.'
+      :'Vectorizer error: '+String(e).slice(0,60));
+  }
+  updateVecBtn();
+};
+
 /* ---------- GANG SHEET (v0.3) ----------
    Snapshot the current patch (cut geometry + art canvas refs stay valid because
    computeCut()/art loads always REPLACE the objects), shelf auto-nest with
@@ -1134,7 +1456,7 @@ function drawGangPatches(ctx,ppi,forPrint){
   const g=state.gang;
   if(!g.placed)return;
   for(const pl of g.placed){
-    const pc=renderPatchG(pl.it.cut,pl.it.art,pl.it.bgOn,pl.it.bgColor,ppi,forPrint);
+    const pc=renderPatchG(pl.it.cut,pl.it.art,pl.it.sty,ppi,forPrint);
     ctx.save();
     ctx.translate(pl.x*ppi,pl.y*ppi);
     if(pl.rot){ctx.translate(pl.w*ppi,0);ctx.rotate(Math.PI/2);}
@@ -1263,10 +1585,11 @@ $('gsAdd').onclick=()=>{
   if(!state.cut)return;
   const qty=Math.max(1,Math.round(parseFloat($('gsQty').value)||1));
   gangId++;
+  const sty=styleSnap();
   state.gang.items.push({
     id:gangId,
-    label:(state.artName||'patch').replace(/\.[a-z0-9]+$/i,'')||'patch',
-    cut:state.cut,art:state.art,bgOn:state.bgOn,bgColor:state.bgColor,qty
+    label:((state.artName||'patch').replace(/\.[a-z0-9]+$/i,'')||'patch')+(sty.mode==='engrave'?' ◆eng':''),
+    cut:state.cut,art:state.art,sty,qty
   });
   gangChanged();
   setTab('gang');
@@ -1314,6 +1637,9 @@ $('gsDlZip').onclick=async()=>{
     'Sheet: '+g.w+'" x '+g.h+'"  ·  '+(g.placed?g.placed.length:0)+' patches  ·  utilization '+Math.round(g.util*100)+'%\n\n'+
     'PRINT (eufyMake E1): -print.png is the FULL SHEET at 300 DPI, transparent,\n'+
     '  with registration marks '+(g.marks?'ON':'OFF')+'. Print at exact size - do not scale.\n'+
+    (g.items.some(i=>i.sty&&i.sty.mode==='engrave')
+      ?'  NOTE: engrave-mode patches on this sheet render as BLACK ENGRAVE ART, not\n'+
+       '  printed color - run those areas on the P3 as an engrave, not the E1.\n':'')+
     'CUT (xTool P3 / XCS): -cutline.svg (true size) or -cutline.dxf (inch units).\n'+
     'PRINT+CUT (-print+cut.svg): raster art + magenta CutContour strokes in one\n'+
     '  file for RIP workflows that read a cut spot color.\n\n'+
