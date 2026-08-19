@@ -271,6 +271,7 @@
         <div class="segmented" id="viewSeg">
           <button data-view="left" class="on">ANGLE</button>
           <button data-view="front">FRONT</button>
+          <button data-view="back">BACK</button>
         </div>
         <label class="lbl">Colorway — Richardson 112</label>
         <input type="text" id="catSearch" placeholder="Search colorways…">
@@ -1769,7 +1770,7 @@ $('tabGang').onclick=()=>setTab('gang');
 
 /* ---------- Richardson 112 catalog (v0.2) ---------- */
 const HAT_BASE='hats/R112/';
-const HAT_CALIB={front:{cx:0.505,cy:0.235,scale:0.30},left:{cx:0.46,cy:0.245,scale:0.26}};
+const HAT_CALIB={front:{cx:0.505,cy:0.235,scale:0.30},left:{cx:0.46,cy:0.245,scale:0.26},back:{cx:0.5,cy:0.30,scale:0.26}};
 const cat={colors:null,slug:null,view:'left'};
 function catInit(){
   fetch(HAT_BASE+'colors.json').then(r=>{if(!r.ok)throw new Error('404');return r.json();}).then(map=>{
@@ -1802,7 +1803,7 @@ function loadCatPhoto(slug){
     state.hat.cx=d.cx;state.hat.cy=d.cy;state.hat.scale=d.scale;
     $('hatScale').value=String(d.scale*100);
     $('hatScaleVal').textContent=$('hatScale').value+'% of photo width';
-    $('catSel').textContent='Richardson 112 · '+cat.colors[slug]+' · '+(side==='left'?'angle':'front')+' view';
+    $('catSel').textContent='Richardson 112 · '+cat.colors[slug]+' · '+(side==='left'?'angle':side)+' view';
     renderCatList($('catSearch').value);
     setTab('hat');
   };
