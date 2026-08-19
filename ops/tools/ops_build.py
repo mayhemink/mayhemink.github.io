@@ -9,7 +9,7 @@ Mayhem Ops daily builder.
 Lanes: FILMS (Joe) · WVN order · DTF print/order · LASER make (leather/engrave/UV) · DIGI (embroidery digitizing)
 Task IDs are stable: "<visualId>:<lane>" — KV state keys on them. Never add volatile text.
 """
-import json, re, datetime, sys
+import json, re, datetime, sys, os
 from zoneinfo import ZoneInfo
 from repeat_match import match, norm_customer
 
@@ -243,8 +243,23 @@ def build():
         if not services:
             flags.append("UNCLASSIFIED — open job and check")
 
+        # mockup thumb: local mocks/<v>_1.jpg (this run) or already-published one
+        img = None
+        if os.path.exists(f'mocks/{job["v"]}_1.jpg'):
+            img = f'/ops/data/mocks/{job["v"]}_1.jpg'
+        else:
+            try:
+                import urllib.request
+                rq = urllib.request.Request(
+                    f'https://mayhemink.github.io/ops/data/mocks/{job["v"]}_1.jpg', method="HEAD")
+                with urllib.request.urlopen(rq, timeout=8) as resp:
+                    if resp.status == 200:
+                        img = f'/ops/data/mocks/{job["v"]}_1.jpg'
+            except Exception:
+                pass
+
         jobs_out.append({
-            "id": job["id"], "visualId": job["v"],
+            "id": job["id"], "visualId": job["v"], "img": img,
             "url": f'https://www.printavo.com/invoices/{job["id"]}',
             "nickname": job["nick"], "customer": cust,
             "due": str(due), "days": (due - TODAY).days,
@@ -265,9 +280,13 @@ def build():
     must.sort(key=lambda r: (RANK.get(r["urgency"], 2), r["days"]))
 
     # ---- pending payload (PRIVATE) --------------------------------------------
+    # Quotes sent >14 days ago are dropped (stale — probably already resolved),
+    # EXCEPT when money is down or there's an admin flag: those are never hidden.
     pend = []
     for q in pull["quotes"]:
         age = (TODAY - datetime.date.fromisoformat(q["created"])).days
+        if age > 14 and not (q["paid"] > 0 or q.get("approval") in ("approved", "declined")):
+            continue
         entry = {**q, "url": f'https://www.printavo.com/quotes/{q["id"]}', "ageDays": age}
         if q.get("approval") == "approved":
             entry["adminFlag"] = "Customer APPROVED — move the status in Printavo"

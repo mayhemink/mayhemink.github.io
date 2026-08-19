@@ -162,6 +162,30 @@ nav button.on .n{background:rgba(75,156,211,.4)}
   background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;padding:14px;margin:8px 0}
 .draft .db{display:flex;gap:10px}
 .gone{color:var(--dim2);font-size:13px;text-align:center;padding:40px 0}
+
+/* mockup thumbs + lightbox */
+.thumb{width:52px;height:52px;object-fit:contain;border-radius:8px;background:#fff;
+  border:1px solid var(--line);cursor:zoom-in;flex:none;transition:transform .15s}
+.thumb:hover{transform:scale(1.06);border-color:rgba(75,156,211,.5)}
+.thumb.none{background:rgba(255,255,255,.04);cursor:default}
+.thumb.big{width:74px;height:74px}
+.jrow{display:flex;gap:14px;align-items:flex-start}
+#lightbox{display:none;position:fixed;inset:0;z-index:60;background:rgba(5,8,12,.85);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;cursor:zoom-out}
+#lightbox img{max-width:88vw;max-height:88vh;border-radius:14px;background:#fff;
+  box-shadow:0 30px 90px rgba(0,0,0,.6)}
+
+/* move control + menu */
+.movebtn{font:inherit;font-size:15px;color:var(--dim2);background:none;border:1px solid transparent;
+  border-radius:8px;padding:4px 8px;cursor:pointer;flex:none}
+.movebtn:hover{color:var(--blue2);border-color:rgba(75,156,211,.35);background:rgba(75,156,211,.08)}
+.movemenu{position:absolute;z-index:50;min-width:170px;padding:8px;display:flex;flex-direction:column;gap:4px}
+.movemenu .mm-title{font-size:11px;letter-spacing:.14em;color:var(--dim);padding:2px 8px 6px}
+.movemenu button{font:inherit;font-size:13.5px;font-weight:600;text-align:left;color:var(--txt);
+  background:none;border:none;border-radius:8px;padding:8px 12px;cursor:pointer}
+.movemenu button:hover{background:rgba(75,156,211,.18);color:#fff}
+.movemenu .mm-reset{color:var(--amber)}
 #err{display:none;margin-bottom:18px;padding:12px 18px;border-radius:12px;font-size:13.5px;
   background:rgba(224,82,82,.12);border:1px solid rgba(224,82,82,.4);color:#f2b8b8}
 .copyok{color:var(--green) !important;border-color:rgba(61,214,140,.5) !important}
@@ -179,27 +203,53 @@ nav button.on .n{background:rgba(75,156,211,.4)}
   <nav id="tabs"></nav>
   <main id="view"></main>
 </div>
+<div id="lightbox" onclick="this.style.display='none'"><img src="" alt=""></div>
 
 <script>
 "use strict";
 /* ===== config ===== */
 const WORKER = "https://mayhem-ops-state.autumn-mountain-14c6.workers.dev";
 const DATA_URL = "data/ops.json";
-const LANES = {FILMS:"Films", WVN:"Woven", DTF:"DTF", LASER:"Laser", DIGI:"Digitizing"};
+const LANES = {FILMS:"Films", WVN:"Woven", DTF:"DTF", LASER:"Laser", DIGI:"Digitizing", OUTSOURCE:"Outsource"};
 const ACT_LABEL = {onfile:"ON FILE", made:"MADE", ordered:"ORDERED", printed:"PRINTED",
                    sent:"SENT OUT", received:"RECEIVED"};
+// per-lane relabels: outsourced work is "ordered" out, then "received" back in
+const ACT_LABEL_LANE = {OUTSOURCE:{sent:"ORDERED"}};
+const LANE_ACTIONS = {FILMS:["onfile","made"], WVN:["ordered"], DTF:["printed","ordered"],
+                      LASER:["made"], DIGI:["onfile","sent","received"], OUTSOURCE:["sent","received"]};
 const LANE_SUB = {FILMS:"burn films & screens — knock off the repeats first",
   WVN:"order woven patches — longest lead time in the shop",
   DTF:"transfers to print (or order out)",
   LASER:"leather patches, engraving & UV — batch a day",
-  DIGI:"embroidery digitizing — send early, it round-trips"};
+  DIGI:"embroidery digitizing — send early, it round-trips",
+  OUTSOURCE:"ordered out (China etc.) — waiting on goods"};
 
 /* ===== identity from the bookmark hash: #k=KEY&who=joe ===== */
 const hashP = new URLSearchParams(location.hash.slice(1));
 const KEY = hashP.get("k") || "";
 const WHO = (hashP.get("who") || "").toLowerCase() || "shop";
 
-let OPS = null, STATE = {}, tab = sessionStorage.getItem("mo-tab") || "MUST";
+let OPS = null, STATE = {}, OV = {}, tab = sessionStorage.getItem("mo-tab") || "MUST";
+let V2IMG = {};   // visualId -> mockup path
+
+/* effective lanes after user moves (overrides live in KV, keyed by taskId).
+   The taskId NEVER changes on a move — check-off state follows the row. */
+function effLanes(){
+  const out = {}; for (const k of Object.keys(LANES)) out[k] = [];
+  for (const [k, rows] of Object.entries(OPS.lanes))
+    for (const r of rows){
+      const target = (OV[r.id] && LANES[OV[r.id].lane]) ? OV[r.id].lane : k;
+      const row = (target === k) ? r : {...r, actions: LANE_ACTIONS[target], moved: k};
+      out[target].push(row);
+    }
+  for (const l of Object.values(out)) l.sort((a,b) => a.due < b.due ? -1 : 1);
+  return out;
+}
+function effLaneOf(id){
+  if (OV[id] && LANES[OV[id].lane]) return OV[id].lane;
+  const suf = id.split(":")[1];
+  return {films:"FILMS", woven:"WVN", dtf:"DTF", laser:"LASER", digi:"DIGI"}[suf] || "FILMS";
+}
 
 /* ===== helpers ===== */
 const $ = s => document.querySelector(s);
@@ -230,8 +280,22 @@ async function loadState(){
   if (!KEY) return;
   try{
     const r = await fetch(WORKER + "/state?k=" + encodeURIComponent(KEY));
-    if (r.ok) STATE = (await r.json()).states || {};
+    if (r.ok){ const d = await r.json(); STATE = d.states || {}; OV = d.overrides || {}; }
   }catch(e){ /* keep last known state */ }
+}
+async function setOverride(id, lane){
+  const prev = OV[id];
+  if (lane) OV[id] = {lane, who:WHO, ts:new Date().toISOString()}; else delete OV[id];
+  render();
+  try{
+    const r = await fetch(WORKER + "/override", {method:"POST",
+      headers:{"Content-Type":"application/json","X-Ops-Key":KEY},
+      body:JSON.stringify({taskId:id, lane:lane||"", who:WHO})});
+    if (!r.ok) throw new Error(r.status);
+  }catch(e){
+    if (prev) OV[id] = prev; else delete OV[id];
+    showErr("Couldn't save that move — it was undone."); render();
+  }
 }
 async function setCheck(id, done, how){
   const prev = STATE[id];
@@ -254,7 +318,7 @@ function showErr(msg){ const e = $("#err"); e.textContent = msg; e.style.display
 
 /* ===== header ===== */
 function renderHeader(){
-  const open = Object.values(OPS.lanes).flat().filter(r => !isCleared(r)).length;
+  const open = Object.values(effLanes()).flat().filter(r => !isCleared(r)).length;
   const over = OPS.jobs.filter(j => j.overdue).length;
   $("#built").textContent = "built " + new Date(OPS.built).toLocaleString("en-US",
     {weekday:"short", hour:"numeric", minute:"2-digit"}).toLowerCase();
@@ -272,7 +336,8 @@ const isSent    = r => { const st = STATE[r.id]; return !!st && st.how === "sent
 /* ===== must-do ===== */
 function renderMust(){
   const box = $("#must"); box.style.display = "";
-  const rows = OPS.must.filter(r => !isCleared(r) && !isSent(r));
+  const rows = OPS.must.filter(r => !isCleared(r) && !isSent(r))
+                       .map(r => ({...r, lane: effLaneOf(r.id)}));
   if (!rows.length){
     box.className = "card clear"; box.id = "must";
     box.innerHTML = `<h2>MUST-DO TODAY</h2><div class="zero">Nothing burns today — you're ahead. 🤘</div>`;
@@ -290,14 +355,13 @@ function jobId(v){ const j = OPS.jobs.find(x => x.visualId === v); return j ? j.
 
 /* ===== tabs ===== */
 function renderTabs(){
+  const eff = effLanes();
   const t = [["MUST","Board"],["ALL","All Jobs"]];
   for (const [k, label] of Object.entries(LANES)){
-    const total = OPS.lanes[k].length;
-    if (!total) continue;
-    const openN = OPS.lanes[k].filter(r => !isCleared(r)).length;
-    t.push([k, label, openN]);
+    if (!eff[k].length) continue;
+    t.push([k, label, eff[k].filter(r => !isCleared(r)).length]);
   }
-  if (KEY) t.push(["PEND","Pending", OPS.pendingCount]);
+  if (KEY) t.push(["PEND","Pending Quotes", OPS.pendingCount]);
   $("#tabs").innerHTML = t.map(([k,label,n]) =>
     `<button data-t="${k}" class="${tab===k?"on":""}">${label}${n!=null?`<span class="n">${n}</span>`:""}</button>`).join("");
   document.querySelectorAll("#tabs button").forEach(b =>
@@ -306,7 +370,7 @@ function renderTabs(){
 
 /* ===== lane view ===== */
 function laneView(k){
-  const rows = OPS.lanes[k];
+  const rows = effLanes()[k];
   const openRows = rows.filter(r => !isCleared(r));
   const clearedN = rows.length - openRows.length;
   let tallies = "";
@@ -321,6 +385,7 @@ function laneView(k){
   return `<div class="lanehead"><b>${LANES[k]}</b> — ${LANE_SUB[k]}</div>
           <div class="lanewrap">${list || `<div class="gone">Lane's empty. Nothing to do here.</div>`}</div>${tallies}`;
 }
+function actLbl(k, a){ return (ACT_LABEL_LANE[k] && ACT_LABEL_LANE[k][a]) || ACT_LABEL[a]; }
 function laneRow(k, r){
   const st = STATE[r.id];
   const cleared = isCleared(r), sent = isSent(r);
@@ -328,12 +393,15 @@ function laneRow(k, r){
   if (cleared){
     right = `<span class="stamp" title="click to un-check" data-un="${r.id}">${stampTxt(st)}</span>`;
   } else if (sent){
-    right = `<span class="sentnote">out @ ${new Date(st.ts).toLocaleDateString("en-US",{month:"numeric",day:"numeric"})} · ${esc(st.who)}</span>
+    const lbl = k === "OUTSOURCE" ? "ordered" : "out";
+    right = `<span class="sentnote">${lbl} @ ${new Date(st.ts).toLocaleDateString("en-US",{month:"numeric",day:"numeric"})} · ${esc(st.who)}</span>
              <div class="acts"><button data-act="received" data-id="${r.id}">RECEIVED</button></div>`;
   } else {
     right = `<div class="acts">` + r.actions.filter(a => a !== "received").map(a =>
-      `<button data-act="${a}" data-id="${r.id}">${ACT_LABEL[a]}</button>`).join("") + `</div>`;
+      `<button data-act="${a}" data-id="${r.id}">${actLbl(k, a)}</button>`).join("") + `</div>`;
   }
+  // move control: every row can be re-laned; taskId (and its check state) never changes
+  right += `<button class="movebtn" data-move="${r.id}" title="move to another lane">⇄</button>`;
   let badge = "";
   if (r.repeat){
     const cls = {strong:"b-strong", standing:"b-standing", weak:"b-weak"}[r.repeat.conf] || "b-weak";
@@ -341,8 +409,13 @@ function laneRow(k, r){
     badge = `<span class="badge ${cls}" title="${esc(r.repeat.why)}">${lbl}${r.repeat.prior ? " #"+r.repeat.prior : ""}</span>`;
   }
   if (r.hint) badge += `<span class="badge b-standing" title="${esc(r.hint)}">DST on file?</span>`;
+  if (r.moved) badge += `<span class="badge b-flag" title="moved by ${esc((OV[r.id]||{}).who||"?")} — click ⇄ to move back">was ${LANES[r.moved]}</span>`;
   const sub = [r.locs && r.locs.length ? esc(r.locs.join(" · ")) : "", r.what ? esc(r.what) : ""].filter(Boolean).join(" · ");
+  const img = V2IMG[r.v];
+  const thumb = img ? `<img class="thumb" src="${img}" loading="lazy" data-zoom="${img}" alt="">`
+                    : `<span class="thumb none"></span>`;
   return `<div class="row card ${cleared?"done":""} ${sent?"sent":""}">
+    ${thumb}
     <span class="v"><a href="https://www.printavo.com/invoices/${jobId(r.v)}" target="_blank">#${r.v}</a></span>
     <div class="meat"><div class="job">${esc(r.job)}${badge}</div>
       <div class="sub">${esc(r.cust)}${sub ? " — " + sub : ""}</div></div>
@@ -354,26 +427,31 @@ function laneRow(k, r){
 /* ===== all jobs ===== */
 function allView(){
   return `<div class="grid">` + OPS.jobs.map(j => {
-    const laneRows = Object.values(OPS.lanes).flat().filter(r => r.v === j.visualId);
+    const laneRows = Object.values(effLanes()).flat().filter(r => r.v === j.visualId);
     const items = laneRows.map(r => {
       const done = isCleared(r);
-      return `<li class="${done?"tdone":""}"><span class="tick"></span>${LANES[laneKeyOf(r)]}: ${esc(laneLabel(r))}${done ? ` <span style="color:var(--green)">${esc(STATE[r.id].who)}</span>`:""}</li>`;
+      return `<li class="${done?"tdone":""}"><span class="tick"></span>${LANES[effLaneOf(r.id)]}: ${esc(laneLabel(r))}${done ? ` <span style="color:var(--green)">${esc(STATE[r.id].who)}</span>`:""}</li>`;
     }).join("");
+    const img = V2IMG[j.visualId];
+    const cardThumb = img ? `<img class="thumb big" src="${img}" loading="lazy" data-zoom="${img}" alt="">` : "";
     const badges =
       (j.new ? `<span class="badge b-new">NEW</span>` : "") +
       (j.onHold ? `<span class="badge b-hold">ON HOLD</span>` : "") +
       j.flags.filter(f => f !== "ON HOLD").map(f => `<span class="badge b-flag">${esc(f)}</span>`).join("");
     return `<div class="card jcard ${j.overdue?"overduecard":""}">
-      <div class="top"><span class="v"><a style="color:var(--blue2);text-decoration:none;font-weight:800" href="${j.url}" target="_blank">#${j.visualId}</a></span>
-        <span class="nick">${esc(j.nickname || j.customer)}</span>
-        <span class="due ${j.overdue?"u-red":j.days<=2?"u-amber":"u-ok"}">${dueTxt(j.days, j.due)}</span></div>
-      <div class="cust">${esc(j.customer)} · ${j.qty} pcs · ${esc(j.status)}</div>
-      <div class="chips">${j.services.map(s=>`<span class="chip">${s}</span>`).join("")}${badges}</div>
-      <ul>${items}</ul></div>`;
+      <div class="jrow">
+        ${cardThumb}
+        <div style="flex:1;min-width:0">
+          <div class="top"><span class="v"><a style="color:var(--blue2);text-decoration:none;font-weight:800" href="${j.url}" target="_blank">#${j.visualId}</a></span>
+            <span class="nick">${esc(j.nickname || j.customer)}</span>
+            <span class="due ${j.overdue?"u-red":j.days<=2?"u-amber":"u-ok"}">${dueTxt(j.days, j.due)}</span></div>
+          <div class="cust">${esc(j.customer)} · ${j.qty} pcs · ${esc(j.status)}</div>
+          <div class="chips">${j.services.map(s=>`<span class="chip">${s}</span>`).join("")}${badges}</div>
+          <ul>${items}</ul>
+        </div>
+      </div></div>`;
   }).join("") + `</div>`;
 }
-function laneKeyOf(r){ return r.id.split(":")[1] === "films" ? "FILMS" : r.id.split(":")[1] === "woven" ? "WVN"
-  : r.id.split(":")[1] === "dtf" ? "DTF" : r.id.split(":")[1] === "laser" ? "LASER" : "DIGI"; }
 function laneLabel(r){ return r.what || (r.locs && r.locs.length ? r.locs.join(", ") : (r.qty ? r.qty + " pc" : "task")); }
 
 /* ===== pending ===== */
@@ -446,14 +524,38 @@ async function render(){
     setCheck(b.dataset.id, true, b.dataset.act));
   document.querySelectorAll("[data-un]").forEach(s => s.onclick = () =>
     setCheck(s.dataset.un, false, ""));
+  // move menu
+  document.querySelectorAll("[data-move]").forEach(b => b.onclick = ev => {
+    ev.stopPropagation(); closeMenu();
+    const id = b.dataset.move, cur = effLaneOf(id);
+    const m = document.createElement("div"); m.className = "movemenu card";
+    m.innerHTML = `<div class="mm-title">Move to…</div>` +
+      Object.entries(LANES).filter(([k]) => k !== cur)
+        .map(([k, l]) => `<button data-l="${k}">${l}</button>`).join("") +
+      (OV[id] ? `<button data-l="" class="mm-reset">↩ back to auto</button>` : "");
+    document.body.appendChild(m);
+    const r = b.getBoundingClientRect();
+    m.style.top = (r.bottom + scrollY + 6) + "px";
+    m.style.left = Math.min(r.left + scrollX, innerWidth - 190) + "px";
+    m.querySelectorAll("button").forEach(x => x.onclick = e => {
+      e.stopPropagation(); setOverride(id, x.dataset.l); closeMenu(); });
+  });
+  // mockup zoom
+  document.querySelectorAll("[data-zoom]").forEach(i => i.onclick = ev => {
+    ev.stopPropagation();
+    const lb = $("#lightbox"); lb.querySelector("img").src = i.dataset.zoom; lb.style.display = "flex";
+  });
   if (tab === "PEND") wirePend();
 }
+function closeMenu(){ document.querySelectorAll(".movemenu").forEach(m => m.remove()); }
+document.addEventListener("click", closeMenu);
 
 /* ===== boot ===== */
 (async function(){
   try{ await loadOps(); }
   catch(e){ $("#built").textContent = ""; showErr("Couldn't load the board data (" + e.message + "). Check the publish."); return; }
-  if (!KEY) showErr("No key in the bookmark — board is read-only and Pending is hidden. Use the full bookmarked link.");
+  V2IMG = {}; OPS.jobs.forEach(j => { if (j.img) V2IMG[j.visualId] = j.img; });
+  if (!KEY) showErr("No key in the bookmark — board is read-only and Pending Quotes is hidden. Use the full bookmarked link.");
   await loadState();
   render();
   setInterval(async () => { await loadState(); render(); }, 60000);   // two-iMac sync
