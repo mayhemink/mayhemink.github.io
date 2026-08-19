@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.5 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave</title>
+<title>Mayhem Patch Lab v0.6 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -96,6 +96,17 @@
   .lea-sw .rev{position:absolute;right:0;bottom:0;width:45%;height:45%;border-top-left-radius:4px;}
   .lea-cat{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);margin:10px 0 2px;}
   details.cfg summary{font-size:11px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;}
+  .preset-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px;}
+  .preset-row button{background:var(--surface2);border:1px solid var(--line2);color:var(--muted);padding:7px 6px;cursor:pointer;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;}
+  .preset-row button:hover{border-color:var(--accent2);color:var(--ink);}
+  .preset-row button.on{background:var(--accent);border-color:var(--accent);color:#111;}
+  .pr-tiers{width:100%;border-collapse:collapse;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:12px;}
+  .pr-tiers td,.pr-tiers th{border:1px solid var(--line2);padding:5px 8px;text-align:right;}
+  .pr-tiers th{color:var(--accent2);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;text-align:right;}
+  .pr-tiers tr.on td{background:var(--surface2);color:var(--accent2);font-weight:700;}
+  .pr-big{font-family:'Archivo Black',sans-serif;font-size:26px;color:var(--ink);margin:8px 0 0;}
+  .pr-big small{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  .cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 </style>
 </head>
 <body>
@@ -103,7 +114,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.5</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.6</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -173,6 +184,8 @@
         <div class="note">Pre-made blank: the border is molded in the bottom-layer color. No cutting — engrave in the jig.</div>
       </div>
       <div id="cutControls">
+      <label class="lbl">Hat presets — one click, standard sizes</label>
+      <div class="preset-row" id="presetRow"></div>
       <label class="lbl">Cut shape</label>
       <div class="segmented" id="shapeSeg">
         <button data-shape="contour" class="on">CONTOUR</button>
@@ -310,6 +323,35 @@
       </div>
     </div>
 
+    <div class="panel">
+      <h3><span class="stepnum">7</span> PRICE</h3>
+      <p class="desc">Live price from the shop's own costs — PatchForge can't do this. Edit costs below; they save in this browser.</p>
+      <label class="lbl">Quantity</label>
+      <input type="number" id="prQty" value="24" min="1" max="10000" step="1">
+      <div class="pr-big" id="prBig">—</div>
+      <div class="val" id="prBreak"></div>
+      <table class="pr-tiers" id="prTiers"></table>
+      <details class="cfg" style="margin-top:12px;">
+        <summary>⚙ shop costs — edit &amp; save</summary>
+        <div class="cost-grid">
+          <div><label class="lbl">Sheet cost $ (12×24)</label><input type="number" id="cSheet" step="0.5" min="0"></div>
+          <div><label class="lbl">Waste %</label><input type="number" id="cWaste" step="1" min="0" max="60"></div>
+          <div><label class="lbl">Silicone blank $ ea</label><input type="number" id="cBlank" step="0.1" min="0"></div>
+          <div><label class="lbl">Labor+machine $ / patch</label><input type="number" id="cLabor" step="0.05" min="0"></div>
+          <div><label class="lbl">UV ink $ / sq in</label><input type="number" id="cInk" step="0.01" min="0"></div>
+          <div><label class="lbl">Job setup fee $</label><input type="number" id="cSetup" step="1" min="0"></div>
+          <div><label class="lbl">Markup ×</label><input type="number" id="cMarkup" step="0.1" min="1"></div>
+          <div><label class="lbl">Min price $ ea</label><input type="number" id="cMin" step="0.25" min="0"></div>
+          <div><label class="lbl">12+ multiplier</label><input type="number" id="cT12" step="0.01" min="0.1" max="1"></div>
+          <div><label class="lbl">24+ multiplier</label><input type="number" id="cT24" step="0.01" min="0.1" max="1"></div>
+          <div><label class="lbl">48+ multiplier</label><input type="number" id="cT48" step="0.01" min="0.1" max="1"></div>
+          <div><label class="lbl">96+ multiplier</label><input type="number" id="cT96" step="0.01" min="0.1" max="1"></div>
+        </div>
+        <div class="btnrow"><button class="btn sm" id="cSave">SAVE COSTS</button><button class="btn sm ghost" id="cReset">RESET DEFAULTS</button></div>
+        <div class="val" id="cStatus"></div>
+      </details>
+    </div>
+
   </div>
 
   <div class="col-right">
@@ -360,7 +402,8 @@ const state={
   hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true},
   gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0},
   eng:{on:false,cat:'',name:'',top:'#151515',engC:'#C8A24B',override:false,invert:false,settings:'',blank:false},
-  blank:{shape:'rect',border:0.19,shapes:null}
+  blank:{shape:'rect',border:0.19,shapes:null},
+  presetId:null
 };
 function styleSnap(){
   return state.eng.on
@@ -610,6 +653,7 @@ function computeCut(){
   $('blobWarn').hidden=true;
   if(!state.art)return;
   if(state.eng.on&&state.eng.blank){buildBlankCut();return;}
+  if(state.presetId){buildPresetCut();if(state.cut)return;}
   const art=state.art;
   const artAspect=art.height/art.width;
   const artWin=state.artW, artHin=state.artW*artAspect;
@@ -919,6 +963,12 @@ function refresh(){
   ['dlPrint','dlApproval','dlZip'].forEach(id=>$(id).disabled=!ready);
   ['dlSvg','dlDxf'].forEach(id=>$(id).disabled=!ready||isBlank); /* pre-made blanks: nothing to cut */
   $('gsAdd').disabled=!ready||isBlank; /* blanks engrave in the jig, not on a gang sheet */
+  updatePrice();
+  if(ready&&state.tab==='patch'){
+    const q=Math.max(1,Math.round(parseFloat($('prQty').value)||1));
+    const u=unitPrice(q);
+    if(u)$('dimsBar').innerHTML+=' · <b>$'+u.price.toFixed(2)+'/ea @ '+q+'</b>';
+  }
   const gready=!!(state.gang.placed&&state.gang.placed.length);
   ['gsDlPrint','gsDlSvg','gsDlDxf','gsDlPC','gsDlZip'].forEach(id=>$(id).disabled=!gready);
   updateVecBtn();
@@ -1167,6 +1217,8 @@ $('shapeSeg').querySelectorAll('button').forEach(b=>{
     $('shapeSeg').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');
     state.shape=b.dataset.shape;
+    state.presetId=null;   /* picking a custom shape leaves preset mode */
+    renderPresets();
     $('radiusRow').hidden=state.shape!=='round';
     recompute();
   };
@@ -1496,6 +1548,109 @@ $('blankBorder').oninput=()=>{
   $('blankBorderVal').textContent=state.blank.border.toFixed(3)+'"';
   recompute();
 };
+
+/* ---------- HAT SHAPE PRESETS (v0.6) ---------- */
+const PRESETS=[
+  {id:'r3525', n:'3.5″×2.5″ RECT',   shape:'rect',  w:3.5,h:2.5,r:0.25},
+  {id:'cap2520',n:'2.5″×2″ CAP FRONT',shape:'rect',  w:2.5,h:2,  r:0.25},
+  {id:'sq25',  n:'2.5″ SQUARE',      shape:'rect',  w:2.5,h:2.5,r:0.25},
+  {id:'cir25', n:'2.5″ CIRCLE',      shape:'circle',w:2.5,h:2.5},
+  {id:'rock3515',n:'3.5″×1.5″ ROCKER',shape:'rect', w:3.5,h:1.5,r:0.6},
+  {id:'r3020', n:'3″×2″ RECT',       shape:'rect',  w:3,  h:2,  r:0.25}
+];
+function buildPresetCut(){
+  const p=PRESETS.find(x=>x.id===state.presetId);
+  if(!p){state.presetId=null;return;}
+  const W=p.w,H=p.h;
+  const outer=blankShapePoly(W,H,p.shape,p.r,0);
+  const art=state.art, aspect=art.height/art.width;
+  const pad=Math.max(0.06,state.offset);
+  let aw=Math.min(state.artW,W-2*pad), ah=aw*aspect;
+  const maxH=H-2*pad;
+  if(ah>maxH){ah=maxH;aw=ah/aspect;}
+  state.cut={polys:[outer],w:W,h:H,svgPath:null,
+    art:{x:W/2-aw/2,y:H/2-ah/2,w:aw,h:ah},blobCount:1,preset:p.id};
+}
+function renderPresets(){
+  const row=$('presetRow');row.innerHTML='';
+  PRESETS.forEach(p=>{
+    const b=document.createElement('button');
+    b.textContent=p.n;
+    b.className=state.presetId===p.id?'on':'';
+    b.onclick=()=>{
+      state.presetId=state.presetId===p.id?null:p.id;
+      renderPresets();
+      recompute();
+    };
+    row.appendChild(b);
+  });
+}
+renderPresets();
+
+/* ---------- LIVE PRICING (v0.6 — the shop's real costs, editable, saved in-browser) ---------- */
+const COST_KEY='mayhemPatchCosts';
+const COST_DEFAULTS={sheet:30,waste:15,blank:2.5,labor:1.0,ink:0.05,setup:10,markup:2.5,min:2.0,t12:0.85,t24:0.75,t48:0.65,t96:0.55};
+const COST_FIELDS={cSheet:'sheet',cWaste:'waste',cBlank:'blank',cLabor:'labor',cInk:'ink',cSetup:'setup',cMarkup:'markup',cMin:'min',cT12:'t12',cT24:'t24',cT48:'t48',cT96:'t96'};
+function costs(){
+  try{return Object.assign({},COST_DEFAULTS,JSON.parse(localStorage.getItem(COST_KEY)||'{}'));}
+  catch(e){return Object.assign({},COST_DEFAULTS);}
+}
+function tierMult(q,C){return q>=96?C.t96:q>=48?C.t48:q>=24?C.t24:q>=12?C.t12:1;}
+function unitPrice(q){
+  if(!state.cut)return null;
+  const C=costs();
+  const area=state.cut.w*state.cut.h;
+  const mat=state.cut.blank?C.blank:(area*(1+C.waste/100))/(12*24)*C.sheet;
+  const ink=state.eng.on?0:area*C.ink;
+  const cost=mat+C.labor+ink;
+  const price=Math.max(C.min,cost*C.markup*tierMult(q,C));
+  return {price,cost,mat,ink,C};
+}
+function updatePrice(){
+  if(!$('prQty'))return;
+  const q=Math.max(1,Math.round(parseFloat($('prQty').value)||1));
+  const u=unitPrice(q);
+  if(!u){
+    $('prBig').textContent='—';
+    $('prBreak').textContent='Load art to price the patch.';
+    $('prTiers').innerHTML='';
+    return;
+  }
+  const total=u.price*q+u.C.setup;
+  $('prBig').innerHTML='$'+u.price.toFixed(2)+' <small>each</small>&ensp;·&ensp;$'+total.toFixed(2)+' <small>job @ '+q+' (incl. $'+u.C.setup.toFixed(0)+' setup)</small>';
+  $('prBreak').textContent='cost/patch $'+u.cost.toFixed(2)+'  =  material $'+u.mat.toFixed(2)+
+    (u.ink?' + ink $'+u.ink.toFixed(2):'')+' + labor/machine $'+u.C.labor.toFixed(2)+
+    '  ·  markup ×'+u.C.markup+(state.cut.blank?'  ·  pre-made blank':'');
+  let html='<tr><th>qty</th><th>each</th><th>job total</th></tr>';
+  for(const t of [12,24,48,96,144]){
+    const uu=unitPrice(t);
+    const on=tierMult(q,u.C)===tierMult(t,u.C);
+    html+='<tr'+(on?' class="on"':'')+'><td>'+t+'</td><td>$'+uu.price.toFixed(2)+'</td><td>$'+(uu.price*t+uu.C.setup).toFixed(2)+'</td></tr>';
+  }
+  $('prTiers').innerHTML=html;
+}
+function loadCostUI(){
+  const C=costs();
+  for(const [id,k] of Object.entries(COST_FIELDS))$(id).value=String(C[k]);
+}
+$('cSave').onclick=()=>{
+  const o={};
+  for(const [id,k] of Object.entries(COST_FIELDS)){
+    const v=parseFloat($(id).value);
+    if(isFinite(v))o[k]=v;
+  }
+  localStorage.setItem(COST_KEY,JSON.stringify(o));
+  $('cStatus').textContent='Saved '+new Date().toLocaleTimeString()+' (this browser only).';
+  updatePrice();
+};
+$('cReset').onclick=()=>{
+  localStorage.removeItem(COST_KEY);
+  loadCostUI();
+  $('cStatus').textContent='Back to defaults.';
+  updatePrice();
+};
+$('prQty').oninput=updatePrice;
+loadCostUI();
 function buildEngraveCanvas(){
   const prod=renderPatch(DPI,true); /* black-on-transparent engrave form */
   const c=document.createElement('canvas');c.width=prod.width;c.height=prod.height;
