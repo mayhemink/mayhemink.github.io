@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.2 — Patch Designer / Cut Lines / Hat Mockups</title>
+<title>Mayhem Patch Lab v0.3 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -84,6 +84,11 @@
   .cat-item{padding:6px 10px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--line);color:var(--ink);}
   .cat-item:hover{background:var(--surface2);}
   .cat-item.on{background:var(--accent);color:#111;}
+  .gang-item{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:6px 8px;margin-top:6px;font-size:12px;}
+  .gang-item .gi-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .gang-item .gi-dim{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:11px;white-space:nowrap;}
+  .gang-item input.gi-qty{width:54px;padding:4px 6px;}
+  .gang-item button.gi-x{background:transparent;border:none;color:var(--warn);cursor:pointer;font-size:15px;padding:0 4px;line-height:1;}
 </style>
 </head>
 <body>
@@ -91,8 +96,8 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.2</span></h1>
-      <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.3</span></h1>
+      <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
   </div>
@@ -203,12 +208,66 @@
       <div class="btnrow"><button class="btn" id="dlZip" disabled>⬇ JOB ZIP — ALL FILES</button></div>
     </div>
 
+    <div class="panel">
+      <h3><span class="stepnum">6</span> GANG SHEET</h3>
+      <p class="desc">Batch a full run: auto-nest patches onto one sheet — one E1 print, one P3 cut job.</p>
+      <div class="row2">
+        <div><label class="lbl">Sheet W (in)</label><input type="number" id="gsW" value="12" min="2" max="48" step="0.5"></div>
+        <div><label class="lbl">Sheet H (in)</label><input type="number" id="gsH" value="24" min="2" max="48" step="0.5"></div>
+      </div>
+      <div class="row2">
+        <div><label class="lbl">Margin (in)</label><input type="number" id="gsMargin" value="0.25" min="0" max="2" step="0.05"></div>
+        <div><label class="lbl">Spacing (in)</label><input type="number" id="gsGap" value="0.125" min="0.02" max="1" step="0.005"></div>
+      </div>
+      <label class="checkline"><input type="checkbox" id="gsMarks" checked> Print registration marks</label>
+      <label class="checkline"><input type="checkbox" id="gsRotate" checked> Allow 90° rotation</label>
+      <label class="lbl">Add current patch × quantity</label>
+      <div class="row2">
+        <input type="number" id="gsQty" value="12" min="1" max="500" step="1">
+        <button class="btn sm" id="gsAdd" disabled>＋ ADD TO SHEET</button>
+      </div>
+      <div id="gsList"></div>
+      <div class="val" id="gsStats"></div>
+      <div class="note warn" id="gsWarn" hidden></div>
+      <div class="dl-grid" style="margin-top:12px;">
+        <div class="dl-card">
+          <h4>SHEET PRINT (PNG)</h4>
+          <p class="machine">eufyMake E1</p>
+          <p>Full sheet @ 300 DPI, transparent.</p>
+          <button class="btn sm" id="gsDlPrint" disabled>Download</button>
+        </div>
+        <div class="dl-card">
+          <h4>SHEET CUT (SVG)</h4>
+          <p class="machine">xTool P3 · XCS</p>
+          <p>All cut lines, true size.</p>
+          <button class="btn sm" id="gsDlSvg" disabled>Download</button>
+        </div>
+        <div class="dl-card">
+          <h4>SHEET CUT (DXF)</h4>
+          <p class="machine">xTool P3 · XCS</p>
+          <p>Inch-unit polylines.</p>
+          <button class="btn sm" id="gsDlDxf" disabled>Download</button>
+        </div>
+        <div class="dl-card">
+          <h4>PRINT+CUT (SVG)</h4>
+          <p class="machine">RIP / combined</p>
+          <p>Art + CutContour strokes, one file.</p>
+          <button class="btn sm" id="gsDlPC" disabled>Download</button>
+        </div>
+      </div>
+      <div class="btnrow">
+        <button class="btn" id="gsDlZip" disabled>⬇ GANG SHEET ZIP</button>
+        <button class="btn ghost" id="gsClear">CLEAR SHEET</button>
+      </div>
+    </div>
+
   </div>
 
   <div class="col-right">
     <div class="tabs">
       <button id="tabPatch" class="on">PATCH PREVIEW</button>
       <button id="tabHat">HAT MOCKUP</button>
+      <button id="tabGang">GANG SHEET</button>
     </div>
     <div class="stage">
       <div class="stage-canvas-wrap" id="stageWrap">
@@ -249,7 +308,8 @@ const state={
   bgColor:'#F5F0E6',
   cut:null,            /* {polys:[[{x,y}in]], w,h, art:{x,y,w,h}, blobCount} */
   tab:'patch',
-  hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true}
+  hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true},
+  gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0}
 };
 
 /* ---------- art loading (Mockup Lab pattern: trim to alpha bbox, SVG rasterized big) ---------- */
@@ -560,9 +620,9 @@ function computeCut(){
     $('blobWarn').textContent='⚠ Art separates into '+polys.length+' pieces at this offset — increase the cut offset until it bridges into one patch, or the P3 will cut '+polys.length+' parts.';
   }
 }
-function cutPath2D(scale){
+function cutPath2DG(cut,scale){
   const p=new Path2D();
-  for(const poly of state.cut.polys){
+  for(const poly of cut.polys){
     poly.forEach((pt,i)=>{
       if(i===0)p.moveTo(pt[0]*scale,pt[1]*scale);
       else p.lineTo(pt[0]*scale,pt[1]*scale);
@@ -571,6 +631,7 @@ function cutPath2D(scale){
   }
   return p;
 }
+function cutPath2D(scale){return cutPath2DG(state.cut,scale);}
 function cutSvgD(){
   if(state.cut.svgPath)return state.cut.svgPath;
   let d='';
@@ -582,22 +643,25 @@ function cutSvgD(){
 }
 
 /* ---------- patch compositor (shared by preview / print / mockup / approval) ---------- */
-function renderPatch(scalePxPerIn,forPrint){
+function renderPatchG(cut,art,bgOn,bgColor,scalePxPerIn,forPrint){
   const c=document.createElement('canvas');
-  c.width=Math.max(2,Math.round(state.cut.w*scalePxPerIn));
-  c.height=Math.max(2,Math.round(state.cut.h*scalePxPerIn));
+  c.width=Math.max(2,Math.round(cut.w*scalePxPerIn));
+  c.height=Math.max(2,Math.round(cut.h*scalePxPerIn));
   const ctx=c.getContext('2d');
-  const path=cutPath2D(scalePxPerIn);
-  if(state.bgOn){ctx.save();ctx.fillStyle=state.bgColor;ctx.fill(path);ctx.restore();}
+  const path=cutPath2DG(cut,scalePxPerIn);
+  if(bgOn){ctx.save();ctx.fillStyle=bgColor;ctx.fill(path);ctx.restore();}
   ctx.save();ctx.clip(path);
-  const a=state.cut.art;
+  const a=cut.art;
   ctx.imageSmoothingQuality='high';
-  ctx.drawImage(state.art,a.x*scalePxPerIn,a.y*scalePxPerIn,a.w*scalePxPerIn,a.h*scalePxPerIn);
+  ctx.drawImage(art,a.x*scalePxPerIn,a.y*scalePxPerIn,a.w*scalePxPerIn,a.h*scalePxPerIn);
   ctx.restore();
   if(!forPrint){ /* preview edge hint */
     ctx.save();ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=Math.max(1,scalePxPerIn*0.012);ctx.stroke(path);ctx.restore();
   }
   return c;
+}
+function renderPatch(scalePxPerIn,forPrint){
+  return renderPatchG(state.cut,state.art,state.bgOn,state.bgColor,scalePxPerIn,forPrint);
 }
 
 /* ---------- stage rendering ---------- */
@@ -671,9 +735,14 @@ function drawHatMockup(){
   }
 }
 function refresh(){
-  if(state.tab==='patch')drawPatchPreview();else drawHatMockup();
+  if(state.tab==='patch')drawPatchPreview();
+  else if(state.tab==='hat')drawHatMockup();
+  else drawGangSheet();
   const ready=!!state.cut;
   ['dlPrint','dlSvg','dlDxf','dlApproval','dlZip'].forEach(id=>$(id).disabled=!ready);
+  $('gsAdd').disabled=!ready;
+  const gready=!!(state.gang.placed&&state.gang.placed.length);
+  ['gsDlPrint','gsDlSvg','gsDlDxf','gsDlPC','gsDlZip'].forEach(id=>$(id).disabled=!gready);
   $('statusBadge').textContent=state.art
     ?(state.cut?('PATCH '+state.cut.w.toFixed(2)+'" × '+state.cut.h.toFixed(2)+'"'):'COMPUTING…')
     :'NO ART LOADED';
@@ -920,10 +989,12 @@ function setTab(t){
   state.tab=t;
   $('tabPatch').classList.toggle('on',t==='patch');
   $('tabHat').classList.toggle('on',t==='hat');
+  $('tabGang').classList.toggle('on',t==='gang');
   refresh();
 }
 $('tabPatch').onclick=()=>setTab('patch');
 $('tabHat').onclick=()=>setTab('hat');
+$('tabGang').onclick=()=>setTab('gang');
 
 /* ---------- Richardson 112 catalog (v0.2) ---------- */
 const HAT_BASE='hats/R112/';
@@ -977,6 +1048,280 @@ $('viewSeg').querySelectorAll('button').forEach(b=>{
   };
 });
 catInit();
+
+/* ---------- GANG SHEET (v0.3) ----------
+   Snapshot the current patch (cut geometry + art canvas refs stay valid because
+   computeCut()/art loads always REPLACE the objects), shelf auto-nest with
+   optional 90° rotation, reg marks, utilization %, full-sheet exports.
+   Same-frame rule: every sheet export spans the exact full sheet W x H.     */
+let gangId=0;
+const REG_INSET=0.45;   /* extra nest inset when reg marks are on (in) */
+function gangUsable(){
+  const g=state.gang;
+  const inset=g.margin+(g.marks?REG_INSET:0);
+  return {x:inset,y:inset,w:g.w-2*inset,h:g.h-2*inset};
+}
+function gangNest(){
+  const g=state.gang;
+  const u=gangUsable();
+  const inst=[];
+  g.items.forEach(it=>{for(let i=0;i<it.qty;i++)inst.push(it);});
+  inst.sort((a,b)=>Math.max(b.cut.w,b.cut.h)-Math.max(a.cut.w,a.cut.h));
+  const shelves=[];
+  let yCur=0,unplaced=0;
+  const placed=[];
+  for(const it of inst){
+    const opts=[[it.cut.w,it.cut.h,false]];
+    if(g.rotate&&Math.abs(it.cut.w-it.cut.h)>1e-6)opts.push([it.cut.h,it.cut.w,true]);
+    let best=null;
+    for(const sh of shelves){
+      for(const [w,h,rot] of opts){
+        if(sh.x+w<=u.w+1e-9&&h<=sh.h+1e-9){
+          const waste=sh.h-h;
+          if(!best||waste<best.waste)best={sh,w,h,rot,waste};
+        }
+      }
+    }
+    if(!best){
+      let cand=null;
+      for(const [w,h,rot] of opts){
+        if(w<=u.w+1e-9&&yCur+h<=u.h+1e-9){if(!cand||h<cand.h)cand={w,h,rot};}
+      }
+      if(cand){
+        const sh={y:yCur,h:cand.h,x:0};
+        shelves.push(sh);
+        yCur+=cand.h+g.gap;
+        best={sh,w:cand.w,h:cand.h,rot:cand.rot,waste:0};
+      }
+    }
+    if(best){
+      placed.push({it,x:u.x+best.sh.x,y:u.y+best.sh.y,w:best.w,h:best.h,rot:best.rot});
+      best.sh.x+=best.w+g.gap;
+    }else unplaced++;
+  }
+  g.placed=placed;g.unplaced=unplaced;
+  const area=placed.reduce((s,p)=>s+p.w*p.h,0);
+  g.util=(u.w>0&&u.h>0)?area/(u.w*u.h):0;
+}
+function placedPolys(pl){
+  /* placed cut polygons in SHEET inches; rot = 90° cw: (px,py)->(h-py,px) */
+  const out=[];
+  for(const poly of pl.it.cut.polys){
+    out.push(poly.map(p=>pl.rot
+      ?[pl.x+pl.it.cut.h-p[1],pl.y+p[0]]
+      :[pl.x+p[0],pl.y+p[1]]));
+  }
+  return out;
+}
+function regMarkPts(){
+  const g=state.gang,o=g.margin+0.15;
+  return [[o,o],[g.w-o,o],[o,g.h-o],[g.w-o,g.h-o]];
+}
+function drawRegMarks(ctx,ppi){
+  const r=0.12*ppi;
+  ctx.save();
+  ctx.strokeStyle='#000';ctx.lineWidth=Math.max(1,0.02*ppi);
+  for(const [cx,cy] of regMarkPts()){
+    ctx.beginPath();ctx.arc(cx*ppi,cy*ppi,r,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx*ppi-r*1.6,cy*ppi);ctx.lineTo(cx*ppi+r*1.6,cy*ppi);
+    ctx.moveTo(cx*ppi,cy*ppi-r*1.6);ctx.lineTo(cx*ppi,cy*ppi+r*1.6);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawGangPatches(ctx,ppi,forPrint){
+  const g=state.gang;
+  if(!g.placed)return;
+  for(const pl of g.placed){
+    const pc=renderPatchG(pl.it.cut,pl.it.art,pl.it.bgOn,pl.it.bgColor,ppi,forPrint);
+    ctx.save();
+    ctx.translate(pl.x*ppi,pl.y*ppi);
+    if(pl.rot){ctx.translate(pl.w*ppi,0);ctx.rotate(Math.PI/2);}
+    ctx.drawImage(pc,0,0);
+    ctx.restore();
+  }
+}
+function drawGangSheet(){
+  const cv=$('stageCv'),ctx=cv.getContext('2d');
+  const g=state.gang;
+  const ppi=Math.min(950/g.w,1500/g.h);
+  cv.width=Math.max(2,Math.round(g.w*ppi));
+  cv.height=Math.max(2,Math.round(g.h*ppi));
+  ctx.fillStyle='#DDDFE2';ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.save();
+  ctx.strokeStyle='rgba(75,156,211,.55)';ctx.setLineDash([6,5]);ctx.lineWidth=1;
+  ctx.strokeRect(g.margin*ppi,g.margin*ppi,(g.w-2*g.margin)*ppi,(g.h-2*g.margin)*ppi);
+  ctx.restore();
+  if(g.marks)drawRegMarks(ctx,ppi);
+  drawGangPatches(ctx,ppi,false);
+  if(g.placed){
+    ctx.save();
+    ctx.strokeStyle='#C1272D';ctx.lineWidth=1;ctx.setLineDash([5,4]);
+    ctx.beginPath();
+    for(const pl of g.placed)for(const poly of placedPolys(pl)){
+      poly.forEach((p,i)=>{if(i===0)ctx.moveTo(p[0]*ppi,p[1]*ppi);else ctx.lineTo(p[0]*ppi,p[1]*ppi);});
+      ctx.closePath();
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+  if(!g.items.length){
+    ctx.fillStyle='#5A6167';ctx.font='700 '+Math.max(13,Math.round(cv.width/34))+'px JetBrains Mono,monospace';
+    ctx.textAlign='center';
+    ctx.fillText('ADD PATCHES IN STEP 6',cv.width/2,cv.height/2);
+  }
+  const total=g.items.reduce((s,i)=>s+i.qty,0);
+  $('dimsBar').innerHTML=
+    'SHEET <b>'+g.w+'&quot; × '+g.h+'&quot;</b>'+
+    ' · PLACED <b>'+(g.placed?g.placed.length:0)+' / '+total+'</b>'+
+    ' · UTILIZATION <b>'+Math.round(g.util*100)+'%</b>'+
+    (g.unplaced?' · <span style="color:var(--warn)">'+g.unplaced+' DID NOT FIT</span>':'');
+}
+function renderGangList(){
+  const box=$('gsList');box.innerHTML='';
+  state.gang.items.forEach(it=>{
+    const row=document.createElement('div');row.className='gang-item';
+    const nm=document.createElement('span');nm.className='gi-name';nm.textContent=it.label;
+    const dim=document.createElement('span');dim.className='gi-dim';
+    dim.textContent=it.cut.w.toFixed(2)+'×'+it.cut.h.toFixed(2)+'"';
+    const qty=document.createElement('input');
+    qty.type='number';qty.min='1';qty.max='500';qty.step='1';qty.value=String(it.qty);qty.className='gi-qty';
+    qty.oninput=()=>{it.qty=Math.max(1,Math.round(parseFloat(qty.value)||1));gangChanged(false);};
+    const x=document.createElement('button');x.className='gi-x';x.textContent='✕';
+    x.onclick=()=>{state.gang.items=state.gang.items.filter(o=>o.id!==it.id);renderGangList();gangChanged(false);};
+    row.append(nm,dim,qty,x);
+    box.appendChild(row);
+  });
+}
+function gangChanged(rerenderList){
+  if(rerenderList!==false)renderGangList();
+  gangNest();
+  const g=state.gang,total=g.items.reduce((s,i)=>s+i.qty,0);
+  $('gsStats').textContent=g.items.length
+    ?('Placed '+(g.placed?g.placed.length:0)+' of '+total+' · utilization '+Math.round(g.util*100)+'%')
+    :'';
+  $('gsWarn').hidden=!g.unplaced;
+  if(g.unplaced)$('gsWarn').textContent='⚠ '+g.unplaced+' patch'+(g.unplaced>1?'es':'')+' did not fit — use a bigger sheet, tighter spacing, or fewer pieces.';
+  refresh();
+}
+/* --- gang exports (all share the exact full-sheet frame) --- */
+function gangBase(){
+  const b=fileBase().replace(/-patch$/,'');
+  return b+'-gangsheet-'+state.gang.w+'x'+state.gang.h+'in';
+}
+function buildGangPrintCanvas(){
+  const g=state.gang;
+  const c=document.createElement('canvas');
+  c.width=Math.round(g.w*DPI);c.height=Math.round(g.h*DPI);
+  const ctx=c.getContext('2d');
+  drawGangPatches(ctx,DPI,true);
+  if(g.marks)drawRegMarks(ctx,DPI);
+  return c;
+}
+function buildGangCutSvg(){
+  const g=state.gang;
+  const w=g.w.toFixed(4),h=g.h.toFixed(4);
+  let d='';
+  for(const pl of g.placed)for(const poly of placedPolys(pl)){
+    poly.forEach((p,i)=>{d+=(i===0?'M ':'L ')+p[0].toFixed(4)+' '+p[1].toFixed(4)+' ';});
+    d+='Z ';
+  }
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'+
+  '<!-- MAYHEM PATCH LAB - gang sheet cut lines - true size '+w+'in x '+h+'in - frame = full sheet - import into XCS -->\n'+
+  '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'in" height="'+h+'in" viewBox="0 0 '+w+' '+h+'">\n'+
+  '<path d="'+d.trim()+'" fill="none" stroke="#FF0000" stroke-width="0.01"/>\n</svg>';
+}
+function buildGangCutDxf(){
+  const g=state.gang,H=g.h;
+  let s='0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n1\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n';
+  for(const pl of g.placed)for(const poly of placedPolys(pl)){
+    s+='0\nPOLYLINE\n8\nCUT\n66\n1\n70\n1\n';
+    for(const p of poly)s+='0\nVERTEX\n8\nCUT\n10\n'+p[0].toFixed(5)+'\n20\n'+(H-p[1]).toFixed(5)+'\n';
+    s+='0\nSEQEND\n';
+  }
+  s+='0\nENDSEC\n0\nEOF\n';
+  return s;
+}
+function buildGangPrintCutSvg(){
+  /* combined RIP-style file: raster art layer + CutContour stroke layer */
+  const g=state.gang;
+  const w=g.w.toFixed(4),h=g.h.toFixed(4);
+  const png=buildGangPrintCanvas().toDataURL('image/png');
+  let d='';
+  for(const pl of g.placed)for(const poly of placedPolys(pl)){
+    poly.forEach((p,i)=>{d+=(i===0?'M ':'L ')+p[0].toFixed(4)+' '+p[1].toFixed(4)+' ';});
+    d+='Z ';
+  }
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'+
+  '<!-- MAYHEM PATCH LAB - print+cut gang sheet - '+w+'in x '+h+'in - raster art + CutContour strokes -->\n'+
+  '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="'+w+'in" height="'+h+'in" viewBox="0 0 '+w+' '+h+'">\n'+
+  '<image x="0" y="0" width="'+w+'" height="'+h+'" xlink:href="'+png+'"/>\n'+
+  '<path id="CutContour" d="'+d.trim()+'" fill="none" stroke="#EC008C" stroke-width="0.01"/>\n</svg>';
+}
+$('gsAdd').onclick=()=>{
+  if(!state.cut)return;
+  const qty=Math.max(1,Math.round(parseFloat($('gsQty').value)||1));
+  gangId++;
+  state.gang.items.push({
+    id:gangId,
+    label:(state.artName||'patch').replace(/\.[a-z0-9]+$/i,'')||'patch',
+    cut:state.cut,art:state.art,bgOn:state.bgOn,bgColor:state.bgColor,qty
+  });
+  gangChanged();
+  setTab('gang');
+};
+$('gsClear').onclick=()=>{state.gang.items=[];state.gang.placed=null;state.gang.unplaced=0;state.gang.util=0;gangChanged();};
+const bindGangNum=(id,key,min,max)=>{
+  $(id).onchange=()=>{
+    let v=parseFloat($(id).value);
+    if(!isFinite(v))v=state.gang[key];
+    v=Math.min(max,Math.max(min,v));
+    $(id).value=String(v);
+    state.gang[key]=v;
+    gangChanged(false);
+  };
+};
+bindGangNum('gsW','w',2,48);
+bindGangNum('gsH','h',2,48);
+bindGangNum('gsMargin','margin',0,2);
+bindGangNum('gsGap','gap',0.02,1);
+$('gsMarks').onchange=()=>{state.gang.marks=$('gsMarks').checked;gangChanged(false);};
+$('gsRotate').onchange=()=>{state.gang.rotate=$('gsRotate').checked;gangChanged(false);};
+$('gsDlPrint').onclick=()=>{
+  buildGangPrintCanvas().toBlob(b=>downloadBlobFile(b,gangBase()+'-print.png'),'image/png');
+};
+$('gsDlSvg').onclick=()=>{
+  downloadBlobFile(new Blob([buildGangCutSvg()],{type:'image/svg+xml'}),gangBase()+'-cutline.svg');
+};
+$('gsDlDxf').onclick=()=>{
+  downloadBlobFile(new Blob([buildGangCutDxf()],{type:'application/dxf'}),gangBase()+'-cutline.dxf');
+};
+$('gsDlPC').onclick=()=>{
+  downloadBlobFile(new Blob([buildGangPrintCutSvg()],{type:'image/svg+xml'}),gangBase()+'-print+cut.svg');
+};
+$('gsDlZip').onclick=async()=>{
+  const enc=new TextEncoder();
+  const g=state.gang;
+  const folder=gangBase();
+  const entries=[];
+  entries.push({name:folder+'/'+folder+'-print.png',data:await canvasPngU8(buildGangPrintCanvas())});
+  entries.push({name:folder+'/'+folder+'-cutline.svg',data:enc.encode(buildGangCutSvg())});
+  entries.push({name:folder+'/'+folder+'-cutline.dxf',data:enc.encode(buildGangCutDxf())});
+  entries.push({name:folder+'/'+folder+'-print+cut.svg',data:enc.encode(buildGangPrintCutSvg())});
+  entries.push({name:folder+'/README.txt',data:enc.encode(
+    'MAYHEM PATCH LAB - GANG SHEET EXPORT\n'+
+    'Sheet: '+g.w+'" x '+g.h+'"  ·  '+(g.placed?g.placed.length:0)+' patches  ·  utilization '+Math.round(g.util*100)+'%\n\n'+
+    'PRINT (eufyMake E1): -print.png is the FULL SHEET at 300 DPI, transparent,\n'+
+    '  with registration marks '+(g.marks?'ON':'OFF')+'. Print at exact size - do not scale.\n'+
+    'CUT (xTool P3 / XCS): -cutline.svg (true size) or -cutline.dxf (inch units).\n'+
+    'PRINT+CUT (-print+cut.svg): raster art + magenta CutContour strokes in one\n'+
+    '  file for RIP workflows that read a cut spot color.\n\n'+
+    'ALL FILES SHARE THE SAME FRAME = the full sheet. Align by outer bounds:\n'+
+    '  place the printed sheet so its edges match the cut file frame and the\n'+
+    '  cut lines land exactly on the printed patches.\n')});
+  downloadBlobFile(zipStore(entries),folder+'.zip');
+};
 
 /* drag patch on hat mockup */
 (()=>{
