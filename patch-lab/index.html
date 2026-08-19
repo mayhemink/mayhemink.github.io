@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.4 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave</title>
+<title>Mayhem Patch Lab v0.5 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -103,7 +103,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.4</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.5</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -163,6 +163,16 @@
         <label class="checkline"><input type="checkbox" id="engInvert"> Invert — engrave the background, art stays top color</label>
         <div class="note" id="engNote"></div>
       </div>
+      <div id="blankBox" hidden>
+        <label class="lbl">Blank shape — pre-made, fixed sizes</label>
+        <div class="segmented" id="blankSeg"></div>
+        <div class="val" id="blankSel"></div>
+        <label class="lbl">Border width (inches)</label>
+        <input type="range" id="blankBorder" min="0.08" max="0.35" step="0.005" value="0.19">
+        <div class="val" id="blankBorderVal">0.190"</div>
+        <div class="note">Pre-made blank: the border is molded in the bottom-layer color. No cutting — engrave in the jig.</div>
+      </div>
+      <div id="cutControls">
       <label class="lbl">Cut shape</label>
       <div class="segmented" id="shapeSeg">
         <button data-shape="contour" class="on">CONTOUR</button>
@@ -170,12 +180,15 @@
         <button data-shape="round">ROUNDED</button>
         <button data-shape="oval">OVAL</button>
       </div>
+      </div>
       <label class="lbl">Art width (inches)</label>
       <input type="range" id="artW" min="0.5" max="8" step="0.05" value="2.75">
       <div class="val" id="artWVal">2.75"</div>
+      <div id="offsetRow">
       <label class="lbl">Cut offset / margin (inches)</label>
       <input type="range" id="cutOff" min="0.03" max="0.6" step="0.005" value="0.125">
       <div class="val" id="cutOffVal">0.125"</div>
+      </div>
       <div id="radiusRow" hidden>
         <label class="lbl">Corner radius (inches)</label>
         <input type="range" id="cornerR" min="0" max="1" step="0.02" value="0.25">
@@ -346,13 +359,15 @@ const state={
   tab:'patch',
   hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true},
   gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0},
-  eng:{on:false,cat:'',name:'',top:'#151515',engC:'#C8A24B',override:false,invert:false,settings:''}
+  eng:{on:false,cat:'',name:'',top:'#151515',engC:'#C8A24B',override:false,invert:false,settings:'',blank:false},
+  blank:{shape:'rect',border:0.19,shapes:null}
 };
 function styleSnap(){
   return state.eng.on
     ?{mode:'engrave',top:state.eng.top,engC:state.eng.engC,invert:state.eng.invert,
-      matName:state.eng.cat+' '+state.eng.name,settings:state.eng.settings,bgOn:false,bgColor:'#000'}
-    :{mode:'print',bgOn:state.bgOn,bgColor:state.bgColor,top:'',engC:'',invert:false,matName:'',settings:''};
+      matName:state.eng.cat+' '+state.eng.name,settings:state.eng.settings,bgOn:false,bgColor:'#000',
+      blank:state.eng.blank,border:state.blank.border}
+    :{mode:'print',bgOn:state.bgOn,bgColor:state.bgColor,top:'',engC:'',invert:false,matName:'',settings:'',blank:false,border:0};
 }
 
 /* ---------- art loading (Mockup Lab pattern: trim to alpha bbox, SVG rasterized big) ---------- */
@@ -558,10 +573,43 @@ function polyArea(pts){
 }
 
 /* ---------- cut geometry ---------- */
+function blankShapePoly(w,h,shape,r,inset){
+  const iw=w-2*inset, ih=h-2*inset, o=inset;
+  const pts=[];
+  if(shape==='circle'){
+    const rx=iw/2, ry=ih/2;
+    for(let i=0;i<160;i++){const a=i/160*Math.PI*2;pts.push([o+iw/2+rx*Math.cos(a),o+ih/2+ry*Math.sin(a)]);}
+  }else if(shape==='hex'){
+    const cx=Math.min(iw*0.22,ih*0.7);
+    pts.push([o+cx,o],[o+iw-cx,o],[o+iw,o+ih/2],[o+iw-cx,o+ih],[o+cx,o+ih],[o,o+ih/2]);
+  }else{ /* rounded rect */
+    const rr=Math.max(0.02,Math.min((r||0.25),iw/2,ih/2));
+    const seg=(ccx,ccy,a0,a1)=>{for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;pts.push([ccx+rr*Math.cos(a),ccy+rr*Math.sin(a)]);}};
+    seg(o+iw-rr,o+rr,-Math.PI/2,0);seg(o+iw-rr,o+ih-rr,0,Math.PI/2);
+    seg(o+rr,o+ih-rr,Math.PI/2,Math.PI);seg(o+rr,o+rr,Math.PI,Math.PI*1.5);
+  }
+  return pts;
+}
+function buildBlankCut(){
+  const shp=(state.blank.shapes||[]).find(s=>s.id===state.blank.shape)||{id:'rect',w:3,h:2,r:0.25};
+  const W=shp.w,H=shp.h,b=state.blank.border;
+  const outer=blankShapePoly(W,H,shp.id,shp.r,0);
+  const inner=blankShapePoly(W,H,shp.id,shp.r,b);
+  const art=state.art;
+  const aspect=art.height/art.width;
+  const pad=0.06;
+  let aw=Math.min(state.artW,W-2*(b+pad));
+  let ah=aw*aspect;
+  const maxH=H-2*(b+pad);
+  if(ah>maxH){ah=maxH;aw=ah/aspect;}
+  state.cut={polys:[outer],inner:[inner],w:W,h:H,svgPath:null,
+    art:{x:W/2-aw/2,y:H/2-ah/2,w:aw,h:ah},blobCount:1,blank:true};
+}
 function computeCut(){
   state.cut=null;
   $('blobWarn').hidden=true;
   if(!state.art)return;
+  if(state.eng.on&&state.eng.blank){buildBlankCut();return;}
   const art=state.art;
   const artAspect=art.height/art.width;
   const artWin=state.artW, artHin=state.artW*artAspect;
@@ -722,12 +770,15 @@ function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
   const path=cutPath2DG(cut,scalePxPerIn);
 
   if(sty.mode==='engrave'){
+    /* fieldPath = engraveable area: full patch, or inner field inside a molded border on pre-made blanks */
+    const isBlank=!!(sty.blank&&cut.inner);
+    const fieldPath=isBlank?cutPath2DG({polys:cut.inner},scalePxPerIn):path;
     if(forPrint){
       /* PRODUCTION ENGRAVE FORM: black = what the laser engraves, transparent elsewhere.
          normal: engrave the art. invert: engrave the field, art stays top color. */
-      ctx.save();ctx.clip(path);
+      ctx.save();ctx.clip(fieldPath);
       if(sty.invert){
-        ctx.fillStyle='#000';ctx.fill(path);
+        ctx.fillStyle='#000';ctx.fill(fieldPath);
         ctx.globalCompositeOperation='destination-out';
         ctx.drawImage(artSilhouette(cut,art,'#000',scalePxPerIn),0,0);
       }else{
@@ -736,21 +787,23 @@ function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
       ctx.restore();
       return c;
     }
-    /* PREVIEW: leatherette top color + grain, engraved area in reveal color w/ depth */
-    ctx.save();ctx.fillStyle=sty.top;ctx.fill(path);
-    ctx.clip(path);
+    /* PREVIEW: top color + grain, engraved area in reveal color w/ depth.
+       Blanks: molded border ring in the bottom-layer color around the field. */
+    if(isBlank){ctx.save();ctx.fillStyle=sty.engC;ctx.fill(path);ctx.restore();}
+    ctx.save();ctx.fillStyle=sty.top;ctx.fill(fieldPath);
+    ctx.clip(fieldPath);
     ctx.globalAlpha=0.10;ctx.globalCompositeOperation='overlay';
     ctx.fillStyle=ctx.createPattern(grainTile(),'repeat');
     ctx.fillRect(0,0,c.width,c.height);
     ctx.restore();
     const d=Math.max(1,scalePxPerIn*0.008);
-    ctx.save();ctx.clip(path);
+    ctx.save();ctx.clip(fieldPath);
     if(sty.invert){
       /* engraved field, art raised in top color */
       const field=document.createElement('canvas');field.width=c.width;field.height=c.height;
       const fx=field.getContext('2d');
       fx.fillStyle=sty.engC;
-      fx.fill(cutPath2DG(cut,scalePxPerIn));
+      fx.fill(isBlank?cutPath2DG({polys:cut.inner},scalePxPerIn):cutPath2DG(cut,scalePxPerIn));
       fx.globalCompositeOperation='destination-out';
       fx.drawImage(artSilhouette(cut,art,'#000',scalePxPerIn),0,0);
       ctx.save();ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=d*2;ctx.shadowOffsetX=-d;ctx.shadowOffsetY=-d;
@@ -761,6 +814,10 @@ function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
       ctx.drawImage(artSilhouette(cut,art,sty.engC,scalePxPerIn),0,0);
     }
     ctx.restore();
+    if(isBlank){
+      /* soft inner edge where the molded border meets the field */
+      ctx.save();ctx.strokeStyle='rgba(0,0,0,.30)';ctx.lineWidth=Math.max(1,scalePxPerIn*0.014);ctx.stroke(fieldPath);ctx.restore();
+    }
     ctx.save();ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=Math.max(1,scalePxPerIn*0.012);ctx.stroke(path);ctx.restore();
     return c;
   }
@@ -807,9 +864,11 @@ function drawPatchPreview(){
   ctx.restore();
   const dpi=state.art?Math.round(state.art.width/state.cut.art.w):0;
   $('dimsBar').innerHTML=
-    'PATCH <b>'+state.cut.w.toFixed(2)+'&quot; × '+state.cut.h.toFixed(2)+'&quot;</b>'+
+    (state.cut.blank?'BLANK':'PATCH')+' <b>'+state.cut.w.toFixed(2)+'&quot; × '+state.cut.h.toFixed(2)+'&quot;</b>'+
     ' · ART <b>'+state.cut.art.w.toFixed(2)+'&quot; × '+state.cut.art.h.toFixed(2)+'&quot;</b>'+
-    ' · OFFSET <b>'+state.offset.toFixed(3)+'&quot;</b>'+
+    (state.cut.blank
+      ?' · BORDER <b>'+state.blank.border.toFixed(3)+'&quot;</b> · PRE-MADE, NO CUT'
+      :' · OFFSET <b>'+state.offset.toFixed(3)+'&quot;</b>')+
     ' · SOURCE <b>'+dpi+' DPI</b> at this size'+
     (state.cut.blobCount>1?' · <span style="color:var(--warn)">'+state.cut.blobCount+' PIECES</span>':'');
 }
@@ -856,8 +915,10 @@ function refresh(){
   else if(state.tab==='hat')drawHatMockup();
   else drawGangSheet();
   const ready=!!state.cut;
-  ['dlPrint','dlSvg','dlDxf','dlApproval','dlZip'].forEach(id=>$(id).disabled=!ready);
-  $('gsAdd').disabled=!ready;
+  const isBlank=!!(state.cut&&state.cut.blank);
+  ['dlPrint','dlApproval','dlZip'].forEach(id=>$(id).disabled=!ready);
+  ['dlSvg','dlDxf'].forEach(id=>$(id).disabled=!ready||isBlank); /* pre-made blanks: nothing to cut */
+  $('gsAdd').disabled=!ready||isBlank; /* blanks engrave in the jig, not on a gang sheet */
   const gready=!!(state.gang.placed&&state.gang.placed.length);
   ['gsDlPrint','gsDlSvg','gsDlDxf','gsDlPC','gsDlZip'].forEach(id=>$(id).disabled=!gready);
   updateVecBtn();
@@ -1035,24 +1096,31 @@ $('dlZip').onclick=async()=>{
   const entries=[];
   const folder=fileBase();
   const eng=state.eng.on;
+  const isBlank=!!state.cut.blank;
   if(eng){
     entries.push({name:folder+'/'+folder+'-engrave.png',data:await canvasPngU8(buildEngraveCanvas())});
   }else{
     entries.push({name:folder+'/'+folder+'-print.png',data:await canvasPngU8(buildPrintCanvas())});
   }
-  entries.push({name:folder+'/'+folder+'-cutline.svg',data:enc.encode(buildCutSvg())});
-  entries.push({name:folder+'/'+folder+'-cutline.dxf',data:enc.encode(buildCutDxf())});
+  if(!isBlank){
+    entries.push({name:folder+'/'+folder+'-cutline.svg',data:enc.encode(buildCutSvg())});
+    entries.push({name:folder+'/'+folder+'-cutline.dxf',data:enc.encode(buildCutDxf())});
+  }
   entries.push({name:folder+'/'+folder+'-approval.png',data:await canvasPngU8(buildApprovalCanvas())});
   const readme=eng
     ?('MAYHEM PATCH LAB EXPORT — LASER ENGRAVED PATCH\n'+
       'Material: '+state.eng.cat+' — '+state.eng.name+(state.eng.invert?'  (INVERTED: field engraves, art stays top color)':'')+'\n'+
-      'Patch true size: '+state.cut.w.toFixed(3)+'" x '+state.cut.h.toFixed(3)+'"\n\n'+
-      'ENGRAVE (xTool P3 / XCS): import -engrave.png at exact size. BLACK = engrave.\n'+
+      (isBlank
+        ?('PRE-MADE BLANK: '+state.cut.w.toFixed(2)+'" x '+state.cut.h.toFixed(2)+'" — molded border '+state.blank.border.toFixed(3)+'" in the bottom-layer color.\n')
+        :('Patch true size: '+state.cut.w.toFixed(3)+'" x '+state.cut.h.toFixed(3)+'"\n'))+
+      '\nENGRAVE (xTool P3 / XCS): import -engrave.png at exact size. BLACK = engrave.\n'+
       '  '+state.eng.settings+'\n'+
-      (state.eng.cutSet?('CUT: -cutline.svg (true size) or -cutline.dxf. '+state.eng.cutSet+'\n'):'CUT: -cutline.svg (true size) or -cutline.dxf (inch units).\n')+
+      (isBlank
+        ?'NO CUT FILES — this is a pre-made blank. Position with the supplier jig;\n  the engrave file frame = the exact blank size.\n'
+        :(state.eng.cutSet?('CUT: -cutline.svg (true size) or -cutline.dxf. '+state.eng.cutSet+'\n'):'CUT: -cutline.svg (true size) or -cutline.dxf (inch units).\n'))+
       'CLEANUP: '+state.eng.clean+'\n'+
       (state.eng.press?(state.eng.press+'\n'):'')+
-      '\nEngrave file and cut files share the same frame: align by outer bounds.\n'+
+      '\n'+(isBlank?'':'Engrave file and cut files share the same frame: align by outer bounds.\n')+
       'Never run at threshold - take one step up in energy. Validate on a real-size piece.\n')
     :('MAYHEM PATCH LAB EXPORT\n'+
       'Patch true size: '+state.cut.w.toFixed(3)+'" x '+state.cut.h.toFixed(3)+'"\n\n'+
@@ -1195,53 +1263,148 @@ catInit();
    attached so every export carries its own run sheet.                    */
 const MATERIALS=[
   {cat:'JDS Leatherette',
-   set:'Engrave 28-29% @ 800-1000 mm/s · 140 lpc · min air · 1 pass',
-   cutSet:'Cut 35% @ 20 mm/s · 1 pass · air on · clamp it (curls when hot)',
+   set:'Engrave 28-29% @ 800-1000 mm/s \u00b7 140 lpc \u00b7 min air \u00b7 1 pass',
+   cutSet:'Cut 35% @ 20 mm/s \u00b7 1 pass \u00b7 air on \u00b7 clamp it (curls when hot)',
    clean:"LA's Totally Awesome + soft brush. Metallic reveals: masking tape FIRST to lift glitter, then clean.",
    press:'',
    items:[
-    {n:'Grey / Black',t:'#8E9296',e:'#2B2B2B'},
-    {n:'Black / Silver',t:'#161616',e:'#C7CBD1'},
     {n:'Black / Gold',t:'#161616',e:'#C9A24B'},
+    {n:'Black / Silver',t:'#161616',e:'#C7CBD1'},
+    {n:'Gray / Black',t:'#8E9296',e:'#2B2B2B'},
+    {n:'Light Brown / Black',t:'#A97C50',e:'#241B10'},
     {n:'Dark Brown / Gold',t:'#4A342A',e:'#C9A24B'},
+    {n:'Brown / Black',t:'#6B4A2F',e:'#241B10'},
     {n:'Rawhide / Black',t:'#C9A87C',e:'#2A2118'},
     {n:'Rustic / Gold',t:'#8B5A2B',e:'#D4B26A'},
-    {n:'Bamboo / Black',t:'#D9B98A',e:'#241B10'},
-    {n:'Cream / Black',t:'#EFE6D4',e:'#2B241C'},
-    {n:'Light Brown / Black',t:'#A97C50',e:'#241B10'},
-    {n:'Blue / Black',t:'#2C4A73',e:'#101820'},
-    {n:'Teal / Black',t:'#2E6E71',e:'#10201F'},
-    {n:'Red / Black',t:'#A6342E',e:'#201211'},
     {n:'Pink / Black',t:'#D98CA6',e:'#241318'},
+    {n:'Teal / Black',t:'#2E6E71',e:'#10201F'},
+    {n:'Blue / Silver',t:'#2C4A73',e:'#C7CBD1'},
+    {n:'White / Black',t:'#F2F2EF',e:'#222222'},
     {n:'Purple / Black',t:'#5A3E6B',e:'#170F1D'},
-    {n:'Green / Black',t:'#3E6B4F',e:'#101B13'},
-    {n:'White / Black',t:'#F2F2EF',e:'#222222'}
+    {n:'Orange / Black',t:'#D96C2C',e:'#241811'}
    ]},
   {cat:'Lonestar Silicone',
-   set:'Engrave 26% @ 400 mm/s · 160 lpc · min air · bidirectional · 1 pass',
-   cutSet:'',
-   clean:"LA's Totally Awesome + brush (silicone doesn't char brown — skip the Dawn trick).",
-   press:'Press: 260°F top / 320°F bottom · 45s (single platen: preheat hat, 300°F · 45s). Cool before flexing.',
+   blank:true,
+   shapes:[
+    {id:'rect',n:'Rectangle 3\u2033\u00d72\u2033',w:3,h:2,r:0.25},
+    {id:'circle',n:'Circle 2.5\u2033',w:2.5,h:2.5},
+    {id:'hex',n:'Hexagon 3.66\u2033\u00d72.25\u2033',w:3.66,h:2.25}
+   ],
+   set:'Engrave 26% @ 400 mm/s \u00b7 160 lpc \u00b7 min air \u00b7 bidirectional \u00b7 1 pass',
+   cutSet:'PRE-MADE BLANK \u2014 no cutting; engrave in the Lonestar jig',
+   clean:"LA's Totally Awesome + brush (silicone doesn't char brown \u2014 skip the Dawn trick).",
+   press:'Press: 260\u00b0F top / 320\u00b0F bottom \u00b7 45s (single platen: preheat hat, 300\u00b0F \u00b7 45s). Cool before flexing.',
    items:[
-    {n:'Black / White',t:'#141414',e:'#EDEDEA'},
-    {n:'Charcoal / White',t:'#3A3D40',e:'#EDEDEA'},
-    {n:'Black / Charcoal',t:'#141414',e:'#3A3D40'},
-    {n:'White / Black',t:'#EDEDEA',e:'#1A1A1A'},
-    {n:'Navy / White',t:'#1F2D4A',e:'#EDEDEA'},
-    {n:'Red / White',t:'#A6342E',e:'#EDEDEA'},
-    {n:'Olive / Black',t:'#5C5B38',e:'#191910'},
-    {n:'Grey / Black',t:'#909398',e:'#1C1C1C'}
+    {n:'Black / Charcoal',t:'#17181A',e:'#3B3E42'},
+    {n:'Black / White',t:'#17181A',e:'#E8E8E4'},
+    {n:'White / Black',t:'#E8E8E4',e:'#1A1A1A'},
+    {n:'Charcoal / White',t:'#3B3E42',e:'#E8E8E4'},
+    {n:'Charcoal / Black',t:'#3B3E42',e:'#17181A'},
+    {n:'Coyote / Black',t:'#B08D57',e:'#1A1A1A'},
+    {n:'Navy / Caramel',t:'#23324D',e:'#B57B3F'},
+    {n:'Loden / Black',t:'#66684B',e:'#1A1A1A'},
+    {n:'Khaki / Coffee',t:'#C6B48E',e:'#4A362A'}
    ]},
-  {cat:'HydBond UV Leatherette',
-   set:'Engrave start 28% @ 1000 (dark/light) or 29-35% @ 800 (patterned) · 140 lpc — VALIDATE on a real patch',
-   cutSet:'Canvas Flex / Poly Pro: start cut 40% @ 35 mm/s',
-   clean:"LA's Totally Awesome + soft brush. Pale halo at engraving edge on camo = ADD power, not less.",
+  {cat:'HydBond UltraHyd',
+   set:'Engrave start 28% @ 1000 (dark/light) or 29-35% @ 800 (patterned) \u00b7 140 lpc \u2014 VALIDATE on a real patch',
+   cutSet:'Start cut 40% @ 35 mm/s (validate)',
+   clean:"LA's Totally Awesome + soft brush. Pale halo at engraving edge on camo/pattern = ADD power, not less.",
    press:'',
    items:[
-    {n:'Stealth Topo Black / White',t:'#1C1E1F',e:'#E8E6E0'},
-    {n:'Matte Black / White',t:'#181818',e:'#E8E6E0'},
-    {n:'Concrete / Black',t:'#9B9B94',e:'#1E1D1A'},
-    {n:'Realtree APX / Black',t:'#6E6653',e:'#1E1D1A'}
+    {n:'Basketball / Black',t:'#D25114',e:'#1A1A1A'},
+    {n:'Black / Gold',t:'#1C1C1A',e:'#C9A24B'},
+    {n:'Black / Silver',t:'#1C1C1A',e:'#C7CBD1'},
+    {n:'Black Denim / Black',t:'#303030',e:'#1A1A1A'},
+    {n:'Blue / Silver',t:'#194593',e:'#C7CBD1'},
+    {n:'Brushed Bronze / Black',t:'#B07B52',e:'#1A1A1A'},
+    {n:'Brushed Gold / Black',t:'#B59F56',e:'#1A1A1A'},
+    {n:'Brushed Stainless / Black',t:'#C1C2BD',e:'#1A1A1A'},
+    {n:'Burnt Orange Denim / Black',t:'#C95E0F',e:'#1A1A1A'},
+    {n:'Carbon Fiber Black / Silver',t:'#2E2E2E',e:'#C7CBD1'},
+    {n:'Carbon Fiber Black / White',t:'#282828',e:'#EAEAE6'},
+    {n:'Carbon Fiber Blue / Black',t:'#263F9A',e:'#1A1A1A'},
+    {n:'Carbon Fiber Bronze / Black',t:'#A37048',e:'#1A1A1A'},
+    {n:'Carbon Fiber Green / Black',t:'#40A213',e:'#1A1A1A'},
+    {n:'Carbon Fiber Pink / Black',t:'#E67EA6',e:'#1A1A1A'},
+    {n:'Carbon Fiber Purple / Black',t:'#58387A',e:'#1A1A1A'},
+    {n:'Carbon Fiber Red / Black',t:'#9D2729',e:'#1A1A1A'},
+    {n:'Carbon Fiber White / Black',t:'#DBDBD9',e:'#1A1A1A'},
+    {n:'Cheetah Print / Black',t:'#BB9571',e:'#1A1A1A'},
+    {n:'Chocolate Denim / Black',t:'#79644A',e:'#1A1A1A'},
+    {n:'Clover / Black',t:'#CCE4D7',e:'#1A1A1A'},
+    {n:'Concrete / Black',t:'#8F9296',e:'#1A1A1A'},
+    {n:'Cork / Black',t:'#E0A16A',e:'#1A1A1A'},
+    {n:'Dark Brown / Black',t:'#6C554A',e:'#1A1A1A'},
+    {n:'Digital Camo / Black',t:'#AE8563',e:'#1A1A1A'},
+    {n:'Duck Camo / Black',t:'#B68F70',e:'#1A1A1A'},
+    {n:'Floral / Black',t:'#D1D1D4',e:'#1A1A1A'},
+    {n:'Forest Denim / Black',t:'#BFC99E',e:'#1A1A1A'},
+    {n:'Forged Copper / Black',t:'#C36B42',e:'#1A1A1A'},
+    {n:'Gator Skin Tan / Black',t:'#AE6625',e:'#1A1A1A'},
+    {n:'Gloss White / Black',t:'#E7E7E7',e:'#1A1A1A'},
+    {n:'Glow In The Dark / Black',t:'#01C421',e:'#1A1A1A'},
+    {n:'Golf Black / Black',t:'#1B1811',e:'#1A1A1A'},
+    {n:'Golf Lime / Black',t:'#46F02E',e:'#1A1A1A'},
+    {n:'Golf Orange / Black',t:'#FE8802',e:'#1A1A1A'},
+    {n:'Golf Red / Black',t:'#FD0134',e:'#1A1A1A'},
+    {n:'Golf Tan / Black',t:'#ECC979',e:'#1A1A1A'},
+    {n:'Gray / Black',t:'#80848D',e:'#1A1A1A'},
+    {n:'Gray Denim / Black',t:'#818181',e:'#1A1A1A'},
+    {n:'High Gloss Golf White / Black',t:'#EEEFEF',e:'#1A1A1A'},
+    {n:'Holographic / Black',t:'#3064C0',e:'#1A1A1A'},
+    {n:'Iron Rust / Black',t:'#8A8178',e:'#1A1A1A'},
+    {n:'Light Brown / Black',t:'#988E6D',e:'#1A1A1A'},
+    {n:'Matte Black / Red',t:'#302D2F',e:'#A6342E'},
+    {n:'Matte Black / White',t:'#303032',e:'#EAEAE6'},
+    {n:'Metallic Gold / Black',t:'#D7C170',e:'#1A1A1A'},
+    {n:'Metallic Silver / Black',t:'#B7B6BA',e:'#1A1A1A'},
+    {n:'Navy / White',t:'#183E84',e:'#EAEAE6'},
+    {n:'Navy Denim / Black',t:'#3A4456',e:'#1A1A1A'},
+    {n:'Neon Green / Black',t:'#02F602',e:'#1A1A1A'},
+    {n:'Neon Orange / Black',t:'#FE5F01',e:'#1A1A1A'},
+    {n:'Neon Pink / Black',t:'#FB45A2',e:'#1A1A1A'},
+    {n:'Neon Red / Black',t:'#F61804',e:'#1A1A1A'},
+    {n:'Neon Yellow / Black',t:'#FFFF01',e:'#1A1A1A'},
+    {n:'Ostrich Gray / Black',t:'#8290A6',e:'#1A1A1A'},
+    {n:'Patina / Black',t:'#4F6862',e:'#1A1A1A'},
+    {n:'Pebbled Veg Tan / Black',t:'#CCB794',e:'#1A1A1A'},
+    {n:'Pinewood / Black',t:'#D6B7A4',e:'#1A1A1A'},
+    {n:'Purple / Gold',t:'#685AB2',e:'#C9A24B'},
+    {n:'Purple Football / Black',t:'#9548AB',e:'#1A1A1A'},
+    {n:'Rawhide / Black',t:'#925E30',e:'#1A1A1A'},
+    {n:'Realtree APX® / Black',t:'#69574B',e:'#1A1A1A'},
+    {n:'Red / White',t:'#F81804',e:'#EAEAE6'},
+    {n:'Ruby Denim / Black',t:'#CD1A3A',e:'#1A1A1A'},
+    {n:'Rustica Barrel Brown / Black',t:'#796143',e:'#1A1A1A'},
+    {n:'Rustica Bourbon / Black',t:'#46392C',e:'#1A1A1A'},
+    {n:'Rustica Forest Green / Black',t:'#405D57',e:'#1A1A1A'},
+    {n:'Rustica Navy / Black',t:'#3C5472',e:'#1A1A1A'},
+    {n:'Rustica Ruby / Black',t:'#8B2733',e:'#1A1A1A'},
+    {n:'Saddlehyd Ash / Black',t:'#686864',e:'#1A1A1A'},
+    {n:'Saddlehyd Azure / Black',t:'#355E84',e:'#1A1A1A'},
+    {n:'Saddlehyd Chesnut / Black',t:'#57462D',e:'#1A1A1A'},
+    {n:'Saddlehyd Clay / Black',t:'#A5AB87',e:'#1A1A1A'},
+    {n:'Saddlehyd Light Rawhide / Black',t:'#CF8C50',e:'#1A1A1A'},
+    {n:'Saddlehyd Onyx / Black',t:'#2B2C2C',e:'#1A1A1A'},
+    {n:'Saddlehyd Rawhide / Black',t:'#774810',e:'#1A1A1A'},
+    {n:'Saddlehyd Royal / Black',t:'#324C7D',e:'#1A1A1A'},
+    {n:'Saddlehyd Slate / Black',t:'#575F62',e:'#1A1A1A'},
+    {n:'Saddlehyd Super White / Black',t:'#F8F8F8',e:'#1A1A1A'},
+    {n:'Saddlehyd Toffee / Black',t:'#9A681E',e:'#1A1A1A'},
+    {n:'Sky Denim / Black',t:'#C5E0E8',e:'#1A1A1A'},
+    {n:'Stars And Stripes / Black',t:'#BE7EA0',e:'#1A1A1A'},
+    {n:'Stealth Topo Black / White',t:'#54545C',e:'#EAEAE6'},
+    {n:'Teal Denim / Black',t:'#60827C',e:'#1A1A1A'},
+    {n:'Teal Football / Black',t:'#68D3C4',e:'#1A1A1A'},
+    {n:'Topo Veg Tan / Black',t:'#EEB38A',e:'#1A1A1A'},
+    {n:'True Yellow / Black',t:'#F2D203',e:'#1A1A1A'},
+    {n:'Veg Tan / Black',t:'#F8B46F',e:'#1A1A1A'},
+    {n:'Vintage Black / Black',t:'#353535',e:'#1A1A1A'},
+    {n:'Vintage Brown / Black',t:'#83431E',e:'#1A1A1A'},
+    {n:'Vintage Sand / Black',t:'#CEAA53',e:'#1A1A1A'},
+    {n:'White / Gold',t:'#E8E9E8',e:'#C9A24B'},
+    {n:'White / Silver',t:'#E8E8E8',e:'#C7CBD1'},
+    {n:'White Football / Black',t:'#E1E4E9',e:'#1A1A1A'}
    ]}
 ];
 function renderLeaGrid(q){
@@ -1270,11 +1433,33 @@ function selectLea(mi,ii){
   const m=MATERIALS[mi],it=m.items[ii];
   state.eng.cat=m.cat;state.eng.name=it.n;state.eng.top=it.t;
   state.eng.settings=m.set;state.eng.cutSet=m.cutSet;state.eng.clean=m.clean;state.eng.press=m.press;
+  state.eng.blank=!!m.blank;
+  state.blank.shapes=m.shapes||null;
+  if(m.shapes&&!m.shapes.some(s=>s.id===state.blank.shape))state.blank.shape=m.shapes[0].id;
   if(!state.eng.override){state.eng.engC=it.e;$('engColor').value=it.e;}
   $('leaSel').textContent=m.cat+' — '+it.n;
   $('engNote').textContent='P3: '+m.set+(m.cutSet?' · '+m.cutSet:'');
+  updateBlankUI();
   renderLeaGrid($('leaSearch').value);
-  refresh();
+  recompute();
+}
+function updateBlankUI(){
+  const blank=state.eng.on&&state.eng.blank;
+  $('blankBox').hidden=!blank;
+  $('cutControls').style.display=blank?'none':'';
+  $('offsetRow').style.display=blank?'none':'';
+  if(blank){
+    const seg=$('blankSeg');seg.innerHTML='';
+    (state.blank.shapes||[]).forEach(s=>{
+      const b=document.createElement('button');
+      b.textContent=s.n.toUpperCase();
+      b.className=s.id===state.blank.shape?'on':'';
+      b.onclick=()=>{state.blank.shape=s.id;updateBlankUI();recompute();};
+      seg.appendChild(b);
+    });
+    const shp=(state.blank.shapes||[]).find(s=>s.id===state.blank.shape);
+    $('blankSel').textContent=shp?('Blank: '+shp.n):'';
+  }
 }
 function updateModeUI(){
   const eng=state.eng.on;
@@ -1292,7 +1477,8 @@ $('modeSeg').querySelectorAll('button').forEach(b=>{
     $('engBox').hidden=!state.eng.on;
     if(state.eng.on&&!state.eng.name)selectLea(0,0);
     updateModeUI();
-    refresh();
+    updateBlankUI();
+    recompute();
   };
 });
 $('leaSearch').oninput=()=>renderLeaGrid($('leaSearch').value);
@@ -1305,6 +1491,11 @@ $('engReset').onclick=()=>{
   refresh();
 };
 $('engInvert').onchange=()=>{state.eng.invert=$('engInvert').checked;refresh();};
+$('blankBorder').oninput=()=>{
+  state.blank.border=parseFloat($('blankBorder').value);
+  $('blankBorderVal').textContent=state.blank.border.toFixed(3)+'"';
+  recompute();
+};
 function buildEngraveCanvas(){
   const prod=renderPatch(DPI,true); /* black-on-transparent engrave form */
   const c=document.createElement('canvas');c.width=prod.width;c.height=prod.height;
