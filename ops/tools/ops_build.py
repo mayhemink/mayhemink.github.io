@@ -346,7 +346,10 @@ def build():
     for e in admin:
         L.append(f"- ADMIN: #{e['v']} {e['customer'].strip()} — {e['adminFlag']}")
     L.append("")
-    L.append("Board: https://mayhemink.github.io/ops/")
+    # keyed link so the email/shop view shows live check-off state (key via env — NEVER hardcode
+    # it here: this file is committed to the public repo). Email only goes to the shop inbox.
+    _pk = os.environ.get("OPS_PAGE_KEY", "")
+    L.append("Board: https://mayhemink.github.io/ops/" + (f"#k={_pk}&who=shop" if _pk else ""))
     open("email.md", "w").write("\n".join(L))
 
     # ---- console review --------------------------------------------------------

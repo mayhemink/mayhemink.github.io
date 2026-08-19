@@ -124,6 +124,9 @@ nav button.on .n{background:rgba(75,156,211,.4)}
 .sentnote{font-size:12.5px;color:var(--amber);white-space:nowrap}
 .tally{color:var(--dim);font-size:13px;margin:10px 6px 0}
 .tally b{color:var(--green)}
+.donehead{color:var(--dim2);font-size:12px;font-weight:700;letter-spacing:.18em;
+  margin:20px 6px 10px;display:flex;align-items:center;gap:12px}
+.donehead::after{content:"";flex:1;height:1px;background:var(--line)}
 
 /* all-jobs grid */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:16px}
@@ -332,6 +335,10 @@ function renderHeader(){
 /* state semantics: done rows disappear from lanes; DIGI "sent" stays dimmed until "received" */
 const isCleared = r => { const st = STATE[r.id]; return !!st && st.how !== "sent"; };
 const isSent    = r => { const st = STATE[r.id]; return !!st && st.how === "sent"; };
+/* completed rows drop to a "COMPLETED TODAY" section at the bottom of the lane;
+   anything cleared on a previous shop day (Denver) is hidden — the section empties itself daily */
+const denverDay = ts => new Date(ts).toLocaleDateString("en-CA", {timeZone:"America/Denver"});
+const clearedToday = r => { const st = STATE[r.id]; return !st.ts || denverDay(st.ts) === denverDay(Date.now()); };
 
 /* ===== must-do ===== */
 function renderMust(){
@@ -381,9 +388,17 @@ function laneView(k){
   } else if (clearedN){
     tallies = `<div class="tally"><b>${clearedN}</b> cleared · ${openRows.length} to go</div>`;
   }
-  const list = rows.map(r => laneRow(k, r)).join("");
+  const doneToday = rows.filter(r => isCleared(r) && clearedToday(r));
+  const list = openRows.map(r => laneRow(k, r)).join("");
+  const empty = doneToday.length
+    ? `<div class="gone">All done here today. 🤘</div>`
+    : `<div class="gone">Lane's empty. Nothing to do here.</div>`;
+  const doneSec = doneToday.length
+    ? `<div class="donehead">COMPLETED TODAY — ${doneToday.length}</div>
+       <div class="lanewrap">${doneToday.map(r => laneRow(k, r)).join("")}</div>`
+    : "";
   return `<div class="lanehead"><b>${LANES[k]}</b> — ${LANE_SUB[k]}</div>
-          <div class="lanewrap">${list || `<div class="gone">Lane's empty. Nothing to do here.</div>`}</div>${tallies}`;
+          <div class="lanewrap">${list || empty}</div>${doneSec}${tallies}`;
 }
 function actLbl(k, a){ return (ACT_LABEL_LANE[k] && ACT_LABEL_LANE[k][a]) || ACT_LABEL[a]; }
 function laneRow(k, r){
