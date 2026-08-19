@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.1 — Patch Designer / Cut Lines / Hat Mockups</title>
+<title>Mayhem Patch Lab v0.2 — Patch Designer / Cut Lines / Hat Mockups</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -81,6 +81,9 @@
   .dl-card h4{margin:0 0 3px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);}
   .dl-card p{margin:0 0 10px;font-size:11.5px;color:var(--muted);}
   .machine{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--accent2);text-transform:uppercase;}
+  .cat-item{padding:6px 10px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--line);color:var(--ink);}
+  .cat-item:hover{background:var(--surface2);}
+  .cat-item.on{background:var(--accent);color:#111;}
 </style>
 </head>
 <body>
@@ -88,7 +91,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.1</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.2</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -145,7 +148,20 @@
 
     <div class="panel">
       <h3><span class="stepnum">4</span> HAT</h3>
-      <p class="desc">Richardson 112 catalog coming via Style Lab. Until then, drop any hat photo and place the patch by hand.</p>
+      <p class="desc">Pick a Richardson 112 colorway, or drop any hat photo and place by hand.</p>
+      <div id="catBox" hidden>
+        <label class="lbl">View</label>
+        <div class="segmented" id="viewSeg">
+          <button data-view="left" class="on">ANGLE</button>
+          <button data-view="front">FRONT</button>
+        </div>
+        <label class="lbl">Colorway — Richardson 112</label>
+        <input type="text" id="catSearch" placeholder="Search colorways…">
+        <div id="catList" style="max-height:190px;overflow:auto;border:1px solid var(--line2);border-radius:4px;margin-top:6px;"></div>
+        <div class="val" id="catSel"></div>
+      </div>
+      <div class="note" id="catPending" hidden>HAT CATALOG PENDING — 112 photos not published yet. Manual drop below still works.</div>
+      <label class="lbl">Or manual photo</label>
       <div class="drop" id="hatDrop"><b>Drop hat photo</b>JPG / PNG — or click to browse</div>
       <input type="file" id="hatFile" accept="image/*">
       <label class="lbl">Patch width on hat</label>
@@ -908,6 +924,59 @@ function setTab(t){
 }
 $('tabPatch').onclick=()=>setTab('patch');
 $('tabHat').onclick=()=>setTab('hat');
+
+/* ---------- Richardson 112 catalog (v0.2) ---------- */
+const HAT_BASE='hats/R112/';
+const HAT_CALIB={front:{cx:0.505,cy:0.235,scale:0.30},left:{cx:0.46,cy:0.245,scale:0.26}};
+const cat={colors:null,slug:null,view:'left'};
+function catInit(){
+  fetch(HAT_BASE+'colors.json').then(r=>{if(!r.ok)throw new Error('404');return r.json();}).then(map=>{
+    cat.colors=map;
+    $('catBox').hidden=false;
+    renderCatList('');
+  }).catch(()=>{$('catPending').hidden=false;});
+}
+function renderCatList(q){
+  const box=$('catList');box.innerHTML='';
+  const ql=(q||'').toLowerCase();
+  Object.entries(cat.colors).forEach(([slug,name])=>{
+    if(ql&&!name.toLowerCase().includes(ql))return;
+    const d=document.createElement('div');
+    d.className='cat-item'+(slug===cat.slug?' on':'');
+    d.textContent=name;
+    d.onclick=()=>loadCatPhoto(slug);
+    box.appendChild(d);
+  });
+}
+function loadCatPhoto(slug){
+  cat.slug=slug;
+  const side=cat.view;
+  const img=new Image();
+  img.onload=()=>{
+    const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
+    c.getContext('2d').drawImage(img,0,0);
+    state.hat.photo=c;
+    const d=HAT_CALIB[side];
+    state.hat.cx=d.cx;state.hat.cy=d.cy;state.hat.scale=d.scale;
+    $('hatScale').value=String(d.scale*100);
+    $('hatScaleVal').textContent=$('hatScale').value+'% of photo width';
+    $('catSel').textContent='Richardson 112 · '+cat.colors[slug]+' · '+(side==='left'?'angle':'front')+' view';
+    renderCatList($('catSearch').value);
+    setTab('hat');
+  };
+  img.onerror=()=>{$('catSel').textContent='Photo missing for '+cat.colors[slug];};
+  img.src=HAT_BASE+side+'/r112-'+slug.toLowerCase()+'-'+side+'.jpg';
+}
+$('catSearch').oninput=()=>renderCatList($('catSearch').value);
+$('viewSeg').querySelectorAll('button').forEach(b=>{
+  b.onclick=()=>{
+    $('viewSeg').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    cat.view=b.dataset.view;
+    if(cat.slug)loadCatPhoto(cat.slug);
+  };
+});
+catInit();
 
 /* drag patch on hat mockup */
 (()=>{
