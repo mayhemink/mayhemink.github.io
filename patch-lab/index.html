@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.6 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Pricing</title>
+<title>Mayhem Patch Lab v0.7 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -114,7 +114,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.6</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.7</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -159,8 +159,10 @@
       <label class="lbl">Method</label>
       <div class="segmented" id="modeSeg">
         <button data-mode="print" class="on">UV PRINT</button>
-        <button data-mode="engrave">LASER ENGRAVE</button>
+        <button data-mode="engrave">ENGRAVE</button>
+        <button data-mode="emb">EMBROIDERY</button>
       </div>
+      <div class="note" id="embNote" hidden>Direct embroidery on the hat — no patch, no cut. Export the art file for digitizing (DST comes back from the digitizer; track it in the ops DIGITIZING lane).</div>
       <div id="engBox" hidden>
         <label class="lbl">Material — top / engrave reveal</label>
         <input type="text" id="leaSearch" placeholder="Search materials…">
@@ -268,6 +270,8 @@
         </div>
       </div>
       <div class="btnrow"><button class="btn" id="dlZip" disabled>⬇ JOB ZIP — ALL FILES</button></div>
+      <div class="btnrow"><button class="btn ghost" id="copyPrintavo" disabled>⧉ COPY JOB FOR PRINTAVO</button></div>
+      <div class="val" id="copyStatus"></div>
     </div>
 
     <div class="panel">
@@ -402,10 +406,12 @@ const state={
   hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true},
   gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0},
   eng:{on:false,cat:'',name:'',top:'#151515',engC:'#C8A24B',override:false,invert:false,settings:'',blank:false},
+  embOn:false,
   blank:{shape:'rect',border:0.19,shapes:null},
   presetId:null
 };
 function styleSnap(){
+  if(state.embOn)return {mode:'emb',bgOn:false,bgColor:'#000',top:'',engC:'',invert:false,matName:'Direct embroidery',settings:'',blank:false,border:0};
   return state.eng.on
     ?{mode:'engrave',top:state.eng.top,engC:state.eng.engC,invert:state.eng.invert,
       matName:state.eng.cat+' '+state.eng.name,settings:state.eng.settings,bgOn:false,bgColor:'#000',
@@ -652,6 +658,14 @@ function computeCut(){
   state.cut=null;
   $('blobWarn').hidden=true;
   if(!state.art)return;
+  if(state.embOn){
+    /* direct embroidery: no patch frame, no cut — the art IS the object */
+    const art=state.art, aspect=art.height/art.width;
+    const W=state.artW, H=W*aspect;
+    state.cut={polys:[[[0,0],[W,0],[W,H],[0,H]]],w:W,h:H,svgPath:null,
+      art:{x:0,y:0,w:W,h:H},blobCount:1,emb:true};
+    return;
+  }
   if(state.eng.on&&state.eng.blank){buildBlankCut();return;}
   if(state.presetId){buildPresetCut();if(state.cut)return;}
   const art=state.art;
@@ -806,12 +820,51 @@ function artSilhouette(cut,art,color,scalePxPerIn){
   ctx.fillRect(0,0,c.width,c.height);
   return c;
 }
+let _threadTile=null;
+function threadTile(){
+  if(_threadTile)return _threadTile;
+  const c=document.createElement('canvas');c.width=16;c.height=16;
+  const x=c.getContext('2d');
+  x.translate(8,8);x.rotate(Math.PI/4);x.translate(-8,-8);
+  for(let i=-16;i<32;i+=3){
+    x.fillStyle='rgba(255,255,255,0.30)';x.fillRect(i,-16,1.2,48);
+    x.fillStyle='rgba(0,0,0,0.28)';x.fillRect(i+1.6,-16,1,48);
+  }
+  _threadTile=c;
+  return c;
+}
 function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
   const c=document.createElement('canvas');
   c.width=Math.max(2,Math.round(cut.w*scalePxPerIn));
   c.height=Math.max(2,Math.round(cut.h*scalePxPerIn));
   const ctx=c.getContext('2d');
   const path=cutPath2DG(cut,scalePxPerIn);
+
+  if(sty.mode==='emb'){
+    const a=cut.art;
+    if(forPrint){
+      /* clean art file for the digitizer */
+      ctx.imageSmoothingQuality='high';
+      ctx.drawImage(art,a.x*scalePxPerIn,a.y*scalePxPerIn,a.w*scalePxPerIn,a.h*scalePxPerIn);
+      return c;
+    }
+    /* stitched-thread preview: art + satin line sheen clipped to the art, slight loft shadow */
+    const tmp=document.createElement('canvas');tmp.width=c.width;tmp.height=c.height;
+    const tx=tmp.getContext('2d');
+    tx.imageSmoothingQuality='high';
+    tx.drawImage(art,a.x*scalePxPerIn,a.y*scalePxPerIn,a.w*scalePxPerIn,a.h*scalePxPerIn);
+    tx.globalCompositeOperation='source-atop';
+    tx.globalAlpha=0.5;
+    tx.fillStyle=tx.createPattern(threadTile(),'repeat');
+    tx.fillRect(0,0,tmp.width,tmp.height);
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.5)';
+    ctx.shadowBlur=Math.max(1,scalePxPerIn*0.02);
+    ctx.shadowOffsetY=Math.max(1,scalePxPerIn*0.008);
+    ctx.drawImage(tmp,0,0);
+    ctx.restore();
+    return c;
+  }
 
   if(sty.mode==='engrave'){
     /* fieldPath = engraveable area: full patch, or inner field inside a molded border on pre-made blanks */
@@ -901,14 +954,16 @@ function drawPatchPreview(){
   ctx.shadowColor='rgba(0,0,0,.55)';ctx.shadowBlur=26;ctx.shadowOffsetY=8;
   ctx.drawImage(patch,px,py);
   ctx.restore();
-  /* cut line */
-  ctx.save();ctx.translate(px,py);
-  ctx.strokeStyle='#4B9CD3';ctx.lineWidth=1.6;ctx.setLineDash([7,5]);
-  ctx.stroke(cutPath2D(s));
-  ctx.restore();
+  /* cut line (not for direct embroidery — nothing gets cut) */
+  if(!state.cut.emb){
+    ctx.save();ctx.translate(px,py);
+    ctx.strokeStyle='#4B9CD3';ctx.lineWidth=1.6;ctx.setLineDash([7,5]);
+    ctx.stroke(cutPath2D(s));
+    ctx.restore();
+  }
   const dpi=state.art?Math.round(state.art.width/state.cut.art.w):0;
   $('dimsBar').innerHTML=
-    (state.cut.blank?'BLANK':'PATCH')+' <b>'+state.cut.w.toFixed(2)+'&quot; × '+state.cut.h.toFixed(2)+'&quot;</b>'+
+    (state.cut.emb?'EMBROIDERY':(state.cut.blank?'BLANK':'PATCH'))+' <b>'+state.cut.w.toFixed(2)+'&quot; × '+state.cut.h.toFixed(2)+'&quot;</b>'+
     ' · ART <b>'+state.cut.art.w.toFixed(2)+'&quot; × '+state.cut.art.h.toFixed(2)+'&quot;</b>'+
     (state.cut.blank
       ?' · BORDER <b>'+state.blank.border.toFixed(3)+'&quot;</b> · PRE-MADE, NO CUT'
@@ -960,9 +1015,11 @@ function refresh(){
   else drawGangSheet();
   const ready=!!state.cut;
   const isBlank=!!(state.cut&&state.cut.blank);
+  const isEmb=!!(state.cut&&state.cut.emb);
   ['dlPrint','dlApproval','dlZip'].forEach(id=>$(id).disabled=!ready);
-  ['dlSvg','dlDxf'].forEach(id=>$(id).disabled=!ready||isBlank); /* pre-made blanks: nothing to cut */
-  $('gsAdd').disabled=!ready||isBlank; /* blanks engrave in the jig, not on a gang sheet */
+  ['dlSvg','dlDxf'].forEach(id=>$(id).disabled=!ready||isBlank||isEmb); /* blanks + embroidery: nothing to cut */
+  $('gsAdd').disabled=!ready||isBlank||isEmb;
+  $('copyPrintavo').disabled=!ready;
   updatePrice();
   if(ready&&state.tab==='patch'){
     const q=Math.max(1,Math.round(parseFloat($('prQty').value)||1));
@@ -1071,10 +1128,14 @@ function buildApprovalCanvas(){
     ctx.stroke(cutPath2D(s));ctx.restore();
   }
   ctx.fillStyle='#7BAFD4';ctx.font='700 22px "JetBrains Mono",monospace';ctx.textAlign='center';
-  ctx.fillText('TRUE SIZE: '+state.cut.w.toFixed(2)+'" × '+state.cut.h.toFixed(2)+'"  ·  DASHED LINE = CUT LINE',W/2,Hh-96);
+  ctx.fillText('TRUE SIZE: '+state.cut.w.toFixed(2)+'" × '+state.cut.h.toFixed(2)+'"'+(state.embOn?'':'  ·  DASHED LINE = CUT LINE'),W/2,Hh-96);
   if(state.eng.on){
     ctx.fillStyle='#98A0A6';ctx.font='700 18px "JetBrains Mono",monospace';
     ctx.fillText('LASER ENGRAVED · '+(state.eng.cat+' — '+state.eng.name).toUpperCase(),W/2,Hh-64);
+  }
+  if(state.embOn){
+    ctx.fillStyle='#98A0A6';ctx.font='700 18px "JetBrains Mono",monospace';
+    ctx.fillText('DIRECT EMBROIDERY — STITCHED PREVIEW, FINAL THREAD COLORS AT DIGITIZING',W/2,Hh-64);
   }
   watermarkTile(ctx,W,Hh);
   ctx.globalAlpha=1;ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono",monospace';
@@ -1127,9 +1188,8 @@ function zipStore(entries){
 
 /* ---------- download handlers ---------- */
 $('dlPrint').onclick=async()=>{
-  const eng=state.eng.on;
-  const cv=eng?buildEngraveCanvas():buildPrintCanvas();
-  const tag=eng?'-engrave-':'-print-';
+  const cv=state.embOn?buildPrintCanvas():(state.eng.on?buildEngraveCanvas():buildPrintCanvas());
+  const tag=state.embOn?'-art-':(state.eng.on?'-engrave-':'-print-');
   cv.toBlob(b=>downloadBlobFile(b,fileBase()+tag+state.cut.w.toFixed(2)+'x'+state.cut.h.toFixed(2)+'in.png'),'image/png');
 };
 $('dlSvg').onclick=()=>{
@@ -1141,12 +1201,54 @@ $('dlDxf').onclick=()=>{
 $('dlApproval').onclick=()=>{
   buildApprovalCanvas().toBlob(b=>downloadBlobFile(b,fileBase()+'-approval.png'),'image/png');
 };
+function jobPayload(){
+  const q=Math.max(1,Math.round(parseFloat($('prQty').value)||1));
+  const u=unitPrice(q);
+  const mode=state.embOn?'embroidery':(state.eng.on?'engrave':'print');
+  return {
+    app:'mayhem-patch-lab',
+    customer:($('jobCustomer').value||'').trim(),
+    quoteRef:($('jobQuote').value||'').trim(),
+    mode,
+    material:state.embOn?'Direct embroidery on hat':(state.eng.on?(state.eng.cat+' — '+state.eng.name):'UV print patch material'),
+    blank:!!(state.cut&&state.cut.blank),
+    blankShape:(state.cut&&state.cut.blank)?state.blank.shape:null,
+    sizeIn:state.cut?[+state.cut.w.toFixed(2),+state.cut.h.toFixed(2)]:null,
+    invert:(state.eng.on&&state.eng.invert)||false,
+    artName:state.artName,
+    qty:q,
+    unitPrice:u?+u.price.toFixed(2):null,
+    setupFee:u?u.C.setup:null,
+    jobTotal:u?+(u.price*q+u.C.setup).toFixed(2):null,
+    p3Settings:state.eng.on?state.eng.settings:null,
+    ts:new Date().toISOString()
+  };
+}
+$('copyPrintavo').onclick=async()=>{
+  try{
+    await navigator.clipboard.writeText(JSON.stringify(jobPayload(),null,1));
+    $('copyStatus').textContent='✓ Copied — paste it to Claude: "push this patch job to Printavo".';
+  }catch(e){$('copyStatus').textContent='✗ Clipboard blocked — use the JOB ZIP (it contains patch-job.json).';}
+};
 $('dlZip').onclick=async()=>{
   const enc=new TextEncoder();
   const entries=[];
   const folder=fileBase();
   const eng=state.eng.on;
   const isBlank=!!state.cut.blank;
+  entries.push({name:folder+'/patch-job.json',data:enc.encode(JSON.stringify(jobPayload(),null,1))});
+  if(state.embOn){
+    entries.push({name:folder+'/'+folder+'-art.png',data:await canvasPngU8(buildPrintCanvas())});
+    entries.push({name:folder+'/'+folder+'-approval.png',data:await canvasPngU8(buildApprovalCanvas())});
+    entries.push({name:folder+'/README.txt',data:enc.encode(
+      'MAYHEM PATCH LAB EXPORT — DIRECT EMBROIDERY\n'+
+      'Art size on hat: '+state.cut.w.toFixed(2)+'" x '+state.cut.h.toFixed(2)+'"\n\n'+
+      'Send -art.png to the digitizer (track in the ops DIGITIZING lane).\n'+
+      'The DST/EMB file comes back from the digitizer — nothing is printed or cut in-house.\n'+
+      'patch-job.json carries the job details for the Printavo quote.\n')});
+    downloadBlobFile(zipStore(entries),folder+'.zip');
+    return;
+  }
   if(eng){
     entries.push({name:folder+'/'+folder+'-engrave.png',data:await canvasPngU8(buildEngraveCanvas())});
   }else{
@@ -1514,19 +1616,22 @@ function updateBlankUI(){
   }
 }
 function updateModeUI(){
-  const eng=state.eng.on;
+  const eng=state.eng.on, emb=state.embOn;
   const card=$('dlPrint').closest('.dl-card');
   const ps=card.querySelectorAll('p');
-  card.querySelector('h4').textContent=eng?'ENGRAVE FILE (PNG)':'PRINT FILE (PNG)';
-  ps[0].textContent=eng?'xTool P3 · raster engrave':'eufyMake E1';
-  ps[1].textContent=eng?'Black = engrave, white bg, 300 DPI exact size.':'Transparent PNG @ 300 DPI, exact size.';
+  card.querySelector('h4').textContent=emb?'ART FILE (PNG)':(eng?'ENGRAVE FILE (PNG)':'PRINT FILE (PNG)');
+  ps[0].textContent=emb?'Digitizer':(eng?'xTool P3 · raster engrave':'eufyMake E1');
+  ps[1].textContent=emb?'Clean art @ 300 DPI for digitizing.':(eng?'Black = engrave, white bg, 300 DPI exact size.':'Transparent PNG @ 300 DPI, exact size.');
 }
 $('modeSeg').querySelectorAll('button').forEach(b=>{
   b.onclick=()=>{
     $('modeSeg').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');
-    state.eng.on=b.dataset.mode==='engrave';
+    const m=b.dataset.mode;
+    state.eng.on=m==='engrave';
+    state.embOn=m==='emb';
     $('engBox').hidden=!state.eng.on;
+    $('embNote').hidden=!state.embOn;
     if(state.eng.on&&!state.eng.name)selectLea(0,0);
     updateModeUI();
     updateBlankUI();
@@ -1600,8 +1705,8 @@ function unitPrice(q){
   if(!state.cut)return null;
   const C=costs();
   const area=state.cut.w*state.cut.h;
-  const mat=state.cut.blank?C.blank:(area*(1+C.waste/100))/(12*24)*C.sheet;
-  const ink=state.eng.on?0:area*C.ink;
+  const mat=state.cut.emb?0:(state.cut.blank?C.blank:(area*(1+C.waste/100))/(12*24)*C.sheet);
+  const ink=(state.eng.on||state.cut.emb)?0:area*C.ink;
   const cost=mat+C.labor+ink;
   const price=Math.max(C.min,cost*C.markup*tierMult(q,C));
   return {price,cost,mat,ink,C};
@@ -1620,7 +1725,7 @@ function updatePrice(){
   $('prBig').innerHTML='$'+u.price.toFixed(2)+' <small>each</small>&ensp;·&ensp;$'+total.toFixed(2)+' <small>job @ '+q+' (incl. $'+u.C.setup.toFixed(0)+' setup)</small>';
   $('prBreak').textContent='cost/patch $'+u.cost.toFixed(2)+'  =  material $'+u.mat.toFixed(2)+
     (u.ink?' + ink $'+u.ink.toFixed(2):'')+' + labor/machine $'+u.C.labor.toFixed(2)+
-    '  ·  markup ×'+u.C.markup+(state.cut.blank?'  ·  pre-made blank':'');
+    '  ·  markup ×'+u.C.markup+(state.cut.blank?'  ·  pre-made blank':'')+(state.cut.emb?'  ·  EMBROIDERY: set labor to cover stitching + digitizing':'');
   let html='<tr><th>qty</th><th>each</th><th>job total</th></tr>';
   for(const t of [12,24,48,96,144]){
     const uu=unitPrice(t);
