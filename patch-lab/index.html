@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.7 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Pricing</title>
+<title>Mayhem Patch Lab v0.8 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -107,6 +107,18 @@
   .pr-big{font-family:'Archivo Black',sans-serif;font-size:26px;color:var(--ink);margin:8px 0 0;}
   .pr-big small{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
   .cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .layer-row{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:5px 8px;margin-top:5px;font-size:12px;cursor:pointer;}
+  .layer-row.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+  .layer-row .ln{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .layer-row .lt{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--accent2);text-transform:uppercase;}
+  .layer-row button{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0 3px;line-height:1;}
+  .layer-row button:hover{color:var(--accent2);}
+  .layer-row button.lx{color:var(--warn);}
+  .design-row{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:6px 9px;margin-top:6px;font-size:12px;}
+  .design-row .dn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}
+  .design-row .dn:hover{color:var(--accent2);}
+  .design-row .dd{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;}
+  .design-row button{background:transparent;border:none;color:var(--warn);cursor:pointer;font-size:14px;padding:0 3px;}
 </style>
 </head>
 <body>
@@ -114,7 +126,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.7</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.8</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -131,14 +143,48 @@
       <input type="text" id="jobCustomer" placeholder="Customer name">
       <label class="lbl">Quote / Invoice #</label>
       <input type="text" id="jobQuote" placeholder="e.g. 6412">
+      <label class="lbl">Saved designs — autosaves as you work</label>
+      <div class="row2">
+        <input type="text" id="dsName" placeholder="Design name…">
+        <button class="btn sm" id="dsSave">💾 SAVE</button>
+      </div>
+      <div id="dsList"></div>
+      <div class="val" id="dsStatus"></div>
     </div>
 
     <div class="panel">
       <h3><span class="stepnum">2</span> ART</h3>
-      <p class="desc">SVG preferred (crisp at any size). PNG with transparency works too.</p>
-      <div class="drop" id="artDrop"><b>Drop art here</b>SVG · PNG · WEBP — or click to browse</div>
+      <p class="desc">Stack images and text — drag, scale and rotate them right on the preview.</p>
+      <div class="drop" id="artDrop"><b>Drop art here</b>SVG · PNG · WEBP — or click to browse (adds a layer)</div>
       <input type="file" id="artFile" accept=".svg,.png,.webp,.jpg,.jpeg,image/*">
       <div class="val" id="artInfo"></div>
+      <label class="lbl">Add text</label>
+      <input type="text" id="txtContent" placeholder="YOUR TEXT">
+      <div class="row2" style="margin-top:8px;">
+        <select id="txtFont">
+          <option>Archivo Black</option><option>Impact</option><option>Arial Black</option>
+          <option>Inter</option><option>Georgia</option><option>Times New Roman</option>
+          <option>Courier New</option><option>JetBrains Mono</option><option>Verdana</option>
+          <option>Trebuchet MS</option><option>Brush Script MT</option>
+        </select>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="color" id="txtColor" value="#111111">
+          <label class="checkline" style="margin-top:0;"><input type="checkbox" id="txtBold" checked> Bold</label>
+        </div>
+      </div>
+      <label class="lbl">Arc / curve</label>
+      <input type="range" id="txtArc" min="-100" max="100" step="1" value="0">
+      <div class="val" id="txtArcVal">flat</div>
+      <div class="btnrow">
+        <button class="btn sm" id="txtAdd">＋ ADD TEXT</button>
+        <button class="btn sm ghost" id="txtApply" disabled>APPLY TO SELECTED</button>
+      </div>
+      <label class="lbl">Layers — click to select · double-click preview too</label>
+      <div id="layerList"></div>
+      <div class="btnrow">
+        <button class="btn sm ghost" id="undoBtn">↶ UNDO</button>
+        <button class="btn sm ghost" id="redoBtn">↷ REDO</button>
+      </div>
       <div class="note warn" id="dpiWarn" hidden></div>
       <div class="btnrow"><button class="btn sm ghost" id="vecBtn" disabled>✦ VECTORIZE ART — vectorizer.ai</button></div>
       <div class="val" id="vecStatus"></div>
@@ -192,8 +238,10 @@
       <div class="segmented" id="shapeSeg">
         <button data-shape="contour" class="on">CONTOUR</button>
         <button data-shape="rect">RECT</button>
-        <button data-shape="round">ROUNDED</button>
+        <button data-shape="round">ROUND</button>
         <button data-shape="oval">OVAL</button>
+        <button data-shape="hexcut">HEX</button>
+        <button data-shape="capsule">PILL</button>
       </div>
       </div>
       <label class="lbl">Art width (inches)</label>
@@ -237,7 +285,14 @@
       <input type="range" id="hatScale" min="8" max="60" step="0.5" value="30">
       <div class="val" id="hatScaleVal">30% of photo width</div>
       <label class="checkline"><input type="checkbox" id="hatShade" checked> Pick up hat shading</label>
+      <label class="lbl">Patch tilt</label>
+      <input type="range" id="hatRot" min="-25" max="25" step="0.5" value="0">
+      <div class="val" id="hatRotVal">0°</div>
       <div class="note">Drag the patch on the mockup to position it.</div>
+      <div class="btnrow">
+        <button class="btn sm" id="dlMockPng" disabled>⬇ MOCKUP PNG</button>
+        <button class="btn sm ghost" id="dlMockJpg" disabled>⬇ MOCKUP JPEG</button>
+      </div>
     </div>
 
     <div class="panel">
@@ -392,8 +447,13 @@ const DPI=300;               /* production print resolution */
 const MASK_MAX=600;          /* working mask resolution for contour math */
 
 const state={
-  art:null,            /* trimmed canvas */
+  art:null,            /* COMPOSITE canvas of all objects (v0.8) */
   artName:'',
+  assets:{},           /* id -> {canvas,name,dataURL} */
+  objects:[],          /* [{id,type:'image'|'text',...,xc,yc,w,rot}] draw order = array order */
+  selId:null,
+  artBox:null,         /* {minX,minY,w,h} composite bounds in art-space inches */
+  _view:null,          /* last patch-preview transform {px,py,s} */
   shape:'contour',
   artW:2.75,           /* inches */
   offset:0.125,        /* inches */
@@ -403,7 +463,7 @@ const state={
   bgColor:'#F5F0E6',
   cut:null,            /* {polys:[[{x,y}in]], w,h, art:{x,y,w,h}, blobCount} */
   tab:'patch',
-  hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true},
+  hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true,rot:0},
   gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0},
   eng:{on:false,cat:'',name:'',top:'#151515',engC:'#C8A24B',override:false,invert:false,settings:'',blank:false},
   embOn:false,
@@ -691,9 +751,15 @@ function computeCut(){
         ' A '+rx.toFixed(4)+' '+ry.toFixed(4)+' 0 1 0 '+(rx*2).toFixed(4)+' '+ry.toFixed(4)+' Z';
       state.cut={polys,w:fw,h:fh,svgPath,
         art:{x:fw/2-artWin/2,y:fh/2-artHin/2,w:artWin,h:artHin},blobCount:1};
+    }else if(state.shape==='hexcut'){
+      fw=artWin+2*m;fh=artHin+2*m;
+      polys=[blankShapePoly(fw,fh,'hex',0,0)];
+      state.cut={polys,w:fw,h:fh,svgPath:null,
+        art:{x:m,y:m,w:artWin,h:artHin},blobCount:1};
     }else{
       fw=artWin+2*m;fh=artHin+2*m;
-      const r=state.shape==='round'?Math.min(state.radius,fw/2,fh/2):(state.shape==='rect'?0:0);
+      const r=state.shape==='round'?Math.min(state.radius,fw/2,fh/2)
+             :(state.shape==='capsule'?Math.min(fw,fh)/2:0);
       const pts=[];
       const seg=(cx,cy,a0,a1)=>{for(let i=0;i<=14;i++){const a=a0+(a1-a0)*i/14;pts.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}};
       if(r>0.001){
@@ -795,14 +861,41 @@ function cutSvgD(){
 let _grainTile=null;
 function grainTile(){
   if(_grainTile)return _grainTile;
-  const c=document.createElement('canvas');c.width=128;c.height=128;
+  const N=256;
+  const c=document.createElement('canvas');c.width=N;c.height=N;
   const ctx=c.getContext('2d');
-  const img=ctx.createImageData(128,128);
-  for(let i=0;i<img.data.length;i+=4){
-    const v=118+Math.random()*44|0;
-    img.data[i]=v;img.data[i+1]=v;img.data[i+2]=v;img.data[i+3]=255;
+  /* soft blotches: low-res noise scaled up smooth */
+  const lo=document.createElement('canvas');lo.width=32;lo.height=32;
+  const lctx=lo.getContext('2d');
+  const li=lctx.createImageData(32,32);
+  for(let i=0;i<li.data.length;i+=4){
+    const v=128+((Math.random()-0.5)*46)|0;
+    li.data[i]=v;li.data[i+1]=v;li.data[i+2]=v;li.data[i+3]=255;
   }
-  ctx.putImageData(img,0,0);
+  lctx.putImageData(li,0,0);
+  ctx.imageSmoothingEnabled=true;
+  ctx.drawImage(lo,0,0,N,N);
+  /* fine pore noise */
+  const fi=ctx.getImageData(0,0,N,N);
+  for(let i=0;i<fi.data.length;i+=4){
+    const f=(Math.random()-0.5)*30;
+    fi.data[i]=Math.max(0,Math.min(255,fi.data[i]+f));
+    fi.data[i+1]=fi.data[i];fi.data[i+2]=fi.data[i];
+  }
+  ctx.putImageData(fi,0,0);
+  /* faint fibrous creases */
+  ctx.strokeStyle='rgba(0,0,0,0.10)';
+  ctx.lineWidth=0.7;
+  for(let k=0;k<70;k++){
+    const x0=Math.random()*N,y0=Math.random()*N;
+    const a=Math.random()*Math.PI,len=6+Math.random()*22;
+    ctx.beginPath();
+    ctx.moveTo(x0,y0);
+    ctx.quadraticCurveTo(x0+Math.cos(a)*len*0.5+(Math.random()-0.5)*6,
+                         y0+Math.sin(a)*len*0.5+(Math.random()-0.5)*6,
+                         x0+Math.cos(a)*len,y0+Math.sin(a)*len);
+    ctx.stroke();
+  }
   _grainTile=c;
   return c;
 }
@@ -919,8 +1012,20 @@ function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
     return c;
   }
 
-  /* UV PRINT mode (original) */
-  if(sty.bgOn){ctx.save();ctx.fillStyle=sty.bgColor;ctx.fill(path);ctx.restore();}
+  /* UV PRINT mode */
+  if(!forPrint){
+    /* WYSIWYG: printed patches live on leatherette — show the material (bg color or white stock) w/ grain */
+    ctx.save();
+    ctx.fillStyle=sty.bgOn?sty.bgColor:'#EFEAE0';
+    ctx.fill(path);
+    ctx.clip(path);
+    ctx.globalAlpha=0.12;ctx.globalCompositeOperation='overlay';
+    ctx.fillStyle=ctx.createPattern(grainTile(),'repeat');
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.restore();
+  }else if(sty.bgOn){
+    ctx.save();ctx.fillStyle=sty.bgColor;ctx.fill(path);ctx.restore();
+  }
   ctx.save();ctx.clip(path);
   const a=cut.art;
   ctx.imageSmoothingQuality='high';
@@ -949,6 +1054,7 @@ function drawPatchPreview(){
   const margin=70;
   const s=Math.min((cv.width-margin*2)/state.cut.w,(cv.height-margin*2)/state.cut.h);
   const px=(cv.width-state.cut.w*s)/2,py=(cv.height-state.cut.h*s)/2;
+  state._view={px,py,s};
   const patch=renderPatch(s,false);
   ctx.save();
   ctx.shadowColor='rgba(0,0,0,.55)';ctx.shadowBlur=26;ctx.shadowOffsetY=8;
@@ -961,9 +1067,36 @@ function drawPatchPreview(){
     ctx.stroke(cutPath2D(s));
     ctx.restore();
   }
+  /* selection overlay (v0.8) */
+  const so=selObj();
+  if(so&&state.artBox&&so._w){
+    const k=state.cut.art.w/state.artBox.w;    /* art may be fit-scaled inside preset/blank frames */
+    const toStage=(ax,ay)=>[px+(state.cut.art.x+(ax-state.artBox.minX)*k)*s,
+                            py+(state.cut.art.y+(ay-state.artBox.minY)*k)*s];
+    const hw=so._w/2,hh=so._h/2,r=so.rot||0;
+    const corners=[[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]].map(([lx,ly])=>{
+      const rx=lx*Math.cos(r)-ly*Math.sin(r), ry=lx*Math.sin(r)+ly*Math.cos(r);
+      return toStage(so.xc+rx,so.yc+ry);
+    });
+    const topMid=[(corners[0][0]+corners[1][0])/2,(corners[0][1]+corners[1][1])/2];
+    const c0=toStage(so.xc,so.yc);
+    const rotH=[topMid[0]+(topMid[0]-c0[0])*0.22,topMid[1]+(topMid[1]-c0[1])*0.22];
+    ctx.save();
+    ctx.strokeStyle='#7BAFD4';ctx.lineWidth=1.4;ctx.setLineDash([4,3]);
+    ctx.beginPath();
+    corners.forEach((p,i)=>{i===0?ctx.moveTo(p[0],p[1]):ctx.lineTo(p[0],p[1]);});
+    ctx.closePath();ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#4B9CD3';
+    for(const p of corners)ctx.fillRect(p[0]-5,p[1]-5,10,10);
+    ctx.beginPath();ctx.moveTo(topMid[0],topMid[1]);ctx.lineTo(rotH[0],rotH[1]);ctx.stroke();
+    ctx.beginPath();ctx.arc(rotH[0],rotH[1],6,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+    state._sel={corners,rotH,c0};
+  }else state._sel=null;
   const dpi=state.art?Math.round(state.art.width/state.cut.art.w):0;
   $('dimsBar').innerHTML=
-    (state.cut.emb?'EMBROIDERY':(state.cut.blank?'BLANK':'PATCH'))+' <b>'+state.cut.w.toFixed(2)+'&quot; × '+state.cut.h.toFixed(2)+'&quot;</b>'+
+    (state.cut.emb?'EMBROIDERY':(state.cut.blank?'BLANK':'PATCH'))+' <b>'+state.cut.w.toFixed(2)+'&quot; × '+state.cut.h.toFixed(2)+'&quot;</b> <span style="color:var(--muted)">('+Math.round(state.cut.w*25.4)+'×'+Math.round(state.cut.h*25.4)+'mm)</span>'+
     ' · ART <b>'+state.cut.art.w.toFixed(2)+'&quot; × '+state.cut.art.h.toFixed(2)+'&quot;</b>'+
     (state.cut.blank
       ?' · BORDER <b>'+state.blank.border.toFixed(3)+'&quot;</b> · PRE-MADE, NO CUT'
@@ -987,27 +1120,44 @@ function drawHatMockup(){
   cv.width=ph.width;cv.height=ph.height;
   ctx.drawImage(ph,0,0);
   if(state.cut){
-    const patchWpx=state.hat.scale*ph.width;
-    const s=patchWpx/state.cut.w;
-    const w=state.cut.w*s,h=state.cut.h*s;
-    const x=state.hat.cx*ph.width-w/2,y=state.hat.cy*ph.height-h/2;
-    const patch=renderPatch(s,false);
-    ctx.save();
-    ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=Math.max(4,patchWpx*0.03);ctx.shadowOffsetY=Math.max(2,patchWpx*0.012);
-    ctx.drawImage(patch,x,y);
-    ctx.restore();
-    if(state.hat.shade&&!state.cut.emb){ /* emb: no patch surface to shade */
-      ctx.save();
-      ctx.translate(x,y);
-      ctx.clip(cutPath2D(s));
-      ctx.globalCompositeOperation='multiply';
-      ctx.globalAlpha=0.35;
-      ctx.drawImage(ph,-x,-y);
-      ctx.restore();
-    }
+    paintPatchOnHat(ctx,ph);
     const inW=state.cut.w;
     $('dimsBar').innerHTML='PATCH ON HAT · true size <b>'+inW.toFixed(2)+'&quot; wide</b> · drag to position';
   }
+}
+/* shared: draw the current patch onto a hat photo context (mockup tab, approval, downloads) */
+function paintPatchOnHat(ctx,ph){
+  const patchWpx=state.hat.scale*ph.width;
+  const s=patchWpx/state.cut.w;
+  const w=state.cut.w*s,h=state.cut.h*s;
+  const cx=state.hat.cx*ph.width,cy=state.hat.cy*ph.height;
+  const rot=(state.hat.rot||0)*Math.PI/180;
+  const patch=renderPatch(s,false);
+  ctx.save();
+  ctx.translate(cx,cy);ctx.rotate(rot);
+  ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=Math.max(4,patchWpx*0.03);ctx.shadowOffsetY=Math.max(2,patchWpx*0.012);
+  ctx.drawImage(patch,-w/2,-h/2);
+  ctx.restore();
+  if(state.hat.shade&&!state.cut.emb){ /* emb: no patch surface to shade */
+    ctx.save();
+    ctx.translate(cx,cy);ctx.rotate(rot);ctx.translate(-w/2,-h/2);
+    ctx.clip(cutPath2D(s));
+    ctx.globalCompositeOperation='multiply';
+    ctx.globalAlpha=0.35;
+    /* exact inverse transform so the photo stays unrotated under the clip */
+    ctx.translate(w/2,h/2);ctx.rotate(-rot);ctx.translate(-cx,-cy);
+    ctx.drawImage(ph,0,0);
+    ctx.restore();
+  }
+}
+function buildMockupCanvas(){
+  const ph=state.hat.photo;
+  if(!ph||!state.cut)return null;
+  const c=document.createElement('canvas');c.width=ph.width;c.height=ph.height;
+  const ctx=c.getContext('2d');
+  ctx.drawImage(ph,0,0);
+  paintPatchOnHat(ctx,ph);
+  return c;
 }
 function refresh(){
   if(state.tab==='patch')drawPatchPreview();
@@ -1020,6 +1170,9 @@ function refresh(){
   ['dlSvg','dlDxf'].forEach(id=>$(id).disabled=!ready||isBlank||isEmb); /* blanks + embroidery: nothing to cut */
   $('gsAdd').disabled=!ready||isBlank||isEmb;
   $('copyPrintavo').disabled=!ready;
+  const mockReady=ready&&!!state.hat.photo;
+  $('dlMockPng').disabled=!mockReady;
+  $('dlMockJpg').disabled=!mockReady;
   updatePrice();
   if(ready&&state.tab==='patch'){
     const q=Math.max(1,Math.round(parseFloat($('prQty').value)||1));
@@ -1035,7 +1188,7 @@ function refresh(){
   $('statusBadge').style.borderColor=ready?'var(--ok)':'var(--line2)';
   $('statusBadge').style.color=ready?'var(--ok)':'var(--muted)';
 }
-function recompute(){computeCut();refresh();}
+function recompute(){computeCut();refresh();autosaveSoon();}
 
 /* ---------- exports ---------- */
 function fileBase(){
@@ -1102,20 +1255,8 @@ function buildApprovalCanvas(){
     const ph=state.hat.photo;
     const s=Math.min((W-100)/ph.width,areaH/ph.height);
     const mw=ph.width*s,mh=ph.height*s,mx=(W-mw)/2,my=areaY+(areaH-mh)/2;
-    /* render mockup at native then scale */
-    const tmp=document.createElement('canvas');tmp.width=ph.width;tmp.height=ph.height;
-    const tctx=tmp.getContext('2d');
-    tctx.drawImage(ph,0,0);
-    const patchWpx=state.hat.scale*ph.width,ps=patchWpx/state.cut.w;
-    const pw=state.cut.w*ps,phh=state.cut.h*ps;
-    const px=state.hat.cx*ph.width-pw/2,py=state.hat.cy*ph.height-phh/2;
-    tctx.save();tctx.shadowColor='rgba(0,0,0,.45)';tctx.shadowBlur=patchWpx*0.03;
-    tctx.drawImage(renderPatch(ps,false),px,py);tctx.restore();
-    if(state.hat.shade&&!state.cut.emb){
-      tctx.save();tctx.translate(px,py);tctx.clip(cutPath2D(ps));
-      tctx.globalCompositeOperation='multiply';tctx.globalAlpha=0.35;
-      tctx.drawImage(ph,-px,-py);tctx.restore();
-    }
+    /* render mockup at native then scale (shared painter incl. tilt) */
+    const tmp=buildMockupCanvas();
     ctx.drawImage(tmp,mx,my,mw,mh);
   }else{
     const s=Math.min((W-500)/state.cut.w,(areaH-80)/state.cut.h);
@@ -1293,16 +1434,254 @@ function bindDrop(dropId,fileId,handler){
   drop.ondrop=e=>{e.preventDefault();drop.classList.remove('drag');
     if(e.dataTransfer.files[0])handler(e.dataTransfer.files[0]);};
 }
-bindDrop('artDrop','artFile',file=>{
-  loadArtFile(file,(canvas,isSvg)=>{
-    state.art=canvas;state.artName=file.name;
-    $('artInfo').textContent=file.name+' · '+canvas.width+'×'+canvas.height+'px'+(isSvg?' (vector, rasterized hi-res)':'');
-    const dpi=Math.round(canvas.width/state.artW);
-    $('dpiWarn').hidden=isSvg||dpi>=200;
-    if(!$('dpiWarn').hidden)$('dpiWarn').textContent='⚠ '+dpi+' DPI at '+state.artW+'" wide — soft for UV print. Vector art (SVG) or a bigger PNG prints sharper.';
-    recompute();
+/* ---------- OBJECT ENGINE (v0.8): images + text as layers, composited into state.art ---------- */
+let objSeq=0;
+function newId(){return 'o'+(++objSeq)+'_'+Date.now().toString(36);}
+function assetPut(canvas,name){
+  const id=newId();
+  /* store a downscaled dataURL immediately for cheap persistence */
+  const s=Math.min(1,1000/Math.max(canvas.width,canvas.height));
+  let dataURL='';
+  try{
+    const t=document.createElement('canvas');
+    t.width=Math.max(2,Math.round(canvas.width*s));t.height=Math.max(2,Math.round(canvas.height*s));
+    t.getContext('2d').drawImage(canvas,0,0,t.width,t.height);
+    dataURL=t.toDataURL('image/png');
+  }catch(e){}
+  state.assets[id]={canvas,name,dataURL};
+  return id;
+}
+function renderObjCanvas(o,ppi){
+  if(o.type==='image'){
+    const a=state.assets[o.assetId];
+    if(!a)return null;
+    const asp=a.canvas.height/a.canvas.width;
+    const c=document.createElement('canvas');
+    c.width=Math.max(2,Math.round(o.w*ppi));c.height=Math.max(2,Math.round(o.w*asp*ppi));
+    const x=c.getContext('2d');x.imageSmoothingQuality='high';
+    x.drawImage(a.canvas,0,0,c.width,c.height);
+    return c;
+  }
+  return renderTextCanvas(o,ppi);
+}
+function renderTextCanvas(o,ppi){
+  const basePx=200;
+  const meas=document.createElement('canvas').getContext('2d');
+  const fontStr=(o.bold?'700 ':'400 ')+basePx+'px "'+o.font+'"';
+  meas.font=fontStr;
+  const txt=o.text||'TEXT';
+  const arc=o.arc||0;
+  let raw;
+  if(!arc){
+    const w=Math.max(2,meas.measureText(txt).width);
+    raw=document.createElement('canvas');
+    raw.width=Math.ceil(w+basePx*0.2);raw.height=Math.ceil(basePx*1.4);
+    const x=raw.getContext('2d');
+    x.font=fontStr;x.fillStyle=o.color;x.textAlign='center';x.textBaseline='middle';
+    x.fillText(txt,raw.width/2,raw.height/2);
+  }else{
+    const widths=[...txt].map(ch=>Math.max(1,meas.measureText(ch).width));
+    const total=widths.reduce((a,b)=>a+b,0);
+    const bend=Math.max(-1,Math.min(1,arc/100));
+    const R=total/(Math.PI*Math.abs(bend));
+    const up=bend>0;
+    const half=total/2;
+    const sag=R-Math.sqrt(Math.max(0,R*R-half*half));
+    raw=document.createElement('canvas');
+    raw.width=Math.ceil(total+basePx);raw.height=Math.ceil(basePx*1.6+sag);
+    const x=raw.getContext('2d');
+    x.font=fontStr;x.fillStyle=o.color;x.textAlign='center';x.textBaseline='middle';
+    const cx=raw.width/2;
+    const cy=up?(basePx*0.75+R):(raw.height-basePx*0.75-R);
+    let along=-half;
+    for(let i=0;i<txt.length;i++){
+      const mid=(along+widths[i]/2)/R;
+      const theta=up?(-Math.PI/2+mid):(Math.PI/2-mid);
+      const chx=cx+R*Math.cos(theta),chy=cy+R*Math.sin(theta);
+      x.save();x.translate(chx,chy);
+      x.rotate(up?(theta+Math.PI/2):(theta-Math.PI/2));
+      x.fillText(txt[i],0,0);
+      x.restore();
+      along+=widths[i];
+    }
+  }
+  raw=trimCanvas(raw);
+  const scale=(o.w*ppi)/raw.width;
+  const out=document.createElement('canvas');
+  out.width=Math.max(2,Math.round(raw.width*scale));out.height=Math.max(2,Math.round(raw.height*scale));
+  const ox=out.getContext('2d');ox.imageSmoothingQuality='high';
+  ox.drawImage(raw,0,0,out.width,out.height);
+  return out;
+}
+function compositeArt(){
+  if(!state.objects.length){
+    state.art=null;state.artBox=null;state.artName='';
+    $('artInfo').textContent='';
+    $('dpiWarn').hidden=true;
+    return;
+  }
+  const RPPI=250;
+  const rend=[];
+  for(const o of state.objects){
+    const cv=renderObjCanvas(o,RPPI);
+    if(!cv)continue;
+    const w=cv.width/RPPI,h=cv.height/RPPI;
+    o._w=w;o._h=h;
+    rend.push({o,cv,w,h});
+  }
+  if(!rend.length){state.art=null;state.artBox=null;return;}
+  let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+  for(const r of rend){
+    const cos=Math.abs(Math.cos(r.o.rot||0)),sin=Math.abs(Math.sin(r.o.rot||0));
+    const ew=(r.w/2)*cos+(r.h/2)*sin, eh=(r.w/2)*sin+(r.h/2)*cos;
+    minX=Math.min(minX,r.o.xc-ew);maxX=Math.max(maxX,r.o.xc+ew);
+    minY=Math.min(minY,r.o.yc-eh);maxY=Math.max(maxY,r.o.yc+eh);
+  }
+  const W=Math.max(0.05,maxX-minX),H=Math.max(0.05,maxY-minY);
+  const ppi=Math.min(RPPI,2200/Math.max(W,H));
+  const c=document.createElement('canvas');
+  c.width=Math.max(2,Math.round(W*ppi));c.height=Math.max(2,Math.round(H*ppi));
+  const x=c.getContext('2d');x.imageSmoothingQuality='high';
+  for(const r of rend){
+    x.save();
+    x.translate((r.o.xc-minX)*ppi,(r.o.yc-minY)*ppi);
+    x.rotate(r.o.rot||0);
+    const cv=(ppi===RPPI)?r.cv:renderObjCanvas(r.o,ppi);
+    x.drawImage(cv,-cv.width/2,-cv.height/2);
+    x.restore();
+  }
+  state.art=c;
+  state.artBox={minX,minY,w:W,h:H};
+  state.artW=W;
+  $('artW').value=String(Math.min(8,Math.max(0.5,W)));
+  $('artWVal').textContent=W.toFixed(2)+'"';
+  state.artName=state.objects.length===1?(state.objects[0].name||'design'):'design';
+  /* dpi warn: lowest effective dpi among raster layers */
+  let worst=1e9,anyRaster=false;
+  for(const o of state.objects){
+    if(o.type!=='image')continue;
+    const a=state.assets[o.assetId];
+    if(!a||a.vector)continue;
+    anyRaster=true;
+    worst=Math.min(worst,Math.round(a.canvas.width/o.w));
+  }
+  $('dpiWarn').hidden=!anyRaster||worst>=200;
+  if(!$('dpiWarn').hidden)$('dpiWarn').textContent='⚠ '+worst+' DPI at print size — soft for UV print. Vector art (SVG) or a bigger PNG prints sharper.';
+  $('artInfo').textContent=state.objects.length+' layer'+(state.objects.length>1?'s':'')+' · design '+W.toFixed(2)+'" × '+H.toFixed(2)+'"';
+}
+/* undo/redo — objects only (assets persist) */
+let undoStack=[],redoStack=[];
+function pushUndo(){
+  undoStack.push(JSON.stringify(state.objects));
+  if(undoStack.length>60)undoStack.shift();
+  redoStack=[];
+}
+function doUndo(){
+  if(!undoStack.length)return;
+  redoStack.push(JSON.stringify(state.objects));
+  state.objects=JSON.parse(undoStack.pop());
+  state.selId=null;
+  objChanged();
+}
+function doRedo(){
+  if(!redoStack.length)return;
+  undoStack.push(JSON.stringify(state.objects));
+  state.objects=JSON.parse(redoStack.pop());
+  state.selId=null;
+  objChanged();
+}
+function objChanged(){
+  compositeArt();
+  recompute();
+  refreshLayers();
+  autosaveSoon();
+}
+function selObj(){return state.objects.find(o=>o.id===state.selId)||null;}
+function refreshLayers(){
+  const box=$('layerList');box.innerHTML='';
+  [...state.objects].reverse().forEach(o=>{
+    const row=document.createElement('div');
+    row.className='layer-row'+(o.id===state.selId?' sel':'');
+    const t=document.createElement('span');t.className='lt';t.textContent=o.type==='text'?'TXT':'IMG';
+    const n=document.createElement('span');n.className='ln';
+    n.textContent=o.type==='text'?('“'+(o.text||'')+'”'):(o.name||'image');
+    const up=document.createElement('button');up.textContent='▲';
+    const dn=document.createElement('button');dn.textContent='▼';
+    const dup=document.createElement('button');dup.textContent='⧉';
+    const del=document.createElement('button');del.className='lx';del.textContent='✕';
+    up.onclick=e=>{e.stopPropagation();const i=state.objects.indexOf(o);if(i<state.objects.length-1){pushUndo();[state.objects[i],state.objects[i+1]]=[state.objects[i+1],state.objects[i]];objChanged();}};
+    dn.onclick=e=>{e.stopPropagation();const i=state.objects.indexOf(o);if(i>0){pushUndo();[state.objects[i],state.objects[i-1]]=[state.objects[i-1],state.objects[i]];objChanged();}};
+    dup.onclick=e=>{e.stopPropagation();pushUndo();const cp=JSON.parse(JSON.stringify(o));cp.id=newId();cp.xc+=0.2;cp.yc+=0.2;state.objects.push(cp);state.selId=cp.id;objChanged();};
+    del.onclick=e=>{e.stopPropagation();pushUndo();state.objects=state.objects.filter(x=>x.id!==o.id);if(state.selId===o.id)state.selId=null;objChanged();};
+    row.onclick=()=>{state.selId=o.id;refreshLayers();refresh();syncTextForm();};
+    row.append(t,n,up,dn,dup,del);
+    box.appendChild(row);
   });
+  $('txtApply').disabled=!(selObj()&&selObj().type==='text');
+}
+function addImageObject(file){
+  loadArtFile(file,(canvas,isSvg)=>{
+    pushUndo();
+    const id=assetPut(canvas,file.name);
+    state.assets[id].vector=isSvg;
+    const base=state.artBox?{x:state.artBox.minX+state.artBox.w/2+0.15,y:state.artBox.minY+state.artBox.h/2+0.15}:{x:0,y:0};
+    state.objects.push({id:newId(),type:'image',assetId:id,name:file.name,xc:base.x,yc:base.y,w:2.5,rot:0});
+    state.selId=state.objects[state.objects.length-1].id;
+    objChanged();
+  });
+}
+function addTextObject(){
+  const txt=($('txtContent').value||'').trim();
+  if(!txt)return;
+  pushUndo();
+  const base=state.artBox?{x:state.artBox.minX+state.artBox.w/2,y:state.artBox.minY+state.artBox.h+0.35}:{x:0,y:0};
+  state.objects.push({
+    id:newId(),type:'text',text:txt,
+    font:$('txtFont').value,color:$('txtColor').value,bold:$('txtBold').checked,
+    arc:parseFloat($('txtArc').value)||0,
+    xc:base.x,yc:base.y,w:2.2,rot:0
+  });
+  state.selId=state.objects[state.objects.length-1].id;
+  objChanged();
+}
+function syncTextForm(){
+  const o=selObj();
+  if(o&&o.type==='text'){
+    $('txtContent').value=o.text;
+    $('txtFont').value=o.font;
+    $('txtColor').value=o.color;
+    $('txtBold').checked=!!o.bold;
+    $('txtArc').value=String(o.arc||0);
+    $('txtArcVal').textContent=(o.arc||0)===0?'flat':((o.arc>0?'arch up ':'arch down ')+Math.abs(o.arc));
+  }
+}
+$('txtAdd').onclick=addTextObject;
+$('txtApply').onclick=()=>{
+  const o=selObj();
+  if(!o||o.type!=='text')return;
+  pushUndo();
+  o.text=($('txtContent').value||o.text).trim()||o.text;
+  o.font=$('txtFont').value;o.color=$('txtColor').value;o.bold=$('txtBold').checked;
+  o.arc=parseFloat($('txtArc').value)||0;
+  objChanged();
+};
+$('txtArc').oninput=()=>{
+  const v=parseFloat($('txtArc').value)||0;
+  $('txtArcVal').textContent=v===0?'flat':((v>0?'arch up ':'arch down ')+Math.abs(v));
+};
+$('undoBtn').onclick=doUndo;
+$('redoBtn').onclick=doRedo;
+document.addEventListener('keydown',e=>{
+  if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?doRedo():doUndo();}
+  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();doRedo();}
+  else if((e.key==='Delete'||e.key==='Backspace')&&state.selId){
+    e.preventDefault();pushUndo();
+    state.objects=state.objects.filter(x=>x.id!==state.selId);
+    state.selId=null;objChanged();
+  }
 });
+bindDrop('artDrop','artFile',addImageObject);
 bindDrop('hatDrop','hatFile',file=>{
   loadImgFile(file,img=>{
     /* fit to 1100 max dim like Style Lab */
@@ -1333,7 +1712,21 @@ const bindRange=(id,valId,fmt,key,obj)=>{
     recompute();
   };
 };
-bindRange('artW','artWVal',v=>v.toFixed(2)+'"','artW');
+/* artW slider (v0.8): scales the WHOLE design uniformly about its center */
+$('artW').oninput=()=>{
+  if(!state.objects.length||!state.artBox)return;
+  const target=parseFloat($('artW').value);
+  const cur=state.artBox.w;
+  const f=target/cur;
+  if(!isFinite(f)||f<=0)return;
+  const cx0=state.artBox.minX+cur/2, cy0=state.artBox.minY+state.artBox.h/2;
+  for(const o of state.objects){
+    o.w*=f;
+    o.xc=cx0+(o.xc-cx0)*f;
+    o.yc=cy0+(o.yc-cy0)*f;
+  }
+  compositeArt();recompute();autosaveSoon();
+};
 bindRange('cutOff','cutOffVal',v=>v.toFixed(3)+'"','offset');
 bindRange('cornerR','cornerRVal',v=>v.toFixed(2)+'"','radius');
 $('hatScale').oninput=()=>{
@@ -1345,6 +1738,22 @@ $('smoothChk').onchange=()=>{state.smooth=$('smoothChk').checked;recompute();};
 $('bgChk').onchange=()=>{state.bgOn=$('bgChk').checked;refresh();};
 $('bgColor').oninput=()=>{state.bgColor=$('bgColor').value;state.bgOn=true;$('bgChk').checked=true;refresh();};
 $('hatShade').onchange=()=>{state.hat.shade=$('hatShade').checked;refresh();};
+$('hatRot').oninput=()=>{
+  state.hat.rot=parseFloat($('hatRot').value)||0;
+  $('hatRotVal').textContent=state.hat.rot.toFixed(1).replace(/\.0$/,'')+'°';
+  refresh();
+};
+$('dlMockPng').onclick=()=>{
+  const c=buildMockupCanvas();
+  if(c)c.toBlob(b=>downloadBlobFile(b,fileBase()+'-mockup.png'),'image/png');
+};
+$('dlMockJpg').onclick=()=>{
+  const c=buildMockupCanvas();
+  if(!c)return;
+  const f=document.createElement('canvas');f.width=c.width;f.height=c.height;
+  const x=f.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,f.width,f.height);x.drawImage(c,0,0);
+  f.toBlob(b=>downloadBlobFile(b,fileBase()+'-mockup.jpg'),'image/jpeg',0.92);
+};
 
 /* tabs */
 function setTab(t){
@@ -1790,11 +2199,21 @@ $('vecTest').onchange=()=>{
 };
 $('vecBtn').onclick=async()=>{
   const a=vecAuth();
-  if(!a||!state.art)return;
+  if(!a)return;
+  /* target: selected image layer, else the only image layer */
+  let target=selObj();
+  if(!target||target.type!=='image')target=null;
+  if(!target){
+    const imgs=state.objects.filter(o=>o.type==='image');
+    if(imgs.length===1)target=imgs[0];
+  }
+  if(!target){$('vecStatus').textContent='Select an image layer to vectorize.';return;}
+  const asset=state.assets[target.assetId];
+  if(!asset)return;
   $('vecBtn').disabled=true;
-  $('vecStatus').textContent='Vectorizing…';
+  $('vecStatus').textContent='Vectorizing “'+(target.name||'image')+'”…';
   try{
-    const blob=await new Promise(r=>state.art.toBlob(r,'image/png'));
+    const blob=await new Promise(r=>asset.canvas.toBlob(r,'image/png'));
     const fd=new FormData();
     fd.append('image',blob,'art.png');
     if(a.test)fd.append('mode','test');
@@ -1805,15 +2224,16 @@ $('vecBtn').onclick=async()=>{
     });
     if(!resp.ok)throw new Error('HTTP '+resp.status);
     const svg=await resp.text();
-    downloadBlobFile(new Blob([svg],{type:'image/svg+xml'}),(state.artName||'art').replace(/\.[a-z0-9]+$/i,'')+'-vector.svg');
+    downloadBlobFile(new Blob([svg],{type:'image/svg+xml'}),(target.name||'art').replace(/\.[a-z0-9]+$/i,'')+'-vector.svg');
     const f=new File([svg],'vectorized.svg',{type:'image/svg+xml'});
     loadArtFile(f,(canvas)=>{
-      state.art=canvas;state.artName='vectorized.svg';
-      $('artInfo').textContent='vectorized.svg · '+canvas.width+'×'+canvas.height+'px (vector, rasterized hi-res)';
-      $('dpiWarn').hidden=true;
-      recompute();
+      pushUndo();
+      const id=assetPut(canvas,'vectorized.svg');
+      state.assets[id].vector=true;
+      target.assetId=id;target.name='vectorized.svg';
+      objChanged();
     });
-    $('vecStatus').textContent='✓ Vectorized — art replaced with the clean vector (SVG also downloaded).';
+    $('vecStatus').textContent='✓ Vectorized — layer swapped to the clean vector (SVG also downloaded).';
   }catch(e){
     $('vecStatus').textContent='✗ '+(String(e).includes('Failed to fetch')
       ?'Browser blocked the API call (CORS) — needs a proxy; tell Claude.'
@@ -2100,25 +2520,269 @@ $('gsDlZip').onclick=async()=>{
   downloadBlobFile(zipStore(entries),folder+'.zip');
 };
 
-/* drag patch on hat mockup */
+/* stage pointer: hat-drag on the mockup tab, OBJECT EDITOR on the patch tab (v0.8) */
 (()=>{
   const cv=$('stageCv');
-  let dragging=false;
+  let hatDrag=false;
+  let ed=null; /* {mode:'move'|'scale'|'rotate', id, startAx, startAy, startXc, startYc, startW, startRot, startAng} */
   const toPhoto=e=>{
     const r=cv.getBoundingClientRect();
     return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};
   };
+  const toStagePx=e=>{
+    const r=cv.getBoundingClientRect();
+    return {x:(e.clientX-r.left)*(cv.width/r.width),y:(e.clientY-r.top)*(cv.height/r.height)};
+  };
+  const toArt=p=>{
+    /* stage px -> art-space inches */
+    const v=state._view;
+    if(!v||!state.cut||!state.artBox)return null;
+    const k=state.cut.art.w/state.artBox.w;
+    return {
+      x:state.artBox.minX+((p.x-v.px)/v.s-state.cut.art.x)/k,
+      y:state.artBox.minY+((p.y-v.py)/v.s-state.cut.art.y)/k
+    };
+  };
+  const hitObject=a=>{
+    for(let i=state.objects.length-1;i>=0;i--){
+      const o=state.objects[i];
+      if(!o._w)continue;
+      const dx=a.x-o.xc,dy=a.y-o.yc,r=-(o.rot||0);
+      const lx=dx*Math.cos(r)-dy*Math.sin(r), ly=dx*Math.sin(r)+dy*Math.cos(r);
+      if(Math.abs(lx)<=o._w/2+0.04&&Math.abs(ly)<=o._h/2+0.04)return o;
+    }
+    return null;
+  };
+  let raf=false;
+  const liveUpdate=()=>{
+    if(raf)return;
+    raf=true;
+    requestAnimationFrame(()=>{raf=false;compositeArt();computeCut();refresh();});
+  };
   cv.addEventListener('pointerdown',e=>{
-    if(state.tab!=='hat'||!state.hat.photo||!state.cut)return;
-    dragging=true;cv.setPointerCapture(e.pointerId);
-    const p=toPhoto(e);state.hat.cx=p.x;state.hat.cy=p.y;refresh();
+    if(state.tab==='hat'){
+      if(!state.hat.photo||!state.cut)return;
+      hatDrag=true;cv.setPointerCapture(e.pointerId);
+      const p=toPhoto(e);state.hat.cx=p.x;state.hat.cy=p.y;refresh();
+      return;
+    }
+    if(state.tab!=='patch'||!state.cut||!state.objects.length)return;
+    const sp=toStagePx(e);
+    /* handles first (they live in stage px) */
+    if(state._sel){
+      const near=(p,r)=>Math.hypot(sp.x-p[0],sp.y-p[1])<=r;
+      if(near(state._sel.rotH,11)){
+        const o=selObj();
+        pushUndo();
+        ed={mode:'rotate',id:o.id,startRot:o.rot||0,
+            startAng:Math.atan2(sp.y-state._sel.c0[1],sp.x-state._sel.c0[0])};
+        cv.setPointerCapture(e.pointerId);
+        return;
+      }
+      for(const p of state._sel.corners){
+        if(near(p,9)){
+          const o=selObj();
+          pushUndo();
+          ed={mode:'scale',id:o.id,startW:o.w,
+              startD:Math.hypot(sp.x-state._sel.c0[0],sp.y-state._sel.c0[1])};
+          cv.setPointerCapture(e.pointerId);
+          return;
+        }
+      }
+    }
+    const a=toArt(sp);
+    if(!a)return;
+    const hit=hitObject(a);
+    if(hit){
+      if(state.selId!==hit.id){state.selId=hit.id;refreshLayers();syncTextForm();}
+      pushUndo();
+      ed={mode:'move',id:hit.id,startAx:a.x,startAy:a.y,startXc:hit.xc,startYc:hit.yc};
+      cv.setPointerCapture(e.pointerId);
+      refresh();
+    }else{
+      state.selId=null;refreshLayers();refresh();
+    }
   });
   cv.addEventListener('pointermove',e=>{
-    if(!dragging)return;
-    const p=toPhoto(e);state.hat.cx=p.x;state.hat.cy=p.y;refresh();
+    if(hatDrag){
+      const p=toPhoto(e);state.hat.cx=p.x;state.hat.cy=p.y;refresh();
+      return;
+    }
+    if(!ed)return;
+    const o=state.objects.find(x=>x.id===ed.id);
+    if(!o)return;
+    const sp=toStagePx(e);
+    if(ed.mode==='move'){
+      const a=toArt(sp);
+      if(!a)return;
+      o.xc=ed.startXc+(a.x-ed.startAx);
+      o.yc=ed.startYc+(a.y-ed.startAy);
+    }else if(ed.mode==='scale'){
+      const d=Math.hypot(sp.x-state._sel.c0[0],sp.y-state._sel.c0[1]);
+      o.w=Math.max(0.15,ed.startW*(d/Math.max(1,ed.startD)));
+    }else if(ed.mode==='rotate'){
+      const ang=Math.atan2(sp.y-state._sel.c0[1],sp.x-state._sel.c0[0]);
+      o.rot=ed.startRot+(ang-ed.startAng);
+    }
+    liveUpdate();
   });
-  cv.addEventListener('pointerup',()=>{dragging=false;});
+  const endDrag=()=>{
+    hatDrag=false;
+    if(ed){ed=null;objChanged();}
+  };
+  cv.addEventListener('pointerup',endDrag);
+  cv.addEventListener('pointercancel',endDrag);
 })();
+
+/* ---------- PERSISTENCE (v0.8): autosave + named designs, localStorage ---------- */
+let _restoring=false,_autosaveT=null;
+function serializeDesign(){
+  const assets={};
+  for(const o of state.objects){
+    if(o.type==='image'&&state.assets[o.assetId]&&!assets[o.assetId]){
+      const a=state.assets[o.assetId];
+      assets[o.assetId]={name:a.name,dataURL:a.dataURL,vector:!!a.vector};
+    }
+  }
+  return {
+    v:8,ts:Date.now(),
+    job:{customer:$('jobCustomer').value,quote:$('jobQuote').value},
+    mode:state.embOn?'emb':(state.eng.on?'engrave':'print'),
+    eng:{cat:state.eng.cat,name:state.eng.name,override:state.eng.override,engC:state.eng.engC,invert:state.eng.invert},
+    blank:{shape:state.blank.shape,border:state.blank.border},
+    presetId:state.presetId,shape:state.shape,offset:state.offset,radius:state.radius,
+    smooth:state.smooth,bgOn:state.bgOn,bgColor:state.bgColor,
+    hat:{slug:cat.slug,view:cat.view,cx:state.hat.cx,cy:state.hat.cy,scale:state.hat.scale,rot:state.hat.rot,shade:state.hat.shade},
+    objects:state.objects.map(o=>{const c=Object.assign({},o);delete c._w;delete c._h;return c;}),
+    assets
+  };
+}
+function autosaveSoon(){
+  if(_restoring)return;
+  clearTimeout(_autosaveT);
+  _autosaveT=setTimeout(()=>{
+    try{localStorage.setItem('plAutosave',JSON.stringify(serializeDesign()));}
+    catch(e){/* quota — silent */}
+  },1200);
+}
+function restoreDesign(d){
+  if(!d)return;
+  _restoring=true;
+  try{
+    $('jobCustomer').value=(d.job&&d.job.customer)||'';
+    $('jobQuote').value=(d.job&&d.job.quote)||'';
+    /* geometry params */
+    state.shape=d.shape||'contour';
+    $('shapeSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.shape===state.shape));
+    $('radiusRow').hidden=state.shape!=='round';
+    state.presetId=d.presetId||null;
+    state.offset=d.offset!=null?d.offset:0.125;$('cutOff').value=String(state.offset);$('cutOffVal').textContent=state.offset.toFixed(3)+'"';
+    state.radius=d.radius!=null?d.radius:0.25;$('cornerR').value=String(state.radius);
+    state.smooth=d.smooth!==false;$('smoothChk').checked=state.smooth;
+    state.bgOn=!!d.bgOn;$('bgChk').checked=state.bgOn;
+    state.bgColor=d.bgColor||'#F5F0E6';$('bgColor').value=state.bgColor;
+    if(d.blank){state.blank.shape=d.blank.shape||'rect';state.blank.border=d.blank.border||0.19;
+      $('blankBorder').value=String(state.blank.border);$('blankBorderVal').textContent=state.blank.border.toFixed(3)+'"';}
+    /* mode + material */
+    const modeBtn=document.querySelector('#modeSeg [data-mode="'+(d.mode==='emb'?'emb':(d.mode==='engrave'?'engrave':'print'))+'"]');
+    if(modeBtn)modeBtn.onclick();
+    if(d.mode==='engrave'&&d.eng&&d.eng.cat){
+      const mi=MATERIALS.findIndex(m=>m.cat===d.eng.cat);
+      if(mi>=0){
+        const ii=MATERIALS[mi].items.findIndex(it=>it.n===d.eng.name);
+        if(ii>=0)selectLea(mi,ii);
+      }
+      state.eng.invert=!!d.eng.invert;$('engInvert').checked=state.eng.invert;
+      if(d.eng.override){state.eng.override=true;state.eng.engC=d.eng.engC;$('engColor').value=d.eng.engC;}
+    }
+    renderPresets();
+    /* hat */
+    if(d.hat){
+      state.hat.shade=d.hat.shade!==false;$('hatShade').checked=state.hat.shade;
+      state.hat.rot=d.hat.rot||0;$('hatRot').value=String(state.hat.rot);$('hatRotVal').textContent=state.hat.rot+'°';
+      const applyPos=()=>{
+        state.hat.cx=d.hat.cx;state.hat.cy=d.hat.cy;state.hat.scale=d.hat.scale||0.3;state.hat.rot=d.hat.rot||0;
+        $('hatScale').value=String(state.hat.scale*100);
+        refresh();
+      };
+      if(d.hat.slug){
+        let tries=0;
+        const t=setInterval(()=>{
+          tries++;
+          if(cat.colors){
+            clearInterval(t);
+            cat.view=d.hat.view||'left';
+            $('viewSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.view===cat.view));
+            loadCatPhoto(d.hat.slug);
+            setTimeout(applyPos,700);
+          }else if(tries>20)clearInterval(t);
+        },300);
+      }
+    }
+    /* assets + objects (async) */
+    const ids=Object.keys(d.assets||{});
+    let left=ids.length;
+    const done=()=>{
+      state.objects=(d.objects||[]).filter(o=>o.type!=='image'||state.assets[o.assetId]);
+      state.selId=null;
+      undoStack=[];redoStack=[];
+      _restoring=false;
+      objChanged();
+    };
+    if(!left){done();return;}
+    for(const id of ids){
+      const rec=d.assets[id];
+      const img=new Image();
+      img.onload=()=>{
+        const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
+        c.getContext('2d').drawImage(img,0,0);
+        state.assets[id]={canvas:c,name:rec.name,dataURL:rec.dataURL,vector:!!rec.vector};
+        if(--left===0)done();
+      };
+      img.onerror=()=>{if(--left===0)done();};
+      img.src=rec.dataURL;
+    }
+    return;
+  }catch(e){_restoring=false;}
+}
+function designsGet(){try{return JSON.parse(localStorage.getItem('plDesigns')||'{}');}catch(e){return {};}}
+function renderDesigns(){
+  const box=$('dsList');box.innerHTML='';
+  const all=designsGet();
+  Object.entries(all).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0)).forEach(([name,d])=>{
+    const row=document.createElement('div');row.className='design-row';
+    const n=document.createElement('span');n.className='dn';n.textContent=name;
+    n.title='Load this design';
+    n.onclick=()=>{restoreDesign(d);$('dsName').value=name;$('dsStatus').textContent='Loaded “'+name+'”.';};
+    const dt=document.createElement('span');dt.className='dd';
+    dt.textContent=d.ts?new Date(d.ts).toLocaleDateString():'';
+    const x=document.createElement('button');x.textContent='✕';
+    x.onclick=()=>{const a=designsGet();delete a[name];localStorage.setItem('plDesigns',JSON.stringify(a));renderDesigns();};
+    row.append(n,dt,x);
+    box.appendChild(row);
+  });
+}
+$('dsSave').onclick=()=>{
+  const name=($('dsName').value||'').trim()||fileBase();
+  try{
+    const all=designsGet();
+    all[name]=serializeDesign();
+    localStorage.setItem('plDesigns',JSON.stringify(all));
+    $('dsStatus').textContent='Saved “'+name+'” '+new Date().toLocaleTimeString()+' (this browser).';
+    renderDesigns();
+  }catch(e){
+    $('dsStatus').textContent='✗ Storage full — delete old designs or use smaller art.';
+  }
+};
+renderDesigns();
+/* restore autosave on load */
+try{
+  const au=localStorage.getItem('plAutosave');
+  if(au){
+    restoreDesign(JSON.parse(au));
+    $('dsStatus').textContent='Restored your last session (autosave).';
+  }
+}catch(e){}
 
 refresh();
 </script>
