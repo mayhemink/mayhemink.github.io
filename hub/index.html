@@ -130,25 +130,47 @@ a.tile:hover::before{opacity:1}
   color:var(--blue2);
   letter-spacing:.18em;
 }
-.secondary{
-  margin-top:12px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:center;
-}
-.secondary a{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--muted);
-  text-decoration:none;
+.sitelist{
+  margin:14px auto 0;
+  max-width:640px;
   border:1px solid var(--line2);
-  border-radius:6px;
-  padding:8px 14px;
-  letter-spacing:.06em;
-  transition:color .15s, border-color .15s;
+  border-radius:10px;
+  background:var(--surface);
+  overflow:hidden;
 }
-.secondary a:hover{color:var(--blue2);border-color:var(--blue)}
+.sitelist a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:11px 16px;
+  text-decoration:none;
+  color:var(--ink);
+  border-bottom:1px solid var(--line2);
+  transition:background .15s;
+}
+.sitelist a:last-child{border-bottom:none}
+.sitelist a:hover{background:var(--surface2)}
+.sitelist img{
+  width:20px;height:20px;
+  border-radius:4px;
+  background:#fff;
+  flex:none;
+}
+.sitelist .name{
+  font-family:Inter,sans-serif;
+  font-weight:600;
+  font-size:14px;
+  flex:none;
+}
+.sitelist .host{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  margin-left:auto;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
 footer{
   text-align:center;
   padding:16px 20px 26px;
@@ -205,9 +227,43 @@ footer{
     </a>
   </div>
   <div class="sec-label">COMMON SITES</div>
-  <div class="secondary">
-    <a href="https://mayheminkscreenprinting.printavo.com" target="_blank" rel="noopener">PRINTAVO STOREFRONT ↗</a>
-    <a href="https://straightmayhem.com" target="_blank" rel="noopener">STRAIGHT MAYHEM ↗</a>
+  <div class="sitelist">
+    <a href="https://www.printavo.com/calendar?view=month" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=printavo.com&sz=64" alt="">
+      <span class="name">Printavo Calendar</span><span class="host">printavo.com/calendar</span>
+    </a>
+    <a href="https://www.utahlaserpro.com/" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=utahlaserpro.com&sz=64" alt="">
+      <span class="name">Utah Laser Pro</span><span class="host">utahlaserpro.com</span>
+    </a>
+    <a href="https://www.vitordigitizing.net/" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=vitordigitizing.net&sz=64" alt="">
+      <span class="name">Vitor Digitizing</span><span class="host">vitordigitizing.net</span>
+    </a>
+    <a href="https://vectorizer.ai/" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=vectorizer.ai&sz=64" alt="">
+      <span class="name">Vectorizer.AI</span><span class="host">vectorizer.ai</span>
+    </a>
+    <a href="https://licensing.solutionsforscreenprinters.com/license-manager" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=solutionsforscreenprinters.com&sz=64" alt="">
+      <span class="name">SFSP License Manager</span><span class="host">solutionsforscreenprinters.com</span>
+    </a>
+    <a href="https://splitink.com/#" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=splitink.com&sz=64" alt="">
+      <span class="name">Split Ink</span><span class="host">splitink.com</span>
+    </a>
+    <a href="https://www.blankstyle.com/embroidery-cost-estimator" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=blankstyle.com&sz=64" alt="">
+      <span class="name">Embroidery Estimator</span><span class="host">blankstyle.com</span>
+    </a>
+    <a href="https://mayheminkscreenprinting.printavo.com" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=printavo.com&sz=64" alt="">
+      <span class="name">Printavo Storefront</span><span class="host">mayheminkscreenprinting.printavo.com</span>
+    </a>
+    <a href="https://straightmayhem.com" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=straightmayhem.com&sz=64" alt="">
+      <span class="name">Straight Mayhem</span><span class="host">straightmayhem.com</span>
+    </a>
   </div>
 </main>
 <footer>© MAYHEM INK SCREEN PRINTING — ST. GEORGE, UT</footer>
