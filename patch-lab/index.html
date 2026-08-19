@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.8 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Pricing</title>
+<title>Mayhem Patch Lab v0.8.3 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -2776,12 +2776,27 @@ $('dsSave').onclick=()=>{
   }
 };
 renderDesigns();
+/* default logo on a fresh session (v0.8.3): the Mayhem mark loads as the starting layer */
+function loadDefaultLogo(){
+  fetch('assets/mayhem-logo.svg').then(r=>{if(!r.ok)throw new Error('404');return r.blob();}).then(b=>{
+    const f=new File([b],'mayhem-logo.svg',{type:'image/svg+xml'});
+    loadArtFile(f,(canvas)=>{
+      if(state.objects.length)return; /* user already added something */
+      const id=assetPut(canvas,'mayhem-logo.svg');
+      state.assets[id].vector=true;
+      state.objects.push({id:newId(),type:'image',assetId:id,name:'mayhem-logo.svg',xc:0,yc:0,w:3,rot:0});
+      objChanged();
+    });
+  }).catch(()=>{});
+}
 /* restore autosave on load */
 try{
   const au=localStorage.getItem('plAutosave');
   if(au){
     restoreDesign(JSON.parse(au));
     $('dsStatus').textContent='Restored your last session (autosave).';
+  }else{
+    loadDefaultLogo();
   }
 }catch(e){}
 
