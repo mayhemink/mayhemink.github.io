@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mayhem Patch Lab v0.1 — Patch Designer / Cut Lines / Hat Mockups</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  :root{
+    --bg:#0E0F10; --surface:#17181A; --surface2:#1E2124; --ink:#E8EAEC; --muted:#98A0A6;
+    --line:#282C30; --line2:#3A4046; --accent:#4B9CD3; --accent2:#7BAFD4; --ok:#4CC38A; --warn:#E5484D;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.5;padding-bottom:90px;}
+  ::selection{background:var(--accent);color:#111;}
+  header{background:linear-gradient(180deg,#131517,#0E0F10);border-bottom:3px solid var(--accent);padding:26px 30px 20px;}
+  .head-inner{max-width:1460px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2);margin:0 0 6px;}
+  h1{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3.4vw,38px);margin:0;text-transform:uppercase;}
+  h1 .x{color:var(--accent);}
+  .head-sub{color:var(--muted);font-size:13px;margin:4px 0 0;max-width:680px;}
+  .machine-badge{font-family:'JetBrains Mono',monospace;font-size:11px;border:1px solid var(--line2);padding:6px 12px;border-radius:2px;color:var(--muted);}
+  .app{max-width:1460px;margin:20px auto 0;padding:0 30px;display:grid;grid-template-columns:380px minmax(0,1fr);gap:20px;align-items:start;}
+  @media(max-width:1100px){.app{grid-template-columns:1fr;}}
+  .col-left{display:flex;flex-direction:column;gap:14px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto;padding-right:2px;}
+  @media(max-width:1100px){.col-left{position:static;max-height:none;}}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;}
+  .panel h3{margin:0 0 4px;font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:10px;}
+  .stepnum{background:var(--accent);color:#111;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:2px 7px;border-radius:2px;}
+  .desc{color:var(--muted);font-size:12px;margin:2px 0 12px;}
+  label.lbl{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:12px 0 5px;}
+  select,input[type=number],input[type=text]{
+    width:100%;background:var(--surface2);border:1px solid var(--line2);color:var(--ink);
+    font-family:'JetBrains Mono',monospace;font-size:13px;padding:8px 10px;border-radius:4px;
+  }
+  input[type=range]{width:100%;accent-color:var(--accent);}
+  input[type=color]{width:44px;height:30px;border:1px solid var(--line2);background:var(--surface2);border-radius:4px;padding:2px;cursor:pointer;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .val{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:3px;}
+  .btn{
+    font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:12px;letter-spacing:.05em;
+    background:var(--accent);color:#111;border:none;padding:11px 16px;border-radius:4px;cursor:pointer;width:100%;
+  }
+  .btn:hover{background:#63ACDD;}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line2);}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent2);}
+  .btn.sm{padding:7px 10px;font-size:10.5px;width:auto;}
+  .btn:disabled{opacity:.35;cursor:not-allowed;}
+  .btnrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .drop{
+    border:1.5px dashed var(--line2);background:var(--surface2);border-radius:4px;padding:14px;text-align:center;cursor:pointer;
+    transition:border-color .15s;font-size:12px;color:var(--muted);
+  }
+  .drop:hover,.drop.drag{border-color:var(--accent);color:var(--ink);}
+  .drop b{color:var(--ink);display:block;font-size:13px;margin-bottom:2px;}
+  input[type=file]{display:none;}
+  .segmented{display:inline-flex;border:1px solid var(--line2);border-radius:4px;overflow:hidden;width:100%;}
+  .segmented button{flex:1;background:var(--surface2);border:none;color:var(--muted);padding:7px 4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;}
+  .segmented button.on{background:var(--accent);color:#111;}
+  .checkline{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink);margin-top:10px;cursor:pointer;}
+  .checkline input{accent-color:var(--accent);}
+  .note{font-size:12px;color:var(--muted);background:var(--surface2);border-left:3px solid var(--accent2);padding:9px 12px;border-radius:3px;margin-top:12px;}
+  .note.warn{border-left-color:var(--warn);color:#E8B4B6;}
+  .tabs{display:flex;gap:6px;border:1px solid var(--line2);padding:4px;border-radius:4px;background:var(--surface);margin-bottom:12px;width:max-content;}
+  .tabs button{background:var(--surface2);border:1px solid var(--line2);color:var(--muted);padding:7px 16px;cursor:pointer;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#111;}
+  .stage{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;}
+  .stage-canvas-wrap{background:
+      repeating-linear-gradient(45deg,#141618 0 12px,#17191b 12px 24px);
+      border:1px solid var(--line2);border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:420px;position:relative;overflow:hidden;}
+  canvas.stagecv{max-width:100%;max-height:72vh;display:block;}
+  .dims{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent2);margin-top:10px;display:flex;gap:18px;flex-wrap:wrap;}
+  .dims b{color:var(--ink);}
+  footer{max-width:1460px;margin:50px auto 0;padding:26px 30px 0;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px;font-family:'JetBrains Mono',monospace;position:relative;}
+  footer::before{content:"";position:absolute;top:-1px;left:30px;right:30px;height:6px;
+    background:repeating-linear-gradient(-45deg,var(--line2) 0 10px,transparent 10px 20px);opacity:.5;}
+  .dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  @media(max-width:700px){.dl-grid{grid-template-columns:1fr;}}
+  .dl-card{background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:12px;}
+  .dl-card h4{margin:0 0 3px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);}
+  .dl-card p{margin:0 0 10px;font-size:11.5px;color:var(--muted);}
+  .machine{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--accent2);text-transform:uppercase;}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-inner">
+    <div>
+      <p class="eyebrow">Mayhem Ink — Patch Division</p>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.1</span></h1>
+      <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
+    </div>
+    <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
+  </div>
+</header>
+
+<div class="app">
+  <div class="col-left">
+
+    <div class="panel">
+      <h3><span class="stepnum">1</span> JOB</h3>
+      <p class="desc">Who's this patch for.</p>
+      <label class="lbl">Customer</label>
+      <input type="text" id="jobCustomer" placeholder="Customer name">
+      <label class="lbl">Quote / Invoice #</label>
+      <input type="text" id="jobQuote" placeholder="e.g. 6412">
+    </div>
+
+    <div class="panel">
+      <h3><span class="stepnum">2</span> ART</h3>
+      <p class="desc">SVG preferred (crisp at any size). PNG with transparency works too.</p>
+      <div class="drop" id="artDrop"><b>Drop art here</b>SVG · PNG · WEBP — or click to browse</div>
+      <input type="file" id="artFile" accept=".svg,.png,.webp,.jpg,.jpeg,image/*">
+      <div class="val" id="artInfo"></div>
+      <div class="note warn" id="dpiWarn" hidden></div>
+    </div>
+
+    <div class="panel">
+      <h3><span class="stepnum">3</span> PATCH</h3>
+      <p class="desc">Real inches. The cut line is what the P3 cuts; the print file matches it 1:1.</p>
+      <label class="lbl">Cut shape</label>
+      <div class="segmented" id="shapeSeg">
+        <button data-shape="contour" class="on">CONTOUR</button>
+        <button data-shape="rect">RECT</button>
+        <button data-shape="round">ROUNDED</button>
+        <button data-shape="oval">OVAL</button>
+      </div>
+      <label class="lbl">Art width (inches)</label>
+      <input type="range" id="artW" min="0.5" max="8" step="0.05" value="2.75">
+      <div class="val" id="artWVal">2.75"</div>
+      <label class="lbl">Cut offset / margin (inches)</label>
+      <input type="range" id="cutOff" min="0.03" max="0.6" step="0.005" value="0.125">
+      <div class="val" id="cutOffVal">0.125"</div>
+      <div id="radiusRow" hidden>
+        <label class="lbl">Corner radius (inches)</label>
+        <input type="range" id="cornerR" min="0" max="1" step="0.02" value="0.25">
+        <div class="val" id="cornerRVal">0.25"</div>
+      </div>
+      <label class="checkline"><input type="checkbox" id="smoothChk" checked> Smooth contour</label>
+      <label class="checkline"><input type="checkbox" id="bgChk"> Printed background fill
+        <input type="color" id="bgColor" value="#F5F0E6" style="margin-left:auto;"></label>
+      <div class="note warn" id="blobWarn" hidden></div>
+    </div>
+
+    <div class="panel">
+      <h3><span class="stepnum">4</span> HAT</h3>
+      <p class="desc">Richardson 112 catalog coming via Style Lab. Until then, drop any hat photo and place the patch by hand.</p>
+      <div class="drop" id="hatDrop"><b>Drop hat photo</b>JPG / PNG — or click to browse</div>
+      <input type="file" id="hatFile" accept="image/*">
+      <label class="lbl">Patch width on hat</label>
+      <input type="range" id="hatScale" min="8" max="60" step="0.5" value="30">
+      <div class="val" id="hatScaleVal">30% of photo width</div>
+      <label class="checkline"><input type="checkbox" id="hatShade" checked> Pick up hat shading</label>
+      <div class="note">Drag the patch on the mockup to position it.</div>
+    </div>
+
+    <div class="panel">
+      <h3><span class="stepnum">5</span> DOWNLOAD</h3>
+      <p class="desc">Production + approval files. Print PNG and cut files share the exact same frame — what prints is what cuts.</p>
+      <div class="dl-grid">
+        <div class="dl-card">
+          <h4>PRINT FILE (PNG)</h4>
+          <p class="machine">eufyMake E1</p>
+          <p>Transparent PNG @ 300 DPI, exact size.</p>
+          <button class="btn sm" id="dlPrint" disabled>Download</button>
+        </div>
+        <div class="dl-card">
+          <h4>CUT LINE (SVG)</h4>
+          <p class="machine">xTool P3 · XCS</p>
+          <p>True-size vector, import &amp; cut.</p>
+          <button class="btn sm" id="dlSvg" disabled>Download</button>
+        </div>
+        <div class="dl-card">
+          <h4>CUT LINE (DXF)</h4>
+          <p class="machine">xTool P3 · XCS</p>
+          <p>Inch-unit DXF polyline.</p>
+          <button class="btn sm" id="dlDxf" disabled>Download</button>
+        </div>
+        <div class="dl-card">
+          <h4>APPROVAL PAGE (PNG)</h4>
+          <p class="machine">Customer</p>
+          <p>Watermarked approval visual.</p>
+          <button class="btn sm" id="dlApproval" disabled>Download</button>
+        </div>
+      </div>
+      <div class="btnrow"><button class="btn" id="dlZip" disabled>⬇ JOB ZIP — ALL FILES</button></div>
+    </div>
+
+  </div>
+
+  <div class="col-right">
+    <div class="tabs">
+      <button id="tabPatch" class="on">PATCH PREVIEW</button>
+      <button id="tabHat">HAT MOCKUP</button>
+    </div>
+    <div class="stage">
+      <div class="stage-canvas-wrap" id="stageWrap">
+        <canvas class="stagecv" id="stageCv" width="900" height="640"></canvas>
+      </div>
+      <div class="dims" id="dimsBar"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  MAYHEM PATCH LAB · © MAYHEM INK SCREEN PRINTING · mayhemink.net — internal production tool.
+  Cut files target xTool P3 (XCS, SVG/DXF); print files target eufyMake E1 (PNG w/ transparency).
+</footer>
+
+<script>
+'use strict';
+/* ============ MAYHEM PATCH LAB v0.1 ============
+   Single-file app, same architecture rules as Mockup Lab:
+   no libraries, vector-first art, watermarked customer outputs.
+   Pipeline: art -> alpha mask -> EDT dilation (cut offset) ->
+   hole fill -> boundary trace -> simplify/smooth -> cut polygon
+   in real inches -> shared frame for print PNG + cut SVG/DXF.  */
+
+const $=id=>document.getElementById(id);
+const DPI=300;               /* production print resolution */
+const MASK_MAX=600;          /* working mask resolution for contour math */
+
+const state={
+  art:null,            /* trimmed canvas */
+  artName:'',
+  shape:'contour',
+  artW:2.75,           /* inches */
+  offset:0.125,        /* inches */
+  radius:0.25,         /* inches (rounded rect) */
+  smooth:true,
+  bgOn:false,
+  bgColor:'#F5F0E6',
+  cut:null,            /* {polys:[[{x,y}in]], w,h, art:{x,y,w,h}, blobCount} */
+  tab:'patch',
+  hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true}
+};
+
+/* ---------- art loading (Mockup Lab pattern: trim to alpha bbox, SVG rasterized big) ---------- */
+function alphaBBox(c){
+  const ctx=c.getContext('2d');
+  const d=ctx.getImageData(0,0,c.width,c.height).data;
+  let minX=c.width,minY=c.height,maxX=-1,maxY=-1;
+  for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++){
+    if(d[(y*c.width+x)*4+3]>8){
+      if(x<minX)minX=x;if(x>maxX)maxX=x;
+      if(y<minY)minY=y;if(y>maxY)maxY=y;
+    }
+  }
+  if(maxX<0)return null;
+  return {minX,minY,maxX,maxY};
+}
+function trimCanvas(c){
+  const bb=alphaBBox(c);
+  if(!bb)return c;
+  const w=bb.maxX-bb.minX+1,h=bb.maxY-bb.minY+1;
+  if(bb.minX===0&&bb.minY===0&&w===c.width&&h===c.height)return c;
+  const t=document.createElement('canvas');t.width=w;t.height=h;
+  t.getContext('2d').drawImage(c,bb.minX,bb.minY,w,h,0,0,w,h);
+  return t;
+}
+function loadImgFile(file,cb){
+  const url=URL.createObjectURL(file);
+  const img=new Image();
+  img.onload=()=>{cb(img);setTimeout(()=>URL.revokeObjectURL(url),3000);};
+  img.src=url;
+}
+function loadArtFile(file,cb){
+  const isSvg=/svg/i.test(file.type)||/\.svg$/i.test(file.name);
+  if(!isSvg){
+    loadImgFile(file,img=>{
+      const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
+      c.getContext('2d').drawImage(img,0,0);
+      cb(trimCanvas(c),false);
+    });
+    return;
+  }
+  file.text().then(t=>{
+    let aspect=1;
+    const vb=t.match(/viewBox\s*=\s*["']\s*[\d.+-]+[\s,]+[\d.+-]+[\s,]+([\d.eE+-]+)[\s,]+([\d.eE+-]+)/i);
+    if(vb){const vw=parseFloat(vb[1]),vh=parseFloat(vb[2]);if(vw>0&&vh>0)aspect=vh/vw;}
+    const W=2400,H=Math.max(2,Math.round(W*aspect));
+    /* force explicit raster size so drawImage is crisp everywhere */
+    let src=t.replace(/(<svg[^>]*?)\swidth\s*=\s*["'][^"']*["']/i,'$1')
+             .replace(/(<svg[^>]*?)\sheight\s*=\s*["'][^"']*["']/i,'$1')
+             .replace(/<svg/i,'<svg width="'+W+'" height="'+H+'"');
+    const blob=new Blob([src],{type:'image/svg+xml'});
+    loadImgFile(blob,img=>{
+      const c=document.createElement('canvas');c.width=W;c.height=H;
+      c.getContext('2d').drawImage(img,0,0,W,H);
+      cb(trimCanvas(c),true);
+    });
+  });
+}
+
+/* ---------- exact Euclidean distance transform (Felzenszwalb) ---------- */
+function edt1d(f,n){
+  const d=new Float64Array(n),v=new Int32Array(n),z=new Float64Array(n+1);
+  let k=0;v[0]=0;z[0]=-1e20;z[1]=1e20;
+  for(let q=1;q<n;q++){
+    let s=((f[q]+q*q)-(f[v[k]]+v[k]*v[k]))/(2*q-2*v[k]);
+    while(s<=z[k]){k--;s=((f[q]+q*q)-(f[v[k]]+v[k]*v[k]))/(2*q-2*v[k]);}
+    k++;v[k]=q;z[k]=s;z[k+1]=1e20;
+  }
+  k=0;
+  for(let q=0;q<n;q++){
+    while(z[k+1]<q)k++;
+    d[q]=(q-v[k])*(q-v[k])+f[v[k]];
+  }
+  return d;
+}
+function edt2d(mask,w,h){
+  const INF=1e20,d=new Float64Array(w*h);
+  const col=new Float64Array(h);
+  for(let x=0;x<w;x++){
+    for(let y=0;y<h;y++)col[y]=mask[y*w+x]?0:INF;
+    const dc=edt1d(col,h);
+    for(let y=0;y<h;y++)d[y*w+x]=dc[y];
+  }
+  const row=new Float64Array(w);
+  for(let y=0;y<h;y++){
+    for(let x=0;x<w;x++)row[x]=d[y*w+x];
+    const dr=edt1d(row,w);
+    for(let x=0;x<w;x++)d[y*w+x]=dr[x];
+  }
+  return d;
+}
+
+/* ---------- fill holes: BFS from border over background ---------- */
+function fillHoles(mask,w,h){
+  const seen=new Uint8Array(w*h);
+  const qx=new Int32Array(w*h),qy=new Int32Array(w*h);
+  let head=0,tail=0;
+  const push=(x,y)=>{const i=y*w+x;if(!seen[i]&&!mask[i]){seen[i]=1;qx[tail]=x;qy[tail]=y;tail++;}};
+  for(let x=0;x<w;x++){push(x,0);push(x,h-1);}
+  for(let y=0;y<h;y++){push(0,y);push(w-1,y);}
+  while(head<tail){
+    const x=qx[head],y=qy[head];head++;
+    if(x>0)push(x-1,y);if(x<w-1)push(x+1,y);
+    if(y>0)push(x,y-1);if(y<h-1)push(x,y+1);
+  }
+  const out=new Uint8Array(w*h);
+  for(let i=0;i<w*h;i++)out[i]=mask[i]||!seen[i]?1:0;
+  return out;
+}
+
+/* ---------- connected components + Moore boundary trace ---------- */
+function labelBlobs(mask,w,h){
+  const lab=new Int32Array(w*h);
+  let next=0;
+  const qx=new Int32Array(w*h),qy=new Int32Array(w*h);
+  const blobs=[];
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const i=y*w+x;
+    if(!mask[i]||lab[i])continue;
+    next++;
+    let head=0,tail=0,area=0,sx=x,sy=y;
+    lab[i]=next;qx[tail]=x;qy[tail]=y;tail++;
+    while(head<tail){
+      const cx=qx[head],cy=qy[head];head++;area++;
+      const nb=[[cx-1,cy],[cx+1,cy],[cx,cy-1],[cx,cy+1]];
+      for(const [nx,ny] of nb){
+        if(nx<0||ny<0||nx>=w||ny>=h)continue;
+        const ni=ny*w+nx;
+        if(mask[ni]&&!lab[ni]){lab[ni]=next;qx[tail]=nx;qy[tail]=ny;tail++;}
+      }
+    }
+    blobs.push({label:next,area,sx,sy});
+  }
+  return {lab,blobs};
+}
+/* Moore-neighbor tracing from topmost-left pixel of a blob */
+const MOORE=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+function traceBoundary(lab,w,h,label,sx,sy){
+  const inside=(x,y)=>x>=0&&y>=0&&x<w&&y<h&&lab[y*w+x]===label;
+  const pts=[];
+  /* start = topmost-leftmost pixel (scan order), so treat entry as an
+     eastward move: backtrack is W, clockwise search starts at NW.
+     With that start convention, first return to start closes the loop
+     (blobs here are EDT-dilated, so no degenerate pinches). */
+  let cx=sx,cy=sy,dir=0;
+  const startX=sx,startY=sy;
+  let guard=w*h*4;
+  do{
+    pts.push([cx,cy]);
+    let found=false;
+    for(let k=0;k<8;k++){
+      const d=(dir+5+k)%8; /* backtrack+1, clockwise */
+      const nx=cx+MOORE[d][0],ny=cy+MOORE[d][1];
+      if(inside(nx,ny)){cx=nx;cy=ny;dir=d;found=true;break;}
+    }
+    if(!found)break; /* isolated pixel */
+    guard--;
+  }while((cx!==startX||cy!==startY)&&guard>0);
+  return pts;
+}
+
+/* ---------- polygon utils ---------- */
+function rdp(pts,eps){
+  if(pts.length<4)return pts;
+  const keep=new Uint8Array(pts.length);
+  keep[0]=1;keep[pts.length-1]=1;
+  const stack=[[0,pts.length-1]];
+  while(stack.length){
+    const [a,b]=stack.pop();
+    let maxD=0,idx=-1;
+    const ax=pts[a][0],ay=pts[a][1],bx=pts[b][0],by=pts[b][1];
+    const dx=bx-ax,dy=by-ay,len=Math.hypot(dx,dy)||1e-9;
+    for(let i=a+1;i<b;i++){
+      const d=Math.abs((pts[i][0]-ax)*dy-(pts[i][1]-ay)*dx)/len;
+      if(d>maxD){maxD=d;idx=i;}
+    }
+    if(maxD>eps&&idx>0){keep[idx]=1;stack.push([a,idx],[idx,b]);}
+  }
+  const out=[];
+  for(let i=0;i<pts.length;i++)if(keep[i])out.push(pts[i]);
+  return out;
+}
+function chaikinClosed(pts,iters){
+  let p=pts;
+  for(let it=0;it<iters;it++){
+    const out=[];
+    for(let i=0;i<p.length;i++){
+      const a=p[i],b=p[(i+1)%p.length];
+      out.push([0.75*a[0]+0.25*b[0],0.75*a[1]+0.25*b[1]]);
+      out.push([0.25*a[0]+0.75*b[0],0.25*a[1]+0.75*b[1]]);
+    }
+    p=out;
+  }
+  return p;
+}
+function polyArea(pts){
+  let s=0;
+  for(let i=0;i<pts.length;i++){
+    const a=pts[i],b=pts[(i+1)%pts.length];
+    s+=a[0]*b[1]-b[0]*a[1];
+  }
+  return Math.abs(s)/2;
+}
+
+/* ---------- cut geometry ---------- */
+function computeCut(){
+  state.cut=null;
+  $('blobWarn').hidden=true;
+  if(!state.art)return;
+  const art=state.art;
+  const artAspect=art.height/art.width;
+  const artWin=state.artW, artHin=state.artW*artAspect;
+  const m=state.offset;
+
+  if(state.shape!=='contour'){
+    /* geometric frames: art centered with margin m */
+    let fw,fh,polys,svgPath;
+    if(state.shape==='oval'){
+      /* ellipse circumscribing the art rect, plus margin */
+      const rx=artWin/2*Math.SQRT2+m, ry=artHin/2*Math.SQRT2+m;
+      fw=rx*2;fh=ry*2;
+      const pts=[];
+      for(let i=0;i<160;i++){
+        const a=i/160*Math.PI*2;
+        pts.push([rx+rx*Math.cos(a),ry+ry*Math.sin(a)]);
+      }
+      polys=[pts];
+      svgPath='M '+(rx*2).toFixed(4)+' '+ry.toFixed(4)+
+        ' A '+rx.toFixed(4)+' '+ry.toFixed(4)+' 0 1 0 0 '+ry.toFixed(4)+
+        ' A '+rx.toFixed(4)+' '+ry.toFixed(4)+' 0 1 0 '+(rx*2).toFixed(4)+' '+ry.toFixed(4)+' Z';
+      state.cut={polys,w:fw,h:fh,svgPath,
+        art:{x:fw/2-artWin/2,y:fh/2-artHin/2,w:artWin,h:artHin},blobCount:1};
+    }else{
+      fw=artWin+2*m;fh=artHin+2*m;
+      const r=state.shape==='round'?Math.min(state.radius,fw/2,fh/2):(state.shape==='rect'?0:0);
+      const pts=[];
+      const seg=(cx,cy,a0,a1)=>{for(let i=0;i<=14;i++){const a=a0+(a1-a0)*i/14;pts.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}};
+      if(r>0.001){
+        seg(fw-r,r,-Math.PI/2,0);seg(fw-r,fh-r,0,Math.PI/2);
+        seg(r,fh-r,Math.PI/2,Math.PI);seg(r,r,Math.PI,Math.PI*1.5);
+      }else{
+        pts.push([0,0],[fw,0],[fw,fh],[0,fh]);
+      }
+      polys=[pts];
+      svgPath=r>0.001
+        ?('M '+r.toFixed(4)+' 0 H '+(fw-r).toFixed(4)+
+          ' A '+r.toFixed(4)+' '+r.toFixed(4)+' 0 0 1 '+fw.toFixed(4)+' '+r.toFixed(4)+
+          ' V '+(fh-r).toFixed(4)+
+          ' A '+r.toFixed(4)+' '+r.toFixed(4)+' 0 0 1 '+(fw-r).toFixed(4)+' '+fh.toFixed(4)+
+          ' H '+r.toFixed(4)+
+          ' A '+r.toFixed(4)+' '+r.toFixed(4)+' 0 0 1 0 '+(fh-r).toFixed(4)+
+          ' V '+r.toFixed(4)+
+          ' A '+r.toFixed(4)+' '+r.toFixed(4)+' 0 0 1 '+r.toFixed(4)+' 0 Z')
+        :('M 0 0 H '+fw.toFixed(4)+' V '+fh.toFixed(4)+' H 0 Z');
+      state.cut={polys,w:fw,h:fh,svgPath,
+        art:{x:m,y:m,w:artWin,h:artHin},blobCount:1};
+    }
+    return;
+  }
+
+  /* CONTOUR: mask -> EDT -> dilate -> fill holes -> trace */
+  const scale=Math.min(1,MASK_MAX/Math.max(art.width,art.height));
+  const mw0=Math.max(2,Math.round(art.width*scale)),mh0=Math.max(2,Math.round(art.height*scale));
+  const inchPerPx=artWin/mw0;
+  const rPx=state.offset/inchPerPx;
+  const pad=Math.ceil(rPx)+3;
+  const mw=mw0+pad*2,mh=mh0+pad*2;
+  const mc=document.createElement('canvas');mc.width=mw0;mc.height=mh0;
+  mc.getContext('2d').drawImage(art,0,0,mw0,mh0);
+  const md=mc.getContext('2d').getImageData(0,0,mw0,mh0).data;
+  const mask=new Uint8Array(mw*mh);
+  for(let y=0;y<mh0;y++)for(let x=0;x<mw0;x++){
+    if(md[(y*mw0+x)*4+3]>8)mask[(y+pad)*mw+(x+pad)]=1;
+  }
+  const dist2=edt2d(mask,mw,mh);
+  const r2=rPx*rPx;
+  let dil=new Uint8Array(mw*mh);
+  for(let i=0;i<mw*mh;i++)dil[i]=dist2[i]<=r2?1:0;
+  dil=fillHoles(dil,mw,mh);
+  const {lab,blobs}=labelBlobs(dil,mw,mh);
+  const minArea=Math.max(9,rPx*rPx*0.5);
+  const keep=blobs.filter(b=>b.area>=minArea).sort((a,b)=>b.area-a.area);
+  if(!keep.length)return;
+  let polys=[];
+  for(const b of keep){
+    let pts=traceBoundary(lab,mw,mh,b.label,b.sx,b.sy).map(p=>[p[0]+0.5,p[1]+0.5]);
+    if(pts.length<3)continue;
+    pts=rdp(pts,0.9);
+    if(state.smooth){pts=chaikinClosed(pts,2);pts=rdp(pts,0.3);} /* thin after smoothing */
+    if(polyArea(pts)>minArea*0.4)polys.push(pts);
+  }
+  if(!polys.length)return;
+  /* bbox in mask px */
+  let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+  for(const poly of polys)for(const p of poly){
+    if(p[0]<minX)minX=p[0];if(p[0]>maxX)maxX=p[0];
+    if(p[1]<minY)minY=p[1];if(p[1]>maxY)maxY=p[1];
+  }
+  const inPolys=polys.map(poly=>poly.map(p=>[(p[0]-minX)*inchPerPx,(p[1]-minY)*inchPerPx]));
+  const fw=(maxX-minX)*inchPerPx,fh=(maxY-minY)*inchPerPx;
+  state.cut={
+    polys:inPolys,w:fw,h:fh,svgPath:null,
+    art:{x:(pad-minX)*inchPerPx,y:(pad-minY)*inchPerPx,w:artWin,h:artHin},
+    blobCount:polys.length
+  };
+  if(polys.length>1){
+    $('blobWarn').hidden=false;
+    $('blobWarn').textContent='⚠ Art separates into '+polys.length+' pieces at this offset — increase the cut offset until it bridges into one patch, or the P3 will cut '+polys.length+' parts.';
+  }
+}
+function cutPath2D(scale){
+  const p=new Path2D();
+  for(const poly of state.cut.polys){
+    poly.forEach((pt,i)=>{
+      if(i===0)p.moveTo(pt[0]*scale,pt[1]*scale);
+      else p.lineTo(pt[0]*scale,pt[1]*scale);
+    });
+    p.closePath();
+  }
+  return p;
+}
+function cutSvgD(){
+  if(state.cut.svgPath)return state.cut.svgPath;
+  let d='';
+  for(const poly of state.cut.polys){
+    poly.forEach((pt,i)=>{d+=(i===0?'M ':'L ')+pt[0].toFixed(4)+' '+pt[1].toFixed(4)+' ';});
+    d+='Z ';
+  }
+  return d.trim();
+}
+
+/* ---------- patch compositor (shared by preview / print / mockup / approval) ---------- */
+function renderPatch(scalePxPerIn,forPrint){
+  const c=document.createElement('canvas');
+  c.width=Math.max(2,Math.round(state.cut.w*scalePxPerIn));
+  c.height=Math.max(2,Math.round(state.cut.h*scalePxPerIn));
+  const ctx=c.getContext('2d');
+  const path=cutPath2D(scalePxPerIn);
+  if(state.bgOn){ctx.save();ctx.fillStyle=state.bgColor;ctx.fill(path);ctx.restore();}
+  ctx.save();ctx.clip(path);
+  const a=state.cut.art;
+  ctx.imageSmoothingQuality='high';
+  ctx.drawImage(state.art,a.x*scalePxPerIn,a.y*scalePxPerIn,a.w*scalePxPerIn,a.h*scalePxPerIn);
+  ctx.restore();
+  if(!forPrint){ /* preview edge hint */
+    ctx.save();ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=Math.max(1,scalePxPerIn*0.012);ctx.stroke(path);ctx.restore();
+  }
+  return c;
+}
+
+/* ---------- stage rendering ---------- */
+function drawPatchPreview(){
+  const cv=$('stageCv'),ctx=cv.getContext('2d');
+  cv.width=900;cv.height=640;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  if(!state.cut){
+    ctx.fillStyle='#5A6167';ctx.font='700 15px JetBrains Mono,monospace';ctx.textAlign='center';
+    ctx.fillText(state.art?'COMPUTING…':'DROP ART TO START',cv.width/2,cv.height/2);
+    $('dimsBar').textContent='';
+    return;
+  }
+  const margin=70;
+  const s=Math.min((cv.width-margin*2)/state.cut.w,(cv.height-margin*2)/state.cut.h);
+  const px=(cv.width-state.cut.w*s)/2,py=(cv.height-state.cut.h*s)/2;
+  const patch=renderPatch(s,false);
+  ctx.save();
+  ctx.shadowColor='rgba(0,0,0,.55)';ctx.shadowBlur=26;ctx.shadowOffsetY=8;
+  ctx.drawImage(patch,px,py);
+  ctx.restore();
+  /* cut line */
+  ctx.save();ctx.translate(px,py);
+  ctx.strokeStyle='#4B9CD3';ctx.lineWidth=1.6;ctx.setLineDash([7,5]);
+  ctx.stroke(cutPath2D(s));
+  ctx.restore();
+  const dpi=state.art?Math.round(state.art.width/state.cut.art.w):0;
+  $('dimsBar').innerHTML=
+    'PATCH <b>'+state.cut.w.toFixed(2)+'&quot; × '+state.cut.h.toFixed(2)+'&quot;</b>'+
+    ' · ART <b>'+state.cut.art.w.toFixed(2)+'&quot; × '+state.cut.art.h.toFixed(2)+'&quot;</b>'+
+    ' · OFFSET <b>'+state.offset.toFixed(3)+'&quot;</b>'+
+    ' · SOURCE <b>'+dpi+' DPI</b> at this size'+
+    (state.cut.blobCount>1?' · <span style="color:var(--warn)">'+state.cut.blobCount+' PIECES</span>':'');
+}
+function drawHatMockup(){
+  const cv=$('stageCv'),ctx=cv.getContext('2d');
+  const ph=state.hat.photo;
+  if(!ph){
+    cv.width=900;cv.height=640;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#5A6167';ctx.font='700 15px JetBrains Mono,monospace';ctx.textAlign='center';
+    ctx.fillText('DROP A HAT PHOTO IN STEP 4',cv.width/2,cv.height/2-12);
+    ctx.fillStyle='#3A4046';ctx.font='500 12px JetBrains Mono,monospace';
+    ctx.fillText('Richardson 112 catalog lands here next',cv.width/2,cv.height/2+14);
+    $('dimsBar').textContent='';
+    return;
+  }
+  cv.width=ph.width;cv.height=ph.height;
+  ctx.drawImage(ph,0,0);
+  if(state.cut){
+    const patchWpx=state.hat.scale*ph.width;
+    const s=patchWpx/state.cut.w;
+    const w=state.cut.w*s,h=state.cut.h*s;
+    const x=state.hat.cx*ph.width-w/2,y=state.hat.cy*ph.height-h/2;
+    const patch=renderPatch(s,false);
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=Math.max(4,patchWpx*0.03);ctx.shadowOffsetY=Math.max(2,patchWpx*0.012);
+    ctx.drawImage(patch,x,y);
+    ctx.restore();
+    if(state.hat.shade){
+      ctx.save();
+      ctx.translate(x,y);
+      ctx.clip(cutPath2D(s));
+      ctx.globalCompositeOperation='multiply';
+      ctx.globalAlpha=0.35;
+      ctx.drawImage(ph,-x,-y);
+      ctx.restore();
+    }
+    const inW=state.cut.w;
+    $('dimsBar').innerHTML='PATCH ON HAT · true size <b>'+inW.toFixed(2)+'&quot; wide</b> · drag to position';
+  }
+}
+function refresh(){
+  if(state.tab==='patch')drawPatchPreview();else drawHatMockup();
+  const ready=!!state.cut;
+  ['dlPrint','dlSvg','dlDxf','dlApproval','dlZip'].forEach(id=>$(id).disabled=!ready);
+  $('statusBadge').textContent=state.art
+    ?(state.cut?('PATCH '+state.cut.w.toFixed(2)+'" × '+state.cut.h.toFixed(2)+'"'):'COMPUTING…')
+    :'NO ART LOADED';
+  $('statusBadge').style.borderColor=ready?'var(--ok)':'var(--line2)';
+  $('statusBadge').style.color=ready?'var(--ok)':'var(--muted)';
+}
+function recompute(){computeCut();refresh();}
+
+/* ---------- exports ---------- */
+function fileBase(){
+  const cust=($('jobCustomer').value||'').trim().replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,'-').toLowerCase();
+  const q=($('jobQuote').value||'').trim();
+  return (cust||'mayhem')+(q?'-'+q:'')+'-patch';
+}
+function downloadBlobFile(blob,fname){
+  const a=document.createElement('a');a.download=fname;a.href=URL.createObjectURL(blob);
+  a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+function canvasPngU8(cv){
+  return new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/png'));
+}
+function buildPrintCanvas(){return renderPatch(DPI,true);}
+function buildCutSvg(){
+  const w=state.cut.w.toFixed(4),h=state.cut.h.toFixed(4);
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'+
+  '<!-- MAYHEM PATCH LAB - cut line - true size '+w+'in x '+h+'in - import into XCS -->\n'+
+  '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'in" height="'+h+'in" viewBox="0 0 '+w+' '+h+'">\n'+
+  '<path d="'+cutSvgD()+'" fill="none" stroke="#FF0000" stroke-width="0.01"/>\n</svg>';
+}
+function buildCutDxf(){
+  /* minimal DXF R12, $INSUNITS=1 (inches), closed polylines, y-flipped */
+  const H=state.cut.h;
+  let s='0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n1\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n';
+  const polyPts=poly=>poly.map(p=>[p[0],H-p[1]]);
+  for(const poly of state.cut.polys.map(polyPts)){
+    s+='0\nPOLYLINE\n8\nCUT\n66\n1\n70\n1\n';
+    for(const p of poly)s+='0\nVERTEX\n8\nCUT\n10\n'+p[0].toFixed(5)+'\n20\n'+p[1].toFixed(5)+'\n';
+    s+='0\nSEQEND\n';
+  }
+  s+='0\nENDSEC\n0\nEOF\n';
+  return s;
+}
+function watermarkTile(ctx,W,Hh){
+  ctx.save();
+  ctx.globalAlpha=0.055;ctx.fillStyle='#FFFFFF';
+  ctx.font='700 34px "Archivo Black",sans-serif';
+  ctx.translate(W/2,Hh/2);ctx.rotate(-Math.PI/7);
+  const stepX=340,stepY=110;
+  let row=0;
+  for(let yy=-Hh;yy<Hh;yy+=stepY){
+    const off=(row++%2)*stepX/2;
+    for(let xx=-W;xx<W;xx+=stepX)ctx.fillText('MAYHEM INK',xx+off,yy);
+  }
+  ctx.restore();
+}
+function buildApprovalCanvas(){
+  const W=1500,Hh=1080;
+  const c=document.createElement('canvas');c.width=W;c.height=Hh;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#0E0F10';ctx.fillRect(0,0,W,Hh);
+  ctx.fillStyle='#17181A';ctx.fillRect(0,0,W,120);
+  ctx.fillStyle='#4B9CD3';ctx.fillRect(0,118,W,4);
+  ctx.fillStyle='#E8EAEC';ctx.font='700 40px "Archivo Black",sans-serif';
+  ctx.textAlign='left';ctx.fillText('PATCH APPROVAL',50,72);
+  ctx.font='500 20px "JetBrains Mono",monospace';ctx.fillStyle='#98A0A6';
+  const cust=($('jobCustomer').value||'').trim(),q=($('jobQuote').value||'').trim();
+  ctx.fillText((cust||'—')+(q?'  ·  QUOTE #'+q:'')+'  ·  '+new Date().toLocaleDateString(),50,104);
+  /* visual: hat mockup if loaded, else patch card */
+  const areaY=160,areaH=Hh-260;
+  if(state.hat.photo){
+    const ph=state.hat.photo;
+    const s=Math.min((W-100)/ph.width,areaH/ph.height);
+    const mw=ph.width*s,mh=ph.height*s,mx=(W-mw)/2,my=areaY+(areaH-mh)/2;
+    /* render mockup at native then scale */
+    const tmp=document.createElement('canvas');tmp.width=ph.width;tmp.height=ph.height;
+    const tctx=tmp.getContext('2d');
+    tctx.drawImage(ph,0,0);
+    const patchWpx=state.hat.scale*ph.width,ps=patchWpx/state.cut.w;
+    const pw=state.cut.w*ps,phh=state.cut.h*ps;
+    const px=state.hat.cx*ph.width-pw/2,py=state.hat.cy*ph.height-phh/2;
+    tctx.save();tctx.shadowColor='rgba(0,0,0,.45)';tctx.shadowBlur=patchWpx*0.03;
+    tctx.drawImage(renderPatch(ps,false),px,py);tctx.restore();
+    if(state.hat.shade){
+      tctx.save();tctx.translate(px,py);tctx.clip(cutPath2D(ps));
+      tctx.globalCompositeOperation='multiply';tctx.globalAlpha=0.35;
+      tctx.drawImage(ph,-px,-py);tctx.restore();
+    }
+    ctx.drawImage(tmp,mx,my,mw,mh);
+  }else{
+    const s=Math.min((W-500)/state.cut.w,(areaH-80)/state.cut.h);
+    const patch=renderPatch(s,false);
+    const mx=(W-patch.width)/2,my=areaY+(areaH-patch.height)/2;
+    ctx.save();ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=40;ctx.shadowOffsetY=12;
+    ctx.drawImage(patch,mx,my);ctx.restore();
+    ctx.save();ctx.translate(mx,my);
+    ctx.strokeStyle='#4B9CD3';ctx.lineWidth=2;ctx.setLineDash([9,7]);
+    ctx.stroke(cutPath2D(s));ctx.restore();
+  }
+  ctx.fillStyle='#7BAFD4';ctx.font='700 22px "JetBrains Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('TRUE SIZE: '+state.cut.w.toFixed(2)+'" × '+state.cut.h.toFixed(2)+'"  ·  DASHED LINE = CUT LINE',W/2,Hh-96);
+  watermarkTile(ctx,W,Hh);
+  ctx.globalAlpha=1;ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono",monospace';
+  ctx.textAlign='left';
+  ctx.fillText('MOCKUP & ART PREP © MAYHEM INK SCREEN PRINTING — NOT FOR PRODUCTION BY OUTSIDE PRINTERS',50,Hh-30);
+  ctx.textAlign='right';ctx.fillText('MAYHEM INK · mayhemink.net',W-50,Hh-30);
+  return c;
+}
+
+/* ---------- store-mode ZIP (Mockup Lab pattern) ---------- */
+const CRC_TABLE=(()=>{const t=new Uint32Array(256);
+  for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[n]=c;}
+  return t;})();
+function crc32(u8){
+  let c=0xFFFFFFFF;
+  for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&0xFF]^(c>>>8);
+  return (c^0xFFFFFFFF)>>>0;
+}
+function zipStore(entries){
+  const enc=new TextEncoder();
+  const parts=[],central=[];
+  let offset=0;
+  const d=new Date();
+  const dosTime=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1))&0xFFFF;
+  const dosDate=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate())&0xFFFF;
+  entries.forEach(e=>{
+    const name=enc.encode(e.name),data=e.data,crc=crc32(data);
+    const lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);
+    lh.setUint16(8,0,true);lh.setUint16(10,dosTime,true);lh.setUint16(12,dosDate,true);
+    lh.setUint32(14,crc,true);lh.setUint32(18,data.length,true);lh.setUint32(22,data.length,true);
+    lh.setUint16(26,name.length,true);lh.setUint16(28,0,true);
+    parts.push(lh.buffer,name,data);
+    const ch=new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);
+    ch.setUint16(10,0,true);ch.setUint16(12,dosTime,true);ch.setUint16(14,dosDate,true);
+    ch.setUint32(16,crc,true);ch.setUint32(20,data.length,true);ch.setUint32(24,data.length,true);
+    ch.setUint16(28,name.length,true);
+    ch.setUint32(42,offset,true);
+    central.push(ch.buffer,name);
+    offset+=30+name.length+data.length;
+  });
+  let cdSize=0;central.forEach(b=>cdSize+=(b.byteLength!==undefined?b.byteLength:b.length));
+  const end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true);
+  end.setUint16(8,entries.length,true);end.setUint16(10,entries.length,true);
+  end.setUint32(12,cdSize,true);end.setUint32(16,offset,true);
+  return new Blob([...parts,...central,end.buffer],{type:'application/zip'});
+}
+
+/* ---------- download handlers ---------- */
+$('dlPrint').onclick=async()=>{
+  const cv=buildPrintCanvas();
+  cv.toBlob(b=>downloadBlobFile(b,fileBase()+'-print-'+state.cut.w.toFixed(2)+'x'+state.cut.h.toFixed(2)+'in.png'),'image/png');
+};
+$('dlSvg').onclick=()=>{
+  downloadBlobFile(new Blob([buildCutSvg()],{type:'image/svg+xml'}),fileBase()+'-cutline.svg');
+};
+$('dlDxf').onclick=()=>{
+  downloadBlobFile(new Blob([buildCutDxf()],{type:'application/dxf'}),fileBase()+'-cutline.dxf');
+};
+$('dlApproval').onclick=()=>{
+  buildApprovalCanvas().toBlob(b=>downloadBlobFile(b,fileBase()+'-approval.png'),'image/png');
+};
+$('dlZip').onclick=async()=>{
+  const enc=new TextEncoder();
+  const entries=[];
+  const folder=fileBase();
+  entries.push({name:folder+'/'+folder+'-print.png',data:await canvasPngU8(buildPrintCanvas())});
+  entries.push({name:folder+'/'+folder+'-cutline.svg',data:enc.encode(buildCutSvg())});
+  entries.push({name:folder+'/'+folder+'-cutline.dxf',data:enc.encode(buildCutDxf())});
+  entries.push({name:folder+'/'+folder+'-approval.png',data:await canvasPngU8(buildApprovalCanvas())});
+  entries.push({name:folder+'/README.txt',data:enc.encode(
+    'MAYHEM PATCH LAB EXPORT\n'+
+    'Patch true size: '+state.cut.w.toFixed(3)+'" x '+state.cut.h.toFixed(3)+'"\n\n'+
+    'PRINT (eufyMake E1): import the -print.png (transparent, 300 DPI, exact size).\n'+
+    'CUT (xTool P3 / XCS): import -cutline.svg (true size) or -cutline.dxf (inch units).\n'+
+    'Print file and cut files share the same frame: align by outer bounds.\n')});
+  downloadBlobFile(zipStore(entries),folder+'.zip');
+};
+
+/* ---------- inputs ---------- */
+function bindDrop(dropId,fileId,handler){
+  const drop=$(dropId),inp=$(fileId);
+  drop.onclick=()=>inp.click();
+  inp.onchange=()=>{if(inp.files[0])handler(inp.files[0]);inp.value='';};
+  drop.ondragover=e=>{e.preventDefault();drop.classList.add('drag');};
+  drop.ondragleave=()=>drop.classList.remove('drag');
+  drop.ondrop=e=>{e.preventDefault();drop.classList.remove('drag');
+    if(e.dataTransfer.files[0])handler(e.dataTransfer.files[0]);};
+}
+bindDrop('artDrop','artFile',file=>{
+  loadArtFile(file,(canvas,isSvg)=>{
+    state.art=canvas;state.artName=file.name;
+    $('artInfo').textContent=file.name+' · '+canvas.width+'×'+canvas.height+'px'+(isSvg?' (vector, rasterized hi-res)':'');
+    const dpi=Math.round(canvas.width/state.artW);
+    $('dpiWarn').hidden=isSvg||dpi>=200;
+    if(!$('dpiWarn').hidden)$('dpiWarn').textContent='⚠ '+dpi+' DPI at '+state.artW+'" wide — soft for UV print. Vector art (SVG) or a bigger PNG prints sharper.';
+    recompute();
+  });
+});
+bindDrop('hatDrop','hatFile',file=>{
+  loadImgFile(file,img=>{
+    /* fit to 1100 max dim like Style Lab */
+    const s=Math.min(1,1100/Math.max(img.width,img.height));
+    const c=document.createElement('canvas');
+    c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    state.hat.photo=c;
+    setTab('hat');
+  });
+});
+$('shapeSeg').querySelectorAll('button').forEach(b=>{
+  b.onclick=()=>{
+    $('shapeSeg').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    state.shape=b.dataset.shape;
+    $('radiusRow').hidden=state.shape!=='round';
+    recompute();
+  };
+});
+const bindRange=(id,valId,fmt,key,obj)=>{
+  $(id).oninput=()=>{
+    const v=parseFloat($(id).value);
+    (obj||state)[key]=v;
+    $(valId).textContent=fmt(v);
+    recompute();
+  };
+};
+bindRange('artW','artWVal',v=>v.toFixed(2)+'"','artW');
+bindRange('cutOff','cutOffVal',v=>v.toFixed(3)+'"','offset');
+bindRange('cornerR','cornerRVal',v=>v.toFixed(2)+'"','radius');
+$('hatScale').oninput=()=>{
+  state.hat.scale=parseFloat($('hatScale').value)/100;
+  $('hatScaleVal').textContent=$('hatScale').value+'% of photo width';
+  refresh();
+};
+$('smoothChk').onchange=()=>{state.smooth=$('smoothChk').checked;recompute();};
+$('bgChk').onchange=()=>{state.bgOn=$('bgChk').checked;refresh();};
+$('bgColor').oninput=()=>{state.bgColor=$('bgColor').value;state.bgOn=true;$('bgChk').checked=true;refresh();};
+$('hatShade').onchange=()=>{state.hat.shade=$('hatShade').checked;refresh();};
+
+/* tabs */
+function setTab(t){
+  state.tab=t;
+  $('tabPatch').classList.toggle('on',t==='patch');
+  $('tabHat').classList.toggle('on',t==='hat');
+  refresh();
+}
+$('tabPatch').onclick=()=>setTab('patch');
+$('tabHat').onclick=()=>setTab('hat');
+
+/* drag patch on hat mockup */
+(()=>{
+  const cv=$('stageCv');
+  let dragging=false;
+  const toPhoto=e=>{
+    const r=cv.getBoundingClientRect();
+    return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};
+  };
+  cv.addEventListener('pointerdown',e=>{
+    if(state.tab!=='hat'||!state.hat.photo||!state.cut)return;
+    dragging=true;cv.setPointerCapture(e.pointerId);
+    const p=toPhoto(e);state.hat.cx=p.x;state.hat.cy=p.y;refresh();
+  });
+  cv.addEventListener('pointermove',e=>{
+    if(!dragging)return;
+    const p=toPhoto(e);state.hat.cx=p.x;state.hat.cy=p.y;refresh();
+  });
+  cv.addEventListener('pointerup',()=>{dragging=false;});
+})();
+
+refresh();
+</script>
+</body>
+</html>
