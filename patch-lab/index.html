@@ -996,7 +996,7 @@ function drawHatMockup(){
     ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=Math.max(4,patchWpx*0.03);ctx.shadowOffsetY=Math.max(2,patchWpx*0.012);
     ctx.drawImage(patch,x,y);
     ctx.restore();
-    if(state.hat.shade){
+    if(state.hat.shade&&!state.cut.emb){ /* emb: no patch surface to shade */
       ctx.save();
       ctx.translate(x,y);
       ctx.clip(cutPath2D(s));
@@ -1111,7 +1111,7 @@ function buildApprovalCanvas(){
     const px=state.hat.cx*ph.width-pw/2,py=state.hat.cy*ph.height-phh/2;
     tctx.save();tctx.shadowColor='rgba(0,0,0,.45)';tctx.shadowBlur=patchWpx*0.03;
     tctx.drawImage(renderPatch(ps,false),px,py);tctx.restore();
-    if(state.hat.shade){
+    if(state.hat.shade&&!state.cut.emb){
       tctx.save();tctx.translate(px,py);tctx.clip(cutPath2D(ps));
       tctx.globalCompositeOperation='multiply';tctx.globalAlpha=0.35;
       tctx.drawImage(ph,-px,-py);tctx.restore();
