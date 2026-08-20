@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.10.1 —Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
+<title>Mayhem Patch Lab v0.11 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -21,10 +21,27 @@
   h1 .x{color:var(--accent);}
   .head-sub{color:var(--muted);font-size:13px;margin:4px 0 0;max-width:680px;}
   .machine-badge{font-family:'JetBrains Mono',monospace;font-size:11px;border:1px solid var(--line2);padding:6px 12px;border-radius:2px;color:var(--muted);}
-  .app{max-width:1460px;margin:20px auto 0;padding:0 30px;display:grid;grid-template-columns:380px minmax(0,1fr);gap:20px;align-items:start;}
-  @media(max-width:1100px){.app{grid-template-columns:1fr;}}
-  .col-left{display:flex;flex-direction:column;gap:14px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto;padding-right:2px;}
-  @media(max-width:1100px){.col-left{position:static;max-height:none;}}
+  /* v0.11 layout: build flow LEFT · live preview CENTER (sticky) · outputs RIGHT · downloads pinned BOTTOM */
+  .app{max-width:1700px;margin:20px auto 0;padding:0 26px;display:grid;grid-template-columns:330px minmax(0,1fr) 330px;grid-template-areas:"a stage b";gap:16px;align-items:start;}
+  #colA{grid-area:a;}
+  #colB{grid-area:b;}
+  .col-stage{grid-area:stage;position:sticky;top:14px;}
+  .col-left{display:flex;flex-direction:column;gap:14px;position:sticky;top:14px;max-height:calc(100vh - 110px);overflow:auto;padding-right:2px;}
+  @media(max-width:1500px){.app{grid-template-columns:380px minmax(0,1fr);grid-template-areas:"a stage" "b stage";}.col-left{position:static;max-height:none;}}
+  @media(max-width:1100px){.app{grid-template-columns:1fr;grid-template-areas:"stage" "a" "b";}.col-stage{position:static;}}
+  #dlBar{position:sticky;bottom:0;z-index:40;max-width:1700px;margin:14px auto 0;padding:0 26px 10px;}
+  #dlBar .panel{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;box-shadow:0 -8px 26px rgba(0,0,0,.5);border-color:var(--line2);}
+  #dlBar h3{margin:0;white-space:nowrap;}
+  #dlBar .desc{display:none;}
+  #dlBar .dl-grid{display:flex;gap:8px;margin:0;flex:1;flex-wrap:wrap;}
+  #dlBar .dl-card{display:flex;align-items:center;gap:9px;padding:6px 10px;}
+  #dlBar .dl-card h4{margin:0;font-size:10.5px;white-space:nowrap;}
+  #dlBar .dl-card p{display:none;}
+  #dlBar .dl-card p.machine{display:block;margin:0;font-size:8.5px;white-space:nowrap;}
+  #dlBar .btnrow{margin:0;display:flex;gap:8px;flex-wrap:nowrap;}
+  #dlBar .btn{width:auto;padding:9px 14px;}
+  #dlBar .val{margin:0;white-space:nowrap;}
+  @media(max-width:1100px){#dlBar{position:static;}}
   .panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;}
   .panel h3{margin:0 0 4px;font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:10px;}
   .stepnum{background:var(--accent);color:#111;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:2px 7px;border-radius:2px;}
@@ -136,7 +153,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.10.1</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.11</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -144,7 +161,7 @@
 </header>
 
 <div class="app">
-  <div class="col-left">
+  <div class="col-left" id="colA">
 
     <div class="panel">
       <h3><span class="stepnum">1</span> JOB</h3>
@@ -284,6 +301,9 @@
       <div class="note warn" id="blobWarn" hidden></div>
     </div>
 
+  </div>
+
+  <div class="col-left" id="colB">
     <div class="panel">
       <h3><span class="stepnum">4</span> HAT</h3>
       <p class="desc">Pick a Richardson 112 colorway, or drop any hat photo and place by hand.</p>
@@ -318,41 +338,7 @@
     </div>
 
     <div class="panel">
-      <h3><span class="stepnum">5</span> DOWNLOAD</h3>
-      <p class="desc">Production + approval files. Print PNG and cut files share the exact same frame — what prints is what cuts.</p>
-      <div class="dl-grid">
-        <div class="dl-card">
-          <h4>PRINT FILE (PNG)</h4>
-          <p class="machine">eufyMake E1</p>
-          <p>Transparent PNG @ 300 DPI, exact size.</p>
-          <button class="btn sm" id="dlPrint" disabled>Download</button>
-        </div>
-        <div class="dl-card">
-          <h4>CUT LINE (SVG)</h4>
-          <p class="machine">xTool P3 · XCS</p>
-          <p>True-size vector, import &amp; cut.</p>
-          <button class="btn sm" id="dlSvg" disabled>Download</button>
-        </div>
-        <div class="dl-card">
-          <h4>CUT LINE (DXF)</h4>
-          <p class="machine">xTool P3 · XCS</p>
-          <p>Inch-unit DXF polyline.</p>
-          <button class="btn sm" id="dlDxf" disabled>Download</button>
-        </div>
-        <div class="dl-card">
-          <h4>APPROVAL PAGE (PNG)</h4>
-          <p class="machine">Customer</p>
-          <p>Watermarked approval visual.</p>
-          <button class="btn sm" id="dlApproval" disabled>Download</button>
-        </div>
-      </div>
-      <div class="btnrow"><button class="btn" id="dlZip" disabled>⬇ JOB ZIP — ALL FILES</button></div>
-      <div class="btnrow"><button class="btn ghost" id="copyPrintavo" disabled>⧉ COPY JOB FOR PRINTAVO</button></div>
-      <div class="val" id="copyStatus"></div>
-    </div>
-
-    <div class="panel">
-      <h3><span class="stepnum">6</span> GANG SHEET</h3>
+      <h3><span class="stepnum">5</span> GANG SHEET</h3>
       <p class="desc">Batch a full run: auto-nest patches onto one sheet — one E1 print, one P3 cut job.</p>
       <div class="row2">
         <div><label class="lbl">Sheet W (in)</label><input type="number" id="gsW" value="12" min="2" max="48" step="0.5"></div>
@@ -405,7 +391,7 @@
     </div>
 
     <div class="panel">
-      <h3><span class="stepnum">7</span> PRICE</h3>
+      <h3><span class="stepnum">6</span> PRICE</h3>
       <p class="desc">Live price from the shop's own costs — PatchForge can't do this. Edit costs below; they save in this browser.</p>
       <label class="lbl">Quantity</label>
       <input type="number" id="prQty" value="24" min="1" max="10000" step="1">
@@ -441,7 +427,7 @@
 
   </div>
 
-  <div class="col-right">
+  <div class="col-stage">
     <div class="tabs">
       <button id="tabPatch" class="on">PATCH PREVIEW</button>
       <button id="tabHat">HAT MOCKUP</button>
@@ -453,6 +439,44 @@
       </div>
       <div class="dims" id="dimsBar"></div>
     </div>
+  </div>
+</div>
+
+<div id="dlBar">
+  <div class="panel">
+    <h3><span class="stepnum">⬇</span> DOWNLOAD</h3>
+    <p class="desc">Production + approval files. Print PNG and cut files share the exact same frame — what prints is what cuts.</p>
+    <div class="dl-grid">
+      <div class="dl-card">
+        <h4>PRINT FILE (PNG)</h4>
+        <p class="machine">eufyMake E1</p>
+        <p>Transparent PNG @ 300 DPI, exact size.</p>
+        <button class="btn sm" id="dlPrint" disabled>Download</button>
+      </div>
+      <div class="dl-card">
+        <h4>CUT LINE (SVG)</h4>
+        <p class="machine">xTool P3 · XCS</p>
+        <p>True-size vector, import &amp; cut.</p>
+        <button class="btn sm" id="dlSvg" disabled>Download</button>
+      </div>
+      <div class="dl-card">
+        <h4>CUT LINE (DXF)</h4>
+        <p class="machine">xTool P3 · XCS</p>
+        <p>Inch-unit DXF polyline.</p>
+        <button class="btn sm" id="dlDxf" disabled>Download</button>
+      </div>
+      <div class="dl-card">
+        <h4>APPROVAL (PNG)</h4>
+        <p class="machine">Customer</p>
+        <p>Watermarked approval visual.</p>
+        <button class="btn sm" id="dlApproval" disabled>Download</button>
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="btn" id="dlZip" disabled>⬇ JOB ZIP</button>
+      <button class="btn ghost" id="copyPrintavo" disabled>⧉ PRINTAVO</button>
+    </div>
+    <div class="val" id="copyStatus"></div>
   </div>
 </div>
 
