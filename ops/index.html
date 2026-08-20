@@ -241,6 +241,16 @@ try{
   else     WHO = localStorage.getItem("mo-who") || "";
 }catch(e){}
 if (!WHO) WHO = "shop";
+/* pasting the full #k= URL into an already-open tab only changes the hash (no reload) —
+   adopt it live so the unlock still happens */
+window.addEventListener("hashchange", async () => {
+  const p = new URLSearchParams(location.hash.slice(1));
+  const k = p.get("k") || "", who = (p.get("who") || "").toLowerCase();
+  let changed = false;
+  if (k && k !== KEY){ KEY = k; try{ localStorage.setItem("mo-key", k); }catch(e){} changed = true; }
+  if (who && who !== WHO){ WHO = who; try{ localStorage.setItem("mo-who", who); }catch(e){} changed = true; }
+  if (changed && OPS){ hideErr(); await loadState(); render(); }
+});
 
 let OPS = null, STATE = {}, OV = {}, tab = sessionStorage.getItem("mo-tab") || "MUST";
 let V2IMG = {};   // visualId -> mockup path
@@ -326,8 +336,9 @@ async function setCheck(id, done, how){
     render();
   }
 }
-function showErr(msg){ const e = $("#err"); e.textContent = msg; e.style.display = "block";
-  clearTimeout(showErr._t); showErr._t = setTimeout(()=>e.style.display="none", 6000); }
+function showErr(msg, sticky){ const e = $("#err"); e.textContent = msg; e.style.display = "block";
+  clearTimeout(showErr._t); if (!sticky) showErr._t = setTimeout(()=>e.style.display="none", 6000); }
+function hideErr(){ clearTimeout(showErr._t); $("#err").style.display = "none"; }
 
 /* ===== header ===== */
 function renderHeader(){
@@ -339,7 +350,7 @@ function renderHeader(){
     `<span class="pill"><b>${OPS.jobs.length}</b> jobs</span>` +
     `<span class="pill"><b>${open}</b> open items</span>` +
     (over ? `<span class="pill warn"><b>${over}</b> overdue</span>` : "") +
-    `<span class="pill">${esc(WHO)}</span>`;
+    `<span class="pill">${esc(WHO)}${KEY ? "" : " · VIEW ONLY"}</span>`;
 }
 
 /* state semantics: done rows disappear from lanes; DIGI "sent" stays dimmed until "received" */
@@ -598,7 +609,7 @@ document.addEventListener("click", closeMenu);
   try{ await loadOps(); }
   catch(e){ $("#built").textContent = ""; showErr("Couldn't load the board data (" + e.message + "). Check the publish."); return; }
   V2IMG = {}; OPS.jobs.forEach(j => { if (j.img) V2IMG[j.visualId] = j.img; });
-  if (!KEY) showErr("This machine isn't unlocked yet — open your full bookmarked link (the one with #k=) once, and the hub buttons will work here from then on. Read-only until then.");
+  if (!KEY) showErr("VIEW ONLY — this browser isn't unlocked. Paste your full bookmarked link (the one with #k=) into the address bar and hit Enter; it unlocks this machine for good.", true);
   await loadState();
   render();
   setInterval(async () => { await loadState(); render(); }, 60000);   // two-iMac sync
