@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-17T19:04:57.890Z",
+ "generated": "2026-08-20T18:33:36.151Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -14971,6 +14971,746 @@
     },
     {
      "file": "styles/SS4500Z/back/ss4500z-white-back.jpg",
+     "side": "back",
+     "color": "White"
+    }
+   ]
+  },
+  "DT188": {
+   "name": "District DT188",
+   "sub": "Women's Perfect Weight CVC Tee",
+   "tokens": [
+    "dt188"
+   ],
+   "bodyLenM": 26.5,
+   "calib": {
+    "front": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 210,
+     "leftChestX": 500,
+     "default": true
+    },
+    "back": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 160,
+     "leftChestX": 500,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/DT188/front/dt188-bright-white-front.jpg",
+     "side": "front",
+     "color": "Bright White"
+    },
+    {
+     "file": "styles/DT188/back/dt188-bright-white-back.jpg",
+     "side": "back",
+     "color": "Bright White"
+    },
+    {
+     "file": "styles/DT188/front/dt188-frosted-mint-front.jpg",
+     "side": "front",
+     "color": "Frosted Mint"
+    },
+    {
+     "file": "styles/DT188/back/dt188-frosted-mint-back.jpg",
+     "side": "back",
+     "color": "Frosted Mint"
+    },
+    {
+     "file": "styles/DT188/front/dt188-geranium-heather-front.jpg",
+     "side": "front",
+     "color": "Geranium Heather"
+    },
+    {
+     "file": "styles/DT188/back/dt188-geranium-heather-back.jpg",
+     "side": "back",
+     "color": "Geranium Heather"
+    },
+    {
+     "file": "styles/DT188/front/dt188-graphite-heather-front.jpg",
+     "side": "front",
+     "color": "Graphite Heather"
+    },
+    {
+     "file": "styles/DT188/back/dt188-graphite-heather-back.jpg",
+     "side": "back",
+     "color": "Graphite Heather"
+    },
+    {
+     "file": "styles/DT188/front/dt188-heathered-navy-front.jpg",
+     "side": "front",
+     "color": "Heathered Navy"
+    },
+    {
+     "file": "styles/DT188/back/dt188-heathered-navy-back.jpg",
+     "side": "back",
+     "color": "Heathered Navy"
+    },
+    {
+     "file": "styles/DT188/front/dt188-heathered-teal-front.jpg",
+     "side": "front",
+     "color": "Heathered Teal"
+    },
+    {
+     "file": "styles/DT188/back/dt188-heathered-teal-back.jpg",
+     "side": "back",
+     "color": "Heathered Teal"
+    },
+    {
+     "file": "styles/DT188/front/dt188-jet-black-front.jpg",
+     "side": "front",
+     "color": "Jet Black"
+    },
+    {
+     "file": "styles/DT188/back/dt188-jet-black-back.jpg",
+     "side": "back",
+     "color": "Jet Black"
+    },
+    {
+     "file": "styles/DT188/front/dt188-jet-black-heather-front.jpg",
+     "side": "front",
+     "color": "Jet Black Heather"
+    },
+    {
+     "file": "styles/DT188/back/dt188-jet-black-heather-back.jpg",
+     "side": "back",
+     "color": "Jet Black Heather"
+    },
+    {
+     "file": "styles/DT188/front/dt188-light-heather-grey-front.jpg",
+     "side": "front",
+     "color": "Light Heather Grey"
+    },
+    {
+     "file": "styles/DT188/back/dt188-light-heather-grey-back.jpg",
+     "side": "back",
+     "color": "Light Heather Grey"
+    },
+    {
+     "file": "styles/DT188/front/dt188-military-green-heather-front.jpg",
+     "side": "front",
+     "color": "Military Green Heather"
+    },
+    {
+     "file": "styles/DT188/back/dt188-military-green-heather-back.jpg",
+     "side": "back",
+     "color": "Military Green Heather"
+    },
+    {
+     "file": "styles/DT188/front/dt188-orchid-haze-heather-front.jpg",
+     "side": "front",
+     "color": "Orchid Haze Heather"
+    },
+    {
+     "file": "styles/DT188/back/dt188-orchid-haze-heather-back.jpg",
+     "side": "back",
+     "color": "Orchid Haze Heather"
+    },
+    {
+     "file": "styles/DT188/front/dt188-soft-yellow-front.jpg",
+     "side": "front",
+     "color": "Soft Yellow"
+    },
+    {
+     "file": "styles/DT188/back/dt188-soft-yellow-back.jpg",
+     "side": "back",
+     "color": "Soft Yellow"
+    }
+   ]
+  },
+  "NL6600": {
+   "name": "Next Level 6600",
+   "sub": "Women's CVC Relaxed Tee",
+   "tokens": [
+    "nl6600",
+    "6600"
+   ],
+   "bodyLenM": 27,
+   "calib": {
+    "front": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 210,
+     "leftChestX": 500,
+     "default": true
+    },
+    "back": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 160,
+     "leftChestX": 500,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/NL6600/front/nl6600-antique-gold-front.jpg",
+     "side": "front",
+     "color": "Antique Gold"
+    },
+    {
+     "file": "styles/NL6600/back/nl6600-antique-gold-back.jpg",
+     "side": "back",
+     "color": "Antique Gold"
+    },
+    {
+     "file": "styles/NL6600/front/nl6600-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/NL6600/back/nl6600-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/NL6600/front/nl6600-charcoal-front.jpg",
+     "side": "front",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/NL6600/back/nl6600-charcoal-back.jpg",
+     "side": "back",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/NL6600/front/nl6600-dark-heather-gray-front.jpg",
+     "side": "front",
+     "color": "Dark Heather Gray"
+    },
+    {
+     "file": "styles/NL6600/back/nl6600-dark-heather-gray-back.jpg",
+     "side": "back",
+     "color": "Dark Heather Gray"
+    },
+    {
+     "file": "styles/NL6600/front/nl6600-heather-columbia-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Columbia Blue"
+    },
+    {
+     "file": "styles/NL6600/back/nl6600-heather-columbia-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Columbia Blue"
+    },
+    {
+     "file": "styles/NL6600/front/nl6600-heather-mauve-front.jpg",
+     "side": "front",
+     "color": "Heather Mauve"
+    },
+    {
+     "file": "styles/NL6600/back/nl6600-heather-mauve-back.jpg",
+     "side": "back",
+     "color": "Heather Mauve"
+    },
+    {
+     "file": "styles/NL6600/front/nl6600-military-green-front.jpg",
+     "side": "front",
+     "color": "Military Green"
+    },
+    {
+     "file": "styles/NL6600/back/nl6600-military-green-back.jpg",
+     "side": "back",
+     "color": "Military Green"
+    },
+    {
+     "file": "styles/NL6600/front/nl6600-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/NL6600/back/nl6600-white-back.jpg",
+     "side": "back",
+     "color": "White"
+    }
+   ]
+  },
+  "NL3600": {
+   "name": "Next Level 3600",
+   "sub": "Adult Cotton Tee",
+   "tokens": [
+    "nl3600",
+    "3600"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 210,
+     "leftChestX": 500,
+     "default": true
+    },
+    "back": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 160,
+     "leftChestX": 500,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/NL3600/front/nl3600-antique-gold-front.jpg",
+     "side": "front",
+     "color": "Antique Gold"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-antique-gold-back.jpg",
+     "side": "back",
+     "color": "Antique Gold"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-banana-cream-front.jpg",
+     "side": "front",
+     "color": "Banana Cream"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-banana-cream-back.jpg",
+     "side": "back",
+     "color": "Banana Cream"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-blue-jean-front.jpg",
+     "side": "front",
+     "color": "Blue Jean"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-blue-jean-back.jpg",
+     "side": "back",
+     "color": "Blue Jean"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-bone-front.jpg",
+     "side": "front",
+     "color": "Bone"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-bone-back.jpg",
+     "side": "back",
+     "color": "Bone"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-cardinal-front.jpg",
+     "side": "front",
+     "color": "Cardinal"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-cardinal-back.jpg",
+     "side": "back",
+     "color": "Cardinal"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-classic-orange-front.jpg",
+     "side": "front",
+     "color": "Classic Orange"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-classic-orange-back.jpg",
+     "side": "back",
+     "color": "Classic Orange"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-clay-front.jpg",
+     "side": "front",
+     "color": "Clay"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-clay-back.jpg",
+     "side": "back",
+     "color": "Clay"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-cool-blue-front.jpg",
+     "side": "front",
+     "color": "Cool Blue"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-cool-blue-back.jpg",
+     "side": "back",
+     "color": "Cool Blue"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-cream-front.jpg",
+     "side": "front",
+     "color": "Cream"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-cream-back.jpg",
+     "side": "back",
+     "color": "Cream"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-dark-chocolate-front.jpg",
+     "side": "front",
+     "color": "Dark Chocolate"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-dark-chocolate-back.jpg",
+     "side": "back",
+     "color": "Dark Chocolate"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-desert-pink-front.jpg",
+     "side": "front",
+     "color": "Desert Pink"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-desert-pink-back.jpg",
+     "side": "back",
+     "color": "Desert Pink"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-forest-green-front.jpg",
+     "side": "front",
+     "color": "Forest Green"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-forest-green-back.jpg",
+     "side": "back",
+     "color": "Forest Green"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-gold-front.jpg",
+     "side": "front",
+     "color": "Gold"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-gold-back.jpg",
+     "side": "back",
+     "color": "Gold"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-graphite-black-front.jpg",
+     "side": "front",
+     "color": "Graphite Black"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-graphite-black-back.jpg",
+     "side": "back",
+     "color": "Graphite Black"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-heather-gray-front.jpg",
+     "side": "front",
+     "color": "Heather Gray"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-heather-gray-back.jpg",
+     "side": "back",
+     "color": "Heather Gray"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-heavy-metal-front.jpg",
+     "side": "front",
+     "color": "Heavy Metal"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-heavy-metal-back.jpg",
+     "side": "back",
+     "color": "Heavy Metal"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-hot-pink-front.jpg",
+     "side": "front",
+     "color": "Hot Pink"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-hot-pink-back.jpg",
+     "side": "back",
+     "color": "Hot Pink"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-indigo-front.jpg",
+     "side": "front",
+     "color": "Indigo"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-indigo-back.jpg",
+     "side": "back",
+     "color": "Indigo"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-kelly-green-front.jpg",
+     "side": "front",
+     "color": "Kelly Green"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-kelly-green-back.jpg",
+     "side": "back",
+     "color": "Kelly Green"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-light-blue-front.jpg",
+     "side": "front",
+     "color": "Light Blue"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-light-blue-back.jpg",
+     "side": "back",
+     "color": "Light Blue"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-light-gray-front.jpg",
+     "side": "front",
+     "color": "Light Gray"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-light-gray-back.jpg",
+     "side": "back",
+     "color": "Light Gray"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-light-olive-front.jpg",
+     "side": "front",
+     "color": "Light Olive"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-light-olive-back.jpg",
+     "side": "back",
+     "color": "Light Olive"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-light-pink-front.jpg",
+     "side": "front",
+     "color": "Light Pink"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-light-pink-back.jpg",
+     "side": "back",
+     "color": "Light Pink"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-maroon-front.jpg",
+     "side": "front",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-maroon-back.jpg",
+     "side": "back",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-mauve-front.jpg",
+     "side": "front",
+     "color": "Mauve"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-mauve-back.jpg",
+     "side": "back",
+     "color": "Mauve"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-midnight-navy-front.jpg",
+     "side": "front",
+     "color": "Midnight Navy"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-midnight-navy-back.jpg",
+     "side": "back",
+     "color": "Midnight Navy"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-military-green-front.jpg",
+     "side": "front",
+     "color": "Military Green"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-military-green-back.jpg",
+     "side": "back",
+     "color": "Military Green"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-natural-front.jpg",
+     "side": "front",
+     "color": "Natural"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-natural-back.jpg",
+     "side": "back",
+     "color": "Natural"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-oatmeal-front.jpg",
+     "side": "front",
+     "color": "Oatmeal"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-oatmeal-back.jpg",
+     "side": "back",
+     "color": "Oatmeal"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-oxblood-front.jpg",
+     "side": "front",
+     "color": "Oxblood"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-oxblood-back.jpg",
+     "side": "back",
+     "color": "Oxblood"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-peri-blue-front.jpg",
+     "side": "front",
+     "color": "Peri Blue"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-peri-blue-back.jpg",
+     "side": "back",
+     "color": "Peri Blue"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-purple-rush-front.jpg",
+     "side": "front",
+     "color": "Purple Rush"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-purple-rush-back.jpg",
+     "side": "back",
+     "color": "Purple Rush"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-red-front.jpg",
+     "side": "front",
+     "color": "Red"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-red-back.jpg",
+     "side": "back",
+     "color": "Red"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-royal-front.jpg",
+     "side": "front",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-royal-back.jpg",
+     "side": "back",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-royal-pine-front.jpg",
+     "side": "front",
+     "color": "Royal Pine"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-royal-pine-back.jpg",
+     "side": "back",
+     "color": "Royal Pine"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-sand-front.jpg",
+     "side": "front",
+     "color": "Sand"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-sand-back.jpg",
+     "side": "back",
+     "color": "Sand"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-shiitake-front.jpg",
+     "side": "front",
+     "color": "Shiitake"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-shiitake-back.jpg",
+     "side": "back",
+     "color": "Shiitake"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-stonewash-denim-front.jpg",
+     "side": "front",
+     "color": "Stonewash Denim"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-stonewash-denim-back.jpg",
+     "side": "back",
+     "color": "Stonewash Denim"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-tahiti-blue-front.jpg",
+     "side": "front",
+     "color": "Tahiti Blue"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-tahiti-blue-back.jpg",
+     "side": "back",
+     "color": "Tahiti Blue"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-tan-front.jpg",
+     "side": "front",
+     "color": "Tan"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-tan-back.jpg",
+     "side": "back",
+     "color": "Tan"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-teal-front.jpg",
+     "side": "front",
+     "color": "Teal"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-teal-back.jpg",
+     "side": "back",
+     "color": "Teal"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-turquoise-front.jpg",
+     "side": "front",
+     "color": "Turquoise"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-turquoise-back.jpg",
+     "side": "back",
+     "color": "Turquoise"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-warm-gray-front.jpg",
+     "side": "front",
+     "color": "Warm Gray"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-warm-gray-back.jpg",
+     "side": "back",
+     "color": "Warm Gray"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-watermelon-front.jpg",
+     "side": "front",
+     "color": "Watermelon"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-watermelon-back.jpg",
+     "side": "back",
+     "color": "Watermelon"
+    },
+    {
+     "file": "styles/NL3600/front/nl3600-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/NL3600/back/nl3600-white-back.jpg",
      "side": "back",
      "color": "White"
     }
