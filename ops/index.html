@@ -202,7 +202,6 @@ nav button.on .n{background:rgba(75,156,211,.4)}
     <div class="pills" id="pills"></div>
   </header>
   <div id="err"></div>
-  <section id="must" class="card" style="display:none"></section>
   <nav id="tabs"></nav>
   <main id="view"></main>
 </div>
@@ -361,24 +360,6 @@ const isSent    = r => { const st = STATE[r.id]; return !!st && st.how === "sent
 const denverDay = ts => new Date(ts).toLocaleDateString("en-CA", {timeZone:"America/Denver"});
 const clearedToday = r => { const st = STATE[r.id]; return !st.ts || denverDay(st.ts) === denverDay(Date.now()); };
 
-/* ===== must-do ===== */
-function renderMust(){
-  const box = $("#must"); box.style.display = "";
-  const rows = OPS.must.filter(r => !isCleared(r) && !isSent(r))
-                       .map(r => ({...r, lane: effLaneOf(r.id)}));
-  if (!rows.length){
-    box.className = "card clear"; box.id = "must";
-    box.innerHTML = `<h2>MUST-DO TODAY</h2><div class="zero">Nothing burns today — you're ahead. 🤘</div>`;
-    return;
-  }
-  box.className = "card";
-  box.innerHTML = `<h2>MUST-DO TODAY — ${rows.length}</h2>` + rows.slice(0,10).map(r =>
-    `<div class="mrow"><span class="dot ${r.urgency}"></span>` +
-    `<span class="lane">${LANES[r.lane]}</span>` +
-    `<span><a href="https://www.printavo.com/invoices/${jobId(r.v)}" target="_blank" style="color:var(--blue2);text-decoration:none;font-weight:700">#${r.v}</a> ${esc(r.job)} <span style="color:var(--dim)">— ${esc(r.cust)}</span></span>` +
-    `<span class="due ${uCls(r.urgency)}">${dueTxt(r.days, r.due)}</span></div>`
-  ).join("") + (rows.length > 10 ? `<div class="mrow" style="color:var(--dim2)">+ ${rows.length-10} more in the lanes</div>` : "");
-}
 function jobId(v){ const j = OPS.jobs.find(x => x.visualId === v); return j ? j.id : ""; }
 
 /* ===== tabs ===== */
@@ -561,7 +542,7 @@ function wirePend(){
 
 /* ===== render ===== */
 async function render(){
-  renderHeader(); renderMust(); renderTabs();
+  renderHeader(); renderTabs();
   const v = $("#view");
   if (tab === "MUST" || tab === "ALL") v.innerHTML = allView();
   else if (tab === "PEND") v.innerHTML = await pendView();
