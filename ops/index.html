@@ -227,10 +227,20 @@ const LANE_SUB = {FILMS:"burn films & screens — knock off the repeats first",
   DIGI:"embroidery digitizing — send early, it round-trips",
   OUTSOURCE:"ordered out (China etc.) — waiting on goods"};
 
-/* ===== identity from the bookmark hash: #k=KEY&who=joe ===== */
+/* ===== identity: #k=KEY&who=joe from the bookmark, remembered per machine =====
+   First keyed visit stores the key (+who) in localStorage, so the hub's plain
+   /ops/#who=joe|kolton buttons — and even a bare /ops/ — keep working after that.
+   The key itself never appears in the repo or the hub page. */
 const hashP = new URLSearchParams(location.hash.slice(1));
-const KEY = hashP.get("k") || "";
-const WHO = (hashP.get("who") || "").toLowerCase() || "shop";
+let KEY = hashP.get("k") || "";
+let WHO = (hashP.get("who") || "").toLowerCase();
+try{
+  if (KEY) localStorage.setItem("mo-key", KEY);
+  else     KEY = localStorage.getItem("mo-key") || "";
+  if (WHO) localStorage.setItem("mo-who", WHO);
+  else     WHO = localStorage.getItem("mo-who") || "";
+}catch(e){}
+if (!WHO) WHO = "shop";
 
 let OPS = null, STATE = {}, OV = {}, tab = sessionStorage.getItem("mo-tab") || "MUST";
 let V2IMG = {};   // visualId -> mockup path
@@ -570,7 +580,7 @@ document.addEventListener("click", closeMenu);
   try{ await loadOps(); }
   catch(e){ $("#built").textContent = ""; showErr("Couldn't load the board data (" + e.message + "). Check the publish."); return; }
   V2IMG = {}; OPS.jobs.forEach(j => { if (j.img) V2IMG[j.visualId] = j.img; });
-  if (!KEY) showErr("No key in the bookmark — board is read-only and Pending Quotes is hidden. Use the full bookmarked link.");
+  if (!KEY) showErr("This machine isn't unlocked yet — open your full bookmarked link (the one with #k=) once, and the hub buttons will work here from then on. Read-only until then.");
   await loadState();
   render();
   setInterval(async () => { await loadState(); render(); }, 60000);   // two-iMac sync

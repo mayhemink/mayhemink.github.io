@@ -63,7 +63,7 @@ main{
   grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
   gap:16px;
 }
-a.tile{
+.tile{
   display:block;
   background:var(--surface);
   border:1px solid var(--line2);
@@ -75,12 +75,12 @@ a.tile{
   overflow:hidden;
   transition:border-color .15s, transform .15s, background .15s;
 }
-a.tile:hover{
+.tile:hover{
   border-color:var(--blue);
   background:var(--surface2);
   transform:translateY(-2px);
 }
-a.tile::before{
+.tile::before{
   content:"";
   position:absolute;
   left:0;top:0;bottom:0;
@@ -89,7 +89,7 @@ a.tile::before{
   opacity:0;
   transition:opacity .15s;
 }
-a.tile:hover::before{opacity:1}
+.tile:hover::before{opacity:1}
 .tile .tag{
   font-family:'JetBrains Mono',monospace;
   font-size:11px;
@@ -120,6 +120,9 @@ a.tile:hover::before{opacity:1}
   text-overflow:ellipsis;
   white-space:nowrap;
 }
+.tile .who{display:flex;gap:10px;margin-top:14px}
+.tile .who a{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);border:1px solid var(--line2);border-radius:8px;padding:9px 0;text-decoration:none;transition:border-color .15s, background .15s}
+.tile .who a:hover{border-color:var(--blue);background:var(--surface2)}
 .sec-label{
   margin-top:30px;
   border-top:1px solid var(--line2);
@@ -189,12 +192,16 @@ footer{
 </header>
 <main>
   <div class="grid">
-    <a class="tile" href="/ops/" target="_blank" rel="noopener">
+    <div class="tile">
       <span class="tag">Prep</span>
       <h2>Ops Board</h2>
       <p>Daily prep lanes — films, woven, DTF, laser, digitizing — plus pending-quote follow-ups.</p>
+      <div class="who">
+        <a href="/ops/#who=joe" target="_blank" rel="noopener">Joe</a>
+        <a href="/ops/#who=kolton" target="_blank" rel="noopener">Kolton</a>
+      </div>
       <span class="url">mayhemink.github.io/ops</span>
-    </a>
+    </div>
     <a class="tile" href="/mockup-lab/" target="_blank" rel="noopener">
       <span class="tag">Sales</span>
       <h2>Mockup Lab</h2>
