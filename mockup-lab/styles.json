@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-20T18:33:36.151Z",
+ "generated": "2026-08-20T20:05:57.120Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -14985,18 +14985,18 @@
    "bodyLenM": 26.5,
    "calib": {
     "front": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 24.059424543479317,
+     "centerX": 366.49994139026137,
+     "collarY": 219.5838398727357,
+     "leftChestX": 475.9698045505145,
+     "default": false
     },
     "back": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 24.059424543479317,
+     "centerX": 366.49994139026137,
+     "collarY": 156.20540250913902,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
@@ -15132,18 +15132,18 @@
    "bodyLenM": 27,
    "calib": {
     "front": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 24.097981313581048,
+     "centerX": 372.2615131355378,
+     "collarY": 213.82216374877237,
+     "leftChestX": 462.5261371448694,
+     "default": false
     },
     "back": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 24.097981313581048,
+     "centerX": 360.7383696449849,
+     "collarY": 135.07925672127345,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
@@ -15239,18 +15239,18 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 23.134062061037802,
+     "centerX": 366.49994139026137,
+     "collarY": 256.0744846299037,
+     "leftChestX": 454.84404148450074,
+     "default": false
     },
     "back": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 23.134062061037802,
+     "centerX": 360.7383696449849,
+     "collarY": 175.411018894417,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
