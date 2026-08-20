@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.8.3 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Pricing</title>
+<title>Mayhem Patch Lab v0.9 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -89,11 +89,17 @@
   .gang-item .gi-dim{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:11px;white-space:nowrap;}
   .gang-item input.gi-qty{width:54px;padding:4px 6px;}
   .gang-item button.gi-x{background:transparent;border:none;color:var(--warn);cursor:pointer;font-size:15px;padding:0 4px;line-height:1;}
-  .lea-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:8px;max-height:200px;overflow:auto;padding:2px;}
-  .lea-sw{position:relative;height:34px;border-radius:4px;border:2px solid var(--line2);cursor:pointer;overflow:hidden;}
+  .lea-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px;max-height:290px;overflow:auto;padding:2px;}
+  .lea-sw{position:relative;height:54px;border-radius:5px;border:2px solid var(--line2);cursor:pointer;overflow:hidden;background-size:110px;background-blend-mode:overlay;}
   .lea-sw:hover{border-color:var(--accent2);}
   .lea-sw.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
-  .lea-sw .rev{position:absolute;right:0;bottom:0;width:45%;height:45%;border-top-left-radius:4px;}
+  .lea-sw .rev{position:absolute;right:0;bottom:0;width:40%;height:48%;border-top-left-radius:5px;background-size:110px;background-blend-mode:overlay;box-shadow:-1px -1px 3px rgba(0,0,0,.35);}
+  .lea-sw .nm{position:absolute;left:5px;top:4px;right:2px;font-family:'JetBrains Mono',monospace;font-size:8.5px;line-height:1.2;font-weight:700;pointer-events:none;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .chip{position:relative;width:36px;height:28px;border-radius:4px;border:2px solid var(--line2);cursor:pointer;overflow:hidden;}
+  .chip:hover{border-color:var(--accent2);}
+  .chip.mod{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+  .chip input{position:absolute;inset:0;opacity:0;cursor:pointer;}
   .lea-cat{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);margin:10px 0 2px;}
   details.cfg summary{font-size:11px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;}
   .preset-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px;}
@@ -126,7 +132,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.8</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.9</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -154,31 +160,15 @@
 
     <div class="panel">
       <h3><span class="stepnum">2</span> ART</h3>
-      <p class="desc">Stack images and text — drag, scale and rotate them right on the preview.</p>
+      <p class="desc">Stack logos and art — drag, scale and rotate them right on the preview.</p>
       <div class="drop" id="artDrop"><b>Drop art here</b>SVG · PNG · WEBP — or click to browse (adds a layer)</div>
       <input type="file" id="artFile" accept=".svg,.png,.webp,.jpg,.jpeg,image/*">
       <div class="val" id="artInfo"></div>
-      <label class="lbl">Add text</label>
-      <input type="text" id="txtContent" placeholder="YOUR TEXT">
-      <div class="row2" style="margin-top:8px;">
-        <select id="txtFont">
-          <option>Archivo Black</option><option>Impact</option><option>Arial Black</option>
-          <option>Inter</option><option>Georgia</option><option>Times New Roman</option>
-          <option>Courier New</option><option>JetBrains Mono</option><option>Verdana</option>
-          <option>Trebuchet MS</option><option>Brush Script MT</option>
-        </select>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="color" id="txtColor" value="#111111">
-          <label class="checkline" style="margin-top:0;"><input type="checkbox" id="txtBold" checked> Bold</label>
-        </div>
-      </div>
-      <label class="lbl">Arc / curve</label>
-      <input type="range" id="txtArc" min="-100" max="100" step="1" value="0">
-      <div class="val" id="txtArcVal">flat</div>
-      <div class="btnrow">
-        <button class="btn sm" id="txtAdd">＋ ADD TEXT</button>
-        <button class="btn sm ghost" id="txtApply" disabled>APPLY TO SELECTED</button>
-      </div>
+      <label class="lbl">Art colors — click a chip, pick or type a hex</label>
+      <div class="chip-row" id="colorChips"></div>
+      <div class="val" id="colorHint"></div>
+      <div class="btnrow"><button class="btn sm ghost" id="colorReset" style="display:none;">RESET COLORS</button></div>
+      <div class="note">To match a shirt from the Mockup Lab, type that ink's hex code into the picker — same hex here = same color there.</div>
       <label class="lbl">Layers — click to select · double-click preview too</label>
       <div id="layerList"></div>
       <div class="btnrow">
@@ -204,9 +194,9 @@
       <p class="desc">Real inches. The cut line is what the P3 cuts; the print file matches it 1:1.</p>
       <label class="lbl">Method</label>
       <div class="segmented" id="modeSeg">
-        <button data-mode="print" class="on">UV PRINT</button>
-        <button data-mode="engrave">ENGRAVE</button>
+        <button data-mode="engrave" class="on">ENGRAVE</button>
         <button data-mode="emb">EMBROIDERY</button>
+        <button data-mode="print">UV PRINT</button>
       </div>
       <div class="note" id="embNote" hidden>Direct embroidery on the hat — no patch, no cut. Export the art file for digitizing (DST comes back from the digitizer; track it in the ops DIGITIZING lane).</div>
       <div id="engBox" hidden>
@@ -232,8 +222,6 @@
         <div class="note">Pre-made blank: the border is molded in the bottom-layer color. No cutting — engrave in the jig.</div>
       </div>
       <div id="cutControls">
-      <label class="lbl">Hat presets — one click, standard sizes</label>
-      <div class="preset-row" id="presetRow"></div>
       <label class="lbl">Cut shape</label>
       <div class="segmented" id="shapeSeg">
         <button data-shape="contour" class="on">CONTOUR</button>
@@ -243,10 +231,12 @@
         <button data-shape="hexcut">HEX</button>
         <button data-shape="capsule">PILL</button>
       </div>
+      <label class="lbl">Hat presets — one click, standard sizes</label>
+      <div class="preset-row" id="presetRow"></div>
       </div>
-      <label class="lbl">Art width (inches)</label>
-      <input type="range" id="artW" min="0.5" max="8" step="0.05" value="2.75">
-      <div class="val" id="artWVal">2.75"</div>
+      <label class="lbl">Design height (inches)</label>
+      <input type="range" id="artW" min="0.3" max="8" step="0.05" value="1.5">
+      <div class="val" id="artWVal">1.50"</div>
       <div id="offsetRow">
       <label class="lbl">Cut offset / margin (inches)</label>
       <input type="range" id="cutOff" min="0.03" max="0.6" step="0.005" value="0.125">
@@ -269,8 +259,8 @@
       <div id="catBox" hidden>
         <label class="lbl">View</label>
         <div class="segmented" id="viewSeg">
-          <button data-view="left" class="on">ANGLE</button>
-          <button data-view="front">FRONT</button>
+          <button data-view="front" class="on">FRONT</button>
+          <button data-view="left">ANGLE</button>
           <button data-view="back">BACK</button>
         </div>
         <label class="lbl">Colorway — Richardson 112</label>
@@ -285,7 +275,7 @@
       <label class="lbl">Patch width on hat</label>
       <input type="range" id="hatScale" min="8" max="60" step="0.5" value="30">
       <div class="val" id="hatScaleVal">30% of photo width</div>
-      <label class="checkline"><input type="checkbox" id="hatShade" checked> Pick up hat shading</label>
+      <label class="checkline"><input type="checkbox" id="hatShade"> Pick up hat shading</label>
       <label class="lbl">Patch tilt</label>
       <input type="range" id="hatRot" min="-25" max="25" step="0.5" value="0">
       <div class="val" id="hatRotVal">0°</div>
@@ -341,7 +331,7 @@
         <div><label class="lbl">Margin (in)</label><input type="number" id="gsMargin" value="0.25" min="0" max="2" step="0.05"></div>
         <div><label class="lbl">Spacing (in)</label><input type="number" id="gsGap" value="0.125" min="0.02" max="1" step="0.005"></div>
       </div>
-      <label class="checkline"><input type="checkbox" id="gsMarks" checked> Print registration marks</label>
+      <label class="checkline"><input type="checkbox" id="gsMarks" checked> Registration marks — UV print only, framed to the used area</label>
       <label class="checkline"><input type="checkbox" id="gsRotate" checked> Allow 90° rotation</label>
       <label class="lbl">Add current patch × quantity</label>
       <div class="row2">
@@ -388,6 +378,7 @@
       <p class="desc">Live price from the shop's own costs — PatchForge can't do this. Edit costs below; they save in this browser.</p>
       <label class="lbl">Quantity</label>
       <input type="number" id="prQty" value="24" min="1" max="10000" step="1">
+      <label class="checkline"><input type="checkbox" id="prHat"> Include the hat — blank cap + press labor per unit</label>
       <div class="pr-big" id="prBig">—</div>
       <div class="val" id="prBreak"></div>
       <table class="pr-tiers" id="prTiers"></table>
@@ -400,6 +391,8 @@
           <div><label class="lbl">Labor+machine $ / patch</label><input type="number" id="cLabor" step="0.05" min="0"></div>
           <div><label class="lbl">UV ink $ / sq in</label><input type="number" id="cInk" step="0.01" min="0"></div>
           <div><label class="lbl">Job setup fee $</label><input type="number" id="cSetup" step="1" min="0"></div>
+          <div><label class="lbl">Hat blank $ ea</label><input type="number" id="cHat" step="0.25" min="0"></div>
+          <div><label class="lbl">Hat press labor $ ea</label><input type="number" id="cHatLab" step="0.25" min="0"></div>
           <div><label class="lbl">Markup ×</label><input type="number" id="cMarkup" step="0.1" min="1"></div>
           <div><label class="lbl">Min price $ ea</label><input type="number" id="cMin" step="0.25" min="0"></div>
           <div><label class="lbl">12+ multiplier</label><input type="number" id="cT12" step="0.01" min="0.1" max="1"></div>
@@ -464,7 +457,7 @@ const state={
   bgColor:'#F5F0E6',
   cut:null,            /* {polys:[[{x,y}in]], w,h, art:{x,y,w,h}, blobCount} */
   tab:'patch',
-  hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:true,rot:0},
+  hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:false,rot:0},
   gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0},
   eng:{on:false,cat:'',name:'',top:'#151515',engC:'#C8A24B',override:false,invert:false,settings:'',blank:false},
   embOn:false,
@@ -683,6 +676,30 @@ function polyArea(pts){
 }
 
 /* ---------- cut geometry ---------- */
+/* round every corner of a polygon with radius r (quadratic-bezier fillets) —
+   traditional patch shapes are never razor-sharp */
+function roundPoly(src,r,steps){
+  if(!(r>0.002))return src;
+  const n=src.length,out=[];
+  steps=steps||8;
+  for(let i=0;i<n;i++){
+    const P=src[i],A=src[(i-1+n)%n],C=src[(i+1)%n];
+    const v1=[P[0]-A[0],P[1]-A[1]],v2=[C[0]-P[0],C[1]-P[1]];
+    const l1=Math.hypot(v1[0],v1[1]),l2=Math.hypot(v2[0],v2[1]);
+    if(l1<1e-9||l2<1e-9){out.push(P);continue;}
+    const u1=[v1[0]/l1,v1[1]/l1],u2=[v2[0]/l2,v2[1]/l2];
+    const dot=-(u1[0]*u2[0]+u1[1]*u2[1]);
+    const ang=Math.acos(Math.max(-1,Math.min(1,dot)));
+    if(ang>Math.PI-0.05){out.push(P);continue;} /* nearly straight — keep */
+    const t=Math.min(r/Math.max(0.05,Math.tan(ang/2)),l1*0.45,l2*0.45);
+    const p1=[P[0]-u1[0]*t,P[1]-u1[1]*t],p2=[P[0]+u2[0]*t,P[1]+u2[1]*t];
+    for(let k=0;k<=steps;k++){
+      const s=k/steps,q=1-s;
+      out.push([q*q*p1[0]+2*q*s*P[0]+s*s*p2[0],q*q*p1[1]+2*q*s*P[1]+s*s*p2[1]]);
+    }
+  }
+  return out;
+}
 function blankShapePoly(w,h,shape,r,inset){
   const iw=w-2*inset, ih=h-2*inset, o=inset;
   const pts=[];
@@ -690,8 +707,11 @@ function blankShapePoly(w,h,shape,r,inset){
     const rx=iw/2, ry=ih/2;
     for(let i=0;i<160;i++){const a=i/160*Math.PI*2;pts.push([o+iw/2+rx*Math.cos(a),o+ih/2+ry*Math.sin(a)]);}
   }else if(shape==='hex'){
+    /* traditional elongated hex w/ ROUNDED corners (v0.9 — was too sharp) */
     const cx=Math.min(iw*0.22,ih*0.7);
-    pts.push([o+cx,o],[o+iw-cx,o],[o+iw,o+ih/2],[o+iw-cx,o+ih],[o+cx,o+ih],[o,o+ih/2]);
+    const hexPts=[[o+cx,o],[o+iw-cx,o],[o+iw,o+ih/2],[o+iw-cx,o+ih],[o+cx,o+ih],[o,o+ih/2]];
+    const rr=(r!=null&&r>0.002)?Math.min(r,ih*0.32):Math.min(0.2,ih*0.14);
+    return roundPoly(hexPts,rr,8);
   }else{ /* rounded rect */
     const rr=Math.max(0.02,Math.min((r||0.25),iw/2,ih/2));
     const seg=(ccx,ccy,a0,a1)=>{for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;pts.push([ccx+rr*Math.cos(a),ccy+rr*Math.sin(a)]);}};
@@ -754,7 +774,7 @@ function computeCut(){
         art:{x:fw/2-artWin/2,y:fh/2-artHin/2,w:artWin,h:artHin},blobCount:1};
     }else if(state.shape==='hexcut'){
       fw=artWin+2*m;fh=artHin+2*m;
-      polys=[blankShapePoly(fw,fh,'hex',0,0)];
+      polys=[blankShapePoly(fw,fh,'hex',state.radius,0)];
       state.cut={polys,w:fw,h:fh,svgPath:null,
         art:{x:m,y:m,w:artWin,h:artHin},blobCount:1};
     }else{
@@ -1095,14 +1115,23 @@ function drawPatchPreview(){
     ctx.restore();
     state._sel={corners,rotH,c0};
   }else state._sel=null;
-  const dpi=state.art?Math.round(state.art.width/state.cut.art.w):0;
+  /* v0.9: report true SOURCE dpi (worst raster layer), not composite resolution */
+  let srcDpi=1e9,anyRaster=false;
+  for(const o of state.objects){
+    if(o.type!=='image')continue;
+    const a=state.assets[o.assetId];
+    if(!a||a.vector)continue;
+    anyRaster=true;
+    srcDpi=Math.min(srcDpi,Math.round(a.canvas.width/(o._w||o.w||1)));
+  }
+  const dpi=anyRaster?(srcDpi+' DPI'):'VECTOR';
   $('dimsBar').innerHTML=
     (state.cut.emb?'EMBROIDERY':(state.cut.blank?'BLANK':'PATCH'))+' <b>'+state.cut.w.toFixed(2)+'&quot; × '+state.cut.h.toFixed(2)+'&quot;</b> <span style="color:var(--muted)">('+Math.round(state.cut.w*25.4)+'×'+Math.round(state.cut.h*25.4)+'mm)</span>'+
     ' · ART <b>'+state.cut.art.w.toFixed(2)+'&quot; × '+state.cut.art.h.toFixed(2)+'&quot;</b>'+
     (state.cut.blank
       ?' · BORDER <b>'+state.blank.border.toFixed(3)+'&quot;</b> · PRE-MADE, NO CUT'
       :' · OFFSET <b>'+state.offset.toFixed(3)+'&quot;</b>')+
-    ' · SOURCE <b>'+dpi+' DPI</b> at this size'+
+    ' · SOURCE <b>'+dpi+'</b>'+(anyRaster?' at this size':'')+
     (state.cut.blobCount>1?' · <span style="color:var(--warn)">'+state.cut.blobCount+' PIECES</span>':'');
 }
 function drawHatMockup(){
@@ -1238,6 +1267,35 @@ function watermarkTile(ctx,W,Hh){
   }
   ctx.restore();
 }
+/* v0.9: crop hat photos to the hat itself (SanMar shots are mostly white slab) —
+   Mockup Lab pattern: content bbox + pad, plus union with the placed patch rect */
+function hatContentBBox(ph){
+  if(ph.__bbox)return ph.__bbox;
+  const s=Math.min(1,300/Math.max(ph.width,ph.height));
+  const w=Math.max(2,Math.round(ph.width*s)),h=Math.max(2,Math.round(ph.height*s));
+  const t=document.createElement('canvas');t.width=w;t.height=h;
+  const x=t.getContext('2d');x.drawImage(ph,0,0,w,h);
+  let bb=null;
+  try{
+    const d=x.getImageData(0,0,w,h).data;
+    let minX=w,minY=h,maxX=-1,maxY=-1;
+    for(let y=0;y<h;y++)for(let xx=0;xx<w;xx++){
+      const i=(y*w+xx)*4;
+      if(d[i+3]>8&&(d[i]<243||d[i+1]<243||d[i+2]<243)){
+        if(xx<minX)minX=xx;if(xx>maxX)maxX=xx;
+        if(y<minY)minY=y;if(y>maxY)maxY=y;
+      }
+    }
+    if(maxX>=0){
+      const pad=Math.round(Math.max(w,h)*0.035);
+      bb={x:Math.max(0,minX-pad)/s,y:Math.max(0,minY-pad)/s,
+          x2:Math.min(w-1,maxX+pad)/s,y2:Math.min(h-1,maxY+pad)/s};
+    }
+  }catch(e){}
+  if(!bb)bb={x:0,y:0,x2:ph.width,y2:ph.height};
+  ph.__bbox=bb;
+  return bb;
+}
 function buildApprovalCanvas(){
   const W=1500,Hh=1080;
   const c=document.createElement('canvas');c.width=W;c.height=Hh;
@@ -1254,11 +1312,22 @@ function buildApprovalCanvas(){
   const areaY=160,areaH=Hh-260;
   if(state.hat.photo){
     const ph=state.hat.photo;
-    const s=Math.min((W-100)/ph.width,areaH/ph.height);
-    const mw=ph.width*s,mh=ph.height*s,mx=(W-mw)/2,my=areaY+(areaH-mh)/2;
+    /* crop to the hat (v0.9) — union the content bbox with the placed patch */
+    const bb=hatContentBBox(ph);
+    let cx0=bb.x,cy0=bb.y,cx1=bb.x2,cy1=bb.y2;
+    if(state.cut){
+      const pw=state.hat.scale*ph.width, phh=pw*state.cut.h/state.cut.w;
+      const rad=Math.hypot(pw,phh)/2;
+      const pcx=state.hat.cx*ph.width,pcy=state.hat.cy*ph.height;
+      cx0=Math.max(0,Math.min(cx0,pcx-rad));cy0=Math.max(0,Math.min(cy0,pcy-rad));
+      cx1=Math.min(ph.width,Math.max(cx1,pcx+rad));cy1=Math.min(ph.height,Math.max(cy1,pcy+rad));
+    }
+    const cw=Math.max(2,cx1-cx0),chh=Math.max(2,cy1-cy0);
+    const s=Math.min((W-100)/cw,areaH/chh);
+    const mw=cw*s,mh=chh*s,mx=(W-mw)/2,my=areaY+(areaH-mh)/2;
     /* render mockup at native then scale (shared painter incl. tilt) */
     const tmp=buildMockupCanvas();
-    ctx.drawImage(tmp,mx,my,mw,mh);
+    ctx.drawImage(tmp,cx0,cy0,cw,chh,mx,my,mw,mh);
   }else{
     const s=Math.min((W-500)/state.cut.w,(areaH-80)/state.cut.h);
     const patch=renderPatch(s,false);
@@ -1359,6 +1428,7 @@ function jobPayload(){
     invert:(state.eng.on&&state.eng.invert)||false,
     artName:state.artName,
     qty:q,
+    includesHat:!!($('prHat')&&$('prHat').checked),
     unitPrice:u?+u.price.toFixed(2):null,
     setupFee:u?u.C.setup:null,
     jobTotal:u?+(u.price*q+u.C.setup).toFixed(2):null,
@@ -1438,18 +1508,19 @@ function bindDrop(dropId,fileId,handler){
 /* ---------- OBJECT ENGINE (v0.8): images + text as layers, composited into state.art ---------- */
 let objSeq=0;
 function newId(){return 'o'+(++objSeq)+'_'+Date.now().toString(36);}
-function assetPut(canvas,name){
-  const id=newId();
-  /* store a downscaled dataURL immediately for cheap persistence */
+function makeAssetDataURL(canvas){
+  /* downscaled dataURL for cheap persistence */
   const s=Math.min(1,1000/Math.max(canvas.width,canvas.height));
-  let dataURL='';
   try{
     const t=document.createElement('canvas');
     t.width=Math.max(2,Math.round(canvas.width*s));t.height=Math.max(2,Math.round(canvas.height*s));
     t.getContext('2d').drawImage(canvas,0,0,t.width,t.height);
-    dataURL=t.toDataURL('image/png');
-  }catch(e){}
-  state.assets[id]={canvas,name,dataURL};
+    return t.toDataURL('image/png');
+  }catch(e){return '';}
+}
+function assetPut(canvas,name){
+  const id=newId();
+  state.assets[id]={canvas,name,dataURL:makeAssetDataURL(canvas)};
   return id;
 }
 function renderObjCanvas(o,ppi){
@@ -1539,7 +1610,10 @@ function compositeArt(){
     minY=Math.min(minY,r.o.yc-eh);maxY=Math.max(maxY,r.o.yc+eh);
   }
   const W=Math.max(0.05,maxX-minX),H=Math.max(0.05,maxY-minY);
-  const ppi=Math.min(RPPI,2200/Math.max(W,H));
+  /* v0.9 blur fix: composite resolution ADAPTS to design size — small designs
+     render at up to 600 ppi from the full-res sources so preview + 300 DPI
+     print never upscale a soft composite */
+  const ppi=Math.max(250,Math.min(600,2400/Math.max(W,H)));
   const c=document.createElement('canvas');
   c.width=Math.max(2,Math.round(W*ppi));c.height=Math.max(2,Math.round(H*ppi));
   const x=c.getContext('2d');x.imageSmoothingQuality='high';
@@ -1554,8 +1628,9 @@ function compositeArt(){
   state.art=c;
   state.artBox={minX,minY,w:W,h:H};
   state.artW=W;
-  $('artW').value=String(Math.min(8,Math.max(0.5,W)));
-  $('artWVal').textContent=W.toFixed(2)+'"';
+  /* slider is HEIGHT-based (v0.9) — internal artW stays width for the pipeline */
+  $('artW').value=String(Math.min(8,Math.max(0.3,H)));
+  $('artWVal').textContent=H.toFixed(2)+'"';
   state.artName=state.objects.length===1?(state.objects[0].name||'design'):'design';
   /* dpi warn: lowest effective dpi among raster layers */
   let worst=1e9,anyRaster=false;
@@ -1605,7 +1680,7 @@ function refreshLayers(){
     row.className='layer-row'+(o.id===state.selId?' sel':'');
     const t=document.createElement('span');t.className='lt';t.textContent=o.type==='text'?'TXT':'IMG';
     const n=document.createElement('span');n.className='ln';
-    n.textContent=o.type==='text'?('“'+(o.text||'')+'”'):(o.name||'image');
+    n.textContent=(o.type==='text'?('“'+(o.text||'')+'”'):(o.name||'image'))+(o.placeholder?' · placeholder':'');
     const up=document.createElement('button');up.textContent='▲';
     const dn=document.createElement('button');dn.textContent='▼';
     const dup=document.createElement('button');dup.textContent='⧉';
@@ -1614,61 +1689,136 @@ function refreshLayers(){
     dn.onclick=e=>{e.stopPropagation();const i=state.objects.indexOf(o);if(i>0){pushUndo();[state.objects[i],state.objects[i-1]]=[state.objects[i-1],state.objects[i]];objChanged();}};
     dup.onclick=e=>{e.stopPropagation();pushUndo();const cp=JSON.parse(JSON.stringify(o));cp.id=newId();cp.xc+=0.2;cp.yc+=0.2;state.objects.push(cp);state.selId=cp.id;objChanged();};
     del.onclick=e=>{e.stopPropagation();pushUndo();state.objects=state.objects.filter(x=>x.id!==o.id);if(state.selId===o.id)state.selId=null;objChanged();};
-    row.onclick=()=>{state.selId=o.id;refreshLayers();refresh();syncTextForm();};
+    row.onclick=()=>{state.selId=o.id;refreshLayers();refresh();};
     row.append(t,n,up,dn,dup,del);
     box.appendChild(row);
   });
-  $('txtApply').disabled=!(selObj()&&selObj().type==='text');
+  renderColorChips();
 }
 function addImageObject(file){
   loadArtFile(file,(canvas,isSvg)=>{
     pushUndo();
+    /* v0.9: the default Mayhem mark is a PLACEHOLDER — first real art replaces it */
+    state.objects=state.objects.filter(o=>!o.placeholder);
     const id=assetPut(canvas,file.name);
     state.assets[id].vector=isSvg;
-    const base=state.artBox?{x:state.artBox.minX+state.artBox.w/2+0.15,y:state.artBox.minY+state.artBox.h/2+0.15}:{x:0,y:0};
+    const base=state.artBox&&state.objects.length?{x:state.artBox.minX+state.artBox.w/2+0.15,y:state.artBox.minY+state.artBox.h/2+0.15}:{x:0,y:0};
     state.objects.push({id:newId(),type:'image',assetId:id,name:file.name,xc:base.x,yc:base.y,w:2.5,rot:0});
     state.selId=state.objects[state.objects.length-1].id;
     objChanged();
   });
 }
-function addTextObject(){
-  const txt=($('txtContent').value||'').trim();
-  if(!txt)return;
-  pushUndo();
-  const base=state.artBox?{x:state.artBox.minX+state.artBox.w/2,y:state.artBox.minY+state.artBox.h+0.35}:{x:0,y:0};
-  state.objects.push({
-    id:newId(),type:'text',text:txt,
-    font:$('txtFont').value,color:$('txtColor').value,bold:$('txtBold').checked,
-    arc:parseFloat($('txtArc').value)||0,
-    xc:base.x,yc:base.y,w:2.2,rot:0
-  });
-  state.selId=state.objects[state.objects.length-1].id;
-  objChanged();
-}
-function syncTextForm(){
-  const o=selObj();
-  if(o&&o.type==='text'){
-    $('txtContent').value=o.text;
-    $('txtFont').value=o.font;
-    $('txtColor').value=o.color;
-    $('txtBold').checked=!!o.bold;
-    $('txtArc').value=String(o.arc||0);
-    $('txtArcVal').textContent=(o.arc||0)===0?'flat':((o.arc>0?'arch up ':'arch down ')+Math.abs(o.arc));
+/* ---------- ART COLOR EDITOR (v0.9): recolor any layer, match Mockup Lab ink hexes ---------- */
+function hex2rgb(h){const m=/^#?([0-9a-f]{6})$/i.exec(h||'');if(!m)return null;const v=parseInt(m[1],16);return {r:v>>16&255,g:v>>8&255,b:v&255};}
+function rgb2hex(r,g,b){return '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1).toUpperCase();}
+function extractPalette(canvas){
+  const s=Math.min(1,280/Math.max(canvas.width,canvas.height));
+  const w=Math.max(2,Math.round(canvas.width*s)),h=Math.max(2,Math.round(canvas.height*s));
+  const t=document.createElement('canvas');t.width=w;t.height=h;
+  const x=t.getContext('2d');x.drawImage(canvas,0,0,w,h);
+  const d=x.getImageData(0,0,w,h).data;
+  const bins=new Map();
+  let total=0;
+  for(let i=0;i<d.length;i+=4){
+    if(d[i+3]<40)continue;
+    total++;
+    const key=(d[i]>>4<<8)|(d[i+1]>>4<<4)|(d[i+2]>>4);
+    let b=bins.get(key);
+    if(!b){b={n:0,r:0,g:0,b:0};bins.set(key,b);}
+    b.n++;b.r+=d[i];b.g+=d[i+1];b.b+=d[i+2];
   }
+  const arr=[...bins.values()].map(b=>({n:b.n,r:Math.round(b.r/b.n),g:Math.round(b.g/b.n),b:Math.round(b.b/b.n)}))
+    .sort((a,b)=>b.n-a.n);
+  const out=[];
+  for(const c of arr){
+    const hit=out.find(o=>(o.r-c.r)**2+(o.g-c.g)**2+(o.b-c.b)**2<42*42);
+    if(hit)hit.n+=c.n;
+    else out.push({...c});
+  }
+  return out.filter(c=>c.n>=Math.max(4,total*0.004)).slice(0,10)
+    .map(c=>({r:c.r,g:c.g,b:c.b,hex:rgb2hex(c.r,c.g,c.b)}));
 }
-$('txtAdd').onclick=addTextObject;
-$('txtApply').onclick=()=>{
+function applyRecolor(asset){
+  if(!asset.src)asset.src=asset.canvas;
+  const src=asset.src;
+  const c=document.createElement('canvas');c.width=src.width;c.height=src.height;
+  const x=c.getContext('2d');x.drawImage(src,0,0);
+  const map=asset.map||{};
+  const pal=asset.pal||[];
+  const maps=pal.map(p=>({p,to:map[p.hex]?hex2rgb(map[p.hex]):null}));
+  if(maps.some(m=>m.to)){
+    const id=x.getImageData(0,0,c.width,c.height),d=id.data;
+    const cl=v=>v<0?0:v>255?255:v;
+    for(let i=0;i<d.length;i+=4){
+      if(d[i+3]<8)continue;
+      let bi=-1,bd=1e9;
+      for(let k=0;k<maps.length;k++){
+        const p=maps[k].p;
+        const dd=(d[i]-p.r)*(d[i]-p.r)+(d[i+1]-p.g)*(d[i+1]-p.g)+(d[i+2]-p.b)*(d[i+2]-p.b);
+        if(dd<bd){bd=dd;bi=k;}
+      }
+      const m=bi>=0?maps[bi]:null;
+      if(m&&m.to){
+        d[i]=cl(d[i]+m.to.r-m.p.r);
+        d[i+1]=cl(d[i+1]+m.to.g-m.p.g);
+        d[i+2]=cl(d[i+2]+m.to.b-m.p.b);
+      }
+    }
+    x.putImageData(id,0,0);
+  }
+  asset.canvas=c;
+  asset.dataURL=makeAssetDataURL(c);
+}
+function activeImageObj(){
   const o=selObj();
-  if(!o||o.type!=='text')return;
+  if(o&&o.type==='image')return o;
+  const imgs=state.objects.filter(x=>x.type==='image');
+  return imgs.length===1?imgs[0]:null;
+}
+let _chipT=null;
+function renderColorChips(){
+  const box=$('colorChips');if(!box)return;
+  box.innerHTML='';
+  const o=activeImageObj();
+  const reset=$('colorReset');
+  if(!o){
+    reset.style.display='none';
+    $('colorHint').textContent=state.objects.filter(x=>x.type==='image').length>1?'Select a layer to edit its colors.':'';
+    return;
+  }
+  const asset=state.assets[o.assetId];
+  if(!asset){reset.style.display='none';return;}
+  if(!asset.pal){asset.src=asset.src||asset.canvas;asset.pal=extractPalette(asset.src);}
+  $('colorHint').textContent=asset.pal.length?'':'No solid colors detected in this layer.';
+  asset.pal.forEach(p=>{
+    const cur=(asset.map&&asset.map[p.hex])||p.hex;
+    const chip=document.createElement('label');
+    chip.className='chip'+((asset.map&&asset.map[p.hex])?' mod':'');
+    chip.style.background=cur;
+    chip.title=p.hex+((asset.map&&asset.map[p.hex])?(' → '+asset.map[p.hex]):'');
+    const inp=document.createElement('input');inp.type='color';inp.value=cur;
+    inp.oninput=()=>{
+      asset.map=asset.map||{};
+      asset.map[p.hex]=inp.value.toUpperCase();
+      chip.style.background=inp.value;
+      clearTimeout(_chipT);
+      _chipT=setTimeout(()=>{applyRecolor(asset);compositeArt();computeCut();refresh();},160);
+    };
+    inp.onchange=()=>{clearTimeout(_chipT);applyRecolor(asset);objChanged();};
+    chip.appendChild(inp);
+    box.appendChild(chip);
+  });
+  reset.style.display=(asset.map&&Object.keys(asset.map).length)?'':'none';
+}
+$('colorReset').onclick=()=>{
+  const o=activeImageObj();
+  if(!o)return;
+  const asset=state.assets[o.assetId];
+  if(!asset||!asset.src)return;
   pushUndo();
-  o.text=($('txtContent').value||o.text).trim()||o.text;
-  o.font=$('txtFont').value;o.color=$('txtColor').value;o.bold=$('txtBold').checked;
-  o.arc=parseFloat($('txtArc').value)||0;
+  asset.map={};
+  applyRecolor(asset);
   objChanged();
-};
-$('txtArc').oninput=()=>{
-  const v=parseFloat($('txtArc').value)||0;
-  $('txtArcVal').textContent=v===0?'flat':((v>0?'arch up ':'arch down ')+Math.abs(v));
 };
 $('undoBtn').onclick=doUndo;
 $('redoBtn').onclick=doRedo;
@@ -1701,7 +1851,7 @@ $('shapeSeg').querySelectorAll('button').forEach(b=>{
     state.shape=b.dataset.shape;
     state.presetId=null;   /* picking a custom shape leaves preset mode */
     renderPresets();
-    $('radiusRow').hidden=state.shape!=='round';
+    $('radiusRow').hidden=!(state.shape==='round'||state.shape==='hexcut');
     recompute();
   };
 });
@@ -1713,11 +1863,11 @@ const bindRange=(id,valId,fmt,key,obj)=>{
     recompute();
   };
 };
-/* artW slider (v0.8): scales the WHOLE design uniformly about its center */
+/* design-height slider (v0.9): scales the WHOLE design uniformly about its center */
 $('artW').oninput=()=>{
   if(!state.objects.length||!state.artBox)return;
   const target=parseFloat($('artW').value);
-  const cur=state.artBox.w;
+  const cur=state.artBox.h;
   const f=target/cur;
   if(!isFinite(f)||f<=0)return;
   const cx0=state.artBox.minX+cur/2, cy0=state.artBox.minY+state.artBox.h/2;
@@ -1771,7 +1921,7 @@ $('tabGang').onclick=()=>setTab('gang');
 /* ---------- Richardson 112 catalog (v0.2) ---------- */
 const HAT_BASE='hats/R112/';
 const HAT_CALIB={front:{cx:0.505,cy:0.235,scale:0.30},left:{cx:0.46,cy:0.245,scale:0.26},back:{cx:0.5,cy:0.22,scale:0.24}};
-const cat={colors:null,slug:null,view:'left'};
+const cat={colors:null,slug:null,view:'front'};
 function catInit(){
   fetch(HAT_BASE+'colors.json').then(r=>{if(!r.ok)throw new Error('404');return r.json();}).then(map=>{
     cat.colors=map;
@@ -1780,10 +1930,23 @@ function catInit(){
   }).catch(()=>{$('catPending').hidden=false;});
 }
 function renderCatList(q){
+  /* v0.9: Mockup Lab smart search — multi-word AND match with prefix scoring
+     ("hthr grey" or "navy white" find the right colorways) */
   const box=$('catList');box.innerHTML='';
-  const ql=(q||'').toLowerCase();
+  const toks=(q||'').toLowerCase().split(/\s+/).filter(Boolean);
+  const scored=[];
   Object.entries(cat.colors).forEach(([slug,name])=>{
-    if(ql&&!name.toLowerCase().includes(ql))return;
+    const nl=name.toLowerCase(),hay=slug.toLowerCase()+' '+nl;
+    let score=0,ok=true;
+    toks.forEach(t=>{
+      if(!hay.includes(t)){ok=false;return;}
+      score+=10;
+      if(nl.startsWith(t))score+=6;
+      if(nl.split(/[\s/,-]+/).some(w=>w.startsWith(t)))score+=4;
+    });
+    if(ok)scored.push({slug,name,score});
+  });
+  scored.sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).forEach(({slug,name})=>{
     const d=document.createElement('div');
     d.className='cat-item'+(slug===cat.slug?' on':'');
     d.textContent=name;
@@ -1971,7 +2134,12 @@ const MATERIALS=[
     {n:'White Football / Black',t:'#E1E4E9',e:'#1A1A1A'}
    ]}
 ];
+let _grainURL=null;
+function grainURL(){return _grainURL||(_grainURL=grainTile().toDataURL('image/png'));}
+function leaLum(hex){const c=hex2rgb(hex)||{r:128,g:128,b:128};return 0.299*c.r+0.587*c.g+0.114*c.b;}
 function renderLeaGrid(q){
+  /* v0.9: PatchForge-style swatch tiles — leather grain in the swatch itself,
+     name on the tile, reveal-color corner (our own grain render, our data) */
   const box=$('leaGrid');box.innerHTML='';
   const ql=(q||'').toLowerCase();
   MATERIALS.forEach((m,mi)=>{
@@ -1980,13 +2148,21 @@ function renderLeaGrid(q){
     const h=document.createElement('div');h.className='lea-cat';h.textContent=m.cat;
     box.appendChild(h);
     const grid=document.createElement('div');grid.className='lea-grid';
+    const silicone=/silicone/i.test(m.cat);
     hits.forEach(o=>{
       const d=document.createElement('div');
       d.className='lea-sw'+(state.eng.cat===m.cat&&state.eng.name===o.it.n?' on':'');
       d.title=o.it.n;
-      d.style.background=o.it.t;
-      const r=document.createElement('div');r.className='rev';r.style.background=o.it.e;
-      d.appendChild(r);
+      d.style.backgroundColor=o.it.t;
+      if(!silicone)d.style.backgroundImage='url('+grainURL()+')';
+      const nm=document.createElement('div');nm.className='nm';
+      nm.textContent=o.it.n;
+      nm.style.color=leaLum(o.it.t)>150?'rgba(0,0,0,.82)':'rgba(255,255,255,.92)';
+      nm.style.textShadow=leaLum(o.it.t)>150?'0 1px 1px rgba(255,255,255,.4)':'0 1px 2px rgba(0,0,0,.55)';
+      const r=document.createElement('div');r.className='rev';
+      r.style.backgroundColor=o.it.e;
+      if(!silicone)r.style.backgroundImage='url('+grainURL()+')';
+      d.append(nm,r);
       d.onclick=()=>selectLea(mi,o.ii);
       grid.appendChild(d);
     });
@@ -2104,8 +2280,8 @@ renderPresets();
 
 /* ---------- LIVE PRICING (v0.6 — the shop's real costs, editable, saved in-browser) ---------- */
 const COST_KEY='mayhemPatchCosts';
-const COST_DEFAULTS={sheet:30,waste:15,blank:2.5,labor:1.0,ink:0.05,setup:10,markup:2.5,min:2.0,t12:0.85,t24:0.75,t48:0.65,t96:0.55};
-const COST_FIELDS={cSheet:'sheet',cWaste:'waste',cBlank:'blank',cLabor:'labor',cInk:'ink',cSetup:'setup',cMarkup:'markup',cMin:'min',cT12:'t12',cT24:'t24',cT48:'t48',cT96:'t96'};
+const COST_DEFAULTS={sheet:30,waste:15,blank:2.5,labor:1.0,ink:0.05,setup:10,hat:4.25,hatLab:0.75,markup:2.5,min:2.0,t12:0.85,t24:0.75,t48:0.65,t96:0.55};
+const COST_FIELDS={cSheet:'sheet',cWaste:'waste',cBlank:'blank',cLabor:'labor',cInk:'ink',cSetup:'setup',cHat:'hat',cHatLab:'hatLab',cMarkup:'markup',cMin:'min',cT12:'t12',cT24:'t24',cT48:'t48',cT96:'t96'};
 function costs(){
   try{return Object.assign({},COST_DEFAULTS,JSON.parse(localStorage.getItem(COST_KEY)||'{}'));}
   catch(e){return Object.assign({},COST_DEFAULTS);}
@@ -2117,9 +2293,10 @@ function unitPrice(q){
   const area=state.cut.w*state.cut.h;
   const mat=state.cut.emb?0:(state.cut.blank?C.blank:(area*(1+C.waste/100))/(12*24)*C.sheet);
   const ink=(state.eng.on||state.cut.emb)?0:area*C.ink;
-  const cost=mat+C.labor+ink;
+  const hat=($('prHat')&&$('prHat').checked)?(C.hat+C.hatLab):0; /* v0.9: price the whole hat */
+  const cost=mat+C.labor+ink+hat;
   const price=Math.max(C.min,cost*C.markup*tierMult(q,C));
-  return {price,cost,mat,ink,C};
+  return {price,cost,mat,ink,hat,C};
 }
 function updatePrice(){
   if(!$('prQty'))return;
@@ -2133,8 +2310,9 @@ function updatePrice(){
   }
   const total=u.price*q+u.C.setup;
   $('prBig').innerHTML='$'+u.price.toFixed(2)+' <small>each</small>&ensp;·&ensp;$'+total.toFixed(2)+' <small>job @ '+q+' (incl. $'+u.C.setup.toFixed(0)+' setup)</small>';
-  $('prBreak').textContent='cost/patch $'+u.cost.toFixed(2)+'  =  material $'+u.mat.toFixed(2)+
+  $('prBreak').textContent='cost/'+(u.hat?'hat':'patch')+' $'+u.cost.toFixed(2)+'  =  material $'+u.mat.toFixed(2)+
     (u.ink?' + ink $'+u.ink.toFixed(2):'')+' + labor/machine $'+u.C.labor.toFixed(2)+
+    (u.hat?' + hat $'+u.C.hat.toFixed(2)+' + press $'+u.C.hatLab.toFixed(2):'')+
     '  ·  markup ×'+u.C.markup+(state.cut.blank?'  ·  pre-made blank':'')+(state.cut.emb?'  ·  EMBROIDERY: set labor to cover stitching + digitizing':'');
   let html='<tr><th>qty</th><th>each</th><th>job total</th></tr>';
   for(const t of [12,24,48,96,144]){
@@ -2165,6 +2343,7 @@ $('cReset').onclick=()=>{
   updatePrice();
 };
 $('prQty').oninput=updatePrice;
+$('prHat').onchange=()=>refresh();
 loadCostUI();
 function buildEngraveCanvas(){
   const prod=renderPatch(DPI,true); /* black-on-transparent engrave form */
@@ -2250,9 +2429,15 @@ $('vecBtn').onclick=async()=>{
    Same-frame rule: every sheet export spans the exact full sheet W x H.     */
 let gangId=0;
 const REG_INSET=0.45;   /* extra nest inset when reg marks are on (in) */
+/* v0.9: reg marks are a PRINT-to-cut alignment aid — UV print sheets only.
+   Engrave sheets run raster+cut in one XCS job (same frame), no marks needed. */
+function gangMarksOn(){
+  const g=state.gang;
+  return g.marks&&g.items.some(i=>i.sty&&i.sty.mode==='print');
+}
 function gangUsable(){
   const g=state.gang;
-  const inset=g.margin+(g.marks?REG_INSET:0);
+  const inset=g.margin+(gangMarksOn()?REG_INSET:0);
   return {x:inset,y:inset,w:g.w-2*inset,h:g.h-2*inset};
 }
 function gangNest(){
@@ -2307,15 +2492,38 @@ function placedPolys(pl){
   }
   return out;
 }
+function placedBBox(){
+  const g=state.gang;
+  if(!g.placed||!g.placed.length)return null;
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  for(const p of g.placed){
+    x0=Math.min(x0,p.x);y0=Math.min(y0,p.y);
+    x1=Math.max(x1,p.x+p.w);y1=Math.max(y1,p.y+p.h);
+  }
+  return {x0,y0,x1,y1};
+}
 function regMarkPts(){
-  const g=state.gang,o=g.margin+0.15;
-  return [[o,o],[g.w-o,o],[o,g.h-o],[g.w-o,g.h-o]];
+  /* v0.9: marks hug the USED area, not the sheet corners — cut the leatherette
+     to the mark rectangle instead of burning a whole sheet on a 17% nest */
+  const g=state.gang,b=placedBBox();
+  if(!b)return [];
+  const o=0.25;
+  const x0=Math.max(0.14,b.x0-o),y0=Math.max(0.14,b.y0-o);
+  const x1=Math.min(g.w-0.14,b.x1+o),y1=Math.min(g.h-0.14,b.y1+o);
+  return [[x0,y0],[x1,y0],[x0,y1],[x1,y1]];
 }
 function drawRegMarks(ctx,ppi){
+  const pts=regMarkPts();
+  if(!pts.length)return;
   const r=0.12*ppi;
   ctx.save();
+  /* faint trim rectangle through the mark centers — cut raw material to this */
+  ctx.strokeStyle='rgba(120,120,120,0.8)';ctx.lineWidth=Math.max(1,0.008*ppi);
+  ctx.setLineDash([0.12*ppi,0.10*ppi]);
+  ctx.strokeRect(pts[0][0]*ppi,pts[0][1]*ppi,(pts[3][0]-pts[0][0])*ppi,(pts[3][1]-pts[0][1])*ppi);
+  ctx.setLineDash([]);
   ctx.strokeStyle='#000';ctx.lineWidth=Math.max(1,0.02*ppi);
-  for(const [cx,cy] of regMarkPts()){
+  for(const [cx,cy] of pts){
     ctx.beginPath();ctx.arc(cx*ppi,cy*ppi,r,0,Math.PI*2);ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(cx*ppi-r*1.6,cy*ppi);ctx.lineTo(cx*ppi+r*1.6,cy*ppi);
@@ -2347,7 +2555,7 @@ function drawGangSheet(){
   ctx.strokeStyle='rgba(75,156,211,.55)';ctx.setLineDash([6,5]);ctx.lineWidth=1;
   ctx.strokeRect(g.margin*ppi,g.margin*ppi,(g.w-2*g.margin)*ppi,(g.h-2*g.margin)*ppi);
   ctx.restore();
-  if(g.marks)drawRegMarks(ctx,ppi);
+  if(gangMarksOn())drawRegMarks(ctx,ppi);
   drawGangPatches(ctx,ppi,false);
   if(g.placed){
     ctx.save();
@@ -2410,7 +2618,7 @@ function buildGangPrintCanvas(){
   c.width=Math.round(g.w*DPI);c.height=Math.round(g.h*DPI);
   const ctx=c.getContext('2d');
   drawGangPatches(ctx,DPI,true);
-  if(g.marks)drawRegMarks(ctx,DPI);
+  if(gangMarksOn())drawRegMarks(ctx,DPI);
   return c;
 }
 function buildGangCutSvg(){
@@ -2508,7 +2716,10 @@ $('gsDlZip').onclick=async()=>{
     'MAYHEM PATCH LAB - GANG SHEET EXPORT\n'+
     'Sheet: '+g.w+'" x '+g.h+'"  ·  '+(g.placed?g.placed.length:0)+' patches  ·  utilization '+Math.round(g.util*100)+'%\n\n'+
     'PRINT (eufyMake E1): -print.png is the FULL SHEET at 300 DPI, transparent,\n'+
-    '  with registration marks '+(g.marks?'ON':'OFF')+'. Print at exact size - do not scale.\n'+
+    '  with registration marks '+(gangMarksOn()?'ON (UV print sheets only)':'OFF')+'. Print at exact size - do not scale.\n'+
+    (gangMarksOn()
+      ?'  The marks + dashed trim rectangle frame ONLY the used area - cut the raw\n'+
+       '  leatherette to the trim rectangle, no need to feed a full sheet.\n':'')+
     (g.items.some(i=>i.sty&&i.sty.mode==='engrave')
       ?'  NOTE: engrave-mode patches on this sheet render as BLACK ENGRAVE ART, not\n'+
        '  printed color - run those areas on the P3 as an engrave, not the E1.\n':'')+
@@ -2595,7 +2806,7 @@ $('gsDlZip').onclick=async()=>{
     if(!a)return;
     const hit=hitObject(a);
     if(hit){
-      if(state.selId!==hit.id){state.selId=hit.id;refreshLayers();syncTextForm();}
+      if(state.selId!==hit.id){state.selId=hit.id;refreshLayers();}
       pushUndo();
       ed={mode:'move',id:hit.id,startAx:a.x,startAy:a.y,startXc:hit.xc,startYc:hit.yc};
       cv.setPointerCapture(e.pointerId);
@@ -2675,7 +2886,7 @@ function restoreDesign(d){
     /* geometry params */
     state.shape=d.shape||'contour';
     $('shapeSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.shape===state.shape));
-    $('radiusRow').hidden=state.shape!=='round';
+    $('radiusRow').hidden=!(state.shape==='round'||state.shape==='hexcut');
     state.presetId=d.presetId||null;
     state.offset=d.offset!=null?d.offset:0.125;$('cutOff').value=String(state.offset);$('cutOffVal').textContent=state.offset.toFixed(3)+'"';
     state.radius=d.radius!=null?d.radius:0.25;$('cornerR').value=String(state.radius);
@@ -2699,7 +2910,7 @@ function restoreDesign(d){
     renderPresets();
     /* hat */
     if(d.hat){
-      state.hat.shade=d.hat.shade!==false;$('hatShade').checked=state.hat.shade;
+      state.hat.shade=!!d.hat.shade;$('hatShade').checked=state.hat.shade; /* v0.9: default OFF */
       state.hat.rot=d.hat.rot||0;$('hatRot').value=String(state.hat.rot);$('hatRotVal').textContent=state.hat.rot+'°';
       const applyPos=()=>{
         state.hat.cx=d.hat.cx;state.hat.cy=d.hat.cy;state.hat.scale=d.hat.scale||0.3;state.hat.rot=d.hat.rot||0;
@@ -2784,7 +2995,7 @@ function loadDefaultLogo(){
       if(state.objects.length)return; /* user already added something */
       const id=assetPut(canvas,'mayhem-logo.svg');
       state.assets[id].vector=true;
-      state.objects.push({id:newId(),type:'image',assetId:id,name:'mayhem-logo.svg',xc:0,yc:0,w:3,rot:0});
+      state.objects.push({id:newId(),type:'image',assetId:id,name:'mayhem-logo.svg',xc:0,yc:0,w:3,rot:0,placeholder:true});
       objChanged();
     });
   }).catch(()=>{});
@@ -2797,6 +3008,9 @@ try{
     $('dsStatus').textContent='Restored your last session (autosave).';
   }else{
     loadDefaultLogo();
+    /* v0.9: fresh sessions start in ENGRAVE (most of the patch business), then emb, then UV */
+    const eb=document.querySelector('#modeSeg [data-mode="engrave"]');
+    if(eb)eb.onclick();
   }
 }catch(e){}
 
