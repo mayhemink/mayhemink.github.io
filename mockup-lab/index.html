@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.8 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.9 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -492,8 +492,8 @@
       <h3><span class="pn">2</span> Logos</h3>
       <p class="desc">Drop the art in. SVG is best — one setup covers every shirt in the job.</p>
       <div class="row2">
-        <div class="drop" id="artDropF"><b>Front art</b>SVG (best) or transparent PNG<input type="file" id="artInputF" accept="image/*,.svg"></div>
-        <div class="drop" id="artDropB"><b>Back art</b>SVG (best) or transparent PNG<input type="file" id="artInputB" accept="image/*,.svg"></div>
+        <div class="drop" id="artDropF"><b>Front art</b>SVG (best), transparent PNG, or PDF<input type="file" id="artInputF" accept="image/*,.svg,.pdf,application/pdf"></div>
+        <div class="drop" id="artDropB"><b>Back art</b>SVG (best), transparent PNG, or PDF<input type="file" id="artInputB" accept="image/*,.svg,.pdf,application/pdf"></div>
       </div>
       <div class="checkline"><input type="checkbox" id="dupBack"><span>Same art on the back</span></div>
       <div class="checkline" id="lineLive"><input type="checkbox" id="liveInk" checked><span>Recolor art to the chosen inks</span></div>
@@ -705,7 +705,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.7 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.9 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2481,10 +2481,85 @@ function trimCanvas(c){
   t.getContext('2d').drawImage(c,bb.minX,bb.minY,w,h,0,0,w,h);
   return t;
 }
+/* ================= v8.9 PDF ART =================
+   Joe saves art as PDFs — accept them directly. pdf.js (Mozilla) is lazy-loaded
+   from cdnjs ONLY when a PDF is dropped, so the app stays a lean single file;
+   PDF drops need internet (same as the hosted catalog). Page 1 by default,
+   quick prompt when the PDF has more pages. PDFs are an opaque white page, so
+   after rasterizing we knock out ONLY the border-connected near-white — interior
+   white art (white ink on darks!) is preserved. If the knockout would erase
+   everything (an all-white page), we fall back to the untouched raster. From
+   there the canvas rides the exact same pipeline as a PNG. */
+const PDFJS_URL='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+const PDFJS_WORKER='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let __pdfjsP=null;
+function isPdfFile(f){return /pdf/i.test(f.type||'')||/\.pdf$/i.test(f.name||'');}
+function ensurePdfjs(){
+  if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
+  if(__pdfjsP)return __pdfjsP;
+  __pdfjsP=new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src=PDFJS_URL;
+    s.onload=()=>{try{window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;res(window.pdfjsLib);}catch(e){rej(e);}};
+    s.onerror=()=>{__pdfjsP=null;rej(new Error('offline'));};
+    document.head.appendChild(s);
+  });
+  return __pdfjsP;
+}
+/* knock out the opaque page: flood-fill from the canvas borders through
+   near-white pixels only. Interior whites never get touched. */
+function knockoutBorderWhite(c,tol){
+  tol=tol==null?18:tol;
+  const w=c.width,h=c.height,ctx=c.getContext('2d');
+  let im;try{im=ctx.getImageData(0,0,w,h);}catch(e){return c;}
+  const d=im.data,seen=new Uint8Array(w*h),q=new Int32Array(w*h);
+  let qe=0,qs=0;
+  const isW=i=>{const p=i*4;return d[p+3]>0&&(255-d[p])<=tol&&(255-d[p+1])<=tol&&(255-d[p+2])<=tol;};
+  const push=i=>{if(!seen[i]&&isW(i)){seen[i]=1;q[qe++]=i;}};
+  for(let x=0;x<w;x++){push(x);push((h-1)*w+x);}
+  for(let y=0;y<h;y++){push(y*w);push(y*w+w-1);}
+  while(qs<qe){
+    const i=q[qs++],x=i%w,y=(i-x)/w;
+    if(x>0)push(i-1);if(x<w-1)push(i+1);
+    if(y>0)push(i-w);if(y<h-1)push(i+w);
+  }
+  if(!qe)return c;
+  for(let i=0;i<w*h;i++)if(seen[i])d[i*4+3]=0;
+  ctx.putImageData(im,0,0);
+  return c;
+}
+function loadPdfArt(file,cb){
+  ensurePdfjs()
+    .then(pdfjs=>file.arrayBuffer().then(buf=>pdfjs.getDocument({data:buf}).promise))
+    .then(async doc=>{
+      let pn=1;
+      if(doc.numPages>1){
+        const v=prompt('This PDF has '+doc.numPages+' pages — which page is the art? (1-'+doc.numPages+')','1');
+        pn=Math.min(doc.numPages,Math.max(1,parseInt(v,10)||1));
+      }
+      const page=await doc.getPage(pn);
+      const vp1=page.getViewport({scale:1});
+      const TARGET=2400,sc=TARGET/Math.max(vp1.width,vp1.height);
+      const vp=page.getViewport({scale:sc});
+      const c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(vp.width));c.height=Math.max(1,Math.round(vp.height));
+      await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+      const bak=document.createElement('canvas');bak.width=c.width;bak.height=c.height;
+      bak.getContext('2d').drawImage(c,0,0);
+      knockoutBorderWhite(c);
+      cb(trimCanvas(alphaBBox(c)?c:bak));
+    })
+    .catch(err=>{
+      alert(err&&err.message==='offline'
+        ?'PDF support needs an internet connection (the PDF reader loads on demand). Get online, or export a PNG/SVG.'
+        :'Could not read that PDF — it may be corrupted or password-protected. Re-save it, or export a PNG/SVG.');
+    });
+}
 /* art loader: rasterizes SVG at high resolution (crisp at any print size), passes
    raster formats straight through. Always calls back with a canvas, auto-trimmed
    to the visible art (v7.2.2). */
 function loadArtFile(file,cb){
+  if(isPdfFile(file)){loadPdfArt(file,cb);return;}   /* v8.9 */
   const isSvg=/svg/i.test(file.type)||/\.svg$/i.test(file.name);
   if(!isSvg){
     loadImgFile(file,img=>{
