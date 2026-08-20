@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.9 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.9.1 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -705,7 +705,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.9 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.9.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2528,6 +2528,63 @@ function knockoutBorderWhite(c,tol){
   ctx.putImageData(im,0,0);
   return c;
 }
+/* v8.9.1 — does the render carry real transparency of its own? */
+function hasTransparency(c){
+  const ctx=c.getContext('2d');
+  let im;try{im=ctx.getImageData(0,0,c.width,c.height);}catch(e){return false;}
+  const d=im.data;let n=0;
+  for(let i=3;i<d.length;i+=4)if(d[i]<250)n++;
+  return n>(d.length/4)*0.005;
+}
+/* v8.9.1 — un-mix one pixel from a white matte: alpha = distance from pure
+   white, colour re-saturated to what it was before white bled in. */
+function unmixWhite(d,p){
+  const a2=255-Math.min(d[p],d[p+1],d[p+2]);
+  if(a2>=d[p+3])return;
+  if(a2<=0){d[p+3]=0;return;}
+  for(let k=0;k<3;k++)d[p+k]=Math.max(0,255-Math.round((255-d[p+k])*255/a2));
+  d[p+3]=a2;
+}
+/* v8.9.1 — defringe: kill the white halo the knockout leaves on antialiased
+   edges by un-mixing every opaque pixel within 2px of transparency. */
+function defringeWhite(c){
+  const w=c.width,h=c.height,ctx=c.getContext('2d');
+  let im;try{im=ctx.getImageData(0,0,w,h);}catch(e){return c;}
+  const d=im.data;
+  let band=new Uint8Array(w*h);
+  for(let i=0;i<w*h;i++)if(d[i*4+3]===0)band[i]=1;
+  for(let it=0;it<2;it++){
+    const nb=new Uint8Array(band);
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+      const i=y*w+x;
+      if(band[i])continue;
+      if((x>0&&band[i-1])||(x<w-1&&band[i+1])||(y>0&&band[i-w])||(y<h-1&&band[i+w]))nb[i]=2;
+    }
+    band=nb;
+  }
+  for(let i=0;i<w*h;i++)if(band[i]===2)unmixWhite(d,i*4);
+  ctx.putImageData(im,0,0);
+  return c;
+}
+/* v8.9.1 — near-white still sitting in the art after the border knockout
+   (letter counters etc.) */
+function countInteriorWhite(c){
+  const ctx=c.getContext('2d');
+  let im;try{im=ctx.getImageData(0,0,c.width,c.height);}catch(e){return 0;}
+  const d=im.data;let n=0;
+  for(let p=0;p<d.length;p+=4)if(d[p+3]>200&&d[p]>243&&d[p+1]>243&&d[p+2]>243)n++;
+  return n;
+}
+/* v8.9.1 — remove ALL white: un-mix the whole image from the white matte.
+   Pure white goes transparent, colours stay, edges come out clean. */
+function whiteMatteAll(c){
+  const ctx=c.getContext('2d');
+  let im;try{im=ctx.getImageData(0,0,c.width,c.height);}catch(e){return c;}
+  const d=im.data;
+  for(let p=0;p<d.length;p+=4)if(d[p+3]>0)unmixWhite(d,p);
+  ctx.putImageData(im,0,0);
+  return c;
+}
 function loadPdfArt(file,cb){
   ensurePdfjs()
     .then(pdfjs=>file.arrayBuffer().then(buf=>pdfjs.getDocument({data:buf}).promise))
@@ -2543,11 +2600,19 @@ function loadPdfArt(file,cb){
       const vp=page.getViewport({scale:sc});
       const c=document.createElement('canvas');
       c.width=Math.max(1,Math.round(vp.width));c.height=Math.max(1,Math.round(vp.height));
-      await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+      /* v8.9.1: render WITHOUT the default white page — many vector PDFs never
+         paint a background, and then we get true transparency for free: no
+         knockout, no halo, letter holes already open, white ink untouched. */
+      await page.render({canvasContext:c.getContext('2d'),viewport:vp,background:'rgba(0,0,0,0)'}).promise;
+      if(hasTransparency(c)){cb(trimCanvas(c));return;}
+      /* opaque page → knock out border-connected white, then clean the halo */
       const bak=document.createElement('canvas');bak.width=c.width;bak.height=c.height;
       bak.getContext('2d').drawImage(c,0,0);
-      knockoutBorderWhite(c);
-      cb(trimCanvas(alphaBBox(c)?c:bak));
+      knockoutBorderWhite(c,24);
+      if(!alphaBBox(c)){cb(trimCanvas(bak));return;}
+      defringeWhite(c);
+      if(countInteriorWhite(c)>256&&confirm('This art still has white INSIDE it (like the holes in letters).\n\nOK = remove ALL white (it\u2019s background)\nCancel = keep the white (it will print as white ink)'))whiteMatteAll(c);
+      cb(trimCanvas(c));
     })
     .catch(err=>{
       alert(err&&err.message==='offline'
