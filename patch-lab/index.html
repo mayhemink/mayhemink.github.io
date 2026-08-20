@@ -22,12 +22,12 @@
   .head-sub{color:var(--muted);font-size:13px;margin:4px 0 0;max-width:680px;}
   .machine-badge{font-family:'JetBrains Mono',monospace;font-size:11px;border:1px solid var(--line2);padding:6px 12px;border-radius:2px;color:var(--muted);}
   /* v0.11 layout: build flow LEFT · live preview CENTER (sticky) · outputs RIGHT · downloads pinned BOTTOM */
-  .app{max-width:1700px;margin:20px auto 0;padding:0 26px;display:grid;grid-template-columns:330px minmax(0,1fr) 330px;grid-template-areas:"a stage b";gap:16px;align-items:start;}
+  .app{max-width:1700px;margin:20px auto 0;padding:0 22px;display:grid;grid-template-columns:minmax(272px,320px) minmax(0,1fr) minmax(272px,320px);grid-template-areas:"a stage b";gap:14px;align-items:start;}
   #colA{grid-area:a;}
   #colB{grid-area:b;}
   .col-stage{grid-area:stage;position:sticky;top:14px;}
   .col-left{display:flex;flex-direction:column;gap:14px;position:sticky;top:14px;max-height:calc(100vh - 110px);overflow:auto;padding-right:2px;}
-  @media(max-width:1500px){.app{grid-template-columns:380px minmax(0,1fr);grid-template-areas:"a stage" "b stage";}.col-left{position:static;max-height:none;}}
+  @media(max-width:1150px){.app{grid-template-columns:380px minmax(0,1fr);grid-template-areas:"a stage" "b stage";}.col-left{position:static;max-height:none;}}
   @media(max-width:1100px){.app{grid-template-columns:1fr;grid-template-areas:"stage" "a" "b";}.col-stage{position:static;}}
   #dlBar{position:sticky;bottom:0;z-index:40;max-width:1700px;margin:14px auto 0;padding:0 26px 10px;}
   #dlBar .panel{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;box-shadow:0 -8px 26px rgba(0,0,0,.5);border-color:var(--line2);}
