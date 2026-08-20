@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.11 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.12 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -631,6 +631,9 @@
         <button class="btn" id="dlJobZip">⬇ SAVE THE WHOLE JOB — ONE FILE</button>
         <button class="btn ghost" id="dlAllApprovals">⬇ CUSTOMER APPROVAL PDF — ONE FILE, A PAGE PER SHIRT</button>
         <button class="btn ghost" id="dlShopSheet">⬇ SHOP PRINT SHEET ONLY</button>
+      </div>
+      <div class="btnrow" style="margin-top:8px;">
+        <button class="btn ghost sm" id="dlCleanZip">⬇ CLEAN MOCKUPS ZIP — JUST LOGOS ON SHIRTS, NO BRANDING</button>
       </div>
       <div class="mrow" id="manifestRow"></div>
       <div class="btnrow" id="boardCtl" style="margin-top:12px;align-items:center;">
@@ -3608,6 +3611,66 @@ $('dlJobZip').onclick=async()=>{
     b.textContent=orig;b.disabled=false;
     alert('Could not build the job file — try again or use the single downloads.');
   }
+};
+
+/* ============ v8.12 CLEAN MOCKUPS ZIP (rare one-off) ============
+   Per-shirt PNG with ZERO chrome — no header, swatch strip, footer or big
+   watermark. Just the garment(s) with the art placed, white background, plus
+   a tiny corner mark (Kolton-approved exception to the watermark rule).
+   Manual button only — NEVER added to the job ZIP. */
+function cleanMockFor(item,ret){
+  const g=garmentIndex().find(x=>x.styleKey===item.styleKey&&slug(x.colorName)===slug(item.colorName));
+  if(!g)return;
+  const sides=[];
+  if(g.front)sides.push(['front',g.front]);
+  if(g.back)sides.push(['back',g.back]);
+  if(!sides.length)return;
+  const W=sides.length===2?1600:900,H=1000;
+  const pg=document.createElement('canvas');pg.width=W;pg.height=H;
+  const ctx=pg.getContext('2d');
+  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);
+  const gap=40,cardW=(W-gap*(sides.length+1))/sides.length;
+  let x0=gap;
+  sides.forEach(([side,photo])=>{
+    const cv=document.createElement('canvas');
+    renderMock(photo,cv,side,state.loc[side],false);
+    const gb=garmentBBox(cv);
+    const boxH=H-100;
+    const scl=Math.min(cardW/gb.w,boxH/gb.h);
+    const fitW=gb.w*scl,fitH=gb.h*scl;
+    ctx.drawImage(cv,gb.x,gb.y,gb.w,gb.h,x0+(cardW-fitW)/2,40+(boxH-fitH)/2,fitW,fitH);
+    x0+=cardW+gap;
+  });
+  ctx.fillStyle='rgba(120,126,131,0.55)';
+  ctx.font='700 13px "JetBrains Mono", monospace';
+  ctx.textAlign='right';
+  ctx.fillText('MAYHEM INK',W-16,H-14);
+  ctx.textAlign='left';
+  if(ret)return pg;
+  downloadCanvas(pg,'clean-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
+}
+$('dlCleanZip').onclick=async()=>{
+  const items=activeSet().items;
+  if(!items.length){alert('Add shirts to the job first (step 3).');return;}
+  const b=$('dlCleanZip'),orig=b.textContent;
+  b.disabled=true;b.textContent='BUILDING…';
+  try{
+    await ensureSetPhotos();
+    const folder=jobFolderName()+' - clean mockups';
+    const toU8=cv=>new Promise(res=>cv.toBlob(bl=>bl.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/png'));
+    const entries=[];
+    for(const it of items){
+      const pg=cleanMockFor(it,true);
+      if(pg)entries.push({name:folder+'/clean-'+slug(it.styleKey)+'-'+slug(it.colorName)+'.png',data:await toU8(pg)});
+    }
+    if(!entries.length)throw 0;
+    const z=zipStore(entries);
+    const a=document.createElement('a');a.download=folder+'.zip';
+    a.href=URL.createObjectURL(z);a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+    b.textContent='✓ '+entries.length+' CLEAN PNG'+(entries.length>1?'S':'');
+  }catch(e){b.textContent='COULD NOT BUILD — TRY AGAIN';}
+  setTimeout(()=>{b.textContent=orig;b.disabled=false;},2400);
 };
 
 const __v72ril=refreshInkList;refreshInkList=function(){__v72ril();updateFlipBanner();};
