@@ -451,11 +451,23 @@ function laneRow(k, r){
 
 /* ===== all jobs ===== */
 function allView(){
-  return `<div class="grid">` + OPS.jobs.map(j => {
-    const laneRows = Object.values(effLanes()).flat().filter(r => r.v === j.visualId);
+  const flat = Object.values(effLanes()).flat();
+  const cards = OPS.jobs.map(j => ({j, rows: flat.filter(r => r.v === j.visualId)}));
+  const jobDone = c => c.rows.length > 0 && c.rows.every(r => isCleared(r));
+  const open = cards.filter(c => !jobDone(c));
+  const doneToday = cards.filter(c => jobDone(c) && c.rows.some(r => clearedToday(r)));
+  let html = `<div class="grid">` + open.map(c => jobCard(c.j, c.rows, false)).join("") + `</div>`;
+  if (!open.length) html = `<div class="card clear"><div class="zero">Every job's prep is done. 🤘</div></div>`;
+  if (doneToday.length)
+    html += `<div class="donehead">ALL PREP DONE TODAY — ${doneToday.length}</div>` +
+            `<div class="grid">` + doneToday.map(c => jobCard(c.j, c.rows, true)).join("") + `</div>`;
+  return html;
+}
+function jobCard(j, laneRows, dim){
+  {
     const items = laneRows.map(r => {
       const done = isCleared(r);
-      return `<li class="${done?"tdone":""}"><span class="tick"></span>${LANES[effLaneOf(r.id)]}: ${esc(laneLabel(r))}${done ? ` <span style="color:var(--green)">${esc(STATE[r.id].who)}</span>`:""}</li>`;
+      return `<li class="${done?"tdone":""}" data-tick="${r.id}" style="cursor:pointer" title="${done?"click to un-check":"click to mark done"}"><span class="tick"></span>${LANES[effLaneOf(r.id)]}: ${esc(laneLabel(r))}${done ? ` <span style="color:var(--green)">${esc(STATE[r.id].who)}</span>`:""}</li>`;
     }).join("");
     const img = V2IMG[j.visualId];
     const cardThumb = img ? `<img class="thumb big" src="${img}" loading="lazy" data-zoom="${img}" alt="">` : "";
@@ -463,7 +475,7 @@ function allView(){
       (j.new ? `<span class="badge b-new">NEW</span>` : "") +
       (j.onHold ? `<span class="badge b-hold">ON HOLD</span>` : "") +
       j.flags.filter(f => f !== "ON HOLD").map(f => `<span class="badge b-flag">${esc(f)}</span>`).join("");
-    return `<div class="card jcard ${j.overdue?"overduecard":""}">
+    return `<div class="card jcard ${j.overdue?"overduecard":""}"${dim?' style="opacity:.55"':''}>
       <div class="jrow">
         ${cardThumb}
         <div style="flex:1;min-width:0">
@@ -475,7 +487,7 @@ function allView(){
           <ul>${items}</ul>
         </div>
       </div></div>`;
-  }).join("") + `</div>`;
+  }
 }
 function laneLabel(r){ return r.what || (r.locs && r.locs.length ? r.locs.join(", ") : (r.qty ? r.qty + " pc" : "task")); }
 
@@ -549,6 +561,12 @@ async function render(){
     setCheck(b.dataset.id, true, b.dataset.act));
   document.querySelectorAll("[data-un]").forEach(s => s.onclick = () =>
     setCheck(s.dataset.un, false, ""));
+  // clickable ticks on job cards (Board / All Jobs)
+  document.querySelectorAll("[data-tick]").forEach(li => li.onclick = ev => {
+    ev.stopPropagation();
+    const id = li.dataset.tick, st = STATE[id];
+    setCheck(id, !(st && st.how !== "sent"), "");
+  });
   // move menu
   document.querySelectorAll("[data-move]").forEach(b => b.onclick = ev => {
     ev.stopPropagation(); closeMenu();
