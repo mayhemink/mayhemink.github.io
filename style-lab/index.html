@@ -63,6 +63,7 @@
   .cst{display:inline-block;padding:2px 6px;border-radius:2px;border:1px solid var(--line2);color:var(--muted);margin-left:4px;}
   .cst.ok{border-color:var(--ok);color:var(--ok);}
   .cst.no{border-color:var(--warn);color:var(--warn);}
+  .cst.prop{border-color:var(--accent);color:var(--accent2);}
   .canvas-frame{background:
       linear-gradient(45deg,#191C1F 25%,transparent 25%),linear-gradient(-45deg,#191C1F 25%,transparent 25%),
       linear-gradient(45deg,transparent 75%,#191C1F 75%),linear-gradient(-45deg,transparent 75%,#191C1F 75%);
@@ -188,6 +189,7 @@
       <div class="btnrow">
         <button class="btn sm" id="calibBtn">⌖ Calibrate this side</button>
         <button class="btn ghost sm" id="showLines">Show grid lines</button>
+        <button class="btn sm" id="revBtn" hidden>⚡ Review proposal</button>
       </div>
       <div class="cchips" id="chips" style="display:none;"></div>
       <div class="drawbanner" id="banner" style="margin-top:12px;"></div>
@@ -242,7 +244,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM STYLE LAB · V1.5 · CALIBRATES IN MOCKUP-LAB CANVAS SPACE</span>
+  <span>MAYHEM STYLE LAB · V1.6 · CALIBRATES IN MOCKUP-LAB CANVAS SPACE</span>
   <span>calibrations save only when the exported styles.json is pushed to the repo</span>
 </footer>
 
@@ -291,8 +293,8 @@ function buildStyleList(){
     const nB=s.photos.filter(p=>p.side==='back').length;
     row.innerHTML=`<div><div class="sk">${key}</div><div class="sn">${s.name||''}</div></div>
       <div class="right">${nF}F · ${nB}B<br>
-      <span class="cst ${calOK(key,'front')?'ok':'no'}">front ${calOK(key,'front')?'✓':'!'}</span>
-      <span class="cst ${calOK(key,'back')?'ok':'no'}">back ${calOK(key,'back')?'✓':'!'}</span></div>`;
+      <span class="cst ${calOK(key,'front')?'ok':(hasProposal(key,'front')?'prop':'no')}">front ${calOK(key,'front')?'✓':(hasProposal(key,'front')?'⚡':'!')}</span>
+      <span class="cst ${calOK(key,'back')?'ok':(hasProposal(key,'back')?'prop':'no')}">back ${calOK(key,'back')?'✓':(hasProposal(key,'back')?'⚡':'!')}</span></div>`;
     row.onclick=()=>{sel.style=key;cancelCalib();buildStyleList();buildPhotoSel();refreshStatus();};
     el.appendChild(row);
   });
@@ -323,6 +325,7 @@ function buildPhotoSel(){
 }
 let pendingAutoCalib=false;
 function maybeAutoCalib(){
+  if(pendingAutoReview&&curPhotoCanvas){pendingAutoReview=false;startReview();return;}
   if(pendingAutoCalib&&curPhotoCanvas){pendingAutoCalib=false;startCalib();}
 }
 function loadSelPhoto(){
@@ -342,9 +345,13 @@ function loadSelPhoto(){
 function refreshStatus(){
   $('calWho').textContent=sel.style?(sel.style+' · '+sel.side):'pick a style';
   const c=sel.style&&CAT.styles[sel.style].calib&&CAT.styles[sel.style].calib[sel.side];
+  const prop=!!(sel.style&&hasProposal(sel.style,sel.side));
   $('calStatus').innerHTML=!sel.style?'—':(c&&!c.default)
     ?`<span style="color:var(--ok)">✓ calibrated · 1"=${(+c.ppi).toFixed(1)}px</span>`
+    :prop?`<span style="color:var(--accent2)">⚡ Claude proposed — review it</span>`
     :`<span style="color:var(--warn)">defaults — calibrate</span>`;
+  const rb=$('revBtn');
+  if(rb){rb.hidden=!prop&&!reviewMode;rb.textContent=reviewMode?'✕ exit review':'⚡ Review proposal ('+proposalCount()+' left)';}
 }
 
 /* ================= INTAKE ================= */
@@ -520,6 +527,7 @@ function startCalib(){
   applyZoom();renderChips();render();
 }
 function cancelCalib(){
+  reviewMode=false;revTemp=null;revDrag=null;
   calStep=-1;calTemp={};calGuide=null;pendingAutoCalib=false;
   frame.classList.remove('calibrating');
   $('calibBtn').classList.remove('on');
@@ -528,8 +536,9 @@ function cancelCalib(){
   applyZoom();
 }
 function applyZoom(){
-  frame.classList.toggle('zoomed',calStep>=0&&zoom>1);
-  cvEl.style.width=calStep>=0?(zoom*100)+'%':'';
+  const act=calStep>=0||reviewMode;
+  frame.classList.toggle('zoomed',act&&zoom>1);
+  cvEl.style.width=act?(zoom*100)+'%':'';
 }
 function goToStep(i){
   for(let k=i;k<calSteps.length;k++)delete calTemp[calSteps[k].key];
@@ -657,6 +666,109 @@ cvEl.addEventListener('click',e=>{
 });
 window.addEventListener('mouseup',()=>{logoDragging=false;});
 
+/* ================= v1.6 REVIEW MODE (Claude-proposed calibrations) ================= */
+let reviewMode=false,revTemp=null,revDrag=null,revOff=null,pendingAutoReview=false;
+function hasProposal(st,side){const c=CAT&&CAT.styles[st]&&CAT.styles[st].calib&&CAT.styles[st].calib[side];return !!(c&&c.default&&c.proposed);}
+function proposalCount(){return CAT?Object.keys(CAT.styles).filter(k=>hasProposal(k,'front')||hasProposal(k,'back')).length:0;}
+function startReview(){
+  if(!sel.style||!curPhotoCanvas)return;
+  const c=CAT.styles[sel.style].calib[sel.side];
+  cancelCalib();
+  reviewMode=true;zoom=0.5;
+  const barIn=parseFloat($('barIn').value)||10;
+  revTemp={collarY:+c.collarY,centerX:+c.centerX,
+    leftChestX:sel.side==='front'?+(c.leftChestX||c.centerX+4*c.ppi):null,
+    logo:{cx:+c.centerX,cy:+c.collarY+(sel.side==='front'?4:6)*c.ppi,w:barIn*c.ppi}};
+  frame.classList.add('calibrating');
+  applyZoom();renderRevChips();refreshStatus();render();
+}
+function cancelReview(){
+  reviewMode=false;revTemp=null;revDrag=null;pendingAutoReview=false;
+  frame.classList.remove('calibrating');
+  $('banner').classList.remove('show');
+  $('chips').style.display='none';
+  applyZoom();refreshStatus();render();
+}
+function approveReview(){
+  const st=CAT.styles[sel.style];const cal=st.calib[sel.side];
+  const barIn=parseFloat($('barIn').value)||10;
+  cal.ppi=revTemp.logo.w/barIn;
+  cal.collarY=revTemp.collarY;cal.centerX=revTemp.centerX;
+  if(revTemp.leftChestX!=null)cal.leftChestX=revTemp.leftChestX;
+  cal.default=false;delete cal.proposed;
+  const doneSide=sel.side;
+  reviewMode=false;revTemp=null;revDrag=null;
+  frame.classList.remove('calibrating');
+  $('banner').classList.remove('show');$('chips').style.display='none';applyZoom();
+  markDirty(sel.style+' '+doneSide+' approved — publish to save');
+  buildStyleList();refreshStatus();render();
+  const other=doneSide==='front'?'back':'front';
+  if(hasProposal(sel.style,other)){setSide(other);pendingAutoReview=true;maybeAutoCalib();return;}
+  const next=Object.keys(CAT.styles).find(k=>hasProposal(k,'front')||hasProposal(k,'back'));
+  if(next){
+    sel.style=next;buildStyleList();
+    setSide(hasProposal(next,'front')?'front':'back');
+    pendingAutoReview=true;maybeAutoCalib();
+  }
+}
+function renderRevChips(){
+  const el=$('chips');el.style.display='flex';el.innerHTML='';
+  [0.5,1,2,3].forEach(z=>{
+    const c=document.createElement('span');
+    c.className='cchip zoom'+(zoom===z?' zon':'');
+    c.textContent='🔍'+(z===0.5?'½':z)+'x';
+    c.onclick=()=>{zoom=z;applyZoom();renderRevChips();};
+    el.appendChild(c);
+  });
+  const minus=document.createElement('span');minus.className='cchip zoom';minus.textContent='−';
+  minus.onclick=()=>{revTemp.logo.w*=0.97;render();};
+  const plus=document.createElement('span');plus.className='cchip zoom';plus.textContent='+';
+  plus.onclick=()=>{revTemp.logo.w*=1.03;render();};
+  el.appendChild(minus);el.appendChild(plus);
+  const ok=document.createElement('span');ok.className='cchip confirm';ok.textContent='✓ approve calibration';
+  ok.onclick=approveReview;el.appendChild(ok);
+  const no=document.createElement('span');no.className='cchip undo';no.textContent='✕ cancel';
+  no.onclick=cancelReview;el.appendChild(no);
+  const banner=$('banner');
+  banner.innerHTML='REVIEWING CLAUDE&rsquo;S PROPOSAL — '+sel.style+' '+sel.side.toUpperCase()+
+    '<span class="how">Drag any line to fix it · drag/scroll the logo until it looks like a real '+(parseFloat($('barIn').value)||10)+'&Prime; print · then ✓ approve.</span>';
+  banner.classList.add('show');
+}
+cvEl.addEventListener('mousedown',e=>{
+  if(!reviewMode||!revTemp)return;
+  e.preventDefault();
+  const p=pos(e);
+  const near=(a,b)=>Math.abs(a-b)<12;
+  if(near(p.y,revTemp.collarY))revDrag='collarY';
+  else if(near(p.x,revTemp.centerX))revDrag='centerX';
+  else if(revTemp.leftChestX!=null&&near(p.x,revTemp.leftChestX))revDrag='leftChestX';
+  else{
+    const L=revTemp.logo,lh=LOGO_DARK?L.w*(LOGO_DARK.height/LOGO_DARK.width):L.w*0.4;
+    if(Math.abs(p.x-L.cx)<L.w/2&&Math.abs(p.y-L.cy)<lh/2){revDrag='logo';revOff={x:p.x-L.cx,y:p.y-L.cy};}
+  }
+});
+cvEl.addEventListener('mousemove',e=>{
+  if(!reviewMode||!revDrag)return;
+  const p=pos(e);
+  if(revDrag==='collarY')revTemp.collarY=p.y;
+  else if(revDrag==='centerX')revTemp.centerX=p.x;
+  else if(revDrag==='leftChestX')revTemp.leftChestX=p.x;
+  else if(revDrag==='logo'){revTemp.logo.cx=p.x-revOff.x;revTemp.logo.cy=p.y-revOff.y;}
+  render();
+});
+window.addEventListener('mouseup',()=>{revDrag=null;});
+cvEl.addEventListener('wheel',e=>{
+  if(!reviewMode||!revTemp)return;
+  e.preventDefault();
+  revTemp.logo.w*=e.deltaY<0?1.03:0.97;
+  render();
+},{passive:false});
+$('revBtn').onclick=()=>{
+  if(reviewMode){cancelReview();return;}
+  if(!curPhotoCanvas){pendingAutoReview=true;return;}
+  startReview();
+};
+
 /* ================= RENDER ================= */
 function render(){
   if(!curPhotoCanvas){
@@ -720,6 +832,32 @@ function render(){
     if(st&&calGuide&&!logoDragging){
       if(st.guide==='v')drawV(calGuide.x,'rgba(75,156,211,.95)','');
       else if(st.guide==='h')drawH(calGuide.y,'rgba(75,156,211,.95)','');
+    }
+  } else if(reviewMode&&revTemp){
+    drawH(revTemp.collarY,'#4B9CD3','collar — drag');
+    drawV(revTemp.centerX,'#98A0A6','center — drag',16);
+    if(revTemp.leftChestX!=null)drawV(revTemp.leftChestX,'#7BAFD4','left chest — drag',32);
+    if(LOGO_DARK){
+      const L=revTemp.logo,lh=L.w*(LOGO_DARK.height/LOGO_DARK.width);
+      ctx.setLineDash([]);ctx.globalAlpha=0.92;
+      ctx.drawImage(LOGO_DARK,L.cx-L.w/2,L.cy-lh/2,L.w,lh);
+      ctx.globalAlpha=1;
+      ctx.strokeStyle='#4CC38A';ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.moveTo(L.cx-L.w/2,L.cy-lh/2-14);ctx.lineTo(L.cx+L.w/2,L.cy-lh/2-14);
+      ctx.moveTo(L.cx-L.w/2,L.cy-lh/2-20);ctx.lineTo(L.cx-L.w/2,L.cy-lh/2-8);
+      ctx.moveTo(L.cx+L.w/2,L.cy-lh/2-20);ctx.lineTo(L.cx+L.w/2,L.cy-lh/2-8);
+      ctx.stroke();
+      const lbl='proposed '+barIn+'" — look right?';
+      ctx.font='700 16px "JetBrains Mono", monospace';
+      const tw=ctx.measureText(lbl).width;
+      ctx.fillStyle='rgba(14,15,16,0.88)';
+      ctx.fillRect(L.cx-tw/2-12,L.cy-lh/2-52,tw+24,30);
+      ctx.strokeStyle='#4CC38A';ctx.lineWidth=1;
+      ctx.strokeRect(L.cx-tw/2-12,L.cy-lh/2-52,tw+24,30);
+      ctx.fillStyle='#E8EAEC';ctx.textAlign='center';
+      ctx.fillText(lbl,L.cx,L.cy-lh/2-31);
+      ctx.textAlign='left';
     }
   } else if(showLines&&sel.style){
     const c=CAT.styles[sel.style].calib&&CAT.styles[sel.style].calib[sel.side];
