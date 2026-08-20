@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-20T20:05:57.120Z",
+ "generated": "2026-08-20T20:30:47.881Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -5397,18 +5397,20 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 52.918,
-     "centerX": 548,
-     "collarY": 130.84,
-     "leftChestX": 691.28,
-     "default": true
+     "ppi": 29.0811,
+     "centerX": 366,
+     "collarY": 171.65,
+     "leftChestX": 483.78,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 52.918,
-     "centerX": 548,
-     "collarY": 82.42,
-     "leftChestX": 548,
-     "default": true
+     "ppi": 29.0811,
+     "centerX": 351.67,
+     "collarY": 158.63,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -5683,18 +5685,20 @@
    "bodyLenM": 28,
    "calib": {
     "front": {
-     "ppi": 44.2712,
-     "centerX": 550,
-     "collarY": 156.36,
-     "leftChestX": 719.2,
-     "default": true
+     "ppi": 27.0186,
+     "centerX": 366.33,
+     "collarY": 187.76,
+     "leftChestX": 475.76,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 44.2712,
-     "centerX": 550,
-     "collarY": 117.18,
-     "leftChestX": 550,
-     "default": true
+     "ppi": 27.0186,
+     "centerX": 366.67,
+     "collarY": 244.83,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -11111,18 +11115,20 @@
    "bodyLenM": 26,
    "calib": {
     "front": {
-     "ppi": 41.3091,
-     "centerX": 551,
-     "collarY": 248.16,
-     "leftChestX": 728.48,
-     "default": true
+     "ppi": 25.0773,
+     "centerX": 366.67,
+     "collarY": 246.05,
+     "leftChestX": 468.23,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 41.3091,
-     "centerX": 551,
-     "collarY": 214.08,
-     "leftChestX": 551,
-     "default": true
+     "ppi": 25.0773,
+     "centerX": 370.67,
+     "collarY": 164.23,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -11227,18 +11233,20 @@
    "bodyLenM": 26,
    "calib": {
     "front": {
-     "ppi": 43.9273,
-     "centerX": 545,
-     "collarY": 248.48,
-     "leftChestX": 724.64,
-     "default": true
+     "ppi": 26.6225,
+     "centerX": 367.33,
+     "collarY": 251.78,
+     "leftChestX": 475.15,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 43.9273,
-     "centerX": 545,
-     "collarY": 212.24,
-     "leftChestX": 545,
-     "default": true
+     "ppi": 26.6225,
+     "centerX": 363,
+     "collarY": 168.6,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -11463,18 +11471,20 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 44,
-     "centerX": 546,
-     "collarY": 168.52,
-     "leftChestX": 716.64,
-     "default": true
+     "ppi": 26.9076,
+     "centerX": 355.33,
+     "collarY": 193.87,
+     "leftChestX": 464.31,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 44,
-     "centerX": 546,
-     "collarY": 128.26,
-     "leftChestX": 546,
-     "default": true
+     "ppi": 26.9076,
+     "centerX": 351,
+     "collarY": 101.29,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -11839,18 +11849,20 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 39.2131,
-     "centerX": 538,
-     "collarY": 269.76,
-     "leftChestX": 676.24,
-     "default": true
+     "ppi": 19.1987,
+     "centerX": 387,
+     "collarY": 371.32,
+     "leftChestX": 464.75,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 39.2131,
-     "centerX": 538,
-     "collarY": 233.88,
-     "leftChestX": 538,
-     "default": true
+     "ppi": 19.1987,
+     "centerX": 337.67,
+     "collarY": 298.38,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -11955,18 +11967,20 @@
    "bodyLenM": 24,
    "calib": {
     "front": {
-     "ppi": 48.4706,
-     "centerX": 544,
-     "collarY": 170.16,
-     "leftChestX": 707.44,
-     "default": true
+     "ppi": 22.5319,
+     "centerX": 364,
+     "collarY": 344.98,
+     "leftChestX": 455.25,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 48.4706,
-     "centerX": 544,
-     "collarY": 133.08,
-     "leftChestX": 544,
-     "default": true
+     "ppi": 22.5319,
+     "centerX": 365,
+     "collarY": 387.36,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -12201,18 +12215,20 @@
    "bodyLenM": 25,
    "calib": {
     "front": {
-     "ppi": 39.8491,
-     "centerX": 552,
-     "collarY": 249.36,
-     "leftChestX": 740.64,
-     "default": true
+     "ppi": 24.7653,
+     "centerX": 371.67,
+     "collarY": 231.16,
+     "leftChestX": 471.97,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 39.8491,
-     "centerX": 552,
-     "collarY": 217.68,
-     "leftChestX": 552,
-     "default": true
+     "ppi": 24.7653,
+     "centerX": 369,
+     "collarY": 172.31,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -12477,18 +12493,20 @@
    "bodyLenM": 25,
    "calib": {
     "front": {
-     "ppi": 41.8113,
-     "centerX": 550,
-     "collarY": 264.48,
-     "leftChestX": 736.48,
-     "default": true
+     "ppi": 25.9547,
+     "centerX": 373.89,
+     "collarY": 245.02,
+     "leftChestX": 479.01,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 41.8113,
-     "centerX": 550,
-     "collarY": 231.24,
-     "leftChestX": 550,
-     "default": true
+     "ppi": 25.9547,
+     "centerX": 366.33,
+     "collarY": 181.69,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -12613,18 +12631,20 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 37.9016,
-     "centerX": 548,
-     "collarY": 243.36,
-     "leftChestX": 733.76,
-     "default": true
+     "ppi": 20.7747,
+     "centerX": 364.67,
+     "collarY": 222.62,
+     "leftChestX": 448.81,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 37.9016,
-     "centerX": 548,
-     "collarY": 208.68,
-     "leftChestX": 548,
-     "default": true
+     "ppi": 20.7747,
+     "centerX": 364,
+     "collarY": 136.03,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -12919,18 +12939,20 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 35.2787,
-     "centerX": 549,
-     "collarY": 228.56,
-     "leftChestX": 727.2,
-     "default": true
+     "ppi": 21.6265,
+     "centerX": 367,
+     "collarY": 216.8,
+     "leftChestX": 454.59,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 35.2787,
-     "centerX": 549,
-     "collarY": 196.28,
-     "leftChestX": 549,
-     "default": true
+     "ppi": 21.6265,
+     "centerX": 362.33,
+     "collarY": 146.36,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -13575,18 +13597,20 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 45.6393,
-     "centerX": 549,
-     "collarY": 275.52,
-     "leftChestX": 729.36,
-     "default": true
+     "ppi": 27.9317,
+     "centerX": 322.33,
+     "collarY": 268.33,
+     "leftChestX": 435.46,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 45.6393,
-     "centerX": 549,
-     "collarY": 233.76,
-     "leftChestX": 549,
-     "default": true
+     "ppi": 27.9317,
+     "centerX": 346,
+     "collarY": 162.74,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -13711,18 +13735,20 @@
    "bodyLenM": 27,
    "calib": {
     "front": {
-     "ppi": 38.5965,
-     "centerX": 549,
-     "collarY": 202,
-     "leftChestX": 727.2,
-     "default": true
+     "ppi": 23.4615,
+     "centerX": 366.17,
+     "collarY": 208.64,
+     "leftChestX": 461.19,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 38.5965,
-     "centerX": 549,
-     "collarY": 169,
-     "leftChestX": 549,
-     "default": true
+     "ppi": 23.4615,
+     "centerX": 366.33,
+     "collarY": 134.95,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
@@ -13947,18 +13973,20 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 38.8197,
-     "centerX": 549,
-     "collarY": 251.04,
-     "leftChestX": 714.24,
-     "default": true
+     "ppi": 23.7952,
+     "centerX": 353,
+     "collarY": 238.31,
+     "leftChestX": 449.37,
+     "default": true,
+     "proposed": true
     },
     "back": {
-     "ppi": 38.8197,
-     "centerX": 549,
-     "collarY": 215.52,
-     "leftChestX": 549,
-     "default": true
+     "ppi": 23.7952,
+     "centerX": 351.67,
+     "collarY": 151.94,
+     "leftChestX": 500,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
