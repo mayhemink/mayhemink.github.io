@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.10 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
+<title>Mayhem Patch Lab v0.10.1 —Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -136,7 +136,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.10</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.10.1</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -2202,7 +2202,7 @@ bindDrop('hatDrop','hatFile',file=>{
     const c=document.createElement('canvas');
     c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
     c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-    state.hat.photo=c;
+    state.hat.photo=cropHatPhoto(c).canvas; /* v0.10.1: white-bg product shots get cropped too */
     setTab('hat');
   });
 });
@@ -2316,6 +2316,16 @@ function renderCatList(q){
     box.appendChild(d);
   });
 }
+/* v0.10.1: crop a hat photo canvas to its content (kills the white SanMar slab).
+   Returns the cropped canvas + the bbox so calibration can be remapped. */
+function cropHatPhoto(c){
+  const bb=hatContentBBox(c);
+  const cw=Math.max(2,Math.round(bb.x2-bb.x)),ch=Math.max(2,Math.round(bb.y2-bb.y));
+  if(cw>=c.width-4&&ch>=c.height-4)return {canvas:c,bx:0,by:0,cw:c.width,ch:c.height,fw:c.width,fh:c.height};
+  const cc=document.createElement('canvas');cc.width=cw;cc.height=ch;
+  cc.getContext('2d').drawImage(c,bb.x,bb.y,cw,ch,0,0,cw,ch);
+  return {canvas:cc,bx:bb.x,by:bb.y,cw,ch,fw:c.width,fh:c.height};
+}
 function loadCatPhoto(slug){
   cat.slug=slug;
   const side=cat.view;
@@ -2323,11 +2333,15 @@ function loadCatPhoto(slug){
   img.onload=()=>{
     const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
     c.getContext('2d').drawImage(img,0,0);
-    state.hat.photo=c;
+    const cr=cropHatPhoto(c);
+    state.hat.photo=cr.canvas;
+    /* HAT_CALIB is in FULL-photo space — remap into the cropped frame */
     const d=HAT_CALIB[side];
-    state.hat.cx=d.cx;state.hat.cy=d.cy;state.hat.scale=d.scale;
-    $('hatScale').value=String(d.scale*100);
-    $('hatScaleVal').textContent=$('hatScale').value+'% of photo width';
+    state.hat.cx=(d.cx*cr.fw-cr.bx)/cr.cw;
+    state.hat.cy=(d.cy*cr.fh-cr.by)/cr.ch;
+    state.hat.scale=d.scale*cr.fw/cr.cw;
+    $('hatScale').value=String(Math.min(60,Math.max(8,state.hat.scale*100)));
+    $('hatScaleVal').textContent=Math.round(state.hat.scale*100)+'% of photo width';
     $('catSel').textContent='Richardson 112 · '+cat.colors[slug]+' · '+(side==='left'?'angle':side)+' view';
     renderCatList($('catSearch').value);
     setTab('hat');
