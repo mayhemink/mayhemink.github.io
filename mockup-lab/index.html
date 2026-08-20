@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.12.1 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.14 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -108,6 +108,15 @@
   .inkchg{background:none;border:1px solid var(--line2);color:var(--muted);cursor:pointer;border-radius:3px;
     font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.07em;padding:5px 9px;}
   .inkchg:hover{border-color:var(--accent);color:var(--accent);}
+  /* v8.10.1 two-column FRONT INK / BACK INK list (two-different-logo jobs) */
+  .inkcols-head{display:grid;grid-template-columns:1fr 1fr 46px;gap:9px;margin-top:12px;padding:0 11px;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.09em;color:var(--muted);font-weight:700;}
+  .inkrow.two{grid-template-columns:1fr 1fr auto;}
+  .inkcell{display:flex;align-items:center;gap:7px;min-width:0;}
+  .inkcell .inkname{flex:1;min-width:0;}
+  .inkcell .inkchg{padding:4px 7px;flex:none;}
+  .inkcell+.inkcell{border-left:1px solid var(--line2);padding-left:9px;}
+  .inkcell.mut{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;justify-content:center;}
   /* v8.2 ink setup buckets — both always visible, drag shirts between them */
   .bucket-board{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
   .bucket{border:1px solid var(--line2);border-radius:5px;background:var(--surface2);display:flex;flex-direction:column;min-height:96px;transition:border-color .12s,box-shadow .12s;}
@@ -167,11 +176,6 @@
     border-radius:3px;padding:10px;cursor:pointer;color:var(--ink);
     font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;}
   .ipk-same.on{border-color:var(--accent);color:var(--accent);background:#131C24;}
-  #ipkScope{display:flex;gap:8px;margin:10px 15px 0;}
-  #ipkScope[hidden]{display:none;}
-  .ipk-sc{flex:1;background:var(--surface2);border:1px solid var(--line2);border-radius:3px;padding:8px 4px;
-    cursor:pointer;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;}
-  .ipk-sc.on{border-color:var(--accent);color:var(--accent);background:#131C24;}
   .ipk-none{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);padding:16px 0;}
   .inkdet{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:2px;}
   .inkdet .match{color:var(--ok);font-weight:700;}
@@ -713,7 +717,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.12.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.14 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -722,7 +726,6 @@
     <div class="ipk-head"><div class="ipk-title" id="ipkTitle">PICK AN INK</div>
       <button id="ipkClose" title="Close">&#10005;</button></div>
     <div class="ipk-ctx" id="ipkCtx"></div>
-    <div id="ipkScope" hidden></div>
     <input id="ipkSearch" type="search" placeholder="&#128269; search — try &quot;white&quot;, &quot;navy&quot;, &quot;PMS 186&quot;">
     <div id="ipkGrid"></div>
   </div>
@@ -1627,34 +1630,73 @@ function refreshInkList(){
   renderSetupTabs();renderShirtAssign();
   const el=$('inkList');el.innerHTML='';
   const dv=inkView==='dark';
+  const two=twoSidedArt();
+  function onOffBtn(a,idx){
+    const oo=document.createElement('button');oo.className='inkonoff'+(a.off?' isoff':'');
+    oo.textContent=a.off?'OFF':'ON';
+    oo.title=a.off?'Not printing \u2014 click to turn this ink back on':'Printing \u2014 click to turn OFF (goes transparent, drops a screen)';
+    oo.onclick=function(){toggleInkOff(idx);};
+    return oo;
+  }
+  /* v8.10.1: two different logos \u2192 the list splits into FRONT INK / BACK INK
+     columns, same idea as the STANDARD / DARK buckets. CHANGE in a column edits
+     only that side; the back says "same as front" until it gets pinned. */
+  function inkCell(ink,idx,a,side){
+    const cell=document.createElement('div');
+    if(!inkOnSide(idx,side)){
+      cell.className='inkcell mut';cell.textContent='\u2014';
+      cell.title='This colour is not in the '+side+' logo';
+      return cell;
+    }
+    cell.className='inkcell';
+    const useIdx=inkIdxFor(a,dv,side);
+    const p=PMS[useIdx],s=STD_INKS[p[0]];
+    const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=p[1];
+    chip.title=a.off?'OFF \u2014 click to print this ink again':'Click to turn this ink OFF (transparent \u2014 not printed, not a screen)';
+    chip.onclick=function(){toggleInkOff(idx);};
+    const nm=document.createElement('div');nm.className='inkname';
+    const follows=side==='back'&&inkOnSide(idx,'front')&&(dv?(a.backDarkIdx==null&&a.backIdx==null):(a.backIdx==null));
+    nm.innerHTML=(s?(s[1]?'<b class="star">\u2605</b> ':'')+s[0]:'PMS '+p[0])
+      +(a.off?' <b class="offtag">OFF</b>':'')
+      +(dv&&side==='front'&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'')
+      +(follows?'<span class="samet">same as front</span>':'');
+    nm.title=s?('Mayhem standard ink \u00b7 PMS '+p[0]):('PMS '+p[0]+' \u2014 custom mix');
+    const btn=document.createElement('button');btn.className='inkchg';btn.textContent='CHANGE';
+    btn.title='Pick the '+side+(dv?' dark-shirt':'')+' ink';
+    btn.onclick=function(){openInkPicker(idx,side);};
+    cell.appendChild(chip);cell.appendChild(nm);cell.appendChild(btn);
+    return cell;
+  }
+  if(two){
+    const hd=document.createElement('div');hd.className='inkcols-head';
+    hd.innerHTML='<span>FRONT INK</span><span>BACK INK</span><span></span>';
+    el.appendChild(hd);
+  }
   state.artInks.forEach(function(ink,idx){
     const a=state.inkAssign[idx];if(!a)return;
+    if(two){
+      const row=document.createElement('div');row.className='inkrow two'+(a.off?' inkoff':'');
+      row.appendChild(inkCell(ink,idx,a,'front'));
+      row.appendChild(inkCell(ink,idx,a,'back'));
+      row.appendChild(onOffBtn(a,idx));
+      el.appendChild(row);
+      return;
+    }
     const useIdx=dv?(a.darkIdx==null?a.idx:a.darkIdx):a.idx;
-    /* v8.10 badges: which logo the colour lives in + a per-side override note */
-    const two=twoSidedArt();
-    const sTag=two&&ink.sides==='F'?'front logo':(two&&ink.sides==='B'?'back logo':'');
-    const bOver=two&&(!ink.sides||ink.sides==='FB')&&(dv?(a.backDarkIdx!=null):(a.backIdx!=null));
-    const bIdx=bOver?inkIdxFor(a,dv,'back'):-1;
     const p=PMS[useIdx],s=STD_INKS[p[0]];
     const row=document.createElement('div');row.className='inkrow'+(a.off?' inkoff':'');
     const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=p[1];
-    chip.title=a.off?'OFF — click to print this ink again':'Click to turn this ink OFF (transparent — not printed, not a screen)';
+    chip.title=a.off?'OFF \u2014 click to print this ink again':'Click to turn this ink OFF (transparent \u2014 not printed, not a screen)';
     chip.onclick=function(){toggleInkOff(idx);};
     const nm=document.createElement('div');nm.className='inkname';
     nm.innerHTML=(s?(s[1]?'<b class="star">\u2605</b> ':'')+s[0]:'PMS '+p[0])
       +(a.off?' <b class="offtag">OFF</b>':'')
-      +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'')
-      +(sTag?'<span class="samet">'+sTag+'</span>':'')
-      +(bOver?'<span class="samet">back: PMS '+PMS[bIdx][0]+'</span>':'');
+      +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'');
     nm.title=s?('Mayhem standard ink \u00b7 PMS '+p[0]):('PMS '+p[0]+' \u2014 custom mix');
     const btn=document.createElement('button');btn.className='inkchg';btn.textContent='CHANGE';
     btn.title=dv?'Pick what this ink becomes on the dark shirts':'Pick this ink';
     btn.onclick=function(){openInkPicker(idx);};
-    const oo=document.createElement('button');oo.className='inkonoff'+(a.off?' isoff':'');
-    oo.textContent=a.off?'OFF':'ON';
-    oo.title=a.off?'Not printing — click to turn this ink back on':'Printing — click to turn OFF (goes transparent, drops a screen)';
-    oo.onclick=function(){toggleInkOff(idx);};
-    row.appendChild(chip);row.appendChild(nm);row.appendChild(oo);row.appendChild(btn);
+    row.appendChild(chip);row.appendChild(nm);row.appendChild(onOffBtn(a,idx));row.appendChild(btn);
     el.appendChild(row);
   });
   const tot=state.artInks.length;
@@ -1684,20 +1726,15 @@ function refreshInkList(){
 }
 /* ---- ink picker overlay: search + Mayhem standards + full library ---- */
 let __pickIdx=-1,__pickScope='both';
-function openInkPicker(idx){
+function openInkPicker(idx,side){
   __pickIdx=idx;
   const ink=state.artInks[idx],a=state.inkAssign[idx];
   if(!ink||!a)return;
-  $('ipkTitle').textContent=inkView==='dark'?'PICK THE DARK-SHIRT INK':'PICK THE STANDARD INK';
-  /* v8.10: scope only appears when there are two different logos AND this
-     colour lives in both — single-logo jobs never see it. */
-  __pickScope='both';
-  const sr=$('ipkScope');
-  if(sr){
-    const two=twoSidedArt()&&(!ink.sides||ink.sides==='FB');
-    sr.hidden=!two;
-    if(two)renderScopeRow();
-  }
+  /* v8.10.1: the column you clicked IS the scope — no toggle to hunt for. */
+  const two=twoSidedArt();
+  __pickScope=two?(side==='back'?'back':'front'):'both';
+  $('ipkTitle').textContent=(two?(side==='back'?'BACK \u2014 ':'FRONT \u2014 '):'')
+    +(inkView==='dark'?'PICK THE DARK-SHIRT INK':'PICK THE STANDARD INK');
   $('ipkCtx').innerHTML='<span class="ipk-sw" style="background:'+ink.hex+'"></span>'
     +'in your art: <b>'+ink.hex.toUpperCase()+'</b> \u00b7 '+ink.pct+'% of the design'
     +(a.match!=null?' \u00b7 closest standard <b>'+a.match+'%</b> match':'');
@@ -1705,18 +1742,6 @@ function openInkPicker(idx){
   renderPickGrid('');
   $('inkPickWrap').hidden=false;
   setTimeout(function(){$('ipkSearch').focus();},30);
-}
-function renderScopeRow(){
-  const el=$('ipkScope');if(!el)return;
-  el.innerHTML='';
-  [['both','BOTH SIDES'],['front','FRONT ONLY'],['back','BACK ONLY']].forEach(function(s){
-    const b=document.createElement('button');
-    b.className='ipk-sc'+(__pickScope===s[0]?' on':'');
-    b.textContent=s[1];
-    b.title=s[0]==='both'?'Change this ink everywhere':'Change it only on the '+s[0]+' logo';
-    b.onclick=function(){__pickScope=s[0];renderScopeRow();renderPickGrid($('ipkSearch').value);};
-    el.appendChild(b);
-  });
 }
 function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;}
 function applyPick(i){
@@ -1737,8 +1762,10 @@ function applyPick(i){
       else a.backDarkIdx=i;
     }
   }else{
-    if(i==null){closeInkPicker();return;}
-    if(scope==='both'){
+    if(i==null){
+      if(scope!=='back'){closeInkPicker();return;}
+      a.backIdx=null;   /* re-link \u2014 the back follows the front ink again */
+    }else if(scope==='both'){
       if(a.backIdx!=null&&a.backDarkIdx==null)a.backDarkIdx=a.backIdx;   /* keep the dark-back where it was */
       if(a.darkIdx==null&&i!==a.idx)a.darkIdx=a.idx;
       a.idx=i;a.backIdx=null;a.auto=false;a.match=matchPct(pmsDist(ink.r,ink.g,ink.b,i));
@@ -1786,6 +1813,13 @@ function renderPickGrid(query){
     b.className='ipk-same'+(e.darkIdx==null?' on':'');
     b.textContent='SAME AS THE STANDARD INK';
     b.title='These shirts print exactly what the standard setup prints';
+    b.onclick=function(){applyPick(null);};
+    el.appendChild(b);
+  }else if(__pickScope==='back'&&twoSidedArt()&&state.artInks[__pickIdx]&&(!state.artInks[__pickIdx].sides||state.artInks[__pickIdx].sides==='FB')){
+    const b=document.createElement('button');
+    b.className='ipk-same'+(a.backIdx==null?' on':'');
+    b.textContent='SAME AS THE FRONT INK';
+    b.title='The back prints exactly what the front prints';
     b.onclick=function(){applyPick(null);};
     el.appendChild(b);
   }
