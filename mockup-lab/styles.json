@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-08-20T20:30:47.881Z",
+ "generated": "2026-08-20T20:53:25.145Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -5397,20 +5397,18 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 29.0811,
-     "centerX": 366,
-     "collarY": 171.65,
-     "leftChestX": 483.78,
-     "default": true,
-     "proposed": true
+     "ppi": 21.445104776644083,
+     "centerX": 365.2504538362519,
+     "collarY": 199.07708504599773,
+     "leftChestX": 470.20272292387796,
+     "default": false
     },
     "back": {
-     "ppi": 29.0811,
-     "centerX": 351.67,
-     "collarY": 158.63,
+     "ppi": 25.74528873689099,
+     "centerX": 286.53625202053234,
+     "collarY": 81.62991945734194,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -5685,20 +5683,18 @@
    "bodyLenM": 28,
    "calib": {
     "front": {
-     "ppi": 27.0186,
+     "ppi": 21.17564833130333,
      "centerX": 366.33,
-     "collarY": 187.76,
-     "leftChestX": 475.76,
-     "default": true,
-     "proposed": true
+     "collarY": 349.00963686130297,
+     "leftChestX": 473.951018248436,
+     "default": false
     },
     "back": {
-     "ppi": 27.0186,
+     "ppi": 22.50573741237467,
      "centerX": 366.67,
-     "collarY": 244.83,
+     "collarY": 401.4860299966598,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -11115,20 +11111,18 @@
    "bodyLenM": 26,
    "calib": {
     "front": {
-     "ppi": 25.0773,
-     "centerX": 366.67,
-     "collarY": 246.05,
-     "leftChestX": 468.23,
-     "default": true,
-     "proposed": true
+     "ppi": 23.595231570000003,
+     "centerX": 367.7493173859573,
+     "collarY": 226.56471954547035,
+     "leftChestX": 458.9578369502037,
+     "default": false
     },
     "back": {
      "ppi": 25.0773,
      "centerX": 370.67,
      "collarY": 164.23,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -11233,20 +11227,18 @@
    "bodyLenM": 26,
    "calib": {
     "front": {
-     "ppi": 26.6225,
-     "centerX": 367.33,
-     "collarY": 251.78,
+     "ppi": 25.026566050774992,
+     "centerX": 370.2481809356627,
+     "collarY": 351.5085127248914,
      "leftChestX": 475.15,
-     "default": true,
-     "proposed": true
+     "default": false
     },
     "back": {
-     "ppi": 26.6225,
+     "ppi": 25.823824999999992,
      "centerX": 363,
      "collarY": 168.6,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -11471,20 +11463,18 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 26.9076,
-     "centerX": 355.33,
-     "collarY": 193.87,
-     "leftChestX": 464.31,
-     "default": true,
-     "proposed": true
+     "ppi": 25.31736084,
+     "centerX": 340.26181833919804,
+     "collarY": 145.35125397884667,
+     "leftChestX": 453.96010985079295,
+     "default": false
     },
     "back": {
-     "ppi": 26.9076,
-     "centerX": 351,
-     "collarY": 101.29,
+     "ppi": 24.5578400148,
+     "centerX": 330.26636414037654,
+     "collarY": 76.63216773016511,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -11849,20 +11839,18 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 19.1987,
-     "centerX": 387,
-     "collarY": 371.32,
-     "leftChestX": 464.75,
-     "default": true,
-     "proposed": true
+     "ppi": 20.978937854900003,
+     "centerX": 329.01693236552387,
+     "collarY": 184.0838298644672,
+     "leftChestX": 428.97147435373915,
+     "default": false
     },
     "back": {
-     "ppi": 19.1987,
+     "ppi": 20.367900830000004,
      "centerX": 337.67,
-     "collarY": 298.38,
+     "collarY": 261.54898163570823,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -11967,20 +11955,18 @@
    "bodyLenM": 24,
    "calib": {
     "front": {
-     "ppi": 22.5319,
-     "centerX": 364,
+     "ppi": 21.200264710000003,
+     "centerX": 364.0010220613992,
      "collarY": 344.98,
      "leftChestX": 455.25,
-     "default": true,
-     "proposed": true
+     "default": false
     },
     "back": {
      "ppi": 22.5319,
      "centerX": 365,
      "collarY": 387.36,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -12215,20 +12201,18 @@
    "bodyLenM": 25,
    "calib": {
     "front": {
-     "ppi": 24.7653,
+     "ppi": 23.301670769999994,
      "centerX": 371.67,
      "collarY": 231.16,
      "leftChestX": 471.97,
-     "default": true,
-     "proposed": true
+     "default": false
     },
     "back": {
-     "ppi": 24.7653,
+     "ppi": 23.301670769999994,
      "centerX": 369,
      "collarY": 172.31,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -12493,20 +12477,18 @@
    "bodyLenM": 25,
    "calib": {
     "front": {
-     "ppi": 25.9547,
+     "ppi": 23.688153913099995,
      "centerX": 373.89,
      "collarY": 245.02,
      "leftChestX": 479.01,
-     "default": true,
-     "proposed": true
+     "default": false
     },
     "back": {
-     "ppi": 25.9547,
+     "ppi": 25.954699999999995,
      "centerX": 366.33,
      "collarY": 181.69,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -12635,16 +12617,14 @@
      "centerX": 364.67,
      "collarY": 222.62,
      "leftChestX": 448.81,
-     "default": true,
-     "proposed": true
+     "default": false
     },
     "back": {
-     "ppi": 20.7747,
+     "ppi": 20.756002770000002,
      "centerX": 364,
      "collarY": 136.03,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -12943,16 +12923,14 @@
      "centerX": 367,
      "collarY": 216.8,
      "leftChestX": 454.59,
-     "default": true,
-     "proposed": true
+     "default": false
     },
     "back": {
      "ppi": 21.6265,
      "centerX": 362.33,
      "collarY": 146.36,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -13597,20 +13575,18 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 27.9317,
+     "ppi": 25.492508434100003,
      "centerX": 322.33,
-     "collarY": 268.33,
+     "collarY": 210.3220264321456,
      "leftChestX": 435.46,
-     "default": true,
-     "proposed": true
+     "default": false
     },
     "back": {
-     "ppi": 27.9317,
-     "centerX": 346,
-     "collarY": 162.74,
+     "ppi": 25.492508434100003,
+     "centerX": 305.27772864332275,
+     "collarY": 151.59844363781772,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -13735,20 +13711,18 @@
    "bodyLenM": 27,
    "calib": {
     "front": {
-     "ppi": 23.4615,
+     "ppi": 22.03520836505953,
      "centerX": 366.17,
-     "collarY": 208.64,
+     "collarY": 189.08158159164404,
      "leftChestX": 461.19,
-     "default": true,
-     "proposed": true
+     "default": false
     },
     "back": {
-     "ppi": 23.4615,
+     "ppi": 22.757655,
      "centerX": 366.33,
      "collarY": 134.95,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
@@ -13974,19 +13948,17 @@
    "calib": {
     "front": {
      "ppi": 23.7952,
-     "centerX": 353,
-     "collarY": 238.31,
-     "leftChestX": 449.37,
-     "default": true,
-     "proposed": true
+     "centerX": 332.76522769008193,
+     "collarY": 249.05460231776613,
+     "leftChestX": 432.7197696782972,
+     "default": false
     },
     "back": {
-     "ppi": 23.7952,
+     "ppi": 22.38890368,
      "centerX": 351.67,
      "collarY": 151.94,
      "leftChestX": 500,
-     "default": true,
-     "proposed": true
+     "default": false
     }
    },
    "photos": [
