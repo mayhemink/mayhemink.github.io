@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.10 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.11 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -497,8 +497,8 @@
       <h3><span class="pn">2</span> Logos</h3>
       <p class="desc">Drop the art in. SVG is best — one setup covers every shirt in the job.</p>
       <div class="row2">
-        <div class="drop" id="artDropF"><b>Front art</b>SVG (best), transparent PNG, or PDF<input type="file" id="artInputF" accept="image/*,.svg,.pdf,application/pdf"></div>
-        <div class="drop" id="artDropB"><b>Back art</b>SVG (best), transparent PNG, or PDF<input type="file" id="artInputB" accept="image/*,.svg,.pdf,application/pdf"></div>
+        <div class="drop" id="artDropF"><b>Front art</b>SVG (best), PNG/JPG, or PDF — white backgrounds come off automatically<input type="file" id="artInputF" accept="image/*,.svg,.pdf,application/pdf"></div>
+        <div class="drop" id="artDropB"><b>Back art</b>SVG (best), PNG/JPG, or PDF — white backgrounds come off automatically<input type="file" id="artInputB" accept="image/*,.svg,.pdf,application/pdf"></div>
       </div>
       <div class="checkline"><input type="checkbox" id="dupBack"><span>Same art on the back</span></div>
       <div class="checkline" id="lineLive"><input type="checkbox" id="liveInk" checked><span>Recolor art to the chosen inks</span></div>
@@ -710,7 +710,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.10 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.11 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2701,6 +2701,33 @@ function whiteMatteAll(c){
   ctx.putImageData(im,0,0);
   return c;
 }
+/* v8.11 — is the image border mostly near-white? (sampled) */
+function borderMostlyWhite(c,tol){
+  tol=tol==null?24:tol;
+  const w=c.width,h=c.height,ctx=c.getContext('2d');
+  let im;try{im=ctx.getImageData(0,0,w,h);}catch(e){return false;}
+  const d=im.data;let n=0,t=0;
+  const chk=(x,y)=>{const p=(y*w+x)*4;t++;if(d[p+3]>200&&(255-d[p])<=tol&&(255-d[p+1])<=tol&&(255-d[p+2])<=tol)n++;};
+  const sx=Math.max(1,w>>6),sy=Math.max(1,h>>6);
+  for(let x=0;x<w;x+=sx){chk(x,0);chk(x,h-1);}
+  for(let y=0;y<h;y+=sy){chk(0,y);chk(w-1,y);}
+  return t>0&&n>=t*0.6;
+}
+/* v8.11 — WHITE-BACKGROUND REMOVER, shared by PDFs and raster art (ChatGPT
+   PNGs, JPEG logos): images with real transparency pass through untouched;
+   opaque images only get processed when their border is mostly white, so
+   photos and art on coloured backgrounds are never mangled. Pipeline =
+   border knockout -> defringe -> optional remove-all-white (one confirm). */
+function deWhiteRaster(c){
+  if(hasTransparency(c)||!borderMostlyWhite(c))return c;
+  const bak=document.createElement('canvas');bak.width=c.width;bak.height=c.height;
+  bak.getContext('2d').drawImage(c,0,0);
+  knockoutBorderWhite(c,24);
+  if(!alphaBBox(c))return bak;
+  defringeWhite(c);
+  if(countInteriorWhite(c)>256&&confirm('This art still has white INSIDE it (like the holes in letters).\n\nOK = remove ALL white (it\u2019s background)\nCancel = keep the white (it will print as white ink)'))whiteMatteAll(c);
+  return c;
+}
 function loadPdfArt(file,cb){
   ensurePdfjs()
     .then(pdfjs=>file.arrayBuffer().then(buf=>pdfjs.getDocument({data:buf}).promise))
@@ -2720,15 +2747,8 @@ function loadPdfArt(file,cb){
          paint a background, and then we get true transparency for free: no
          knockout, no halo, letter holes already open, white ink untouched. */
       await page.render({canvasContext:c.getContext('2d'),viewport:vp,background:'rgba(0,0,0,0)'}).promise;
-      if(hasTransparency(c)){cb(trimCanvas(c));return;}
-      /* opaque page → knock out border-connected white, then clean the halo */
-      const bak=document.createElement('canvas');bak.width=c.width;bak.height=c.height;
-      bak.getContext('2d').drawImage(c,0,0);
-      knockoutBorderWhite(c,24);
-      if(!alphaBBox(c)){cb(trimCanvas(bak));return;}
-      defringeWhite(c);
-      if(countInteriorWhite(c)>256&&confirm('This art still has white INSIDE it (like the holes in letters).\n\nOK = remove ALL white (it\u2019s background)\nCancel = keep the white (it will print as white ink)'))whiteMatteAll(c);
-      cb(trimCanvas(c));
+      /* v8.11: shared white-background remover (was inline here in v8.9.1) */
+      cb(trimCanvas(deWhiteRaster(c)));
     })
     .catch(err=>{
       alert(err&&err.message==='offline'
@@ -2746,7 +2766,7 @@ function loadArtFile(file,cb){
     loadImgFile(file,img=>{
       const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
       c.getContext('2d').drawImage(img,0,0);
-      cb(trimCanvas(c));
+      cb(trimCanvas(deWhiteRaster(c)));   /* v8.11: white-bg PNGs/JPGs come in clean */
     });
     return;
   }
