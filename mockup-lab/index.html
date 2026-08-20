@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.9.1 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.10 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -167,6 +167,11 @@
     border-radius:3px;padding:10px;cursor:pointer;color:var(--ink);
     font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;}
   .ipk-same.on{border-color:var(--accent);color:var(--accent);background:#131C24;}
+  #ipkScope{display:flex;gap:8px;margin:10px 15px 0;}
+  #ipkScope[hidden]{display:none;}
+  .ipk-sc{flex:1;background:var(--surface2);border:1px solid var(--line2);border-radius:3px;padding:8px 4px;
+    cursor:pointer;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;}
+  .ipk-sc.on{border-color:var(--accent);color:var(--accent);background:#131C24;}
   .ipk-none{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);padding:16px 0;}
   .inkdet{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:2px;}
   .inkdet .match{color:var(--ok);font-weight:700;}
@@ -705,7 +710,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.9.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.10 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -714,6 +719,7 @@
     <div class="ipk-head"><div class="ipk-title" id="ipkTitle">PICK AN INK</div>
       <button id="ipkClose" title="Close">&#10005;</button></div>
     <div class="ipk-ctx" id="ipkCtx"></div>
+    <div id="ipkScope" hidden></div>
     <input id="ipkSearch" type="search" placeholder="&#128269; search — try &quot;white&quot;, &quot;navy&quot;, &quot;PMS 186&quot;">
     <div id="ipkGrid"></div>
   </div>
@@ -972,13 +978,22 @@ function recoloredArtFor(side,dark){
   const base=artFor(side);
   if(!base)return null;
   const set=activeSet();
-  const anyOff=state.inkAssign.some(a=>a.off);
-  if((set.liveInk===false&&!anyOff)||!state.artInks.length)return base;
+  /* v8.10: recolor with only THIS side's inks, resolved through sideAssign —
+     front pixels never snap to a back-only ink and per-side swaps stay put. */
+  const inksS=[],assignS=[];
+  state.artInks.forEach((ink,i)=>{
+    if(!inkOnSide(i,side))return;
+    const a=state.inkAssign[i]||{};
+    const e=sideAssign(a,side);
+    inksS.push(ink);assignS.push({idx:e.idx,darkIdx:e.darkIdx,off:!!a.off});
+  });
+  const anyOff=assignS.some(a=>a.off);
+  if((set.liveInk===false&&!anyOff)||!inksS.length)return base;
   if(!base.__id)base.__id='art'+(artIdSeq++);
-  const sig=base.__id+'|'+(dark?'D':'L')+'|'+(set.liveInk===false?'K':'R')+'|'+state.inkAssign.map(a=>a.idx+':'+(a.darkIdx??'-')+(a.off?'X':'')).join(',');
+  const sig=base.__id+'|'+(side==='back'?'B':'F')+'|'+(dark?'D':'L')+'|'+(set.liveInk===false?'K':'R')+'|'+assignS.map(a=>a.idx+':'+(a.darkIdx??'-')+(a.off?'X':'')).join(',');
   if(recolorCache.has(sig))return recolorCache.get(sig);
   if(recolorCache.size>16)recolorCache.clear();
-  const out=recolorArt(base,state.artInks,state.inkAssign,dark,set.liveInk===false);
+  const out=recolorArt(base,inksS,assignS,dark,set.liveInk===false);
   recolorCache.set(sig,out);
   return out;
 }
@@ -1162,18 +1177,23 @@ function detectInks(canvas){
   }));
 }
 function reDetect(){
-  const srcs=[state.artF,activeSet().dupBack?null:state.artB].filter(Boolean);
+  /* v8.10: every merged ink remembers which side(s) it came from — F, B or FB.
+     The tag drives per-side rendering, screen counts and the picker scope. */
+  const srcs=[];
+  if(state.artF)srcs.push(['F',state.artF]);
+  if(!activeSet().dupBack&&state.artB)srcs.push(['B',state.artB]);
   let all=[];
-  srcs.forEach(s=>{all=all.concat(detectInks(s));});
+  srcs.forEach(([tag,s])=>{detectInks(s).forEach(c=>{all.push({...c,sides:tag});});});
   const merged=[];
   all.forEach(c=>{
     const hit=merged.find(m=>Math.hypot(m.r-c.r,m.g-c.g,m.b-c.b)<58);
-    if(hit)hit.pct=Math.max(hit.pct,c.pct);else merged.push({...c});
+    if(hit){hit.pct=Math.max(hit.pct,c.pct);if(hit.sides!==c.sides)hit.sides='FB';}
+    else merged.push({...c});
   });
   state.artInks=merged.slice(0,8);
   state.inkAssign=state.artInks.map(ink=>{
     const m=nearestPms(ink.r,ink.g,ink.b);
-    return {idx:m.idx,match:matchPct(m.dist),auto:true};
+    return {idx:m.idx,match:matchPct(m.dist),auto:true,backIdx:null,backDarkIdx:null};
   });
   refreshInkList();
 }
@@ -1344,7 +1364,7 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
 }
 
 function screensFor(photo,side,loc){
-  const inks=state.artInks.length?enabledAssign().length:1;
+  const inks=state.artInks.length?enabledAssignSide(side).length:1;
   const pl=computePlacement(photo,side,loc);
   let dark=false;
   if(pl){
@@ -1355,11 +1375,34 @@ function screensFor(photo,side,loc){
   dark=effectiveDark(photo,dark);
   /* v8.8: DTF has no screens and no separate underbase — the transfer carries
      its own white. Ink assignment (and therefore the mockup) is untouched. */
-  if(isDTF())return {inks,ub:0,total:0,dark,dtf:true};
+  if(isDTF())return {inks,ub:0,total:0,dark,side,dtf:true};
   const ub=(inks>0&&state.autoUnderbase&&dark)?1:0;
-  return {inks,ub,total:inks+ub,dark};
+  return {inks,ub,total:inks+ub,dark,side};
 }
-function inkIdxFor(a,dark){return (dark&&a.darkIdx!=null)?a.darkIdx:a.idx;}
+/* ============ v8.10 PER-SIDE INK INDEPENDENCE ============
+   backIdx / backDarkIdx on inkAssign entries — null means the back follows the
+   shared assignment, exactly the v8.6.2 dark-shirt contract (pin-on-edit, only
+   an explicit re-link sets it back to null). sideAssign resolves the pair. */
+function sideAssign(a,side){
+  if(side!=='back')return {idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx};
+  const bi=(a.backIdx!=null)?a.backIdx:a.idx;
+  const bd=(a.backDarkIdx!=null)?a.backDarkIdx:((a.backIdx!=null)?null:(a.darkIdx==null?null:a.darkIdx));
+  return {idx:bi,darkIdx:bd};
+}
+function inkIdxFor(a,dark,side){
+  const e=side?sideAssign(a,side):a;
+  return (dark&&e.darkIdx!=null)?e.darkIdx:e.idx;
+}
+function twoSidedArt(){return !!(state.artF&&state.artB&&!activeSet().dupBack);}
+function inkOnSide(i,side){
+  if(!twoSidedArt())return true;
+  const s=state.artInks[i]&&state.artInks[i].sides;
+  if(!s||s==='FB')return true;
+  return s===(side==='back'?'B':'F');
+}
+function enabledAssignSide(side){
+  return state.inkAssign.filter((a,i)=>!a.off&&inkOnSide(i,side));
+}
 
 /* ================= v8.8 DTF — FULL COLOR =================
    A print-method switch, not an ink change. Nothing about how the art renders
@@ -1372,7 +1415,10 @@ function inkIdxFor(a,dark){return (dark&&a.darkIdx!=null)?a.darkIdx:a.idx;}
    second file the press operator has to load. */
 function isDTF(){return state.printMethod==='dtf';}
 function dtfVariantsDiffer(){
-  return enabledAssign().some(function(a){return a.darkIdx!=null&&a.darkIdx!==a.idx;});
+  return enabledAssign().some(function(a){
+    return inkIdxFor(a,true,'front')!==inkIdxFor(a,false,'front')
+      ||inkIdxFor(a,true,'back')!==inkIdxFor(a,false,'back');
+  });
 }
 /* customer=true on approval pages — the customer doesn't care which transfer
    file it is, only that it prints in full color. The shop sheet gets the file. */
@@ -1393,8 +1439,8 @@ function screensText(sc){
 }
 function pmsCalloutText(sc){
   if(sc&&sc.dtf)return 'DTF full color transfer';
-  const names=enabledAssign().map(a=>{
-    const i=inkIdxFor(a,sc.dark),s=STD_INKS[PMS[i][0]];
+  const names=enabledAssignSide(sc.side||'front').map(a=>{
+    const i=inkIdxFor(a,sc.dark,sc.side||'front'),s=STD_INKS[PMS[i][0]];
     return `PMS ${PMS[i][0]}${s?' '+s[0]:''} (${PMS[i][2]})`;
   });
   if(sc.ub)names.push('White UB (Std)');
@@ -1581,6 +1627,11 @@ function refreshInkList(){
   state.artInks.forEach(function(ink,idx){
     const a=state.inkAssign[idx];if(!a)return;
     const useIdx=dv?(a.darkIdx==null?a.idx:a.darkIdx):a.idx;
+    /* v8.10 badges: which logo the colour lives in + a per-side override note */
+    const two=twoSidedArt();
+    const sTag=two&&ink.sides==='F'?'front logo':(two&&ink.sides==='B'?'back logo':'');
+    const bOver=two&&(!ink.sides||ink.sides==='FB')&&(dv?(a.backDarkIdx!=null):(a.backIdx!=null));
+    const bIdx=bOver?inkIdxFor(a,dv,'back'):-1;
     const p=PMS[useIdx],s=STD_INKS[p[0]];
     const row=document.createElement('div');row.className='inkrow'+(a.off?' inkoff':'');
     const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=p[1];
@@ -1589,7 +1640,9 @@ function refreshInkList(){
     const nm=document.createElement('div');nm.className='inkname';
     nm.innerHTML=(s?(s[1]?'<b class="star">\u2605</b> ':'')+s[0]:'PMS '+p[0])
       +(a.off?' <b class="offtag">OFF</b>':'')
-      +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'');
+      +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'')
+      +(sTag?'<span class="samet">'+sTag+'</span>':'')
+      +(bOver?'<span class="samet">back: PMS '+PMS[bIdx][0]+'</span>':'');
     nm.title=s?('Mayhem standard ink \u00b7 PMS '+p[0]):('PMS '+p[0]+' \u2014 custom mix');
     const btn=document.createElement('button');btn.className='inkchg';btn.textContent='CHANGE';
     btn.title=dv?'Pick what this ink becomes on the dark shirts':'Pick this ink';
@@ -1611,18 +1664,37 @@ function refreshInkList(){
       :'<b>DTF — FULL COLOR</b> · no screens';
     return;
   }
+  if(tot&&twoSidedArt()){
+    const nF=enabledAssignSide('front').length,nB=enabledAssignSide('back').length,nT=nF+nB;
+    $('screensPill').innerHTML=nT
+      ?'<b>front '+nF+' + back '+nB+' ink'+(nT>1?'s':'')+'</b>'+(offN?' ('+offN+' off)':'')
+        +' \u2192 '+nT+' screen'+(nT>1?'s':'')+(state.autoUnderbase
+          ?' standard \u00b7 +1 white underbase per dark side'
+          :' \u00b7 no underbase (soft-hand)')
+      :'<b>all inks off</b> \u2014 nothing prints';
+    return;
+  }
   $('screensPill').innerHTML=tot?(en?(state.autoUnderbase
     ?'<b>'+en+' ink'+(en>1?'s':'')+'</b>'+(offN?' ('+offN+' off)':'')+' \u2192 '+en+' screen'+(en>1?'s':'')+' standard \u00b7 '+(en+1)+' on dark shirts (white underbase)'
     :'<b>'+en+' ink'+(en>1?'s':'')+'</b>'+(offN?' ('+offN+' off)':'')+' \u2192 '+en+' screen'+(en>1?'s':'')+' \u00b7 no underbase (soft-hand)')
     :'<b>all inks off</b> \u2014 nothing prints'):'\u2014';
 }
 /* ---- ink picker overlay: search + Mayhem standards + full library ---- */
-let __pickIdx=-1;
+let __pickIdx=-1,__pickScope='both';
 function openInkPicker(idx){
   __pickIdx=idx;
   const ink=state.artInks[idx],a=state.inkAssign[idx];
   if(!ink||!a)return;
   $('ipkTitle').textContent=inkView==='dark'?'PICK THE DARK-SHIRT INK':'PICK THE STANDARD INK';
+  /* v8.10: scope only appears when there are two different logos AND this
+     colour lives in both — single-logo jobs never see it. */
+  __pickScope='both';
+  const sr=$('ipkScope');
+  if(sr){
+    const two=twoSidedArt()&&(!ink.sides||ink.sides==='FB');
+    sr.hidden=!two;
+    if(two)renderScopeRow();
+  }
   $('ipkCtx').innerHTML='<span class="ipk-sw" style="background:'+ink.hex+'"></span>'
     +'in your art: <b>'+ink.hex.toUpperCase()+'</b> \u00b7 '+ink.pct+'% of the design'
     +(a.match!=null?' \u00b7 closest standard <b>'+a.match+'%</b> match':'');
@@ -1631,12 +1703,55 @@ function openInkPicker(idx){
   $('inkPickWrap').hidden=false;
   setTimeout(function(){$('ipkSearch').focus();},30);
 }
+function renderScopeRow(){
+  const el=$('ipkScope');if(!el)return;
+  el.innerHTML='';
+  [['both','BOTH SIDES'],['front','FRONT ONLY'],['back','BACK ONLY']].forEach(function(s){
+    const b=document.createElement('button');
+    b.className='ipk-sc'+(__pickScope===s[0]?' on':'');
+    b.textContent=s[1];
+    b.title=s[0]==='both'?'Change this ink everywhere':'Change it only on the '+s[0]+' logo';
+    b.onclick=function(){__pickScope=s[0];renderScopeRow();renderPickGrid($('ipkSearch').value);};
+    el.appendChild(b);
+  });
+}
 function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;}
 function applyPick(i){
   const a=state.inkAssign[__pickIdx],ink=state.artInks[__pickIdx];
   if(!a||!ink){closeInkPicker();return;}
-  if(inkView==='dark'){a.darkIdx=(i==null)?null:i;}
-  else{if(a.darkIdx==null&&i!==a.idx)a.darkIdx=a.idx;a.idx=i;a.auto=false;a.match=matchPct(pmsDist(ink.r,ink.g,ink.b,i));}
+  /* v8.10: single-side colours always edit the shared fields (the other side
+     never renders them) — the scope toggle only exists for shared colours. */
+  const scope=(twoSidedArt()&&(!ink.sides||ink.sides==='FB'))?__pickScope:'both';
+  if(inkView==='dark'){
+    if(scope==='both'){
+      if(i==null){a.darkIdx=null;a.backDarkIdx=null;}
+      else{a.darkIdx=i;a.backDarkIdx=(a.backIdx!=null)?i:null;}
+    }else if(scope==='front'){
+      if(a.backDarkIdx==null)a.backDarkIdx=inkIdxFor(a,true,'back');   /* pin the back first */
+      a.darkIdx=(i==null)?null:i;
+    }else{
+      if(i==null)a.backDarkIdx=(a.backIdx==null&&a.darkIdx!=null)?a.idx:null;
+      else a.backDarkIdx=i;
+    }
+  }else{
+    if(i==null){closeInkPicker();return;}
+    if(scope==='both'){
+      if(a.backIdx!=null&&a.backDarkIdx==null)a.backDarkIdx=a.backIdx;   /* keep the dark-back where it was */
+      if(a.darkIdx==null&&i!==a.idx)a.darkIdx=a.idx;
+      a.idx=i;a.backIdx=null;a.auto=false;a.match=matchPct(pmsDist(ink.r,ink.g,ink.b,i));
+    }else if(scope==='front'){
+      if(a.backIdx==null){
+        if(a.backDarkIdx==null&&a.darkIdx!=null)a.backDarkIdx=a.darkIdx;
+        a.backIdx=a.idx;   /* pin the back where it was */
+      }
+      if(a.darkIdx==null&&i!==a.idx)a.darkIdx=a.idx;
+      a.idx=i;a.auto=false;a.match=matchPct(pmsDist(ink.r,ink.g,ink.b,i));
+    }else{
+      const oldB=sideAssign(a,'back');
+      if(a.backDarkIdx==null&&i!==oldB.idx)a.backDarkIdx=(oldB.darkIdx!=null)?oldB.darkIdx:oldB.idx;
+      a.backIdx=i;
+    }
+  }
   activeSet().inkAssign=state.inkAssign;
   recolorCache.clear();
   closeInkPicker();refreshInkList();refresh();buildBoard();
@@ -1654,7 +1769,8 @@ function renderPickGrid(query){
   const el=$('ipkGrid');el.innerHTML='';
   const q=(query||'').trim().toLowerCase();
   const a=state.inkAssign[__pickIdx]||{};
-  const cur=inkView==='dark'?(a.darkIdx==null?-1:a.darkIdx):a.idx;
+  const e=sideAssign(a,__pickScope==='back'?'back':'front');
+  const cur=inkView==='dark'?(e.darkIdx==null?-1:e.darkIdx):e.idx;
   const hit=function(p,s){
     if(!q)return true;
     return (s&&s[0].toLowerCase().includes(q))||('pms '+p[0]).toLowerCase().includes(q)
@@ -1664,7 +1780,7 @@ function renderPickGrid(query){
   const grid=function(){const g=document.createElement('div');g.className='ipk-grid';el.appendChild(g);return g;};
   if(inkView==='dark'){
     const b=document.createElement('button');
-    b.className='ipk-same'+(a.darkIdx==null?' on':'');
+    b.className='ipk-same'+(e.darkIdx==null?' on':'');
     b.textContent='SAME AS THE STANDARD INK';
     b.title='These shirts print exactly what the standard setup prints';
     b.onclick=function(){applyPick(null);};
@@ -1741,11 +1857,11 @@ function refresh(){
     $('actualIn').textContent=`${pl.widthIn.toFixed(2)}" wide${hIn?` × ${hIn.toFixed(2)}" tall`:''} · top ${pl.dropIn.toFixed(2)}" below collar`;
   } else $('actualIn').textContent='—';
   const plel=$('previewPms');plel.innerHTML='';
-  state.inkAssign.forEach(a=>{
-    if(a.off)return;
-    const i=inkIdxFor(a,sc.dark);
+  state.inkAssign.forEach((a,ai)=>{
+    if(a.off||!inkOnSide(ai,state.side))return;
+    const i=inkIdxFor(a,sc.dark,state.side);
     const p=PMS[i];
-    const swapped=i!==a.idx;
+    const swapped=i!==inkIdxFor(a,false,state.side);
     const c=document.createElement('span');c.className='pmschip';
     c.innerHTML=`<i style="background:${p[1]}"></i>PMS ${p[0]} <span class="blk">${p[2]}</span>${swapped?' ⇄':' '+a.match+'%'}`;
     plel.appendChild(c);
@@ -2928,17 +3044,17 @@ function drawPageFooter(ctx,W,H,note){
 /* v7.7: wrapping chip layout — 5+ color jobs shrink the chips and wrap to new
    rows instead of running off the page. layoutInkChips measures, drawInkChipsL
    draws; callers anchor the block using lay.rows*lay.rowH. */
-function layoutInkChips(ctx,maxW,dark,ub){
-  const list=enabledAssign();
+function layoutInkChips(ctx,maxW,dark,ub,side){
+  const list=side?enabledAssignSide(side):enabledAssign();
   const dtf=isDTF();
   const n=dtf?1:list.length+(ub?1:0);
   const small=n>4;
   const box=small?22:30,f1=small?11:13,f2=small?9.5:11,rowH=small?34:40,gap=small?12:18;
   /* v8.8: DTF collapses the whole strip to one process-colour chip */
   const items=dtf?[dtfSwatch(dark,true)]:list.map(a=>{
-    const i=inkIdxFor(a,dark),p=PMS[i],st=STD_INKS[p[0]];
+    const i=inkIdxFor(a,dark,side),p=PMS[i],st=STD_INKS[p[0]];
     const l1=st?(st[1]?'★ ':'')+st[0]:'PMS '+p[0];
-    const l2=(st?'PMS '+p[0]+' · ':'')+p[2]+((i!==a.idx)?' · swap':'');
+    const l2=(st?'PMS '+p[0]+' · ':'')+p[2]+((i!==inkIdxFor(a,false,side))?' · swap':'');
     return {hex:p[1],l1,l2};
   });
   if(!dtf&&ub)items.push({hex:'#FFFFFF',l1:'WHITE UNDERBASE',l2:'on dark shirts'});
@@ -3020,7 +3136,7 @@ function approvalFor(item,ret){
   const cardW=sides.length===2?690:900,gap=40;
   const totalW=cardW*sides.length+gap*(sides.length-1);
   let x0=(W-totalW)/2;
-  let firstSc=null;
+  let firstSc=null,totScr=0;
   sides.forEach(([side,photo])=>{
     // white card
     ctx.fillStyle='#FFFFFF';
@@ -3030,7 +3146,8 @@ function approvalFor(item,ret){
     renderMock(photo,cv,side,state.loc[side],false);
     const sc=screensFor(photo,side,state.loc[side]);
     if(!firstSc)firstSc=sc;
-    const lay=layoutInkChips(ctx,cardW-48,sc.dark,sc.ub);
+    totScr+=sc.total;
+    const lay=layoutInkChips(ctx,cardW-48,sc.dark,sc.ub,side);
     const chipTop=cardY+cardH-28-lay.rows*lay.rowH;
     /* v7.3.2: sweet spot — cropped shirt at ~88% of the card zone, centered
        with even breathing room between label, shirt, and ink callouts */
@@ -3054,7 +3171,7 @@ function approvalFor(item,ret){
   ctx.fillText(nm,50,992);
   const nw=ctx.measureText(nm).width;
   ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono", monospace';
-  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?screensText(firstSc):''),50+nw+30,992);
+  ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?(firstSc.dtf?screensText(firstSc):(totScr+' screen'+(totScr===1?'':'s'))):''),50+nw+30,992);
   drawPageFooter(ctx,W,H,'Approve garment, artwork size, placement, and ink colors before production.');
   if(ret)return pg;
   downloadCanvas(pg,'approval-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
@@ -3140,13 +3257,14 @@ function renderSummaryTo(pg){
     const repPhoto=rep.g.front||rep.g.back;
     const side0=rep.g.front?'front':'back';
     const sc=screensFor(repPhoto,side0,state.loc[side0]);
+    const totScr=sc.dtf?0:sides.reduce(function(t,sd){return t+screensFor(repPhoto,sd,state.loc[sd]).total;},0);
     /* header bar (page background — neutral) */
     ctx.fillStyle='#E8EAEC';ctx.font='900 19px "Archivo Black", Arial Black, sans-serif';
     ctx.fillText(gr.label,tx,gy+22);
     ctx.fillStyle='#98A0A6';ctx.font='700 12px "JetBrains Mono", monospace';
     ctx.textAlign='right';
     ctx.fillText(gr.items.length+' SHIRT'+(gr.items.length===1?'':'S')+' · '
-      +(sc.dtf?'NO SCREENS':sc.total+' SCREEN'+(sc.total===1?'':'S')),tx+tileW,gy+22);
+      +(sc.dtf?'NO SCREENS':totScr+' SCREEN'+(totScr===1?'':'S')),tx+tileW,gy+22);
     ctx.textAlign='left';
     /* striped tile */
     const ty=gy+headH;
@@ -3197,15 +3315,28 @@ function renderSummaryTo(pg){
     ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5;
     ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.stroke();
     /* swatch strip below the tile, on the page background */
-    const en=enabledAssign();
     const swatches=[];
     if(isDTF()){
       swatches.push(dtfSwatch(gr.dark));   /* v8.8: one process-colour chip, that's the whole strip */
     }else{
       if(gr.dark&&sc.ub)swatches.push({hex:'#FFFFFF',l1:'UNDERBASE',l2:'prints first',ub:true});
-      en.forEach(function(a){
-        const ii=inkIdxFor(a,gr.dark),p=PMS[ii],st=STD_INKS[p[0]];
-        swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]});
+      /* v8.10: union of each side's effective inks — side-tagged when they differ */
+      const two=twoSidedArt()&&sides.length===2;
+      const seen={};
+      sides.forEach(function(sd){
+        state.inkAssign.forEach(function(a,ai){
+          if(a.off||!inkOnSide(ai,sd))return;
+          const ii=inkIdxFor(a,gr.dark,sd);
+          const tag=two?(sd==='front'?'F':'B'):'';
+          if(seen[ii]!=null){
+            const sw=swatches[seen[ii]];
+            if(tag&&sw.tag&&sw.tag!==tag&&sw.tag!=='FB'){sw.l2='PMS '+PMS[ii][0];sw.tag='FB';}
+            return;
+          }
+          const p=PMS[ii],st=STD_INKS[p[0]];
+          seen[ii]=swatches.length;
+          swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]+(tag?' · '+(sd==='front'?'FRONT':'BACK'):''),tag:tag});
+        });
       });
     }
     let sx=tx,sy=ty+tileH+14;
@@ -3477,7 +3608,7 @@ function serializeJob(){
     userArt:!!window.__userArt,
     sets:SETS.map(st=>({name:st.name,items:st.items,dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
       artInks:st.artInks||[],
-      inkAssign:(st.inkAssign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,off:!!a.off,match:a.match,auto:!!a.auto})),
+      inkAssign:(st.inkAssign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,backIdx:a.backIdx==null?null:a.backIdx,backDarkIdx:a.backDarkIdx==null?null:a.backDarkIdx,off:!!a.off,match:a.match,auto:!!a.auto})),
       artF:(window.__userArt&&st.artF)?st.artF.toDataURL('image/png'):null,
       artB:(window.__userArt&&st.artB)?st.artB.toDataURL('image/png'):null}))};
 }
