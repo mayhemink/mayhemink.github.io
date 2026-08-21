@@ -497,6 +497,11 @@
   .pr-total{display:flex;justify-content:space-between;margin-top:10px;padding:10px;background:var(--surface2);border-radius:6px;font-family:'Archivo Black',sans-serif;font-size:14px;}
   .pr-note{color:#E8C447;font-size:10.5px;font-family:'JetBrains Mono',monospace;margin-top:6px;}
   .pr-sub{color:var(--muted);font-size:10.5px;font-family:'JetBrains Mono',monospace;margin-top:4px;}
+  /* v8.16 cartel sheet tab */
+  #cartelTab{position:fixed;left:14px;bottom:14px;z-index:60;background:var(--surface2);border:1px solid var(--line2);border-radius:4px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.05em;padding:8px 11px;}
+  #cartelTab:hover{border-color:var(--accent);color:var(--accent);}
+  .artsize{font-size:10.5px;margin-top:4px;}
+  .artsize.maxwarn{color:#E8C447;}
 </style>
 </head>
 <body class="tab-mock">
@@ -550,10 +555,11 @@
         <button id="sideBack">BACK</button>
       </div>
       <div class="sideblock" id="blockFront">
-        <div class="sb-head">FRONT</div>
+        <div class="sb-head">FRONT <span class="sb-note" id="frontNoArt" hidden>· no front print</span></div>
         <div class="locbtns" id="locBtnsF"></div>
         <label class="lbl">How wide? (inches)</label>
         <input type="number" id="designW" step="0.25" min="0.5" value="10">
+        <div class="val artsize" id="actualInF">—</div>
         <div class="maxnote" id="maxNoteF" hidden>&#9888; over the max print area — 12.5" wide × 17" tall</div>
       </div>
       <div class="sideblock" id="blockBack">
@@ -561,6 +567,7 @@
         <div class="locbtns" id="locBtnsB"></div>
         <label class="lbl">How wide? (inches)</label>
         <input type="number" id="designWB" step="0.25" min="0.5" value="10">
+        <div class="val artsize" id="actualInB">—</div>
         <div class="maxnote" id="maxNoteB" hidden>&#9888; over the max print area — 12.5" wide × 17" tall</div>
       </div>
       <div class="rulebox">
@@ -579,26 +586,19 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="panel" data-tabs="mock" id="pSizeRun">
-      <button class="col-head" id="srHead" type="button"><h3 style="margin:0;">Size run <span class="arrow">&#9656;</span></h3></button>
-      <div id="srBody" hidden>
-        <p class="desc">Quantities per size, per shirt color. Every color adds to the same total for price breaks.</p>
-        <div id="srList"></div>
-      </div>
-    </div>
-
-    <div class="panel" data-tabs="mock" id="pPricing">
-      <button class="col-head" id="prHead" type="button"><h3 style="margin:0;">Pricing calculator <span class="arrow">&#9656;</span></h3></button>
-      <div id="prBody" hidden>
-        <div class="segmented" style="width:100%;display:flex;margin:8px 0;">
-          <button id="shMayhem" class="active" style="flex:1;">MAYHEM INK</button>
-          <button id="shCC" style="flex:1;">CHRISTIAN</button>
+      <div class="maxnote-fixed">MAX PRINT AREA — 12.5" WIDE × 17" TALL · drag the logo on the shirt to move it · scroll over it to resize · double-click snaps back</div>
+      <div id="advFit">
+        <div class="row2" id="nudgeRow">
+          <div><label class="lbl">Nudge across (in)</label><input type="number" id="nudgeX" step="0.125" value="0"></div>
+          <div><label class="lbl">Nudge down (in)</label><input type="number" id="nudgeY" step="0.125" value="0"></div>
         </div>
-        <label class="checkline" style="margin-top:0;"><input type="checkbox" id="prUB"><span>count the white underbase as a color on dark shirts</span></label>
-        <div id="prOut"></div>
-        <div class="val" id="prFoot" style="margin-top:6px;">shirt costs update weekly from SanMar</div>
+        <label class="lbl">Rotation (°)</label>
+        <input type="range" id="rotDeg" min="-10" max="10" step="0.5" value="0">
+        <div class="val"><span id="rotVal">0</span>°</div>
+      </div>
+      <div class="btnrow">
+        <button class="btn ghost sm" id="resetFit">Reset size &amp; nudge</button>
+        <button class="btn ghost sm" onclick="setTab('sum')">See the shop print sheet →</button>
       </div>
     </div>
 
@@ -738,6 +738,28 @@
       </div>
     </div>
 
+    <div class="panel" data-tabs="mock" id="pSizeRun">
+      <button class="col-head" id="srHead" type="button"><h3 style="margin:0;">Size run <span class="arrow">&#9656;</span></h3></button>
+      <div id="srBody" hidden>
+        <p class="desc">Quantities per size, per shirt color. Every color adds to the same total for price breaks.</p>
+        <div id="srList"></div>
+      </div>
+    </div>
+
+    <div class="panel" data-tabs="mock" id="pPricing">
+      <button class="col-head" id="prHead" type="button"><h3 style="margin:0;">Pricing calculator <span class="arrow">&#9656;</span></h3></button>
+      <div id="prBody" hidden>
+        <div class="segmented" style="width:100%;display:flex;margin:8px 0;">
+          <button id="shMayhem" class="active" style="flex:1;">MAYHEM INK</button>
+          <button id="shCC" style="flex:1;">CHRISTIAN</button>
+        </div>
+        <label class="checkline" style="margin-top:0;"><input type="checkbox" id="prUB"><span>count the white underbase as a color on dark shirts</span></label>
+        <div id="prOut"></div>
+        <div class="val" id="prFoot" style="margin-top:6px;">shirt costs update weekly from SanMar</div>
+      </div>
+    </div>
+
+
     <div class="panel" id="pInks">
       <h3><span class="pn">5</span> Ink colors</h3>
       <p class="desc">Two ink setups. Drag a shirt into the other bucket to change how it prints · click a shirt to see it on the mockup.</p>
@@ -759,30 +781,13 @@
       <div class="checkline" id="lineUB"><input type="checkbox" id="autoUnderbase" checked><span>White underbase on dark shirts (+1 screen)</span></div>
     </div>
 
-    <div class="panel" id="pSize">
-      <h3>Size &amp; fine-tune</h3>
-      <p class="desc">Widths moved up into PLACEMENT. Or work right on the shirt: drag the logo to move it · scroll over it to resize · double-click to snap back.</p>
-      <div class="val" id="actualIn">—</div>
-      <div class="maxnote-fixed">MAX PRINT AREA — 12.5" WIDE × 17" TALL</div>
-      <div id="advFit">
-        <div class="row2" id="nudgeRow">
-          <div><label class="lbl">Nudge across (in)</label><input type="number" id="nudgeX" step="0.125" value="0"></div>
-          <div><label class="lbl">Nudge down (in)</label><input type="number" id="nudgeY" step="0.125" value="0"></div>
-        </div>
-        <label class="lbl">Rotation (°)</label>
-        <input type="range" id="rotDeg" min="-10" max="10" step="0.5" value="0">
-        <div class="val"><span id="rotVal">0</span>°</div>
-      </div>
-      <div class="btnrow">
-        <button class="btn ghost sm" id="resetFit">Reset size &amp; nudge</button>
-        <button class="btn ghost sm" onclick="setTab('sum')">See the shop print sheet →</button>
-      </div>
-    </div>
   </aside>
 </div>
 
+<button id="cartelTab" data-tabs="mock" title="Build the Mayhem customer price sheet for this job — mockups, size runs and colors carry over.">▸ CARTEL PRICE SHEET</button>
+
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.15 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.16 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1960,13 +1965,6 @@ function refresh(){
   const sc=screensFor(photo,state.side,loc);
   $('previewLabel').innerHTML=`<b>${s.name}</b> · ${photo.colorName} · ${state.side==='front'?'Front':'Back'} · ${locLabel(state.side)}`;
   $('previewScreens').textContent=sc.dtf?`${sc.inks} ink${sc.inks===1?'':'s'} · DTF full color · no screens`:`${sc.inks} ink + ${sc.ub} UB = ${sc.total} screens`;
-  const pl=computePlacement(photo,state.side,loc);
-  if(pl){
-    const art=state.side==='front'?state.artF:state.artB;
-    const hIn=art?pl.widthIn*art.height/art.width:0;
-    const __over=pl.widthIn>12.51||hIn>17.01;   /* v8.15: shop max print 12.5" × 17" */
-    $('actualIn').innerHTML=`${pl.widthIn.toFixed(2)}" wide${hIn?` × ${hIn.toFixed(2)}" tall`:''} · top ${pl.dropIn.toFixed(2)}" below collar`+(__over?' · <span class="maxwarn">OVER MAX 12.5" × 17"</span>':'');
-  } else $('actualIn').textContent='—';
   /* v8.15: stacked placement blocks — active highlight, back-art hint, per-side over-max flags */
   const __bf=$('blockFront'),__bb=$('blockBack');
   if(__bf&&__bb){
@@ -1974,13 +1972,21 @@ function refresh(){
     __bb.classList.toggle('on',state.side==='back');
     __bb.classList.toggle('noart',!artFor('back'));
     const bn=$('backNoArt');if(bn)bn.hidden=!!artFor('back');
+    __bf.classList.toggle('noart',!artFor('front'));
+    const fn=$('frontNoArt');if(fn)fn.hidden=!!artFor('front');
     ['front','back'].forEach(sd=>{
-      const a=artFor(sd);let ov=false;
+      const a=artFor(sd);let ov=false,txt='—';
       const ph2=sd==='front'?gp.front:gp.back;
       if(a&&ph2&&ph2.canvas){
         const p2=computePlacement(ph2,sd,state.loc[sd]);
-        if(p2){const h2=p2.widthIn*a.height/a.width;ov=p2.widthIn>12.51||h2>17.01;}
+        if(p2){
+          const h2=p2.widthIn*a.height/a.width;
+          ov=p2.widthIn>12.51||h2>17.01;
+          txt=`${p2.widthIn.toFixed(2)}" wide × ${h2.toFixed(2)}" tall · top ${p2.dropIn.toFixed(2)}" below collar`;
+        }
       }
+      const ro=$(sd==='front'?'actualInF':'actualInB');
+      if(ro){ro.textContent=txt;ro.classList.toggle('maxwarn',ov);}
       const nt=$(sd==='front'?'maxNoteF':'maxNoteB');if(nt)nt.hidden=!ov;
       const inp=$(sd==='front'?'designW':'designWB');if(inp)inp.classList.toggle('overmax',ov);
     });
@@ -2952,7 +2958,7 @@ function loadArtFile(file,cb){
 
 buildStyleTabs();buildLocBtns();buildGallery();refreshCalibStatus();syncRuleInputs();
 state.artF=buildDefaultArt();
-if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>{state.artF=buildDefaultArt();reDetect();refresh();});}
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>{if(window.__userArt)return;state.artF=buildDefaultArt();reDetect();refresh();});}
 reDetect();syncFitInputs();
 
 $('sideFront').onclick=()=>{state.side='front';$('sideFront').classList.add('active');$('sideBack').classList.remove('active');
@@ -3048,12 +3054,17 @@ $('showAnchors').onclick=()=>{
 wireDrop('baseDrop','baseInput',handleFiles,true);
 wireDrop('artDropF','artInputF',f=>loadArtFile(f,c=>{
   c.__id='art'+(artIdSeq++);
+  window.__userArt=true;window.__userArtF=true;
   state.artF=c;activeSet().artF=c;reDetect();
   activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
   refreshArtNote();refresh();buildBoard();
 }));
 wireDrop('artDropB','artInputB',f=>loadArtFile(f,c=>{
   c.__id='art'+(artIdSeq++);
+  /* v8.16: back-only jobs — dropping back art with no real front art kills the
+     demo front, so exports and the sheet show the back alone. */
+  window.__userArt=true;
+  if(!window.__userArtF){state.artF=null;activeSet().artF=null;}
   state.artB=c;activeSet().artB=c;reDetect();
   activeSet().artInks=state.artInks;activeSet().inkAssign=state.inkAssign;
   refreshArtNote();refresh();buildBoard();
@@ -4003,6 +4014,45 @@ if($('exSize'))$('exSize').onchange=e=>{state.exportNoSize=e.target.checked;if(t
 const __v815rsi=renderSetItems;renderSetItems=function(){__v815rsi();if($('srBody')&&!$('srBody').hidden)renderSizeRun();};
 const __v815ril=refreshInkList;refreshInkList=function(){__v815ril();if($('prBody')&&!$('prBody').hidden)renderPricing();};
 
+/* ============ v8.16 CARTEL PRICE SHEET HANDOFF ============
+   Bottom-left tab → cartel.html (the Mayhem customer pricing sheet Christian
+   sends his accounts). Hands the finished job across via localStorage: clean
+   mockup JPEGs, per-side billable color counts, size runs, underbase flag.
+   cartel.html does the rest (and works standalone with no handoff). */
+async function openCartelSheet(){
+  const items=activeSet().items;
+  if(!items.length){alert('Add shirts to the job first (step 4) — the price sheet is built from the job.');window.open('cartel.html','_blank');return;}
+  const b=$('cartelTab'),orig=b.textContent;b.textContent='BUILDING…';
+  try{
+    await ensureSetPhotos();
+    const mocks=[];
+    for(const it of items){
+      const pg=cleanMockFor(it,true);
+      let img=null;
+      if(pg){
+        const sc=Math.min(1,900/pg.width);
+        const c=document.createElement('canvas');c.width=Math.round(pg.width*sc);c.height=Math.round(pg.height*sc);
+        c.getContext('2d').drawImage(pg,0,0,c.width,c.height);
+        img=c.toDataURL('image/jpeg',0.85);
+      }
+      mocks.push({styleKey:it.styleKey,colorName:it.colorName,img,sizeRun:it.sizeRun||null});
+    }
+    const payload={v:1,when:Date.now(),
+      customer:$('jobCustomer').value,quote:$('jobQuote').value,
+      locs:jobPrintLocs().map(sd=>({side:sd,colors:locColorCount(sd)})),
+      underbase:state.autoUnderbase&&!isDTF()&&items.some(it=>itemUsesDark(it)),
+      mocks};
+    try{localStorage.setItem('mockuplab.cartel.handoff.v1',JSON.stringify(payload));}
+    catch(e){
+      payload.mocks.forEach(m=>m.img=null);
+      try{localStorage.setItem('mockuplab.cartel.handoff.v1',JSON.stringify(payload));}catch(e2){}
+    }
+  }catch(e){}
+  b.textContent=orig;
+  window.open('cartel.html','_blank');
+}
+if($('cartelTab'))$('cartelTab').onclick=openCartelSheet;
+
 /* ============ v7.9 JOB AUTOSAVE + RESUME ============ */
 const JOBKEY='mockuplab.job.v1';
 let __bootRestored=false,__saveTimer=null;
@@ -4054,7 +4104,7 @@ async function restoreJob(j){
   state.exportNoSize=!!j.exportNoSize;if($('exSize'))$('exSize').checked=state.exportNoSize;
   if(typeof PRICE_SHEET!=='undefined')PRICE_SHEET=(j.priceSheet==='cc')?'cc':'mayhem';
   if($('prUB'))$('prUB').checked=!!j.prUB;
-  window.__userArt=!!j.userArt;
+  window.__userArt=!!j.userArt;window.__userArtF=!!(j.userArt&&j.sets&&j.sets.some(st=>st.artF));
   SETS.length=0;
   for(const st of (j.sets||[])){
     const artF=await loadCanvasFrom(st.artF),artB=await loadCanvasFrom(st.artB);
