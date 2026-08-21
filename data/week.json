@@ -5,7 +5,7 @@
 "stats":{"pph":{"1":140,"2":79,"3":60,"4":52,"5":47,"6":32},"setup":{"1":5.6,"2":6.8,"3":5.9,"4":8.3,"5":6.5,"6":5.7}},
 "days":[
 {"day":"2026-08-24","rows":[
-{"id":"6414-front","job":"6414","url":"https://www.printavo.com/invoices/24088096","customer":"Flag Football LATE ADD-ON","location":"Front — team jersey design (same screens as 6361, still burned)","colors":1,"screens":1,"qty":63,"noest":true,"note":"CUSTOMER DATE TODAY. Run the 9 WHITE-ink teams first (34 pcs), ONE ink change to Pantone 289, then the 5 blue teams (29 pcs). Ink-per-team list is on the order."},
+{"id":"6414-front","job":"6414","url":"https://www.printavo.com/invoices/24088096","customer":"Flag Football LATE ADD-ON","location":"Front — team jersey design (same screens as 6361, still burned)","colors":1,"screens":1,"qty":63,"img":"6414a","noest":true,"note":"CUSTOMER DATE TODAY. Run the 9 WHITE-ink teams first (34 pcs), ONE ink change to Pantone 289, then the 5 blue teams (29 pcs). Ink-per-team list is on the order."},
 {"id":"6387-lc","job":"6387","url":"https://www.printavo.com/invoices/23971959","customer":"Palmer Litigation — Peach Days","location":"LC — Palmer Litigation logo, navy (Dusty Peach tris)","colors":1,"screens":1,"qty":116,"img":"6387a","note":"Moved from last Friday — screens should still be burned."},
 {"id":"6387-back","job":"6387","url":"https://www.printavo.com/invoices/23971959","customer":"Palmer Litigation — Peach Days","location":"Full back — In a WRECK? 435-INJURED (5 color)","colors":5,"screens":5,"qty":116,"img":"6387a","noest":true,"note":"Customer date Fri 8/28. 5 screens — start this one with real hours left."},
 {"id":"6242-son-grey","job":"6242","url":"https://www.printavo.com/invoices/23417167","customer":"Bret Dickey — Sonuvabeast","location":"Front — SONUVABEAST (Grey Frost tees, black + grey)","colors":2,"screens":2,"qty":24,"img":"6242b","note":"Customer date Thu 8/27."},
@@ -74,6 +74,7 @@
 ]}
 ],
 "img":{
+"6414a":"/data/mocks/2026-08-24/6414_1.jpg",
 "6242a":"/data/mocks/2026-08-24/6242_1.jpg",
 "6242b":"/data/mocks/2026-08-24/6242_2.jpg",
 "6387a":"/data/mocks/2026-08-24/6387_1.jpg",
