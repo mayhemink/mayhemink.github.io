@@ -875,7 +875,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.23 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.24 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -3490,7 +3490,7 @@ function approvalFor(item,ret){
     let ry=cardY+10;
     __slvKs.forEach(k=>{
       totScr+=sleeveScreens(k,__dk);
-      const t=renderSleeveTile(k,__rgb,__dk,tileMax,true);
+      const t=renderSleeveTile(k,__rgb,__dk,tileMax*3,true);   /* v8.24: 3× internal, scaled down below */
       if(!t)return;
       const sc2=Math.min(1,railW/t.width,tileMax/t.height);
       const tw=t.width*sc2,th=t.height*sc2;
@@ -3995,7 +3995,7 @@ function cleanMockFor(item,ret){
   });
   __slvKs.forEach(k=>{
     const photo=g.front||g.back;
-    const t=renderSleeveTile(k,shirtTileColor(photo),itemUsesDark(item),H-180,true);
+    const t=renderSleeveTile(k,shirtTileColor(photo),itemUsesDark(item),(H-180)*3,true);   /* v8.24 */
     if(t){
       const boxH=H-100;
       const scl=Math.min(1,cardW/t.width,boxH/t.height);
@@ -4394,34 +4394,38 @@ function sleeveRecolored(k,dark){
   recolorCache.set(sig,out);
   return out;
 }
-/* the tile. rgb = sampled garment color · cap=true draws the caption strip */
+/* the tile. rgb = sampled garment color · cap=true draws the caption strip.
+   v8.24: rendered at up to 170 ppi internally (was 42) — callers/CSS shrink
+   it for display, so the tile stays razor sharp on retina and at zoom.
+   Strokes, radius and caption all scale with `sf` so nothing changes visually. */
 function renderSleeveTile(k,rgb,dark,maxPx,cap){
   const s=sleeveObj(k);if(!s.art)return null;
   const d=sleeveDims(k);
   const area=d.area,padIn=0.5;
-  const ppi=Math.max(8,Math.min(42,maxPx/(Math.max(area.w,area.h)+padIn*2)));
-  const capH=cap?34:0;
+  const ppi=Math.max(8,Math.min(170,maxPx/(Math.max(area.w,area.h)+padIn*2)));
+  const sf=Math.max(1,ppi/42);
+  const capH=cap?Math.round(34*sf):0;
   const W=Math.round((area.w+padIn*2)*ppi),H=Math.round((area.h+padIn*2)*ppi)+capH;
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;
   const ctx=cv.getContext('2d');ctx.imageSmoothingQuality='high';
   const r=Math.round(rgb[0]),g=Math.round(rgb[1]),b=Math.round(rgb[2]);
-  ctx.beginPath();ctx.roundRect(0,0,W,H,10);
+  ctx.beginPath();ctx.roundRect(0,0,W,H,10*sf);
   ctx.fillStyle='rgb('+r+','+g+','+b+')';ctx.fill();
   const line=relLum(rgb[0],rgb[1],rgb[2])<0.45?'rgba(255,255,255,.4)':'rgba(0,0,0,.35)';
-  ctx.save();ctx.setLineDash([6,5]);ctx.strokeStyle=line;ctx.lineWidth=1.5;
+  ctx.save();ctx.setLineDash([6*sf,5*sf]);ctx.strokeStyle=line;ctx.lineWidth=1.5*sf;
   ctx.strokeRect(padIn*ppi,padIn*ppi,area.w*ppi,area.h*ppi);ctx.restore();
   const art=sleeveRecolored(k,dark)||s.art;
   const aw=d.w*ppi,ah=d.h*ppi;
   ctx.globalAlpha=0.97;
   ctx.drawImage(art,padIn*ppi+(area.w*ppi-aw)/2,padIn*ppi+(area.h*ppi-ah)/2,aw,ah);
   ctx.globalAlpha=1;
-  ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.roundRect(0,0,W,H,10);ctx.stroke();
+  ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5*sf;
+  ctx.beginPath();ctx.roundRect(0,0,W,H,10*sf);ctx.stroke();
   if(cap){
     ctx.fillStyle='rgba(14,15,16,.78)';ctx.fillRect(0,H-capH,W,capH);
-    ctx.fillStyle='#E8EAEC';ctx.font='700 11px "JetBrains Mono", monospace';
+    ctx.fillStyle='#E8EAEC';ctx.font='700 '+Math.round(11*sf)+'px "JetBrains Mono", monospace';
     ctx.textAlign='center';
-    ctx.fillText(SLV_LABEL[k]+' · '+(+d.w.toFixed(2))+'" WIDE'+(d.over?' ⚠':''),W/2,H-capH/2+4,W-10);
+    ctx.fillText(SLV_LABEL[k]+' · '+(+d.w.toFixed(2))+'" WIDE'+(d.over?' ⚠':''),W/2,H-capH/2+4*sf,W-10*sf);
     ctx.textAlign='left';
   }
   return cv;
@@ -4582,7 +4586,7 @@ function refreshSleevePreview(){
   const dark=screensFor(photo,sd0,state.loc[sd0]).dark;
   wrap.innerHTML='';
   ks.forEach(k=>{
-    const t=renderSleeveTile(k,rgb,dark,230,false);
+    const t=renderSleeveTile(k,rgb,dark,850,false);   /* v8.24: hi-res canvas, CSS shrinks it */
     if(!t)return;
     const cell=document.createElement('div');cell.className='pvslv';
     cell.appendChild(t);
