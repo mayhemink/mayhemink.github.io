@@ -1,0 +1,593 @@
+{
+ "updated": "2026-08-20",
+ "note": "dealer costs = SanMar myPrice; base covers through XL; weekly task refreshes the 15 stalest styles",
+ "styles": {
+  "NL6210": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": true,
+   "checked": "2026-08-20",
+   "costs": {
+    "color": {
+     "base": 3.99,
+     "2XL": 5.62,
+     "3XL": 6.92,
+     "4XL": 8.2
+    }
+   }
+  },
+  "PC54": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": true,
+   "checked": "2026-08-20",
+   "costs": {
+    "white": {
+     "base": 2.33,
+     "2XL": 3.84,
+     "3XL": 4.94,
+     "4XL": 4.94
+    },
+    "color": {
+     "base": 2.44,
+     "2XL": 4.25,
+     "3XL": 5.53,
+     "4XL": 5.53
+    }
+   }
+  },
+  "PC55": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": true,
+   "checked": "2026-08-20",
+   "costs": {
+    "white": {
+     "base": 2.67,
+     "2XL": 4.0,
+     "3XL": 5.06,
+     "4XL": 5.06
+    },
+    "color": {
+     "base": 2.99,
+     "2XL": 4.64,
+     "3XL": 6.26,
+     "4XL": 6.26
+    }
+   }
+  },
+  "5000": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL",
+    "5XL"
+   ],
+   "verified": true,
+   "checked": "2026-08-20",
+   "costs": {
+    "white": {
+     "base": 2.38,
+     "2XL": 4.52,
+     "3XL": 5.36,
+     "4XL": 5.36,
+     "5XL": 6.2
+    },
+    "color": {
+     "base": 2.49,
+     "2XL": 5.01,
+     "3XL": 6.2,
+     "4XL": 6.2,
+     "5XL": 6.2
+    }
+   }
+  },
+  "18500": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": true,
+   "checked": "2026-08-20",
+   "costs": {
+    "color": {
+     "base": 10.0,
+     "2XL": 15.73,
+     "3XL": 18.44,
+     "4XL": 18.44
+    }
+   }
+  },
+  "PC78H": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": true,
+   "checked": "2026-08-20",
+   "costs": {
+    "color": {
+     "base": 9.8,
+     "2XL": 14.49,
+     "3XL": 17.05,
+     "4XL": 17.05
+    }
+   }
+  },
+  "1717": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "5400": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+   ],
+   "verified": false
+  },
+  "18000": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "18600": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+   ],
+   "verified": false
+  },
+  "64000": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+   ],
+   "verified": false
+  },
+  "64000CVC": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+   ],
+   "verified": false
+  },
+  "DM108": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "DM130": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "DM108L": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "DM1190L": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "NL3600": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "NL6600": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+   ],
+   "verified": false
+  },
+  "PC340": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "PC61": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "PC43": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "PC55LS": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "ST350": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "ST350LS": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "ST405": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "ST420LSH": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "ST450": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "ST650": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "DT6100": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "DT6104": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "DT109": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "DT153": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "DT188": {
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "G2400": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+   ],
+   "verified": false
+  },
+  "MM1014": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+   ],
+   "verified": false
+  },
+  "SS4500": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+   ],
+   "verified": false
+  },
+  "SS4500Z": {
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+   ],
+   "verified": false
+  },
+  "PC54Y": {
+   "sizes": [
+    "YXS",
+    "YS",
+    "YM",
+    "YL",
+    "YXL"
+   ],
+   "verified": false
+  },
+  "PC55Y": {
+   "sizes": [
+    "YXS",
+    "YS",
+    "YM",
+    "YL",
+    "YXL"
+   ],
+   "verified": false
+  },
+  "DT130Y": {
+   "sizes": [
+    "YXS",
+    "YS",
+    "YM",
+    "YL",
+    "YXL"
+   ],
+   "verified": false
+  },
+  "DT108Y": {
+   "sizes": [
+    "YXS",
+    "YS",
+    "YM",
+    "YL",
+    "YXL"
+   ],
+   "verified": false
+  },
+  "5000B": {
+   "sizes": [
+    "YXS",
+    "YS",
+    "YM",
+    "YL",
+    "YXL"
+   ],
+   "verified": false
+  },
+  "18500B": {
+   "sizes": [
+    "YS",
+    "YM",
+    "YL",
+    "YXL"
+   ],
+   "verified": false
+  }
+ }
+}

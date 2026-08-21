@@ -464,6 +464,39 @@
   body.mode-simple .locbtns{grid-template-columns:1fr 1fr 1fr;}
   body.mode-simple .locbtns button{padding:10px 6px;}
 
+
+  /* ============ v8.15 ============ */
+  .sideblock{border:1px solid var(--line2);border-radius:6px;padding:12px;margin-top:10px;}
+  .sideblock.on{border-color:var(--accent);}
+  .sideblock .sb-head{font-family:'Archivo Black',sans-serif;font-size:11.5px;letter-spacing:.08em;color:var(--accent2);margin-bottom:8px;}
+  .sideblock.on .sb-head{color:var(--accent);}
+  .sideblock.noart{opacity:.55;}
+  .sb-note{color:var(--muted);font-family:'JetBrains Mono',monospace;font-weight:500;font-size:10.5px;letter-spacing:0;}
+  .maxnote{color:#E8C447;font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:6px;font-weight:700;}
+  .maxnote-fixed{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10.5px;margin:6px 0 2px;letter-spacing:.04em;}
+  #designW.overmax,#designWB.overmax{color:#E8C447;border-color:#E8C447;}
+  .maxwarn{color:#E8C447;font-weight:700;}
+  .col-head{width:100%;background:none;border:none;color:var(--ink);cursor:pointer;display:flex;align-items:center;padding:0;text-align:left;}
+  .col-head h3{width:100%;}
+  .col-head .arrow{margin-left:auto;color:var(--muted);transition:transform .15s;}
+  .col-head.open .arrow{transform:rotate(90deg);}
+  .sr-item{border:1px solid var(--line2);border-radius:6px;padding:10px;margin-top:10px;}
+  .sr-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;gap:8px;}
+  .sr-head span{color:var(--muted);font-size:10.5px;font-family:'JetBrains Mono',monospace;text-align:right;}
+  .sr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;}
+  .sr-grid label span{display:block;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;text-align:center;}
+  .sr-grid input{width:100%;text-align:center;padding:6px 2px;}
+  .sr-append{margin-top:8px;font-size:11.5px;}
+  .pr-block{border:1px solid var(--line2);border-radius:6px;padding:10px;margin-top:10px;}
+  .pr-block table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:11.5px;}
+  .pr-block td{padding:3px 4px;border-bottom:1px solid var(--line2);}
+  .pr-block tr:last-child td{border-bottom:none;}
+  .pr-block td:last-child,.pr-block td:nth-child(3){text-align:right;}
+  .pr-title{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;gap:8px;}
+  .pr-title span{color:var(--muted);font-size:10.5px;font-family:'JetBrains Mono',monospace;}
+  .pr-total{display:flex;justify-content:space-between;margin-top:10px;padding:10px;background:var(--surface2);border-radius:6px;font-family:'Archivo Black',sans-serif;font-size:14px;}
+  .pr-note{color:#E8C447;font-size:10.5px;font-family:'JetBrains Mono',monospace;margin-top:6px;}
+  .pr-sub{color:var(--muted);font-size:10.5px;font-family:'JetBrains Mono',monospace;margin-top:4px;}
 </style>
 </head>
 <body class="tab-mock">
@@ -511,14 +544,25 @@
 
     <div class="panel" data-tabs="mock" id="pPlace">
       <h3><span class="pn">3</span> Placement</h3>
-      <p class="desc">Which side you're setting up, and where the print sits. Set this right after the art goes in.</p>
-      <label class="lbl" style="margin-top:0;">Side</label>
-      <div class="segmented" style="width:100%;display:flex;margin-bottom:10px;">
-        <button id="sideFront" class="active" style="flex:1;">FRONT</button>
-        <button id="sideBack" style="flex:1;">BACK</button>
+      <p class="desc">Front on top, back underneath — where each side prints and how wide. The preview follows whichever you touch.</p>
+      <div class="segmented" style="display:none;">
+        <button id="sideFront" class="active">FRONT</button>
+        <button id="sideBack">BACK</button>
       </div>
-      <label class="lbl">Where does it print?</label>
-      <div class="locbtns" id="locBtns"></div>
+      <div class="sideblock" id="blockFront">
+        <div class="sb-head">FRONT</div>
+        <div class="locbtns" id="locBtnsF"></div>
+        <label class="lbl">How wide? (inches)</label>
+        <input type="number" id="designW" step="0.25" min="0.5" value="10">
+        <div class="maxnote" id="maxNoteF" hidden>&#9888; over the max print area — 12.5" wide × 17" tall</div>
+      </div>
+      <div class="sideblock" id="blockBack">
+        <div class="sb-head">BACK <span class="sb-note" id="backNoArt" hidden>· no back print yet</span></div>
+        <div class="locbtns" id="locBtnsB"></div>
+        <label class="lbl">How wide? (inches)</label>
+        <input type="number" id="designWB" step="0.25" min="0.5" value="10">
+        <div class="maxnote" id="maxNoteB" hidden>&#9888; over the max print area — 12.5" wide × 17" tall</div>
+      </div>
       <div class="rulebox">
         <div class="rb-title" id="ruleTitle">rule</div>
         <div class="row2">
@@ -534,6 +578,27 @@
             <input type="number" id="ruleDrop" step="0.25" value="2">
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="panel" data-tabs="mock" id="pSizeRun">
+      <button class="col-head" id="srHead" type="button"><h3 style="margin:0;">Size run <span class="arrow">&#9656;</span></h3></button>
+      <div id="srBody" hidden>
+        <p class="desc">Quantities per size, per shirt color. Every color adds to the same total for price breaks.</p>
+        <div id="srList"></div>
+      </div>
+    </div>
+
+    <div class="panel" data-tabs="mock" id="pPricing">
+      <button class="col-head" id="prHead" type="button"><h3 style="margin:0;">Pricing calculator <span class="arrow">&#9656;</span></h3></button>
+      <div id="prBody" hidden>
+        <div class="segmented" style="width:100%;display:flex;margin:8px 0;">
+          <button id="shMayhem" class="active" style="flex:1;">MAYHEM INK</button>
+          <button id="shCC" style="flex:1;">CHRISTIAN</button>
+        </div>
+        <label class="checkline" style="margin-top:0;"><input type="checkbox" id="prUB"><span>count the white underbase as a color on dark shirts</span></label>
+        <div id="prOut"></div>
+        <div class="val" id="prFoot" style="margin-top:6px;">shirt costs update weekly from SanMar</div>
       </div>
     </div>
 
@@ -636,6 +701,7 @@
         <button class="btn ghost" id="dlAllApprovals">⬇ CUSTOMER APPROVAL PDF — ONE FILE, A PAGE PER SHIRT</button>
         <button class="btn ghost" id="dlShopSheet">⬇ SHOP PRINT SHEET ONLY</button>
       </div>
+      <label class="checkline" id="lineExSize" title="For jobs re-running old films — the mockup just has to look right, so the approval page skips the measured width. The shop print sheet keeps it."><input type="checkbox" id="exSize"><span><b>EXCLUDE PRINT SIZE IN EXPORTS</b> — approval pages skip the measured width (reusing old films)</span></label>
       <div class="btnrow" style="margin-top:8px;">
         <button class="btn ghost sm" id="dlCleanZip">⬇ CLEAN MOCKUPS ZIP — JUST LOGOS ON SHIRTS, NO BRANDING</button>
       </div>
@@ -695,10 +761,9 @@
 
     <div class="panel" id="pSize">
       <h3>Size &amp; fine-tune</h3>
-      <p class="desc">Or work right on the shirt: drag the logo to move it · scroll over it to resize · double-click to snap back.</p>
-      <label class="lbl" style="margin-top:0;">How wide? (inches)</label>
-      <input type="number" id="designW" step="0.25" min="0.5" value="10">
+      <p class="desc">Widths moved up into PLACEMENT. Or work right on the shirt: drag the logo to move it · scroll over it to resize · double-click to snap back.</p>
       <div class="val" id="actualIn">—</div>
+      <div class="maxnote-fixed">MAX PRINT AREA — 12.5" WIDE × 17" TALL</div>
       <div id="advFit">
         <div class="row2" id="nudgeRow">
           <div><label class="lbl">Nudge across (in)</label><input type="number" id="nudgeX" step="0.125" value="0"></div>
@@ -717,7 +782,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.14.1 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.15 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1464,18 +1529,24 @@ function buildStyleTabs(){
     sel.appendChild(o);
   });
 }
+function setSide(side){const b=$(side==='front'?'sideFront':'sideBack');if(b&&state.side!==side)b.click();}
+/* v8.15: FRONT and BACK placement are stacked blocks — both preset lists are
+   always visible, each with its own How-wide. Touching a block flips the
+   preview/edit side; clicking a preset in the other block flips too. */
 function buildLocBtns(){
-  const el=$('locBtns');el.innerHTML='';
   const __ph=activePhoto();
-  LOCATIONS[state.side].forEach(([key,label])=>{
-    const b=document.createElement('button');
-    const r=__ph?effRule(__ph.styleKey,state.side,key):RULES[state.side][key];
-    const hooded=__ph&&r.drop===0&&state.side==='back'&&hoodStyle(__ph.styleKey)&&RULES[state.side][key].drop>0;
-    b.innerHTML=label+`<span class="st">@ ${r.drop}" down${hooded?' · below hood':''}</span>`;
-    if(state.loc[state.side]===key)b.classList.add('active');
-    b.onclick=()=>{state.loc[state.side]=key;buildLocBtns();syncRuleInputs();syncFitInputs();refresh();
-      renderSetupTabs();renderShirtAssign();};   /* placement can flip which shirts read dark */
-    el.appendChild(b);
+  [['front','locBtnsF'],['back','locBtnsB']].forEach(([side,elId])=>{
+    const el=$(elId);if(!el)return;el.innerHTML='';
+    LOCATIONS[side].forEach(([key,label])=>{
+      const b=document.createElement('button');
+      const r=__ph?effRule(__ph.styleKey,side,key):RULES[side][key];
+      const hooded=__ph&&r.drop===0&&side==='back'&&hoodStyle(__ph.styleKey)&&RULES[side][key].drop>0;
+      b.innerHTML=label+`<span class="st">@ ${r.drop}" down${hooded?' · below hood':''}</span>`;
+      if(state.loc[side]===key)b.classList.add('active');
+      b.onclick=()=>{setSide(side);state.loc[side]=key;buildLocBtns();syncRuleInputs();syncFitInputs();refresh();
+        renderSetupTabs();renderShirtAssign();};   /* placement can flip which shirts read dark */
+      el.appendChild(b);
+    });
   });
 }
 function syncRuleInputs(){
@@ -1486,7 +1557,9 @@ function syncRuleInputs(){
 }
 function syncFitInputs(){
   const fit=getFit();
-  $('designW').value=fit.widthIn;
+  const wf=$('designW'),wb=$('designWB');
+  if(wf&&document.activeElement!==wf)wf.value=locWidth('front');
+  if(wb&&document.activeElement!==wb)wb.value=locWidth('back');
   $('nudgeX').value=fit.nudgeX||0;
   $('nudgeY').value=fit.nudgeY||0;
   $('rotDeg').value=fit.rot;$('rotVal').textContent=fit.rot;
@@ -1534,8 +1607,8 @@ function setupCounts(){
    moves anything. Bucket header = edit that setup's inks + jump the preview.
    Data-driven so a third setup can slot in later without a rebuild. */
 const INK_SETUPS=[
-  {key:'light',label:'STANDARD',hint:'The inks most of the job prints in'},
-  {key:'dark',label:'DARK SHIRTS',hint:'These shirts print the alternate inks — the art would disappear in the standard colors'}
+  {key:'light',label:'LIGHT SHIRTS',hint:'The inks the light shirts print in'},
+  {key:'dark',label:'DARK SHIRTS',hint:'These shirts print the alternate inks — the art would disappear in the light-shirt colors'}
 ];
 function itemInSetup(it,key){return (key==='dark')===itemUsesDark(it);}
 function previewSetup(key){
@@ -1599,7 +1672,7 @@ function renderShirtAssign(){
       mv.onclick=function(e){e.stopPropagation();moveItemToSetup(it,su.key==='dark'?'light':'dark');};
       c.appendChild(mv);
       c.title='Click to see this shirt on the mockup · drag it to the other bucket to change how it prints';
-      c.onclick=function(){state.previewGarment={styleKey:it.styleKey,colorSlug:slug(it.colorName)};refresh();renderShirtAssign();};
+      c.onclick=function(){state.previewGarment={styleKey:it.styleKey,colorSlug:slug(it.colorName)};inkView=su.key;refreshInkList();refresh();};
       c.addEventListener('dragstart',function(e){__dragItem=it;c.classList.add('dragging');
         try{e.dataTransfer.setData('text/plain',it.styleKey);}catch(x){}
         e.dataTransfer.effectAllowed='move';});
@@ -1734,7 +1807,7 @@ function openInkPicker(idx,side){
   const two=twoSidedArt();
   __pickScope=two?(side==='back'?'back':'front'):'both';
   $('ipkTitle').textContent=(two?(side==='back'?'BACK \u2014 ':'FRONT \u2014 '):'')
-    +(inkView==='dark'?'PICK THE DARK-SHIRT INK':'PICK THE STANDARD INK');
+    +(inkView==='dark'?'PICK THE DARK-SHIRT INK':'PICK THE LIGHT-SHIRT INK');
   $('ipkCtx').innerHTML='<span class="ipk-sw" style="background:'+ink.hex+'"></span>'
     +'in your art: <b>'+ink.hex.toUpperCase()+'</b> \u00b7 '+ink.pct+'% of the design'
     +(a.match!=null?' \u00b7 closest standard <b>'+a.match+'%</b> match':'');
@@ -1811,7 +1884,7 @@ function renderPickGrid(query){
   if(inkView==='dark'){
     const b=document.createElement('button');
     b.className='ipk-same'+(e.darkIdx==null?' on':'');
-    b.textContent='SAME AS THE STANDARD INK';
+    b.textContent='SAME AS THE LIGHT-SHIRT INK';
     b.title='These shirts print exactly what the standard setup prints';
     b.onclick=function(){applyPick(null);};
     el.appendChild(b);
@@ -1891,8 +1964,27 @@ function refresh(){
   if(pl){
     const art=state.side==='front'?state.artF:state.artB;
     const hIn=art?pl.widthIn*art.height/art.width:0;
-    $('actualIn').textContent=`${pl.widthIn.toFixed(2)}" wide${hIn?` × ${hIn.toFixed(2)}" tall`:''} · top ${pl.dropIn.toFixed(2)}" below collar`;
+    const __over=pl.widthIn>12.51||hIn>17.01;   /* v8.15: shop max print 12.5" × 17" */
+    $('actualIn').innerHTML=`${pl.widthIn.toFixed(2)}" wide${hIn?` × ${hIn.toFixed(2)}" tall`:''} · top ${pl.dropIn.toFixed(2)}" below collar`+(__over?' · <span class="maxwarn">OVER MAX 12.5" × 17"</span>':'');
   } else $('actualIn').textContent='—';
+  /* v8.15: stacked placement blocks — active highlight, back-art hint, per-side over-max flags */
+  const __bf=$('blockFront'),__bb=$('blockBack');
+  if(__bf&&__bb){
+    __bf.classList.toggle('on',state.side==='front');
+    __bb.classList.toggle('on',state.side==='back');
+    __bb.classList.toggle('noart',!artFor('back'));
+    const bn=$('backNoArt');if(bn)bn.hidden=!!artFor('back');
+    ['front','back'].forEach(sd=>{
+      const a=artFor(sd);let ov=false;
+      const ph2=sd==='front'?gp.front:gp.back;
+      if(a&&ph2&&ph2.canvas){
+        const p2=computePlacement(ph2,sd,state.loc[sd]);
+        if(p2){const h2=p2.widthIn*a.height/a.width;ov=p2.widthIn>12.51||h2>17.01;}
+      }
+      const nt=$(sd==='front'?'maxNoteF':'maxNoteB');if(nt)nt.hidden=!ov;
+      const inp=$(sd==='front'?'designW':'designWB');if(inp)inp.classList.toggle('overmax',ov);
+    });
+  }
   const plel=$('previewPms');plel.innerHTML='';
   state.inkAssign.forEach((a,ai)=>{
     if(a.off||!inkOnSide(ai,state.side))return;
@@ -2207,12 +2299,21 @@ function addToSet(g){
   const set=activeSet();
   const key=g.styleKey+'|'+slug(g.colorName);
   if(set.items.some(it=>it.styleKey+'|'+slug(it.colorName)===key))return;
-  set.items.push({styleKey:g.styleKey,colorName:g.colorName});
+  const nit={styleKey:g.styleKey,colorName:g.colorName};
+  set.items.push(nit);
   // jump the preview to what was just added
   state.previewGarment={styleKey:g.styleKey,colorSlug:slug(g.colorName)};
   state.styleKey=g.styleKey;
   buildStyleTabs();refreshCalibStatus();
-  renderSetItems();refresh();buildBoard();
+  /* v8.15: EDITING focus follows the shirt you just added — a lone black shirt
+     lands in (and selects) the DARK bucket, so ink clicks always bite. Waits
+     for the photo when it hasn't decoded yet. */
+  const __focus=()=>{if(!set.items.includes(nit))return;
+    const k=itemUsesDark(nit)?'dark':'light';
+    if(inkView!==k){inkView=k;refreshInkList();}};
+  const __p=itemPhoto(nit);
+  (__p&&__p.canvas)?__focus():ensureSetPhotos().then(__focus).catch(()=>{});
+  renderSetItems();refreshInkList();refresh();buildBoard();
 }
 function renderSetTabs(){
   const el=$('setTabs');el.innerHTML='';
@@ -2358,7 +2459,7 @@ function buildBoard(){
     /* v8.0: move this shirt to the other ink setup, straight from the card */
     const bm=(itemFor(main)||{}).inkMode||'auto';
     const sw=document.createElement('button');sw.className='btn ghost sm cdl';
-    sw.textContent='INKS: '+(sc.dark?'ON DARKS':'STANDARD')+(bm==='auto'?' (auto)':'');
+    sw.textContent='INKS: '+(sc.dark?'ON DARKS':'ON LIGHTS')+(bm==='auto'?' (auto)':'');
     sw.title='Which ink setup this shirt prints — click to move it to the other setup';
     sw.onclick=()=>{
       const it=itemFor(main);if(!it)return;
@@ -2860,10 +2961,21 @@ $('sideBack').onclick=()=>{state.side='back';$('sideBack').classList.add('active
   state.activePhotoId=null;cancelCalib();buildLocBtns();buildGallery();refreshCalibStatus();syncRuleInputs();syncFitInputs();refresh();};
 $('ruleAnchor').onchange=e=>{curRule().line=e.target.value;buildLocBtns();refresh();buildBoard();};
 $('ruleDrop').addEventListener('input',e=>{curRule().drop=+e.target.value||0;buildLocBtns();refresh();buildBoard();});
-$('designW').addEventListener('input',e=>{
-  const v=+e.target.value;
-  getFit().widthIn=(v&&v>=0.5)?v:curRule().defaultWidth;
-  refresh();buildBoard();
+function __wireWidth(id,side){
+  const el=$(id);if(!el)return;
+  el.addEventListener('input',e=>{
+    const v=+e.target.value;
+    const fk=side+':'+state.loc[side];
+    if(!state.fit[fk])state.fit[fk]={widthIn:RULES[side][state.loc[side]].defaultWidth,rot:0,nudgeX:0,nudgeY:0};
+    state.fit[fk].widthIn=(v&&v>=0.5)?v:RULES[side][state.loc[side]].defaultWidth;
+    refresh();buildBoard();
+  });
+}
+__wireWidth('designW','front');__wireWidth('designWB','back');
+[['blockFront','front'],['blockBack','back']].forEach(([id,side])=>{
+  const el=$(id);if(!el)return;
+  el.addEventListener('pointerdown',()=>setSide(side));
+  el.addEventListener('focusin',()=>setSide(side));
 });
 $('nudgeX').addEventListener('input',e=>{getFit().nudgeX=+e.target.value||0;refresh();buildBoard();});
 $('nudgeY').addEventListener('input',e=>{getFit().nudgeY=+e.target.value||0;refresh();buildBoard();});
@@ -3010,7 +3122,12 @@ function setTab(t){
     if(b)b.classList.toggle('active',x===t);
   });
   document.querySelectorAll('[data-tabs]').forEach(el=>{
-    el.hidden=!el.dataset.tabs.split(' ').includes(t);
+    let show=el.dataset.tabs.split(' ').includes(t);
+    /* v8.15 fix: setTab used to unhide the resume bar even with no saved job —
+       an empty bar with dead RESUME / START FRESH buttons. Only show it while
+       a real resume offer is standing. */
+    if(el.id==='resumeBar')show=show&&!!window.__resumeOffer;
+    el.hidden=!show;
   });
   if(t==='sum')renderSummary();
   refresh();
@@ -3197,9 +3314,12 @@ function approvalFor(item,ret){
   const ctx=pg.getContext('2d');
   drawPageHeader(ctx,W,'CUSTOMER APPROVAL MOCKUP');
   stampWatermark(ctx,0,150,W,H-220,'rgba(232,234,236,0.035)',30);
+  /* v8.15: a side with no print stays OFF the approval page — the customer
+     never sees a blank shirt back (or its phantom ink swatches). */
   const sides=[];
-  if(g.front)sides.push(['front',g.front]);
-  if(g.back)sides.push(['back',g.back]);
+  if(g.front&&artFor('front'))sides.push(['front',g.front]);
+  if(g.back&&artFor('back'))sides.push(['back',g.back]);
+  if(!sides.length){if(g.front)sides.push(['front',g.front]);else if(g.back)sides.push(['back',g.back]);}
   /* v7.3.1: shirts fill the page — photo whitespace cropped away, image box
      and text ~10% larger, title compacted to one line under the cards */
   const cardY=156,cardH=800;
@@ -3230,7 +3350,7 @@ function approvalFor(item,ret){
     ctx.fillStyle='#4B9CD3';ctx.font='700 14px "JetBrains Mono", monospace';
     ctx.fillText(side.toUpperCase(),x0+24,180);
     ctx.fillStyle='#666';ctx.font='500 14px "JetBrains Mono", monospace';
-    ctx.fillText(locLabel(side)+' · '+locWidth(side)+'" wide',x0+86,180);
+    ctx.fillText(locLabel(side)+(state.exportNoSize?'':' · '+locWidth(side)+'" wide'),x0+86,180);
     drawInkChipsL(ctx,x0+24,chipTop,lay);
     stampWatermark(ctx,x0,cardY,cardW,cardH,'rgba(19,21,23,0.0375)',24);
     x0+=cardW+gap;
@@ -3242,6 +3362,19 @@ function approvalFor(item,ret){
   const nw=ctx.measureText(nm).width;
   ctx.fillStyle='#98A0A6';ctx.font='500 15px "JetBrains Mono", monospace';
   ctx.fillText(s.name+' · '+s.sub+'   ·   '+(firstSc?(firstSc.dtf?screensText(firstSc):(totScr+' screen'+(totScr===1?'':'s'))):''),50+nw+30,992);
+  /* v8.15: optional size run on the approval page */
+  const __srIt=activeSet().items.find(x=>x.styleKey===item.styleKey&&slug(x.colorName)===slug(item.colorName));
+  if(__srIt&&__srIt.srShow&&__srIt.sizeRun){
+    const __ord=sizesForStyle(item.styleKey);
+    const __ent=Object.entries(__srIt.sizeRun).filter(([k,q])=>+q>0)
+      .sort((a,b)=>__ord.indexOf(a[0])-__ord.indexOf(b[0]));
+    if(__ent.length){
+      const __tq=__ent.reduce((a,e)=>a+(+e[1]||0),0);
+      ctx.textAlign='right';ctx.fillStyle='#98A0A6';ctx.font='700 15px "JetBrains Mono", monospace';
+      ctx.fillText('SIZES   '+__ent.map(([k,q])=>k+'×'+q).join('  ·  ')+'   —   '+__tq+' PCS',1450,992);
+      ctx.textAlign='left';
+    }
+  }
   drawPageFooter(ctx,W,H,'Approve garment, artwork size, placement, and ink colors before production.');
   if(ret)return pg;
   downloadCanvas(pg,'approval-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
@@ -3314,7 +3447,7 @@ function renderSummaryTo(pg){
   if(isDTF()&&!dtfVariantsDiffer()){
     groups.push({key:'light',label:'DTF — FULL COLOR',items:items,dark:false});
   }else{
-    if(lightG.length)groups.push({key:'light',label:isDTF()?'DTF — LIGHT-SHIRT FILE':'STANDARD INKS',items:lightG,dark:false});
+    if(lightG.length)groups.push({key:'light',label:isDTF()?'DTF — LIGHT-SHIRT FILE':'LIGHT-SHIRT INKS',items:lightG,dark:false});
     if(darkG.length)groups.push({key:'dark',label:isDTF()?'DTF — DARK-SHIRT FILE':'DARK-SHIRT INKS',items:darkG,dark:true});
   }
   const gx=50,gy=168,gw=1400,gh=842,gap=16;
@@ -3668,9 +3801,12 @@ $('dlJobZip').onclick=async()=>{
 function cleanMockFor(item,ret){
   const g=garmentIndex().find(x=>x.styleKey===item.styleKey&&slug(x.colorName)===slug(item.colorName));
   if(!g)return;
+  /* v8.15: a side with no print stays OFF the approval page — the customer
+     never sees a blank shirt back (or its phantom ink swatches). */
   const sides=[];
-  if(g.front)sides.push(['front',g.front]);
-  if(g.back)sides.push(['back',g.back]);
+  if(g.front&&artFor('front'))sides.push(['front',g.front]);
+  if(g.back&&artFor('back'))sides.push(['back',g.back]);
+  if(!sides.length){if(g.front)sides.push(['front',g.front]);else if(g.back)sides.push(['back',g.back]);}
   if(!sides.length)return;
   const W=sides.length===2?1600:900,H=1000;
   const pg=document.createElement('canvas');pg.width=W;pg.height=H;
@@ -3723,6 +3859,150 @@ $('dlCleanZip').onclick=async()=>{
 const __v72ril=refreshInkList;refreshInkList=function(){__v72ril();updateFlipBanner();};
 const __v72rf=refresh;refresh=function(){__v72rf();updateStepper();updateFlipBanner();if(typeof scheduleAutosave==='function')scheduleAutosave();};
 
+/* ============ v8.15 SIZE RUN + PRICING CALCULATOR ============
+   Two collapsed-by-default panels under PLACEMENT (mostly for Christian —
+   Kolton & Joe can ignore them). Size runs live on set items (they autosave
+   with the job); shirt costs come from prices.json, refreshed weekly from
+   SanMar by a scheduled task. Two price sheets: MAYHEM INK (the 2023 matrix,
+   garment markup + print cost) and CHRISTIAN (contract sheet). */
+const MAYHEM_TIERS=[ /* [minQty,[1..6 color print $/pc],garment markup ×] */
+  [1,[8.80,9.87,14.23,18.36,22.25,27.68],1.90],[5,[2.56,3.64,5.42,7.01,8.14,9.24],1.85],
+  [12,[1.94,2.94,3.94,4.94,5.94,7.04],1.80],[24,[1.82,2.64,3.53,4.35,5.39,6.49],1.75],
+  [36,[1.60,2.29,3.00,3.70,4.79,5.89],1.70],[48,[1.38,1.93,2.48,3.04,4.07,5.17],1.65],
+  [72,[1.16,1.23,1.62,1.99,3.09,4.19],1.60],[100,[0.83,1.16,1.49,1.82,2.92,4.02],1.55],
+  [144,[0.75,1.05,1.33,1.62,2.72,3.82],1.50],[288,[0.66,0.90,1.14,1.38,2.48,3.58],1.45],
+  [500,[0.61,0.83,1.02,1.23,2.33,3.43],1.40]];
+const CC_TIERS=[ /* [minQty,[1..6 color print $/pc]] */
+  [36,[1.95,2.61,3.28,4.25,4.85,5.54]],[72,[1.32,1.58,1.87,2.33,2.64,3.00]],
+  [144,[1.14,1.27,1.43,1.68,1.90,2.16]],[288,[0.89,1.00,1.13,1.41,1.61,1.82]],
+  [576,[0.81,0.91,1.03,1.28,1.46,1.65]],[864,[0.74,0.83,0.93,1.16,1.32,1.49]],
+  [1152,[0.70,0.79,0.89,1.12,1.28,1.45]]];
+const CC_ADJ=0.10; /* garment handling — folded silently into the shirt figure */
+let PRICE_SHEET='mayhem';
+window.PRICEBOOK=null;
+fetch('prices.json').then(r=>r.ok?r.json():null).then(j=>{
+  if(j&&j.styles){window.PRICEBOOK=j;
+    const f=$('prFoot');if(f)f.textContent='shirt costs from SanMar · updated '+(j.updated||'—')+' · refreshes weekly';
+    if($('srBody')&&!$('srBody').hidden)renderSizeRun();}
+}).catch(()=>{});
+function sizesForStyle(sk){
+  const pb=window.PRICEBOOK&&PRICEBOOK.styles&&PRICEBOOK.styles[sk];
+  return (pb&&pb.sizes&&pb.sizes.length)?pb.sizes:['S','M','L','XL','2XL','3XL','4XL'];
+}
+function shirtCostFor(it,sz){
+  const pb=window.PRICEBOOK&&PRICEBOOK.styles&&PRICEBOOK.styles[it.styleKey];
+  if(!pb||!pb.costs)return null;
+  const v=(slug(it.colorName)==='white'&&pb.costs.white)?pb.costs.white:(pb.costs.color||pb.costs.white);
+  if(!v)return null;
+  const c=(v[sz]!=null)?v[sz]:v.base;
+  return (c==null)?null:+c;
+}
+function srTotalQty(){
+  let n=0;
+  SETS.forEach(st=>st.items.forEach(it=>{if(it.sizeRun)Object.values(it.sizeRun).forEach(q=>n+=(+q||0));}));
+  return n;
+}
+function tierFor(tiers,qty){let t=tiers[0];tiers.forEach(r=>{if(qty>=r[0])t=r;});return t;}
+function jobPrintLocs(){const L=[];if(artFor('front'))L.push('front');if(artFor('back'))L.push('back');return L.length?L:['front'];}
+function locColorCount(side){return Math.max(1,state.artInks.length?enabledAssignSide(side).length:1);}
+function renderSizeRun(){
+  const el=$('srList');if(!el)return;
+  const items=activeSet().items;
+  el.innerHTML='';
+  if(!items.length){el.innerHTML='<div class="bk-hint">add shirts in step 4 — each color gets its own size run</div>';renderPricing();return;}
+  items.forEach(it=>{
+    const box=document.createElement('div');box.className='sr-item';
+    const s=STYLES[it.styleKey]||{name:it.styleKey};
+    const pb=window.PRICEBOOK&&PRICEBOOK.styles&&PRICEBOOK.styles[it.styleKey];
+    const hd=document.createElement('div');hd.className='sr-head';
+    hd.innerHTML='<b>'+it.colorName+'</b><span>'+s.name+((pb&&pb.verified===false)?' · size run unverified':'')+'</span>';
+    box.appendChild(hd);
+    const grid=document.createElement('div');grid.className='sr-grid';
+    sizesForStyle(it.styleKey).forEach(sz=>{
+      const cell=document.createElement('label');
+      const cap=document.createElement('span');cap.textContent=sz;cell.appendChild(cap);
+      const inp=document.createElement('input');inp.type='number';inp.min='0';inp.step='1';inp.placeholder='0';
+      inp.value=(it.sizeRun&&it.sizeRun[sz])||'';
+      inp.addEventListener('input',()=>{
+        it.sizeRun=it.sizeRun||{};
+        it.sizeRun[sz]=Math.max(0,Math.round(+inp.value||0));
+        renderPricing();
+        if(typeof scheduleAutosave==='function')scheduleAutosave();
+      });
+      cell.appendChild(inp);grid.appendChild(cell);
+    });
+    box.appendChild(grid);
+    const tq=Object.values(it.sizeRun||{}).reduce((a,b)=>a+(+b||0),0);
+    const ck=document.createElement('label');ck.className='checkline sr-append';
+    ck.innerHTML='<input type="checkbox"'+(it.srShow?' checked':'')+'><span>show this size run on the approval page'+(tq?' ('+tq+' pcs)':'')+'</span>';
+    ck.querySelector('input').onchange=e=>{it.srShow=e.target.checked;if(typeof scheduleAutosave==='function')scheduleAutosave();};
+    box.appendChild(ck);
+    el.appendChild(box);
+  });
+  renderPricing();
+}
+function renderPricing(){
+  const out=$('prOut');if(!out)return;
+  const bm=$('shMayhem'),bc=$('shCC');
+  if(bm){bm.classList.toggle('active',PRICE_SHEET==='mayhem');bc.classList.toggle('active',PRICE_SHEET==='cc');}
+  const qty=srTotalQty();
+  if(!qty){out.innerHTML='<div class="bk-hint">enter quantities in the SIZE RUN above — pricing goes live from there</div>';return;}
+  const ubCount=$('prUB')&&$('prUB').checked;
+  const locs=jobPrintLocs();
+  const mt=tierFor(MAYHEM_TIERS,qty),ct=tierFor(CC_TIERS,qty);
+  let html='',grand=0,pcs=0,capped=false;const missing={};
+  SETS.forEach(st=>st.items.forEach(it=>{
+    if(!it.sizeRun)return;
+    const ord=sizesForStyle(it.styleKey);
+    const rows=Object.entries(it.sizeRun).filter(([k,q])=>+q>0)
+      .sort((a,b)=>ord.indexOf(a[0])-ord.indexOf(b[0]));
+    if(!rows.length)return;
+    let printPc=0;
+    locs.forEach(sd=>{
+      let n=locColorCount(sd)+((ubCount&&itemUsesDark(it))?1:0);
+      if(n>6){n=6;capped=true;}
+      printPc+=(PRICE_SHEET==='mayhem'?mt[1][n-1]:ct[1][n-1]);
+    });
+    const sName=(STYLES[it.styleKey]||{name:it.styleKey}).name;
+    let inner='',sub=0,subq=0;
+    rows.forEach(([sz,q])=>{
+      const cost=shirtCostFor(it,sz);let pc=null;
+      if(cost!=null){
+        pc=(PRICE_SHEET==='mayhem')?(cost*mt[2]+printPc):((cost+CC_ADJ)+printPc);
+        pc=Math.round(pc*100)/100;sub+=pc*q;
+      } else missing[it.styleKey]=1;
+      subq+=+q;
+      inner+='<tr><td>'+sz+'</td><td>× '+q+'</td><td>'+(pc==null?'—':'$'+pc.toFixed(2)+'/pc')+'</td><td>'+(pc==null?'—':'$'+(pc*q).toFixed(2))+'</td></tr>';
+    });
+    grand+=sub;pcs+=subq;
+    html+='<div class="pr-block"><div class="pr-title"><b>'+it.colorName+'</b><span>'+sName+'</span></div><table>'+inner+'</table></div>';
+  }));
+  const tierTxt=(PRICE_SHEET==='mayhem')
+    ?(mt[0]+'+ piece pricing')
+    :(qty<36?'below the 36-pc minimum — showing 36–71 pricing':(ct[0]+'+ piece pricing'));
+  html+='<div class="pr-total"><span>'+pcs+' PCS</span><span>$'+grand.toFixed(2)+'</span></div>';
+  html+='<div class="pr-sub">'+tierTxt+' · '+locs.map(sd=>sd+' '+locColorCount(sd)+'-color').join(' + ')+(ubCount?' · +UB on darks':'')+'</div>';
+  const miss=Object.keys(missing);
+  if(miss.length)html+='<div class="pr-note">no SanMar cost yet for '+miss.join(', ')+' — those rows show — until the weekly price refresh picks them up</div>';
+  if(qty<36&&PRICE_SHEET==='cc')html+='';
+  if(capped)html+='<div class="pr-note">7+ screens — priced at the 6-color row, quote by hand</div>';
+  if(isDTF())html+='<div class="pr-note">DTF job — these sheets are screen-print pricing; quote DTF by hand</div>';
+  out.innerHTML=html;
+}
+[['srHead','srBody'],['prHead','prBody']].forEach(([h,b])=>{
+  const hd=$(h);if(!hd)return;
+  hd.onclick=()=>{const el=$(b);el.hidden=!el.hidden;hd.classList.toggle('open',!el.hidden);
+    if(!el.hidden){renderSizeRun();}};
+});
+if($('shMayhem')){
+  $('shMayhem').onclick=()=>{PRICE_SHEET='mayhem';renderPricing();if(typeof scheduleAutosave==='function')scheduleAutosave();};
+  $('shCC').onclick=()=>{PRICE_SHEET='cc';renderPricing();if(typeof scheduleAutosave==='function')scheduleAutosave();};
+  $('prUB').onchange=()=>renderPricing();
+}
+if($('exSize'))$('exSize').onchange=e=>{state.exportNoSize=e.target.checked;if(typeof scheduleAutosave==='function')scheduleAutosave();};
+const __v815rsi=renderSetItems;renderSetItems=function(){__v815rsi();if($('srBody')&&!$('srBody').hidden)renderSizeRun();};
+const __v815ril=refreshInkList;refreshInkList=function(){__v815ril();if($('prBody')&&!$('prBody').hidden)renderPricing();};
+
 /* ============ v7.9 JOB AUTOSAVE + RESUME ============ */
 const JOBKEY='mockuplab.job.v1';
 let __bootRestored=false,__saveTimer=null;
@@ -3735,6 +4015,7 @@ function serializeJob(){
     customer:$('jobCustomer').value,quote:$('jobQuote').value,
     activeSetIdx,loc:state.loc,fit:state.fit,
     fabricBlend:state.fabricBlend,autoUnderbase:state.autoUnderbase,printMethod:state.printMethod,
+    exportNoSize:!!state.exportNoSize,priceSheet:(typeof PRICE_SHEET!=='undefined')?PRICE_SHEET:'mayhem',prUB:!!($('prUB')&&$('prUB').checked),
     userArt:!!window.__userArt,
     sets:SETS.map(st=>({name:st.name,items:st.items,dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
       artInks:st.artInks||[],
@@ -3755,7 +4036,7 @@ function scheduleAutosave(){
   if(!__bootRestored){
     if(!jobHasContent())return;
     __bootRestored=true;
-    const b=$('resumeBar');if(b&&!b.hidden){b.hidden=true;localStorage.removeItem(JOBKEY);}
+    const b=$('resumeBar');if(b&&!b.hidden){window.__resumeOffer=false;b.hidden=true;localStorage.removeItem(JOBKEY);}
   }
   clearTimeout(__saveTimer);__saveTimer=setTimeout(autosaveNow,900);
 }
@@ -3770,6 +4051,9 @@ async function restoreJob(j){
   state.autoUnderbase=j.autoUnderbase!==false;$('autoUnderbase').checked=state.autoUnderbase;
   $('noUnderbase').checked=!state.autoUnderbase;
   state.printMethod=(j.printMethod==='dtf')?'dtf':'screen';syncMethodUI();
+  state.exportNoSize=!!j.exportNoSize;if($('exSize'))$('exSize').checked=state.exportNoSize;
+  if(typeof PRICE_SHEET!=='undefined')PRICE_SHEET=(j.priceSheet==='cc')?'cc':'mayhem';
+  if($('prUB'))$('prUB').checked=!!j.prUB;
   window.__userArt=!!j.userArt;
   SETS.length=0;
   for(const st of (j.sets||[])){
@@ -3796,9 +4080,10 @@ async function restoreJob(j){
     const mins=Math.max(1,Math.round((Date.now()-(saved.when||Date.now()))/60000));
     const agoTxt=mins<60?mins+' min ago':mins<1440?Math.round(mins/60)+' hr ago':Math.round(mins/1440)+' day'+(Math.round(mins/1440)>1?'s':'')+' ago';
     $('resumeTxt').innerHTML=`<b>Pick up where you left off?</b> ${saved.customer||'Untitled job'} · ${n} shirt${n===1?'':'s'} · saved ${agoTxt}`;
+    window.__resumeOffer=true;
     bar.hidden=false;
-    $('resumeYes').onclick=async()=>{bar.hidden=true;await restoreJob(saved);__bootRestored=true;};
-    $('resumeNo').onclick=()=>{bar.hidden=true;localStorage.removeItem(JOBKEY);__bootRestored=true;};
+    $('resumeYes').onclick=async()=>{window.__resumeOffer=false;bar.hidden=true;await restoreJob(saved);__bootRestored=true;};
+    $('resumeNo').onclick=()=>{window.__resumeOffer=false;bar.hidden=true;localStorage.removeItem(JOBKEY);__bootRestored=true;};
   } else {__bootRestored=true;}
 })();
 $('jobCustomer').addEventListener('input',scheduleAutosave);
