@@ -475,6 +475,28 @@
   .maxnote{color:#E8C447;font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:6px;font-weight:700;}
   .maxnote-fixed{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10.5px;margin:6px 0 2px;letter-spacing:.04em;}
   #designW.overmax,#designWB.overmax{color:#E8C447;border-color:#E8C447;}
+  /* v8.20 SLEEVES — flat swatch tiles, no photos to calibrate */
+  .slv-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+  .slv-col{border:1px solid var(--line2);border-radius:8px;padding:8px;background:var(--surface2);}
+  .slv-col .sc-cap{font:700 11px "JetBrains Mono",monospace;color:var(--accent2);letter-spacing:.06em;}
+  .slv-drop{border:1.5px dashed var(--line2);border-radius:6px;padding:9px 6px;text-align:center;font-size:11px;color:var(--muted);cursor:pointer;margin-top:6px;position:relative;}
+  .slv-drop:hover,.slv-drop.drag{border-color:var(--accent);color:var(--ink);}
+  .slv-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+  .slv-drop.has{border-style:solid;border-color:var(--accent);color:var(--ink);}
+  .slv-seg{display:flex;gap:4px;margin-top:6px;}
+  .slv-seg button{flex:1;font:700 9.5px "JetBrains Mono",monospace;padding:4px 2px;background:var(--surface);border:1px solid var(--line2);border-radius:5px;color:var(--muted);cursor:pointer;}
+  .slv-seg button.on{border-color:var(--accent);color:var(--ink);background:rgba(75,156,211,.12);}
+  .slv-mini{display:flex;gap:4px;margin-top:6px;}
+  .slv-mini button{flex:1;font:700 9px "JetBrains Mono",monospace;padding:3px 2px;background:none;border:1px solid var(--line2);border-radius:5px;color:var(--muted);cursor:pointer;}
+  .slv-mini button:hover:not(:disabled){border-color:var(--accent);color:var(--ink);}
+  .slv-mini button:disabled{opacity:.35;cursor:default;}
+  .slv-info{font-size:10.5px;color:var(--muted);margin-top:6px;min-height:13px;font-family:"JetBrains Mono",monospace;}
+  .slv-info.maxwarn{color:#E8C447;}
+  #slvInkBox .slv-ink-head{font:700 11px "JetBrains Mono",monospace;color:var(--accent2);letter-spacing:.06em;margin:12px 0 4px;}
+  #pvSleeves{display:flex;gap:16px;justify-content:center;align-items:flex-end;padding:10px 0 6px;flex-wrap:wrap;}
+  #pvSleeves[hidden]{display:none;}
+  #pvSleeves .pvslv{display:flex;flex-direction:column;align-items:center;gap:4px;}
+  #pvSleeves canvas{max-height:230px;max-width:210px;border-radius:8px;}
   .maxwarn{color:#E8C447;font-weight:700;}
   .col-head{width:100%;background:none;border:none;color:var(--ink);cursor:pointer;display:flex;align-items:center;padding:0;text-align:left;}
   .col-head h3{width:100%;}
@@ -587,6 +609,29 @@
         <div class="val artsize" id="actualInB">—</div>
         <div class="maxnote" id="maxNoteB" hidden>&#9888; over the max print area — 12.5" wide × 17" tall</div>
       </div>
+      <!-- v8.20 SLEEVES: no sleeve photos — the print shows as a flat swatch tile in the shirt's color -->
+      <div class="sideblock" id="blockSleeves">
+        <div class="sb-head">SLEEVES <span class="sb-note" id="slvNote">· optional — shows as a color tile, not a photo</span></div>
+        <div class="slv-cols">
+          <div class="slv-col" id="slvColL">
+            <div class="sc-cap">LEFT SLEEVE</div>
+            <div class="slv-drop" id="slvDropL"><span id="slvDropLabL">Sleeve art — drop / click</span><input type="file" id="slvInputL" accept="image/*,.svg,.pdf,application/pdf"></div>
+            <div><label class="lbl">Wide across (in)</label><input type="number" id="slvWL" step="0.25" min="0.5" value="3"></div>
+            <div class="slv-seg"><button id="slvHorL" class="on" title="Short-sleeve print area — 4&quot; × 4&quot;">SHORT SLV</button><button id="slvVerL" title="Down a long sleeve or hoodie arm — 3.5&quot; × 14&quot;">DOWN LS/HOOD</button></div>
+            <div class="slv-mini"><button id="slvRotL" title="Rotate the art 90° — for prints that read down the arm">↻ ROTATE</button><button id="slvCopyL" title="Same print on the right sleeve too">COPY →</button><button id="slvClrL" title="Remove this sleeve print">✕</button></div>
+            <div class="slv-info" id="slvInfoL">no sleeve print</div>
+          </div>
+          <div class="slv-col" id="slvColR">
+            <div class="sc-cap">RIGHT SLEEVE</div>
+            <div class="slv-drop" id="slvDropR"><span id="slvDropLabR">Sleeve art — drop / click</span><input type="file" id="slvInputR" accept="image/*,.svg,.pdf,application/pdf"></div>
+            <div><label class="lbl">Wide across (in)</label><input type="number" id="slvWR" step="0.25" min="0.5" value="3"></div>
+            <div class="slv-seg"><button id="slvHorR" class="on" title="Short-sleeve print area — 4&quot; × 4&quot;">SHORT SLV</button><button id="slvVerR" title="Down a long sleeve or hoodie arm — 3.5&quot; × 14&quot;">DOWN LS/HOOD</button></div>
+            <div class="slv-mini"><button id="slvRotR" title="Rotate the art 90° — for prints that read down the arm">↻ ROTATE</button><button id="slvCopyR" title="Same print on the left sleeve too">← COPY</button><button id="slvClrR" title="Remove this sleeve print">✕</button></div>
+            <div class="slv-info" id="slvInfoR">no sleeve print</div>
+          </div>
+        </div>
+        <div class="maxnote" id="slvMax" hidden>&#9888; over the sleeve print area — short sleeve 4" × 4" · down the arm 3.5" × 14"</div>
+      </div>
       <div class="rulebox">
         <div class="rb-title" id="ruleTitle">rule</div>
         <div class="row2">
@@ -690,6 +735,7 @@
           <div class="pvcell" id="pvF"><canvas id="mainCanvas" data-side="front"></canvas><div class="pvcap">FRONT</div></div>
           <div class="pvcell" id="pvB"><canvas id="backCanvas" data-side="back"></canvas><div class="pvcap">BACK</div></div>
         </div>
+        <div id="pvSleeves" hidden></div>
       </div>
       <div class="apv-foot">
         <div class="af-l"><b id="afName">—</b><span id="afNote">Approve garment, artwork size, placement, and ink colors before production.</span></div>
@@ -790,6 +836,7 @@
       </div>
       <div class="bucket-board" id="bucketBoard"></div>
       <div id="inkList"></div>
+      <div id="slvInkBox"></div>
       <div class="screens-pill" id="screensPill">—</div>
       <div class="checkline" id="lineNoUB"><input type="checkbox" id="noUnderbase"><span><b>NO UNDERBASE</b> — soft-hand / vintage look (ink soaks into the shirt)</span></div>
       <div class="checkline" id="lineFabric"><input type="checkbox" id="fabricBlend"><span>Show fabric texture through the ink</span></div>
@@ -810,7 +857,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.19 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.20 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1844,8 +1891,9 @@ function openInkPicker(idx,side){
   $('inkPickWrap').hidden=false;
   setTimeout(function(){$('ipkSearch').focus();},30);
 }
-function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;}
+function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;__slvPick=null;}
 function applyPick(i){
+  if(__slvPick){applySleevePick(i);return;}   /* v8.20: sleeve inks share the overlay */
   const a=state.inkAssign[__pickIdx],ink=state.artInks[__pickIdx];
   if(!a||!ink){closeInkPicker();return;}
   /* v8.10: single-side colours always edit the shared fields (the other side
@@ -1900,8 +1948,14 @@ function renderPickGrid(query){
   const el=$('ipkGrid');el.innerHTML='';
   const q=(query||'').trim().toLowerCase();
   const a=state.inkAssign[__pickIdx]||{};
-  const e=sideAssign(a,__pickScope==='back'?'back':'front');
-  const cur=inkView==='dark'?(e.darkIdx==null?-1:e.darkIdx):e.idx;
+  let cur;
+  if(__slvPick){   /* v8.20: sleeve assignments keep the same {idx,darkIdx} contract */
+    const sa=(sleeveObj(__slvPick.k).assign||[])[__slvPick.idx]||{};
+    cur=inkView==='dark'?(sa.darkIdx==null?-1:sa.darkIdx):sa.idx;
+  }else{
+    const e=sideAssign(a,__pickScope==='back'?'back':'front');
+    cur=inkView==='dark'?(e.darkIdx==null?-1:e.darkIdx):e.idx;
+  }
   const hit=function(p,s){
     if(!q)return true;
     return (s&&s[0].toLowerCase().includes(q))||('pms '+p[0]).toLowerCase().includes(q)
@@ -1911,12 +1965,12 @@ function renderPickGrid(query){
   const grid=function(){const g=document.createElement('div');g.className='ipk-grid';el.appendChild(g);return g;};
   if(inkView==='dark'){
     const b=document.createElement('button');
-    b.className='ipk-same'+(e.darkIdx==null?' on':'');
+    b.className='ipk-same'+(cur===-1?' on':'');
     b.textContent='SAME AS THE LIGHT-SHIRT INK';
     b.title='These shirts print exactly what the standard setup prints';
     b.onclick=function(){applyPick(null);};
     el.appendChild(b);
-  }else if(__pickScope==='back'&&twoSidedArt()&&state.artInks[__pickIdx]&&(!state.artInks[__pickIdx].sides||state.artInks[__pickIdx].sides==='FB')){
+  }else if(!__slvPick&&__pickScope==='back'&&twoSidedArt()&&state.artInks[__pickIdx]&&(!state.artInks[__pickIdx].sides||state.artInks[__pickIdx].sides==='FB')){
     const b=document.createElement('button');
     b.className='ipk-same'+(a.backIdx==null?' on':'');
     b.textContent='SAME AS THE FRONT INK';
@@ -3357,9 +3411,13 @@ function approvalFor(item,ret){
   /* v7.3.1: shirts fill the page — photo whitespace cropped away, image box
      and text ~10% larger, title compacted to one line under the cards */
   const cardY=156,cardH=800;
-  const cardW=sides.length===2?690:900,gap=40;
+  /* v8.20: sleeve prints ride in a right-hand rail of flat swatch tiles */
+  const __slvKs=sleevesWithArt();
+  const railW=__slvKs.length?330:0;
+  const zoneW=W-100-railW;
+  const cardW=sides.length===2?Math.min(690,(zoneW-40)/2):Math.min(900,zoneW),gap=40;
   const totalW=cardW*sides.length+gap*(sides.length-1);
-  let x0=(W-totalW)/2;
+  let x0=50+(zoneW-totalW)/2;
   let firstSc=null,totScr=0;
   sides.forEach(([side,photo])=>{
     // white card
@@ -3389,6 +3447,29 @@ function approvalFor(item,ret){
     stampWatermark(ctx,x0,cardY,cardW,cardH,'rgba(19,21,23,0.0375)',24);
     x0+=cardW+gap;
   });
+  /* v8.20 sleeve rail — one tile per sleeve, garment-sampled background */
+  if(__slvKs.length){
+    const rx=W-50-railW;
+    const __rgb=shirtTileColor(g.front||g.back);
+    const __dk=itemUsesDark(item);
+    const tileMax=__slvKs.length===2?350:620;
+    let ry=cardY+10;
+    __slvKs.forEach(k=>{
+      totScr+=sleeveScreens(k,__dk);
+      const t=renderSleeveTile(k,__rgb,__dk,tileMax,true);
+      if(!t)return;
+      const sc2=Math.min(1,railW/t.width,tileMax/t.height);
+      const tw=t.width*sc2,th=t.height*sc2;
+      ctx.drawImage(t,rx+(railW-tw)/2,ry,tw,th);
+      const names=isDTF()?['DTF full color']
+        :sleeveEnabled(k).map(a=>{const i=(__dk&&a.darkIdx!=null)?a.darkIdx:a.idx;return 'PMS '+PMS[i][0];});
+      if(__dk&&state.autoUnderbase&&!isDTF())names.push('White UB');
+      ctx.fillStyle='#98A0A6';ctx.font='500 11px "JetBrains Mono", monospace';ctx.textAlign='center';
+      ctx.fillText(names.join(' · '),rx+railW/2,ry+th+18,railW-8);
+      ctx.textAlign='left';
+      ry+=th+38;
+    });
+  }
   const s=STYLES[item.styleKey]||{name:item.styleKey,sub:''};
   ctx.fillStyle='#E8EAEC';ctx.font='900 31px "Archivo Black", Arial Black, sans-serif';
   const nm=item.colorName.toUpperCase();
@@ -3453,6 +3534,7 @@ function renderSummaryTo(pg){
   const sides=[];
   if(artFor('front'))sides.push('front');
   if(artFor('back'))sides.push('back');
+  sleevesWithArt().forEach(function(k){sides.push('slv'+k);});   /* v8.20 */
   const foot=isDTF()
     ?'DTF FULL COLOR — printed transfer, no screens and no separations. One tile per transfer file · the background stripes are every shirt color it presses onto · the art is shown exactly as it prints.'
     :'One tile per press setup · the background stripes are every shirt color in that run · art shown in that setup’s exact inks · underbase swatch first when it prints.';
@@ -3494,7 +3576,9 @@ function renderSummaryTo(pg){
     const repPhoto=rep.g.front||rep.g.back;
     const side0=rep.g.front?'front':'back';
     const sc=screensFor(repPhoto,side0,state.loc[side0]);
-    const totScr=sc.dtf?0:sides.reduce(function(t,sd){return t+screensFor(repPhoto,sd,state.loc[sd]).total;},0);
+    const totScr=sc.dtf?0:sides.reduce(function(t,sd){
+      return t+(sd.slice(0,3)==='slv'?sleeveScreens(sd.slice(3),gr.dark)
+        :screensFor(repPhoto,sd,state.loc[sd]).total);},0);
     /* header bar (page background — neutral) */
     ctx.fillStyle='#E8EAEC';ctx.font='900 19px "Archivo Black", Arial Black, sans-serif';
     ctx.fillText(gr.label,tx,gy+22);
@@ -3533,16 +3617,20 @@ function renderSummaryTo(pg){
     const azTop=ty+58,azBot=ty+tileH-16;
     const rowH=(azBot-azTop-(sides.length-1)*10)/sides.length;
     sides.forEach(function(sd,si){
-      const art=recoloredArtFor(sd,gr.dark)||artFor(sd);
+      const isSlv=sd.slice(0,3)==='slv';   /* v8.20 sleeve rows print like any other screen */
+      const art=isSlv?(sleeveRecolored(sd.slice(3),gr.dark)||sleeveObj(sd.slice(3)).art)
+        :(recoloredArtFor(sd,gr.dark)||artFor(sd));
       if(!art)return;
       const ry=azTop+si*(rowH+10);
       const lab=sides.length>1;
       const labH=lab?18:0;
       if(lab){
+        const labTxt=isSlv?(sd.slice(3)==='L'?'L SLEEVE':'R SLEEVE'):sd.toUpperCase();
+        const labW=isSlv?76:54;
         ctx.fillStyle='rgba(14,15,16,.75)';
-        ctx.beginPath();ctx.roundRect(tx+16,ry,54,15,3);ctx.fill();
+        ctx.beginPath();ctx.roundRect(tx+16,ry,labW,15,3);ctx.fill();
         ctx.fillStyle='#E8EAEC';ctx.font='700 9px "JetBrains Mono", monospace';
-        ctx.textAlign='center';ctx.fillText(sd.toUpperCase(),tx+16+27,ry+11);ctx.textAlign='left';
+        ctx.textAlign='center';ctx.fillText(labTxt,tx+16+labW/2,ry+11);ctx.textAlign='left';
       }
       const scl=Math.min((tileW-44)/art.width,(rowH-labH)/art.height)*0.94;
       const aw=art.width*scl,ah=art.height*scl;
@@ -3558,9 +3646,10 @@ function renderSummaryTo(pg){
     }else{
       if(gr.dark&&sc.ub)swatches.push({hex:'#FFFFFF',l1:'UNDERBASE',l2:'prints first',ub:true});
       /* v8.10: union of each side's effective inks — side-tagged when they differ */
-      const two=twoSidedArt()&&sides.length===2;
+      const fbSides=sides.filter(function(sd){return sd==='front'||sd==='back';});   /* v8.20 */
+      const two=twoSidedArt()&&fbSides.length===2;
       const seen={};
-      sides.forEach(function(sd){
+      fbSides.forEach(function(sd){
         state.inkAssign.forEach(function(a,ai){
           if(a.off||!inkOnSide(ai,sd))return;
           const ii=inkIdxFor(a,gr.dark,sd);
@@ -3573,6 +3662,16 @@ function renderSummaryTo(pg){
           const p=PMS[ii],st=STD_INKS[p[0]];
           seen[ii]=swatches.length;
           swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]+(tag?' · '+(sd==='front'?'FRONT':'BACK'):''),tag:tag});
+        });
+      });
+      /* v8.20: sleeve inks join the strip (deduped against the body inks) */
+      sleevesWithArt().forEach(function(k){
+        sleeveEnabled(k).forEach(function(a){
+          const ii=(gr.dark&&a.darkIdx!=null)?a.darkIdx:a.idx;
+          if(seen[ii]!=null)return;
+          const p=PMS[ii],st=STD_INKS[p[0]];
+          seen[ii]=swatches.length;
+          swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]+' · '+(k==='L'?'L':'R')+' SLV'});
         });
       });
     }
@@ -3841,12 +3940,14 @@ function cleanMockFor(item,ret){
   if(g.front&&artFor('front'))sides.push(['front',g.front]);
   if(g.back&&artFor('back'))sides.push(['back',g.back]);
   if(!sides.length){if(g.front)sides.push(['front',g.front]);else if(g.back)sides.push(['back',g.back]);}
-  if(!sides.length)return;
-  const W=sides.length===2?1600:900,H=1000;
+  const __slvKs=sleevesWithArt();   /* v8.20: sleeve tiles ride along as extra cards */
+  if(!sides.length&&!__slvKs.length)return;
+  const nCard=sides.length+__slvKs.length;
+  const W=nCard>=2?1600:900,H=1000;
   const pg=document.createElement('canvas');pg.width=W;pg.height=H;
   const ctx=pg.getContext('2d');
   ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);
-  const gap=40,cardW=(W-gap*(sides.length+1))/sides.length;
+  const gap=40,cardW=(W-gap*(nCard+1))/nCard;
   let x0=gap;
   sides.forEach(([side,photo])=>{
     const cv=document.createElement('canvas');
@@ -3856,6 +3957,17 @@ function cleanMockFor(item,ret){
     const scl=Math.min(cardW/gb.w,boxH/gb.h);
     const fitW=gb.w*scl,fitH=gb.h*scl;
     ctx.drawImage(cv,gb.x,gb.y,gb.w,gb.h,x0+(cardW-fitW)/2,40+(boxH-fitH)/2,fitW,fitH);
+    x0+=cardW+gap;
+  });
+  __slvKs.forEach(k=>{
+    const photo=g.front||g.back;
+    const t=renderSleeveTile(k,shirtTileColor(photo),itemUsesDark(item),H-180,true);
+    if(t){
+      const boxH=H-100;
+      const scl=Math.min(1,cardW/t.width,boxH/t.height);
+      const fw=t.width*scl,fh=t.height*scl;
+      ctx.drawImage(t,x0+(cardW-fw)/2,40+(boxH-fh)/2,fw,fh);
+    }
     x0+=cardW+gap;
   });
   ctx.fillStyle='rgba(120,126,131,0.55)';
@@ -3931,7 +4043,10 @@ function srTotalQty(){
   return n;
 }
 function tierFor(tiers,qty){let t=tiers[0];tiers.forEach(r=>{if(qty>=r[0])t=r;});return t;}
-function jobPrintLocs(){const L=[];if(artFor('front'))L.push('front');if(artFor('back'))L.push('back');return L.length?L:['front'];}
+function jobPrintLocs(){const L=[];if(artFor('front'))L.push('front');if(artFor('back'))L.push('back');
+  /* v8.20: sleeve-only jobs must not bill a phantom front location */
+  if(!L.length&&!sleevesWithArt().length)L.push('front');
+  return L;}
 function locColorCount(side){return Math.max(1,state.artInks.length?enabledAssignSide(side).length:1);}
 function renderSizeRun(){
   const el=$('srList');if(!el)return;
@@ -3987,6 +4102,12 @@ function renderPricing(){
       if(n>6){n=6;capped=true;}
       printPc+=mt[1][n-1];
     });
+    /* v8.20: each sleeve is one more print location, same matrix */
+    sleevesWithArt().forEach(k=>{
+      let n=sleeveColorCount(k)+((ubCount&&itemUsesDark(it))?1:0);
+      if(n>6){n=6;capped=true;}
+      printPc+=mt[1][n-1];
+    });
     const sName=(STYLES[it.styleKey]||{name:it.styleKey}).name;
     /* v8.18: base sizes grouped on one line, upcharge sizes on their own, AVG/shirt under each color */
     const UPSZ=['2XL','3XL','4XL','5XL','6XL'];
@@ -4015,7 +4136,9 @@ function renderPricing(){
     html+='<div class="pr-block"><div class="pr-title"><b>'+it.colorName+'</b><span>'+sName+'</span></div><table>'+inner+'</table></div>';
   }));
   html+='<div class="pr-total"><span>'+pcs+' PCS</span><span>$'+grand.toFixed(2)+'</span></div>';
-  html+='<div class="pr-sub">'+mt[0]+'+ piece pricing · '+locs.map(sd=>sd+' '+locColorCount(sd)+'-color').join(' + ')+(ubCount?' · +UB on darks':'')+'</div>';
+  html+='<div class="pr-sub">'+mt[0]+'+ piece pricing · '+locs.map(sd=>sd+' '+locColorCount(sd)+'-color')
+    .concat(sleevesWithArt().map(k=>(k==='L'?'left':'right')+' sleeve '+sleeveColorCount(k)+'-color'))
+    .join(' + ')+(ubCount?' · +UB on darks':'')+'</div>';
   const miss=Object.keys(missing);
   if(miss.length)html+='<div class="pr-note">no SanMar cost yet for '+miss.join(', ')+' — those rows show — until the weekly price refresh picks them up</div>';
   if(capped)html+='<div class="pr-note">7+ screens — priced at the 6-color row, quote by hand</div>';
@@ -4072,7 +4195,8 @@ async function openCartelSheet(){
     const allWhiteOnDarks=sd=>enabledAssignSide(sd).every(a=>PMS[inkIdxFor(a,true,sd)][0]==='White');
     const payload={v:1,when:Date.now(),
       customer:$('jobCustomer').value,quote:$('jobQuote').value,
-      locs:jobPrintLocs().map(sd=>({side:sd,colors:locColorCount(sd),ubScreen:ub&&anyDark&&!allWhiteOnDarks(sd)})),
+      locs:jobPrintLocs().map(sd=>({side:sd,colors:locColorCount(sd),ubScreen:ub&&anyDark&&!allWhiteOnDarks(sd)}))
+        .concat(sleevesWithArt().map(k=>({side:k==='L'?'LS':'RS',colors:sleeveColorCount(k),ubScreen:ub&&anyDark&&!sleeveAllWhiteOnDarks(k)}))),   /* v8.20 */
       underbase:ub&&anyDark,
       mixed:anyDark&&items.some(it=>!itemUsesDark(it)),
       mocks};
@@ -4105,7 +4229,11 @@ function serializeJob(){
       artInks:st.artInks||[],
       inkAssign:(st.inkAssign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,backIdx:a.backIdx==null?null:a.backIdx,backDarkIdx:a.backDarkIdx==null?null:a.backDarkIdx,off:!!a.off,match:a.match,auto:!!a.auto})),
       artF:(window.__userArt&&st.artF)?st.artF.toDataURL('image/png'):null,
-      artB:(window.__userArt&&st.artB)?st.artB.toDataURL('image/png'):null}))};
+      artB:(window.__userArt&&st.artB)?st.artB.toDataURL('image/png'):null,
+      sleeves:['L','R'].reduce((o,k)=>{const s=slvOf(st)[k];   /* v8.20 */
+        o[k]={art:s.art?s.art.toDataURL('image/png'):null,widthIn:s.widthIn||3,vertical:!!s.vertical,
+          inks:s.inks||[],assign:(s.assign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,off:!!a.off,match:a.match}))};
+        return o;},{})}))};
 }
 function autosaveNow(){
   if(!__bootRestored)return;
@@ -4113,7 +4241,8 @@ function autosaveNow(){
     if(!jobHasContent()){localStorage.removeItem(JOBKEY);return;}
     localStorage.setItem(JOBKEY,JSON.stringify(serializeJob()));
   }catch(e){
-    try{const j=serializeJob();j.sets.forEach(st=>{st.artF=null;st.artB=null;});localStorage.setItem(JOBKEY,JSON.stringify(j));}catch(e2){}
+    try{const j=serializeJob();j.sets.forEach(st=>{st.artF=null;st.artB=null;
+      if(st.sleeves){st.sleeves.L.art=null;st.sleeves.R.art=null;}});localStorage.setItem(JOBKEY,JSON.stringify(j));}catch(e2){}
   }
 }
 function scheduleAutosave(){
@@ -4142,8 +4271,17 @@ async function restoreJob(j){
   SETS.length=0;
   for(const st of (j.sets||[])){
     const artF=await loadCanvasFrom(st.artF),artB=await loadCanvasFrom(st.artB);
-    SETS.push({name:st.name,items:st.items||[],dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
-      artInks:st.artInks||[],inkAssign:st.inkAssign||[],artF,artB});
+    const ns={name:st.name,items:st.items||[],dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
+      artInks:st.artInks||[],inkAssign:st.inkAssign||[],artF,artB};
+    if(st.sleeves){   /* v8.20 */
+      ns.sleeves={};
+      for(const k of ['L','R']){
+        const s=st.sleeves[k]||{};
+        ns.sleeves[k]={art:await loadCanvasFrom(s.art),widthIn:s.widthIn||3,vertical:!!s.vertical,
+          inks:s.inks||[],assign:s.assign||[]};
+      }
+    }
+    SETS.push(ns);
   }
   if(!SETS.length)SETS.push({name:'GROUP A',items:[],artF:null,artB:null,dupBack:false,liveInk:true,artInks:[],inkAssign:[]});
   activeSetIdx=Math.min(j.activeSetIdx||0,SETS.length-1);
@@ -4173,6 +4311,251 @@ async function restoreJob(j){
 $('jobCustomer').addEventListener('input',scheduleAutosave);
 $('jobQuote').addEventListener('input',scheduleAutosave);
 const __bb9=buildBoard;buildBoard=function(){__bb9();scheduleAutosave();};
+
+/* ============ v8.20 SLEEVES ============
+   No sleeve photos and no calibration — a sleeve print renders as a flat
+   swatch TILE: the garment's sampled color (shirtTileColor) as background,
+   the art at true scale inside the printable area (short sleeve 4"×4",
+   down-the-arm 3.5"×14"). Left/right are independent art with their own
+   detected inks and {idx,darkIdx,off} assignments (same contract as the
+   body inks), priced as extra print locations. Tiles ride the approval
+   pages (right rail), clean mocks, press sheet rows, pricing and the
+   cartel handoff. Never a recolored garment photo — a swatch, on purpose. */
+function slvOf(st){
+  if(!st.sleeves)st.sleeves={L:{art:null,widthIn:3,vertical:false,inks:[],assign:[]},
+                             R:{art:null,widthIn:3,vertical:false,inks:[],assign:[]}};
+  return st.sleeves;
+}
+function sleeveObj(k){return slvOf(activeSet())[k];}
+function sleevesWithArt(){const sv=slvOf(activeSet());return ['L','R'].filter(k=>sv[k].art);}
+const SLV_LABEL={L:'LEFT SLEEVE',R:'RIGHT SLEEVE'};
+function sleeveArea(s){return s.vertical?{w:3.5,h:14}:{w:4,h:4};}
+function sleeveDims(k){
+  const s=sleeveObj(k);if(!s.art)return null;
+  const area=sleeveArea(s);
+  const w=s.widthIn||3,h=w*s.art.height/s.art.width;
+  return {w,h,area,over:w>area.w+0.01||h>area.h+0.01};
+}
+function sleeveEnabled(k){return (sleeveObj(k).assign||[]).filter(a=>!a.off);}
+function sleeveColorCount(k){const s=sleeveObj(k);return Math.max(1,s.inks.length?sleeveEnabled(k).length:1);}
+function sleeveScreens(k,dark){
+  if(isDTF())return 0;
+  return sleeveColorCount(k)+((state.autoUnderbase&&dark)?1:0);
+}
+function sleeveAllWhiteOnDarks(k){
+  const en=sleeveEnabled(k);
+  return en.length>0&&en.every(a=>PMS[(a.darkIdx!=null)?a.darkIdx:a.idx][0]==='White');
+}
+function sleeveRecolored(k,dark){
+  const s=sleeveObj(k);if(!s.art)return null;
+  const set=activeSet();
+  const anyOff=(s.assign||[]).some(a=>a.off);
+  if((set.liveInk===false&&!anyOff)||!s.inks.length)return s.art;
+  if(!s.art.__id)s.art.__id='art'+(artIdSeq++);
+  const sig=s.art.__id+'|SLV'+k+'|'+(dark?'D':'L')+'|'+(set.liveInk===false?'K':'R')+'|'
+    +s.assign.map(a=>a.idx+':'+(a.darkIdx??'-')+(a.off?'X':'')).join(',');
+  if(recolorCache.has(sig))return recolorCache.get(sig);
+  if(recolorCache.size>16)recolorCache.clear();
+  const out=recolorArt(s.art,s.inks,s.assign.map(a=>({idx:a.idx,darkIdx:a.darkIdx,off:!!a.off})),dark,set.liveInk===false);
+  recolorCache.set(sig,out);
+  return out;
+}
+/* the tile. rgb = sampled garment color · cap=true draws the caption strip */
+function renderSleeveTile(k,rgb,dark,maxPx,cap){
+  const s=sleeveObj(k);if(!s.art)return null;
+  const d=sleeveDims(k);
+  const area=d.area,padIn=0.5;
+  const ppi=Math.max(8,Math.min(42,maxPx/(Math.max(area.w,area.h)+padIn*2)));
+  const capH=cap?34:0;
+  const W=Math.round((area.w+padIn*2)*ppi),H=Math.round((area.h+padIn*2)*ppi)+capH;
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');
+  const r=Math.round(rgb[0]),g=Math.round(rgb[1]),b=Math.round(rgb[2]);
+  ctx.beginPath();ctx.roundRect(0,0,W,H,10);
+  ctx.fillStyle='rgb('+r+','+g+','+b+')';ctx.fill();
+  const line=relLum(rgb[0],rgb[1],rgb[2])<0.45?'rgba(255,255,255,.4)':'rgba(0,0,0,.35)';
+  ctx.save();ctx.setLineDash([6,5]);ctx.strokeStyle=line;ctx.lineWidth=1.5;
+  ctx.strokeRect(padIn*ppi,padIn*ppi,area.w*ppi,area.h*ppi);ctx.restore();
+  const art=sleeveRecolored(k,dark)||s.art;
+  const aw=d.w*ppi,ah=d.h*ppi;
+  ctx.globalAlpha=0.97;
+  ctx.drawImage(art,padIn*ppi+(area.w*ppi-aw)/2,padIn*ppi+(area.h*ppi-ah)/2,aw,ah);
+  ctx.globalAlpha=1;
+  ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.roundRect(0,0,W,H,10);ctx.stroke();
+  if(cap){
+    ctx.fillStyle='rgba(14,15,16,.78)';ctx.fillRect(0,H-capH,W,capH);
+    ctx.fillStyle='#E8EAEC';ctx.font='700 11px "JetBrains Mono", monospace';
+    ctx.textAlign='center';
+    ctx.fillText(SLV_LABEL[k]+' · '+(+d.w.toFixed(2))+'" WIDE'+(d.over?' ⚠':''),W/2,H-capH/2+4,W-10);
+    ctx.textAlign='left';
+  }
+  return cv;
+}
+/* ---- placement-panel wiring ---- */
+function refreshSleevePanel(){
+  ['L','R'].forEach(k=>{
+    const s=sleeveObj(k);
+    const drop=$('slvDrop'+k);if(drop)drop.classList.toggle('has',!!s.art);
+    const dl=$('slvDropLab'+k);if(dl)dl.textContent=s.art?'✓ art loaded — drop to replace':'Sleeve art — drop / click';
+    const w=$('slvW'+k);if(w&&document.activeElement!==w)w.value=s.widthIn||3;
+    const hb=$('slvHor'+k),vb=$('slvVer'+k);
+    if(hb)hb.classList.toggle('on',!s.vertical);
+    if(vb)vb.classList.toggle('on',!!s.vertical);
+    const info=$('slvInfo'+k);
+    if(info){
+      const d=sleeveDims(k);
+      if(!d){info.textContent='no sleeve print';info.classList.remove('maxwarn');}
+      else{
+        info.textContent=(+d.w.toFixed(2))+'" × '+(+d.h.toFixed(2))+'" · area '+d.area.w+'" × '+d.area.h+'"';
+        info.classList.toggle('maxwarn',d.over);
+      }
+    }
+    ['slvRot','slvCopy','slvClr'].forEach(p=>{const b=$(p+k);if(b)b.disabled=!s.art;});
+  });
+  const any=sleevesWithArt().length>0;
+  const note=$('slvNote');if(note)note.hidden=any;
+  const mx=$('slvMax');if(mx)mx.hidden=!['L','R'].some(k=>{const d=sleeveDims(k);return d&&d.over;});
+}
+function sleeveArtLoaded(k,c){
+  c.__id='art'+(artIdSeq++);
+  window.__userArt=true;
+  /* sleeve-only jobs: like back-only, the demo front gets out of the way */
+  if(!window.__userArtF){state.artF=null;activeSet().artF=null;}
+  const s=sleeveObj(k);
+  s.art=c;
+  s.inks=detectInks(c);
+  s.assign=s.inks.map(ink=>{const m=nearestPms(ink.r,ink.g,ink.b);return {idx:m.idx,darkIdx:null,match:matchPct(m.dist),off:false,auto:true};});
+  refreshSleevePanel();refreshInkList();refresh();buildBoard();
+}
+['L','R'].forEach(k=>{
+  if(!$('slvDrop'+k))return;
+  wireDrop('slvDrop'+k,'slvInput'+k,f=>loadArtFile(f,c=>sleeveArtLoaded(k,c)));
+  $('slvW'+k).addEventListener('input',()=>{
+    const v=parseFloat($('slvW'+k).value);
+    sleeveObj(k).widthIn=(v&&v>=0.5)?v:3;
+    refreshSleevePanel();refresh();
+  });
+  $('slvHor'+k).onclick=()=>{sleeveObj(k).vertical=false;refreshSleevePanel();refresh();buildBoard();};
+  $('slvVer'+k).onclick=()=>{sleeveObj(k).vertical=true;refreshSleevePanel();refresh();buildBoard();};
+  $('slvRot'+k).onclick=()=>{
+    const s=sleeveObj(k);if(!s.art)return;
+    const c=document.createElement('canvas');c.width=s.art.height;c.height=s.art.width;
+    const x=c.getContext('2d');x.translate(c.width/2,c.height/2);x.rotate(Math.PI/2);
+    x.drawImage(s.art,-s.art.width/2,-s.art.height/2);
+    c.__id='art'+(artIdSeq++);
+    s.art=c;
+    refreshSleevePanel();refresh();buildBoard();
+  };
+  $('slvCopy'+k).onclick=()=>{
+    const src=sleeveObj(k),dst=sleeveObj(k==='L'?'R':'L');
+    if(!src.art)return;
+    dst.art=src.art;dst.widthIn=src.widthIn;dst.vertical=src.vertical;
+    dst.inks=src.inks.map(i=>Object.assign({},i));
+    dst.assign=src.assign.map(a=>Object.assign({},a));
+    refreshSleevePanel();refreshInkList();refresh();buildBoard();
+  };
+  $('slvClr'+k).onclick=()=>{
+    const s=sleeveObj(k);
+    s.art=null;s.inks=[];s.assign=[];
+    refreshSleevePanel();refreshInkList();refresh();buildBoard();
+  };
+});
+/* ---- sleeve ink rows (under the body ink list, same look) ---- */
+let __slvPick=null;
+function openSleevePicker(k,idx){
+  const s=sleeveObj(k),ink=s.inks[idx],a=s.assign[idx];
+  if(!ink||!a)return;
+  __slvPick={k:k,idx:idx};
+  $('ipkTitle').textContent=SLV_LABEL[k]+' — '+(inkView==='dark'?'PICK THE DARK-SHIRT INK':'PICK THE LIGHT-SHIRT INK');
+  $('ipkCtx').innerHTML='<span class="ipk-sw" style="background:'+ink.hex+'"></span>'
+    +'in the sleeve art: <b>'+ink.hex.toUpperCase()+'</b> · '+ink.pct+'% of the design'
+    +(a.match!=null?' · closest standard <b>'+a.match+'%</b> match':'');
+  $('ipkSearch').value='';
+  renderPickGrid('');
+  $('inkPickWrap').hidden=false;
+  setTimeout(function(){$('ipkSearch').focus();},30);
+}
+function applySleevePick(i){
+  const s=sleeveObj(__slvPick.k),a=s.assign[__slvPick.idx],ink=s.inks[__slvPick.idx];
+  if(!a){closeInkPicker();return;}
+  if(inkView==='dark'){a.darkIdx=(i==null)?null:i;}
+  else if(i!=null){
+    if(a.darkIdx==null&&i!==a.idx)a.darkIdx=a.idx;   /* pin the dark where it was */
+    a.idx=i;a.auto=false;a.match=matchPct(pmsDist(ink.r,ink.g,ink.b,i));
+  }
+  recolorCache.clear();
+  closeInkPicker();refreshInkList();refresh();buildBoard();
+}
+function renderSleeveInks(){
+  const box=$('slvInkBox');if(!box)return;
+  box.innerHTML='';
+  const dv=inkView==='dark';
+  sleevesWithArt().forEach(k=>{
+    const s=sleeveObj(k);
+    if(!s.inks.length)return;
+    const hd=document.createElement('div');hd.className='slv-ink-head';hd.textContent=SLV_LABEL[k]+' INK';
+    box.appendChild(hd);
+    s.inks.forEach((ink,idx)=>{
+      const a=s.assign[idx];if(!a)return;
+      const useIdx=dv?((a.darkIdx==null)?a.idx:a.darkIdx):a.idx;
+      const p=PMS[useIdx],st=STD_INKS[p[0]];
+      const row=document.createElement('div');row.className='inkrow'+(a.off?' inkoff':'');
+      const flip=()=>{a.off=!a.off;recolorCache.clear();refreshInkList();refresh();buildBoard();};
+      const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=p[1];
+      chip.title=a.off?'OFF — click to print this ink again':'Click to turn this ink OFF';
+      chip.onclick=flip;
+      const nm=document.createElement('div');nm.className='inkname';
+      nm.innerHTML=(st?(st[1]?'<b class="star">★</b> ':'')+st[0]:'PMS '+p[0])
+        +(a.off?' <b class="offtag">OFF</b>':'')
+        +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'');
+      nm.title=st?('Mayhem standard ink · PMS '+p[0]):('PMS '+p[0]+' — custom mix');
+      const oo=document.createElement('button');oo.className='inkonoff'+(a.off?' isoff':'');
+      oo.textContent=a.off?'OFF':'ON';oo.onclick=flip;
+      const btn=document.createElement('button');btn.className='inkchg';btn.textContent='CHANGE';
+      btn.title=dv?'Pick what this sleeve ink becomes on the dark shirts':'Pick this sleeve ink';
+      btn.onclick=()=>openSleevePicker(k,idx);
+      row.appendChild(chip);row.appendChild(nm);row.appendChild(oo);row.appendChild(btn);
+      box.appendChild(row);
+    });
+  });
+  /* screens-pill add-on */
+  const pill=$('screensPill');
+  if(pill&&!isDTF()){
+    sleevesWithArt().forEach(k=>{
+      const n=sleeveColorCount(k);
+      pill.innerHTML+=' · <b>'+(k==='L'?'left':'right')+' sleeve</b> '+n+' ink'+(n>1?'s':'')
+        +(state.autoUnderbase?' (+UB on darks)':'');
+    });
+  }
+}
+/* ---- live preview tiles under the mockup card ---- */
+function refreshSleevePreview(){
+  const wrap=$('pvSleeves');if(!wrap)return;
+  const ks=sleevesWithArt();
+  if(!ks.length){wrap.hidden=true;wrap.innerHTML='';return;}
+  const photo=activePhoto();
+  if(!photo||!photo.canvas){wrap.hidden=true;return;}
+  const rgb=shirtTileColor(photo);
+  const sd0=photo.side||'front';
+  const dark=screensFor(photo,sd0,state.loc[sd0]).dark;
+  wrap.innerHTML='';
+  ks.forEach(k=>{
+    const t=renderSleeveTile(k,rgb,dark,230,false);
+    if(!t)return;
+    const cell=document.createElement('div');cell.className='pvslv';
+    cell.appendChild(t);
+    const cap=document.createElement('div');cap.className='pvcap';
+    const d=sleeveDims(k);
+    cap.textContent=SLV_LABEL[k]+' · '+(+d.w.toFixed(2))+'"'+(d.over?' ⚠':'');
+    cell.appendChild(cap);
+    wrap.appendChild(cell);
+  });
+  wrap.hidden=false;
+}
+const __v820rf=refresh;refresh=function(){__v820rf();refreshSleevePanel();refreshSleevePreview();};
+const __v820ril=refreshInkList;refreshInkList=function(){__v820ril();renderSleeveInks();};
+refreshSleevePanel();
 
 setTab('mock');
 buildManifest();
