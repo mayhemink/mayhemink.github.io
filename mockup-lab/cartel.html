@@ -192,7 +192,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM CARTEL SHEET · V1.4 · CUSTOMER PRICING</span>
+  <span>MAYHEM CARTEL SHEET · V1.5 · CUSTOMER PRICING</span>
   <span>internal numbers stay off every export</span>
 </footer>
 
@@ -829,7 +829,9 @@ Promise.all([
     const rich=ho.mocks.some(m=>'dark' in m);   /* v8.18+ Lab payloads */
     if(rich){
       jobUB=!!ho.underbase;
-      locs=(ho.locs||[]).map(l=>({label:l.side==='front'?'Front':'Back',colors:Math.min(6,+l.colors||1),ubScreen:!!l.ubScreen}));
+      /* v1.5: Lab v8.20 sleeve locations arrive as LS / RS */
+      const SIDE_LBL={front:'Front',back:'Back',LS:'Left Sleeve',RS:'Right Sleeve'};
+      locs=(ho.locs||[]).map(l=>({label:SIDE_LBL[l.side]||'Back',colors:Math.min(6,+l.colors||1),ubScreen:!!l.ubScreen}));
     } else {
       jobUB=false;   /* legacy payloads baked UB into the counts already */
       locs=(ho.locs||[]).map(l=>({label:l.side==='front'?'Front':'Back',colors:Math.min(6,(+l.colors||1)+((ho.underbase&&l.ub!==false)?1:0))}));
