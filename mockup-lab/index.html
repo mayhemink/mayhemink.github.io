@@ -875,7 +875,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.22 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.23 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1449,7 +1449,7 @@ function renderMock(photo,targetCanvas,side,loc,overlay){
   if(!photo||!photo.canvas)return targetCanvas;
   const W=photo.canvas.width,H=photo.canvas.height;
   targetCanvas.width=W;targetCanvas.height=H;
-  const ctx=targetCanvas.getContext('2d');
+  const ctx=targetCanvas.getContext('2d');ctx.imageSmoothingQuality='high';   /* v8.23: big art → small print without the mush */
   ctx.drawImage(photo.canvas,0,0);
   const art=artFor(side);
   const pl=computePlacement(photo,side,loc);
@@ -3011,6 +3011,17 @@ function loadPdfArt(file,cb){
 /* art loader: rasterizes SVG at high resolution (crisp at any print size), passes
    raster formats straight through. Always calls back with a canvas, auto-trimmed
    to the visible art (v7.2.2). */
+/* v8.23: rewrite the SVG root so its intrinsic size is ~4000px on the long
+   edge — keeps both rasterize passes true-vector-sharp even when the second
+   pass blows the art bbox up past the 1600 target. */
+function svgWithBigSize(t,vw,vh){
+  if(!vw||!vh)return t;
+  const big=4000/Math.max(vw,vh);
+  return t.replace(/<svg([^>]*?)>/i,function(m,attrs){
+    attrs=attrs.replace(/\s(width|height)\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi,'');
+    return '<svg'+attrs+' width="'+Math.round(vw*big)+'" height="'+Math.round(vh*big)+'">';
+  });
+}
 function loadArtFile(file,cb){
   if(isPdfFile(file)){loadPdfArt(file,cb);return;}   /* v8.9 */
   const isSvg=/svg/i.test(file.type)||/\.svg$/i.test(file.name);
@@ -3026,6 +3037,11 @@ function loadArtFile(file,cb){
     let vw=0,vh=0;
     const vb=t.match(/viewBox\s*=\s*["']\s*[\d.+-]+[\s,]+[\d.+-]+[\s,]+([\d.+-]+)[\s,]+([\d.+-]+)/i);
     if(vb){vw=parseFloat(vb[1]);vh=parseFloat(vb[2]);}
+    /* v8.23: SVGs with no width/height (or tiny ones) rasterize at their
+       viewBox size in Chrome and then get bitmap-stretched — the "vector"
+       arrives as a blown-up 135px bitmap. Force a big explicit size on the
+       root tag so the browser renders the vector at full resolution. */
+    t=svgWithBigSize(t,vw,vh);
     const img=new Image();
     img.onload=()=>{
       let w=img.naturalWidth||vw||1000,h=img.naturalHeight||vh||1000;
@@ -3417,7 +3433,7 @@ function approvalFor(item,ret){
   if(!g)return;
   const W=1500,H=1080;
   const pg=document.createElement('canvas');pg.width=W;pg.height=H;
-  const ctx=pg.getContext('2d');
+  const ctx=pg.getContext('2d');ctx.imageSmoothingQuality='high';
   drawPageHeader(ctx,W,'CUSTOMER APPROVAL MOCKUP');
   stampWatermark(ctx,0,150,W,H-220,'rgba(232,234,236,0.035)',30);
   /* v8.15: a side with no print stays OFF the approval page — the customer
@@ -3545,7 +3561,7 @@ function shirtTileColor(photo){
 }
 function renderSummaryTo(pg){
   const W=1500,H=1080;pg.width=W;pg.height=H;
-  const ctx=pg.getContext('2d');
+  const ctx=pg.getContext('2d');ctx.imageSmoothingQuality='high';
   drawPageHeader(ctx,W,isDTF()?'PRODUCTION PRINT SUMMARY — DTF FULL COLOR':'PRODUCTION PRINT SUMMARY — ONE TILE PER PRESS SETUP');
   const items=activeSet().items.map(function(it){return {it:it,g:itemGarment(it)};})
     .filter(function(x){return x.g&&(x.g.front||x.g.back);});
@@ -3963,7 +3979,7 @@ function cleanMockFor(item,ret){
   const nCard=sides.length+__slvKs.length;
   const W=nCard>=2?1600:900,H=1000;
   const pg=document.createElement('canvas');pg.width=W;pg.height=H;
-  const ctx=pg.getContext('2d');
+  const ctx=pg.getContext('2d');ctx.imageSmoothingQuality='high';
   ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);
   const gap=40,cardW=(W-gap*(nCard+1))/nCard;
   let x0=gap;
@@ -4200,7 +4216,7 @@ async function openCartelSheet(){
       if(pg){
         const sc=Math.min(1,900/pg.width);
         const c=document.createElement('canvas');c.width=Math.round(pg.width*sc);c.height=Math.round(pg.height*sc);
-        c.getContext('2d').drawImage(pg,0,0,c.width,c.height);
+        const cx2=c.getContext('2d');cx2.imageSmoothingQuality='high';cx2.drawImage(pg,0,0,c.width,c.height);
         img=c.toDataURL('image/jpeg',0.85);
       }
       mocks.push({styleKey:it.styleKey,colorName:it.colorName,img,sizeRun:it.sizeRun||null,dark:itemUsesDark(it)});
@@ -4387,7 +4403,7 @@ function renderSleeveTile(k,rgb,dark,maxPx,cap){
   const capH=cap?34:0;
   const W=Math.round((area.w+padIn*2)*ppi),H=Math.round((area.h+padIn*2)*ppi)+capH;
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;
-  const ctx=cv.getContext('2d');
+  const ctx=cv.getContext('2d');ctx.imageSmoothingQuality='high';
   const r=Math.round(rgb[0]),g=Math.round(rgb[1]),b=Math.round(rgb[2]);
   ctx.beginPath();ctx.roundRect(0,0,W,H,10);
   ctx.fillStyle='rgb('+r+','+g+','+b+')';ctx.fill();
