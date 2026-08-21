@@ -168,7 +168,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM CARTEL SHEET · V1.1 · CUSTOMER PRICING</span>
+  <span>MAYHEM CARTEL SHEET · V1.2 · CUSTOMER PRICING</span>
   <span>internal numbers stay off every export</span>
 </footer>
 
@@ -598,15 +598,6 @@ function drawPage2(pg){
   grid('SHIRT + FIRST PRINT LOCATION — PER PIECE',
     (i,c)=>round2(shirtFigureFor(psk,'M')+engine.mu[i]+engine.rates[i][c]+shipPc()),
     [firstColors]);
-  /* upsell line — how close to the next break */
-  if(nextT>-1){
-    const need=TIER_MIN[nextT]-qty;
-    const cur=perPcFor(psk,'M',t),nxt=perPcFor(psk,'M',nextT);
-    ctx.fillStyle='rgba(232,196,71,0.30)';ctx.fillRect(gx,y-4,gw,30);
-    ctx.fillStyle='#7A5E00';ctx.font='700 12.5px "JetBrains Mono", monospace';
-    ctx.fillText('★ ADD '+need+' MORE PIECES TO HIT '+TIER_LBL[nextT].toUpperCase()+' PRICING — '+money(nxt)+'/PC INSTEAD OF '+money(cur)+' (SAVE '+money(round2(cur-nxt))+'/PC)',gx+10,y+16);
-    y+=40;
-  }
   const addlRows=[...new Set(locs.slice(1).map(l=>Math.min(6,Math.max(1,+l.colors||1))))];
   grid('ADDITIONAL PRINT LOCATIONS — PER PIECE',(i,c)=>engine.rates[i][c],addlRows);
   ctx.fillStyle='#98A0A6';ctx.font='500 11px "JetBrains Mono", monospace';
@@ -614,6 +605,20 @@ function drawPage2(pg){
   const ups=UPS.map(sz=>({sz,v:+c0[sz]||0})).filter(u=>u.v>0);
   if(ups.length){ctx.fillText('Size upcharges: '+ups.map(u=>u.sz+' +'+money(u.v)).join('   ·   '),gx,y);y+=26;}
   else y+=8;
+  /* v1.2: price-break upsell — bottom of the pricing section, big & bold.
+     perPcFor already spans the shirt + EVERY print location, so the saving
+     shown is the true all-in drop per piece. */
+  if(nextT>-1){
+    const need=TIER_MIN[nextT]-qty;
+    const cur=perPcFor(psk,'M',t),nxt=perPcFor(psk,'M',nextT);
+    ctx.fillStyle='rgba(232,196,71,0.35)';ctx.fillRect(gx,y,gw,64);
+    ctx.strokeStyle='#E8C447';ctx.lineWidth=2;ctx.strokeRect(gx,y,gw,64);
+    ctx.fillStyle='#7A5E00';ctx.font='900 19px "Archivo Black", Arial Black, sans-serif';
+    ctx.fillText('★ ADD '+need+' MORE PIECES TO HIT '+TIER_LBL[nextT].toUpperCase()+' PRICING',gx+16,y+27);
+    ctx.font='700 13.5px "JetBrains Mono", monospace';
+    ctx.fillText(money(nxt)+'/PC INSTEAD OF '+money(cur)+' — SAVE '+money(round2(cur-nxt))+' PER PIECE'+(locs.length>1?' ACROSS ALL '+locs.length+' PRINT LOCATIONS':''),gx+16,y+50);
+    y+=76;
+  }
   /* conditions */
   ctx.fillStyle='#131517';ctx.font='900 14px "Archivo Black", Arial Black, sans-serif';
   ctx.fillText('CONDITIONS',gx,y);y+=10;
