@@ -506,6 +506,11 @@
   #blockSleeves.clpsd .sb-head{margin-bottom:0;}
   #blockSleeves.clpsd .sb-head::after{content:'▸';}
   #blockSleeves.clpsd>*:not(.sb-head){display:none!important;}
+  /* v8.22: sleeve art drops live in the LOGOS panel, under front/back */
+  .drop.slvdrop{padding:8px 6px;font-size:11px;}
+  .drop.slvdrop b{font-size:11.5px;margin-bottom:1px;}
+  .drop.slvdrop.has{border-style:solid;border-color:var(--accent);color:var(--ink);}
+  .drop.slvdrop input{display:none;}
   #pvSleeves .pvslv{display:flex;flex-direction:column;align-items:center;gap:4px;}
   #pvSleeves canvas{max-height:230px;max-width:210px;border-radius:8px;}
   .maxwarn{color:#E8C447;font-weight:700;}
@@ -592,6 +597,10 @@
         <div class="drop" id="artDropF"><b>Front art</b>SVG (best), PNG/JPG, or PDF — white backgrounds come off automatically<input type="file" id="artInputF" accept="image/*,.svg,.pdf,application/pdf"></div>
         <div class="drop" id="artDropB"><b>Back art</b>SVG (best), PNG/JPG, or PDF — white backgrounds come off automatically<input type="file" id="artInputB" accept="image/*,.svg,.pdf,application/pdf"></div>
       </div>
+      <div class="row2" style="margin-top:8px;">
+        <div class="drop slvdrop" id="slvDropL"><b>Left sleeve</b><span id="slvDropLabL">optional — prints as a color tile</span><input type="file" id="slvInputL" accept="image/*,.svg,.pdf,application/pdf"></div>
+        <div class="drop slvdrop" id="slvDropR"><b>Right sleeve</b><span id="slvDropLabR">optional — prints as a color tile</span><input type="file" id="slvInputR" accept="image/*,.svg,.pdf,application/pdf"></div>
+      </div>
       <div class="checkline"><input type="checkbox" id="dupBack"><span>Same art on the back</span></div>
       <div class="checkline" id="lineLive"><input type="checkbox" id="liveInk" checked><span>Recolor art to the chosen inks</span></div>
       <div class="set-artnote" id="artSetNote"></div>
@@ -626,7 +635,6 @@
         <div class="slv-cols">
           <div class="slv-col" id="slvColL">
             <div class="sc-cap">LEFT SLEEVE</div>
-            <div class="slv-drop" id="slvDropL"><span id="slvDropLabL">Sleeve art — drop / click</span><input type="file" id="slvInputL" accept="image/*,.svg,.pdf,application/pdf"></div>
             <div><label class="lbl">Wide across (in)</label><input type="number" id="slvWL" step="0.25" min="0.5" value="3"></div>
             <div class="slv-seg"><button id="slvHorL" class="on" title="Short-sleeve print area — 4&quot; × 4&quot;">SHORT SLV</button><button id="slvVerL" title="Down a long sleeve or hoodie arm — 3.5&quot; × 14&quot;">DOWN LS/HOOD</button></div>
             <div class="slv-mini"><button id="slvRotL" title="Rotate the art 90° — for prints that read down the arm">↻ ROTATE</button><button id="slvCopyL" title="Same print on the right sleeve too">COPY →</button><button id="slvClrL" title="Remove this sleeve print">✕</button></div>
@@ -634,7 +642,6 @@
           </div>
           <div class="slv-col" id="slvColR">
             <div class="sc-cap">RIGHT SLEEVE</div>
-            <div class="slv-drop" id="slvDropR"><span id="slvDropLabR">Sleeve art — drop / click</span><input type="file" id="slvInputR" accept="image/*,.svg,.pdf,application/pdf"></div>
             <div><label class="lbl">Wide across (in)</label><input type="number" id="slvWR" step="0.25" min="0.5" value="3"></div>
             <div class="slv-seg"><button id="slvHorR" class="on" title="Short-sleeve print area — 4&quot; × 4&quot;">SHORT SLV</button><button id="slvVerR" title="Down a long sleeve or hoodie arm — 3.5&quot; × 14&quot;">DOWN LS/HOOD</button></div>
             <div class="slv-mini"><button id="slvRotR" title="Rotate the art 90° — for prints that read down the arm">↻ ROTATE</button><button id="slvCopyR" title="Same print on the left sleeve too">← COPY</button><button id="slvClrR" title="Remove this sleeve print">✕</button></div>
@@ -868,7 +875,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.21 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.22 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -4408,7 +4415,7 @@ function refreshSleevePanel(){
   ['L','R'].forEach(k=>{
     const s=sleeveObj(k);
     const drop=$('slvDrop'+k);if(drop)drop.classList.toggle('has',!!s.art);
-    const dl=$('slvDropLab'+k);if(dl)dl.textContent=s.art?'✓ art loaded — drop to replace':'Sleeve art — drop / click';
+    const dl=$('slvDropLab'+k);if(dl)dl.textContent=s.art?'✓ loaded — drop to replace':'optional — prints as a color tile';
     const w=$('slvW'+k);if(w&&document.activeElement!==w)w.value=s.widthIn||3;
     const hb=$('slvHor'+k),vb=$('slvVer'+k);
     if(hb)hb.classList.toggle('on',!s.vertical);
@@ -4441,6 +4448,9 @@ function sleeveArtLoaded(k,c){
   s.art=c;
   s.inks=detectInks(c);
   s.assign=s.inks.map(ink=>{const m=nearestPms(ink.r,ink.g,ink.b);return {idx:m.idx,darkIdx:null,match:matchPct(m.dist),off:false,auto:true};});
+  /* v8.22: art landed → pop the SLEEVES placement block open so the size/orientation controls are right there */
+  const bs=$('blockSleeves');
+  if(bs&&bs.classList.contains('clpsd')){bs.classList.remove('clpsd');__clps.slv=0;__clpsSave();}
   refreshSleevePanel();refreshInkList();refresh();buildBoard();
 }
 ['L','R'].forEach(k=>{
