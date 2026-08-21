@@ -66,6 +66,22 @@
   .drop{border:1.5px dashed var(--line2);border-radius:6px;color:var(--muted);cursor:pointer;font-size:11px;margin-top:8px;padding:10px;text-align:center;position:relative;}
   .drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
   footer{color:var(--muted);display:flex;font-family:'JetBrains Mono',monospace;font-size:10px;justify-content:space-between;letter-spacing:.05em;padding:16px 20px;}
+  /* 💡 suggestion box (v1.4) — sends quirks/ideas to the ops worker → Kolton's morning email */
+  #sgTab{position:fixed;right:14px;bottom:14px;z-index:70;background:var(--surface2,#16181b);border:1px solid var(--line2,#2c3034);border-radius:4px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.05em;padding:8px 11px;}
+  #sgTab:hover{border-color:var(--accent);color:var(--accent);}
+  #sgPanel{position:fixed;right:14px;bottom:52px;z-index:80;width:282px;background:var(--surface,#101214);border:1px solid var(--line2,#2c3034);border-radius:6px;padding:12px;box-shadow:0 12px 34px rgba(0,0,0,.5);}
+  #sgPanel .sg-head{display:flex;align-items:center;justify-content:space-between;font-family:'Archivo Black',sans-serif;font-size:11px;letter-spacing:.08em;color:var(--ink,#e8eaec);margin-bottom:9px;}
+  #sgPanel .sg-head button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;line-height:1;padding:2px;}
+  #sgPanel .sg-who{display:flex;gap:5px;margin-bottom:8px;}
+  #sgPanel .sg-who button{flex:1;background:var(--surface2,#16181b);border:1px solid var(--line2,#2c3034);border-radius:3px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.04em;padding:5px 0;}
+  #sgPanel .sg-who button.on{border-color:var(--accent);color:var(--accent);}
+  #sgPanel textarea{width:100%;box-sizing:border-box;min-height:84px;background:var(--surface2,#16181b);border:1px solid var(--line2,#2c3034);border-radius:3px;color:var(--ink,#e8eaec);font-family:'Inter',sans-serif;font-size:11.5px;line-height:1.5;padding:8px;resize:vertical;}
+  #sgPanel .sg-foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px;}
+  #sgPanel .sg-foot span{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);flex:1;}
+  #sgPanel .sg-foot span.ok{color:var(--accent);}
+  #sgPanel .sg-foot span.bad{color:#E05252;}
+  #sgSend{background:var(--accent);border:none;border-radius:3px;color:#0b0c0d;cursor:pointer;font-family:'Archivo Black',sans-serif;font-size:10px;letter-spacing:.06em;padding:7px 14px;}
+  #sgSend:disabled{opacity:.5;cursor:default;}
 </style>
 </head>
 <body>
@@ -167,8 +183,16 @@
   </main>
 </div>
 
+<button id="sgTab" title="Spot a quirk or have an idea? Send it straight to Kolton.">💡 SUGGEST</button>
+<div id="sgPanel" hidden>
+  <div class="sg-head">SUGGESTION BOX <button id="sgClose" title="close">✕</button></div>
+  <div class="sg-who" id="sgWho"></div>
+  <textarea id="sgText" maxlength="500" placeholder="Found a quirk? Want something added? It goes straight to Kolton."></textarea>
+  <div class="sg-foot"><span id="sgMsg"></span><button id="sgSend">SEND →</button></div>
+</div>
+
 <footer>
-  <span>MAYHEM CARTEL SHEET · V1.3 · CUSTOMER PRICING</span>
+  <span>MAYHEM CARTEL SHEET · V1.4 · CUSTOMER PRICING</span>
   <span>internal numbers stay off every export</span>
 </footer>
 
@@ -828,6 +852,38 @@ Promise.all([
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(kick);
   kick();
 });
+</script>
+<script>
+/* v1.4: 💡 suggestion box → mayhem-ops-state worker (lands in Kolton's morning ops email).
+   POST is open by design — the page key must NEVER appear in this public file. */
+(function(){
+  const APP='cartel', EP='https://mayhem-ops-state.autumn-mountain-14c6.workers.dev/suggest';
+  const tab=document.getElementById('sgTab'),panel=document.getElementById('sgPanel'),
+        whoWrap=document.getElementById('sgWho'),txt=document.getElementById('sgText'),
+        send=document.getElementById('sgSend'),msg=document.getElementById('sgMsg');
+  const WHOS=['JOE','CHRISTIAN','KOLTON','OTHER'];
+  let who='';try{who=localStorage.getItem('mayhem.suggest.who')||'';}catch(e){}
+  WHOS.forEach(w=>{const b=document.createElement('button');b.type='button';b.textContent=w;
+    if(w===who)b.classList.add('on');
+    b.onclick=()=>{who=w;try{localStorage.setItem('mayhem.suggest.who',w);}catch(e){}
+      whoWrap.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));};
+    whoWrap.appendChild(b);});
+  tab.onclick=()=>{panel.hidden=!panel.hidden;if(!panel.hidden)txt.focus();};
+  document.getElementById('sgClose').onclick=()=>{panel.hidden=true;};
+  send.onclick=async()=>{
+    const text=txt.value.trim();
+    if(!text){msg.textContent='write something first';msg.className='bad';return;}
+    if(!who){msg.textContent='pick who you are';msg.className='bad';return;}
+    send.disabled=true;msg.textContent='sending…';msg.className='';
+    try{
+      const r=await fetch(EP,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({app:APP,who:who.toLowerCase(),text:text})});
+      if(!r.ok)throw 0;
+      msg.textContent='sent — thank you!';msg.className='ok';txt.value='';
+      setTimeout(()=>{panel.hidden=true;msg.textContent='';},1600);
+    }catch(e){msg.textContent="couldn't send — try again";msg.className='bad';}
+    send.disabled=false;};
+})();
 </script>
 </body>
 </html>
