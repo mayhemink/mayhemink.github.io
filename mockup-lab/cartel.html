@@ -162,13 +162,13 @@
   </aside>
 
   <main class="pages">
-    <div class="pagebox"><p class="pagecap">PAGE 1 — JOB PRICING <span id="tierTag" style="margin-left:auto;color:var(--accent);"></span></p><canvas id="pg1" width="1275" height="1650"></canvas></div>
+    <div id="jobPages"><div class="pagebox"><p class="pagecap">JOB PRICING <span id="tierTag" style="margin-left:auto;color:var(--accent);"></span></p><canvas id="pg1" width="1275" height="1650"></canvas></div></div>
     <div class="pagebox" id="pg2box"><p class="pagecap">PAGE 2 — FULL PRICE LIST</p><canvas id="pg2" width="1275" height="1650"></canvas></div>
   </main>
 </div>
 
 <footer>
-  <span>MAYHEM CARTEL SHEET · V1.2 · CUSTOMER PRICING</span>
+  <span>MAYHEM CARTEL SHEET · V1.3 · CUSTOMER PRICING</span>
   <span>internal numbers stay off every export</span>
 </footer>
 
@@ -234,7 +234,12 @@ function loadSettings(){
 /* ---------- pricing ---------- */
 function totalQty(){let n=0;cws.forEach(c=>Object.values(c.sizeRun||{}).forEach(q=>n+=(+q||0)));return n;}
 function tierIdx(){const q=totalQty();let t=0;TIER_MIN.forEach((m,i)=>{if(q>=m)t=i;});return t;}
-function locPrint(t){let s=0;locs.forEach(l=>{const c=Math.min(6,Math.max(1,+l.colors||1));s+=engine.rates[t][c-1];});return s;}
+/* v1.3: each colorway is billed at ITS OWN color count — dark shirts add the
+   underbase as a color, light shirts don't. All colorways share one qty tier. */
+let jobUB=true;   /* underbase applies on dark colorways (handoff flag / default) */
+function isMixed(){return cws.some(c=>c.dark)&&cws.some(c=>!c.dark);}
+function billable(l,cw){return Math.min(6,Math.max(1,(+l.colors||1)+((cw&&cw.dark&&jobUB)?1:0)));}
+function locPrintFor(cw,t){let s=0;locs.forEach(l=>{s+=engine.rates[t][billable(l,cw)-1];});return s;}
 function seedStyleCost(sk){
   if(styleCosts[sk])return;
   const c={base:0};
@@ -261,7 +266,7 @@ function extrasPerPc(){
   return s;
 }
 function shipPc(){return +$('pShip').value||0;}
-function perPcFor(sk,sz,t){return round2(shirtFigureFor(sk,sz)+engine.mu[t]+locPrint(t)+extrasPerPc()+shipPc());}
+function perPcFor(cw,sz,t){return round2(shirtFigureFor(cw.styleKey,sz)+engine.mu[t]+locPrintFor(cw,t)+extrasPerPc()+shipPc());}
 function round2(x){return Math.round(x*100)/100;}
 function money(x){return '$'+x.toFixed(2);}
 function setupTotal(){
@@ -281,14 +286,15 @@ function sizesForStyle(sk){
   return (pb&&pb.sizes&&pb.sizes.length)?pb.sizes:['S','M','L','XL','2XL','3XL','4XL'];
 }
 function styleName(sk){const s=STYLES[sk];return s?(s.name+(s.sub?' · '+s.sub:'')):sk;}
-function primaryStyle(){
+function primaryCw(){
   let best=null,bq=-1;
   cws.forEach(c=>{
     const q=Object.values(c.sizeRun||{}).reduce((a,b)=>a+(+b||0),0);
-    if(q>bq){bq=q;best=c.styleKey;}
+    if(q>bq){bq=q;best=c;}
   });
-  return best||$('jStyle').value||(cws[0]&&cws[0].styleKey)||'';
+  return best||cws[0]||{styleKey:$('jStyle').value||'',dark:false};
 }
+function primaryStyle(){return primaryCw().styleKey||$('jStyle').value||'';}
 function styleGroups(){
   const order=[],map={};
   cws.forEach(c=>{
@@ -328,6 +334,11 @@ function renderCws(){
     st.value=cw.styleKey||'';
     st.onchange=()=>{cw.styleKey=st.value;seedStyleCost(cw.styleKey);renderCws();renderStyleCosts();refresh();};
     hd.appendChild(st);
+    const dk=document.createElement('label');dk.style.cssText='display:flex;align-items:center;gap:3px;font-size:10px;color:var(--muted);flex:none;cursor:pointer;';
+    const dki=document.createElement('input');dki.type='checkbox';dki.checked=!!cw.dark;
+    dki.onchange=()=>{cw.dark=dki.checked;refresh();};
+    dk.appendChild(dki);dk.appendChild(document.createTextNode('dark'));
+    hd.appendChild(dk);
     if(cw.imgSrc){const im=document.createElement('img');im.src=cw.imgSrc;hd.appendChild(im);}
     const x=document.createElement('button');x.className='x';x.textContent='✕';
     x.onclick=()=>{cws.splice(i,1);renderCws();renderStyleCosts();refresh();};
@@ -397,7 +408,12 @@ function renderStyleSel(){
   if(cur)sel.value=cur;
 }
 function autoDesc(){
-  const parts=locs.map(l=>l.colors+' COLOR '+l.label.toUpperCase());
+  const anyD=cws.some(c=>c.dark)&&jobUB;
+  const parts=locs.map(l=>{
+    const lo=+l.colors||1,hi=lo+(anyD?1:0);
+    const n=(isMixed()&&anyD)?(lo+'–'+hi):String(hi>lo?hi:lo);
+    return n+' COLOR '+l.label.toUpperCase();
+  });
   return parts.join(' + ');
 }
 
@@ -434,13 +450,34 @@ function pgFooter(ctx){
   ctx.fillStyle='#131517';ctx.fillText('MAYHEM INK · mayhemink.net',W-MX,H-34);
   ctx.textAlign='left';
 }
-function drawPage1(pg){
-  pg.width=W;pg.height=H;
-  const ctx=pg.getContext('2d');
-  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);
-  pgHeader(ctx,'CUSTOM APPAREL PRICING');
+let jobCvs=[];
+function renderJobPages(){
+  const host=$('jobPages');if(!host)return;
+  host.innerHTML='';jobCvs=[];
   const t=tierIdx(),qty=totalQty();
-  let y=180;
+  let ctx=null,y=0,first=true;
+  const LIMIT=H-120;
+  const open=()=>{
+    const box=document.createElement('div');box.className='pagebox';
+    const cap=document.createElement('p');cap.className='pagecap';
+    cap.innerHTML='JOB PRICING'+(jobCvs.length?' — PAGE '+(jobCvs.length+1):'')+'<span style="margin-left:auto;color:var(--accent);">'+(qty?(qty+' PCS · '+TIER_LBL[t]+' TIER'):'')+'</span>';
+    const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+    box.appendChild(cap);box.appendChild(cv);host.appendChild(box);
+    jobCvs.push(cv);
+    ctx=cv.getContext('2d');
+    ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);
+    pgHeader(ctx,first?'CUSTOM APPAREL PRICING':'CUSTOM APPAREL PRICING — CONTINUED');
+    y=first?180:176;
+  };
+  const close=()=>{pgFooter(ctx);};
+  const brk=()=>{close();first=false;open();};
+  const drawBand=txt=>{
+    ctx.fillStyle='#131517';ctx.fillRect(MX,y,W-2*MX,34);
+    ctx.fillStyle='#E8EAEC';ctx.font='900 15px "Archivo Black", Arial Black, sans-serif';
+    ctx.fillText(txt,MX+14,y+23);
+    y+=42;
+  };
+  open();
   /* job line: description left, qty·tier right */
   ctx.fillStyle='#4B9CD3';ctx.font='700 14px "JetBrains Mono", monospace';
   ctx.fillText(($('jDesc').value||autoDesc()).toUpperCase(),MX,y);
@@ -449,7 +486,7 @@ function drawPage1(pg){
   ctx.fillText(qty+' PCS TOTAL · '+TIER_LBL[t]+' PRICE TIER',W-MX,y);
   ctx.textAlign='left';
   y+=22;
-  /* per-style sections, colorway mockup beside its size table */
+  /* per-style sections, colorway mockup beside its size table — paginated */
   const imgW=195;
   const colX=[MX+imgW+20,MX+imgW+140,MX+imgW+260,MX+imgW+420,W-MX];
   let grand=0;
@@ -460,14 +497,13 @@ function drawPage1(pg){
         .sort((a,b)=>ord.indexOf(a[0])-ord.indexOf(b[0]));
     });
     if(!rowsPer.some(r=>r.length))return;
-    /* style band */
-    ctx.fillStyle='#131517';ctx.fillRect(MX,y,W-2*MX,34);
-    ctx.fillStyle='#E8EAEC';ctx.font='900 15px "Archivo Black", Arial Black, sans-serif';
-    ctx.fillText(styleName(gr.styleKey).toUpperCase(),MX+14,y+23);
-    y+=42;
+    let bandDrawn=false;
     gr.cws.forEach((cw,ci)=>{
       const rows=rowsPer[ci];
       if(!rows.length)return;
+      const estH=Math.max(30+rows.length*28+26,cw.img&&cw.img.complete&&cw.img.naturalWidth?150:0)+10;
+      if(y+(bandDrawn?0:42)+estH>LIMIT){brk();bandDrawn=false;}
+      if(!bandDrawn){drawBand(styleName(gr.styleKey).toUpperCase()+(first&&jobCvs.length===1?'':''));bandDrawn=true;}
       const blockTop=y;
       const tableH=30+rows.length*28+26;
       const blockH=Math.max(tableH,cw.img&&cw.img.complete&&cw.img.naturalWidth?150:0);
@@ -490,7 +526,7 @@ function drawPage1(pg){
       ty+=30;
       let sub=0,subq=0;
       rows.forEach(([sz,q])=>{
-        const pc=perPcFor(cw.styleKey,sz,t),ln=round2(pc*q);
+        const pc=perPcFor(cw,sz,t),ln=round2(pc*q);
         sub+=ln;subq+=+q;
         ctx.fillStyle='#333';ctx.font='500 13px "JetBrains Mono", monospace';
         ctx.fillText(sz,colX[1],ty+20);
@@ -509,7 +545,8 @@ function drawPage1(pg){
     });
     y+=6;
   });
-  /* setup + extras */
+  /* setup + extras + totals stay together on one page */
+  if(y+220>LIMIT)brk();
   const setup=setupTotal();
   const scr=+$('scScreens').value||0,inkc=+$('scInk').value||0,pms=+$('scPms').value||0;
   if(setup>0){
@@ -551,7 +588,7 @@ function drawPage1(pg){
   y+=76;
   ctx.fillStyle='#98A0A6';ctx.font='500 10.5px "JetBrains Mono", monospace';
   ctx.fillText('*Prices subject to blank shirt price adjustments until the order is confirmed.   **Price includes ground shipping.   Sales tax not included.',MX,y);
-  pgFooter(ctx);
+  close();
 }
 function drawPage2(pg){
   pg.width=W;pg.height=H;
@@ -594,31 +631,28 @@ function drawPage2(pg){
     }
     y+=8;
   };
-  const firstColors=locs.length?Math.min(6,Math.max(1,+locs[0].colors||1)):1;
+  const activeCws=cws.filter(c=>Object.values(c.sizeRun||{}).some(q=>+q>0));
+  const useCws=activeCws.length?activeCws:cws;
+  const rowsForLoc=l=>[...new Set(useCws.map(cw=>billable(l,cw)))];
   grid('SHIRT + FIRST PRINT LOCATION — PER PIECE',
     (i,c)=>round2(shirtFigureFor(psk,'M')+engine.mu[i]+engine.rates[i][c]+shipPc()),
-    [firstColors]);
-  const addlRows=[...new Set(locs.slice(1).map(l=>Math.min(6,Math.max(1,+l.colors||1))))];
+    locs.length?rowsForLoc(locs[0]):[1]);
+  const addlRows=locs.length>1?[...new Set(locs.slice(1).flatMap(l=>rowsForLoc(l)))]:[];
   grid('ADDITIONAL PRINT LOCATIONS — PER PIECE',(i,c)=>engine.rates[i][c],addlRows);
-  ctx.fillStyle='#98A0A6';ctx.font='500 11px "JetBrains Mono", monospace';
-  const c0=styleCosts[psk]||{};
-  const ups=UPS.map(sz=>({sz,v:+c0[sz]||0})).filter(u=>u.v>0);
-  if(ups.length){ctx.fillText('Size upcharges: '+ups.map(u=>u.sz+' +'+money(u.v)).join('   ·   '),gx,y);y+=26;}
-  else y+=8;
-  /* v1.2: price-break upsell — bottom of the pricing section, big & bold.
-     perPcFor already spans the shirt + EVERY print location, so the saving
-     shown is the true all-in drop per piece. */
+  /* v1.3: price-break upsell — breathing room around the band, clean wording */
   if(nextT>-1){
+    y+=16;
     const need=TIER_MIN[nextT]-qty;
-    const cur=perPcFor(psk,'M',t),nxt=perPcFor(psk,'M',nextT);
+    const pcw=primaryCw();
+    const cur=perPcFor(pcw,'M',t),nxt=perPcFor(pcw,'M',nextT);
     ctx.fillStyle='rgba(232,196,71,0.35)';ctx.fillRect(gx,y,gw,64);
     ctx.strokeStyle='#E8C447';ctx.lineWidth=2;ctx.strokeRect(gx,y,gw,64);
     ctx.fillStyle='#7A5E00';ctx.font='900 19px "Archivo Black", Arial Black, sans-serif';
     ctx.fillText('★ ADD '+need+' MORE PIECES TO HIT '+TIER_LBL[nextT].toUpperCase()+' PRICING',gx+16,y+27);
     ctx.font='700 13.5px "JetBrains Mono", monospace';
-    ctx.fillText(money(nxt)+'/PC INSTEAD OF '+money(cur)+' — SAVE '+money(round2(cur-nxt))+' PER PIECE'+(locs.length>1?' ACROSS ALL '+locs.length+' PRINT LOCATIONS':''),gx+16,y+50);
-    y+=76;
-  }
+    ctx.fillText(money(nxt)+'/PC INSTEAD OF '+money(cur)+' — SAVE '+money(round2(cur-nxt))+' PER PIECE',gx+16,y+50);
+    y+=96;
+  } else y+=8;
   /* conditions */
   ctx.fillStyle='#131517';ctx.font='900 14px "Archivo Black", Arial Black, sans-serif';
   ctx.fillText('CONDITIONS',gx,y);y+=10;
@@ -653,14 +687,18 @@ let __rT=null;
 function refresh(){
   clearTimeout(__rT);
   __rT=setTimeout(()=>{
-    const q=totalQty(),t=tierIdx();
+    const q=totalQty();
     $('tierWarn').hidden=!(q&&q<TIER_MIN[0]);
-    $('tierTag').textContent=q?(q+' PCS · '+TIER_LBL[t]+' TIER'):'';
+    /* v1.3: screens = art separations + real underbase screens; ink changes
+       auto-fill on mixed light/dark jobs (one swap per shared screen). */
     if(!$('scScreens').dataset.touched){
-      $('scScreens').value=locs.reduce((a,l)=>a+(+l.colors||0),0);
+      $('scScreens').value=locs.reduce((a,l)=>a+(+l.colors||0)+(l.ubScreen?1:0),0);
+    }
+    if(!$('scInk').dataset.touched){
+      $('scInk').value=isMixed()?locs.reduce((a,l)=>a+(+l.colors||0),0):0;
     }
     if(!$('jDesc').dataset.touched)$('jDesc').value=autoDesc();
-    drawPage1($('pg1'));
+    renderJobPages();
     if($('incGrid').checked){$('pg2box').style.display='';drawPage2($('pg2'));}
     else $('pg2box').style.display='none';
     saveSettings();
@@ -702,10 +740,11 @@ function fname(base,ext){
   const c=($('jCustomer').value||'pricing').trim().replace(/[\\/:*?"<>|]/g,'');
   return c+' - '+base+'.'+ext;
 }
-$('dlP1').onclick=()=>dlCanvas($('pg1'),fname('pricing p1','png'));
+$('dlP1').onclick=()=>{jobCvs.forEach((cv,i)=>dlCanvas(cv,fname('pricing p'+(i+1),'png')));};
 $('dlP2').onclick=()=>dlCanvas($('pg2'),fname('price list p2','png'));
 $('dlPdf').onclick=async()=>{
-  const pages=[{data:await canvasJpeg($('pg1')),w:W,h:H}];
+  const pages=[];
+  for(const cv of jobCvs)pages.push({data:await canvasJpeg(cv),w:W,h:H});
   if($('incGrid').checked)pages.push({data:await canvasJpeg($('pg2')),w:W,h:H});
   dlBlob(pdfFromJpegs(pages),fname('pricing','pdf'));
 };
@@ -715,12 +754,13 @@ $('dlPdf').onclick=async()=>{
  'exFoldP','exNeckP','exNeckBP','exHangP','exUpcP'].forEach(id=>$(id).addEventListener('input',refresh));
 ['exFold','exNeck','exNeckB','exHang','exUpc','incGrid'].forEach(id=>$(id).addEventListener('change',refresh));
 $('scScreens').addEventListener('input',()=>{$('scScreens').dataset.touched='1';refresh();});
+$('scInk').addEventListener('input',()=>{$('scInk').dataset.touched='1';refresh();});
 $('jDesc').addEventListener('input',()=>{$('jDesc').dataset.touched='1';refresh();});
 $('jStyle').addEventListener('change',()=>{refresh();});
 $('addLoc').onclick=()=>{locs.push({label:locs.length?'Back':'Front',colors:1});renderLocs();refresh();};
 $('addCw').onclick=()=>{
   const sk=$('jStyle').value||(cws[0]&&cws[0].styleKey)||'';
-  cws.push({colorName:'Color '+(cws.length+1),styleKey:sk,sizeRun:{},img:null,imgSrc:null});
+  cws.push({colorName:'Color '+(cws.length+1),styleKey:sk,sizeRun:{},img:null,imgSrc:null,dark:false});
   seedStyleCost(sk);renderCws();renderStyleCosts();refresh();
 };
 $('resetEngine').onclick=()=>{
@@ -738,7 +778,7 @@ $('mockInput').addEventListener('change',e=>{
       const src=rd.result;
       const im=new Image();im.onload=()=>refresh();im.src=src;
       if(tgt){tgt.imgSrc=src;tgt.img=im;}
-      else{cws.push({colorName:f.name.replace(/\.[a-z]+$/i,''),styleKey:$('jStyle').value||'',sizeRun:{},img:im,imgSrc:src});}
+      else{cws.push({colorName:f.name.replace(/\.[a-z]+$/i,''),styleKey:$('jStyle').value||'',sizeRun:{},img:im,imgSrc:src,dark:false});}
       renderCws();refresh();
     };
     rd.readAsDataURL(f);
@@ -762,17 +802,25 @@ Promise.all([
     $('jCustomer').value=ho.customer||'';
     $('jQuote').value=ho.quote||'';
     $('jStyle').value=ho.mocks[0].styleKey||'';
-    locs=(ho.locs||[]).map(l=>({label:l.side==='front'?'Front':'Back',colors:Math.min(6,(+l.colors||1)+((ho.underbase&&l.ub!==false)?1:0))}));
+    const rich=ho.mocks.some(m=>'dark' in m);   /* v8.18+ Lab payloads */
+    if(rich){
+      jobUB=!!ho.underbase;
+      locs=(ho.locs||[]).map(l=>({label:l.side==='front'?'Front':'Back',colors:Math.min(6,+l.colors||1),ubScreen:!!l.ubScreen}));
+    } else {
+      jobUB=false;   /* legacy payloads baked UB into the counts already */
+      locs=(ho.locs||[]).map(l=>({label:l.side==='front'?'Front':'Back',colors:Math.min(6,(+l.colors||1)+((ho.underbase&&l.ub!==false)?1:0))}));
+    }
     if(!locs.length)locs=[{label:'Front',colors:1}];
     cws=ho.mocks.map(m=>{
       const im=m.img?new Image():null;
       if(im){im.onload=()=>refresh();im.src=m.img;}
-      return {colorName:m.colorName,styleKey:m.styleKey,sizeRun:m.sizeRun||{},img:im,imgSrc:m.img||null};
+      return {colorName:m.colorName,styleKey:m.styleKey,sizeRun:m.sizeRun||{},img:im,imgSrc:m.img||null,dark:!!m.dark};
     });
     if(ho.underbase)$('jDesc').dataset.touched='';
   } else {
+    jobUB=true;
     locs=[{label:'Front',colors:1}];
-    cws=[{colorName:'Color 1',styleKey:$('jStyle').value||'',sizeRun:{},img:null,imgSrc:null}];
+    cws=[{colorName:'Color 1',styleKey:$('jStyle').value||'',sizeRun:{},img:null,imgSrc:null,dark:false}];
   }
   cws.forEach(c=>seedStyleCost(c.styleKey));
   renderLocs();renderCws();renderStyleCosts();renderEngine();

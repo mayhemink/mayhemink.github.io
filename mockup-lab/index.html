@@ -752,10 +752,6 @@
     <div class="panel" data-tabs="mock" id="pPricing">
       <button class="col-head" id="prHead" type="button"><h3 style="margin:0;">Pricing calculator <span class="arrow">&#9656;</span></h3></button>
       <div id="prBody" hidden>
-        <div class="segmented" style="width:100%;display:flex;margin:8px 0;">
-          <button id="shMayhem" class="active" style="flex:1;">MAYHEM INK</button>
-          <button id="shCC" style="flex:1;">CHRISTIAN</button>
-        </div>
         <div class="val" style="margin:2px 0 6px;">white underbase on dark shirts is priced as a color + screen — the NO UNDERBASE toggle removes it</div>
         <div id="prOut"></div>
         <div class="val" id="prFoot" style="margin-top:6px;">shirt costs update weekly from SanMar</div>
@@ -790,7 +786,7 @@
 <button id="cartelTab" data-tabs="mock" title="Build the Mayhem customer price sheet for this job — mockups, size runs and colors carry over.">▸ CARTEL PRICE SHEET</button>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.17 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.18 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -3886,13 +3882,7 @@ const MAYHEM_TIERS=[ /* [minQty,[1..6 color print $/pc],garment markup ×] */
   [72,[1.16,1.23,1.62,1.99,3.09,4.19],1.60],[100,[0.83,1.16,1.49,1.82,2.92,4.02],1.55],
   [144,[0.75,1.05,1.33,1.62,2.72,3.82],1.50],[288,[0.66,0.90,1.14,1.38,2.48,3.58],1.45],
   [500,[0.61,0.83,1.02,1.23,2.33,3.43],1.40]];
-const CC_TIERS=[ /* [minQty,[1..6 color print $/pc]] */
-  [36,[1.95,2.61,3.28,4.25,4.85,5.54]],[72,[1.32,1.58,1.87,2.33,2.64,3.00]],
-  [144,[1.14,1.27,1.43,1.68,1.90,2.16]],[288,[0.89,1.00,1.13,1.41,1.61,1.82]],
-  [576,[0.81,0.91,1.03,1.28,1.46,1.65]],[864,[0.74,0.83,0.93,1.16,1.32,1.49]],
-  [1152,[0.70,0.79,0.89,1.12,1.28,1.45]]];
-const CC_ADJ=0.10; /* garment handling — folded silently into the shirt figure */
-let PRICE_SHEET='mayhem';
+/* v8.18: CHRISTIAN sheet removed from the Lab — the Cartel Sheet (cartel.html) owns customer pricing now */
 window.PRICEBOOK=null;
 fetch('prices.json').then(r=>r.ok?r.json():null).then(j=>{
   if(j&&j.styles){window.PRICEBOOK=j;
@@ -3955,13 +3945,11 @@ function renderSizeRun(){
 }
 function renderPricing(){
   const out=$('prOut');if(!out)return;
-  const bm=$('shMayhem'),bc=$('shCC');
-  if(bm){bm.classList.toggle('active',PRICE_SHEET==='mayhem');bc.classList.toggle('active',PRICE_SHEET==='cc');}
   const qty=srTotalQty();
   if(!qty){out.innerHTML='<div class="bk-hint">enter quantities in the SIZE RUN above — pricing goes live from there</div>';return;}
   const ubCount=state.autoUnderbase&&!isDTF();   /* v8.17: underbase is always a color + screen unless NO UNDERBASE */
   const locs=jobPrintLocs();
-  const mt=tierFor(MAYHEM_TIERS,qty),ct=tierFor(CC_TIERS,qty);
+  const mt=tierFor(MAYHEM_TIERS,qty);
   let html='',grand=0,pcs=0,capped=false;const missing={};
   SETS.forEach(st=>st.items.forEach(it=>{
     if(!it.sizeRun)return;
@@ -3973,30 +3961,39 @@ function renderPricing(){
     locs.forEach(sd=>{
       let n=locColorCount(sd)+((ubCount&&itemUsesDark(it))?1:0);
       if(n>6){n=6;capped=true;}
-      printPc+=(PRICE_SHEET==='mayhem'?mt[1][n-1]:ct[1][n-1]);
+      printPc+=mt[1][n-1];
     });
     const sName=(STYLES[it.styleKey]||{name:it.styleKey}).name;
+    /* v8.18: base sizes grouped on one line, upcharge sizes on their own, AVG/shirt under each color */
+    const UPSZ=['2XL','3XL','4XL','5XL','6XL'];
+    const baseRows=rows.filter(([sz])=>!UPSZ.includes(sz));
+    const upRows=rows.filter(([sz])=>UPSZ.includes(sz));
+    const lines=[];
+    if(baseRows.length){
+      const bq=baseRows.reduce((a,r)=>a+ +r[1],0);
+      const lbl=baseRows.length>1?(baseRows[0][0]+'–'+baseRows[baseRows.length-1][0]):baseRows[0][0];
+      lines.push([lbl,bq,shirtCostFor(it,baseRows[0][0])]);
+    }
+    upRows.forEach(([sz,q])=>lines.push([sz,+q,shirtCostFor(it,sz)]));
     let inner='',sub=0,subq=0;
-    rows.forEach(([sz,q])=>{
-      const cost=shirtCostFor(it,sz);let pc=null;
-      if(cost!=null){
-        pc=(PRICE_SHEET==='mayhem')?(cost*mt[2]+printPc):((cost+CC_ADJ)+printPc);
-        pc=Math.round(pc*100)/100;sub+=pc*q;
-      } else missing[it.styleKey]=1;
-      subq+=+q;
-      inner+='<tr><td>'+sz+'</td><td>× '+q+'</td><td>'+(pc==null?'—':'$'+pc.toFixed(2)+'/pc')+'</td><td>'+(pc==null?'—':'$'+(pc*q).toFixed(2))+'</td></tr>';
+    lines.forEach(([lbl,q,cost])=>{
+      let pc=null;
+      if(cost!=null){pc=Math.round((cost*mt[2]+printPc)*100)/100;sub+=pc*q;}
+      else missing[it.styleKey]=1;
+      subq+=q;
+      inner+='<tr><td>'+lbl+'</td><td>× '+q+'</td><td>'+(pc==null?'—':'$'+pc.toFixed(2)+'/pc')+'</td><td>'+(pc==null?'—':'$'+(pc*q).toFixed(2))+'</td></tr>';
     });
+    if(subq){
+      const avg=sub/subq;
+      inner+='<tr><td colspan="2" style="color:var(--accent2);font-weight:700;">AVG / SHIRT</td><td style="text-align:right;color:var(--accent2);font-weight:700;">$'+avg.toFixed(2)+'</td><td style="font-weight:700;">$'+sub.toFixed(2)+'</td></tr>';
+    }
     grand+=sub;pcs+=subq;
     html+='<div class="pr-block"><div class="pr-title"><b>'+it.colorName+'</b><span>'+sName+'</span></div><table>'+inner+'</table></div>';
   }));
-  const tierTxt=(PRICE_SHEET==='mayhem')
-    ?(mt[0]+'+ piece pricing')
-    :(qty<36?'below the 36-pc minimum — showing 36–71 pricing':(ct[0]+'+ piece pricing'));
   html+='<div class="pr-total"><span>'+pcs+' PCS</span><span>$'+grand.toFixed(2)+'</span></div>';
-  html+='<div class="pr-sub">'+tierTxt+' · '+locs.map(sd=>sd+' '+locColorCount(sd)+'-color').join(' + ')+(ubCount?' · +UB on darks':'')+'</div>';
+  html+='<div class="pr-sub">'+mt[0]+'+ piece pricing · '+locs.map(sd=>sd+' '+locColorCount(sd)+'-color').join(' + ')+(ubCount?' · +UB on darks':'')+'</div>';
   const miss=Object.keys(missing);
   if(miss.length)html+='<div class="pr-note">no SanMar cost yet for '+miss.join(', ')+' — those rows show — until the weekly price refresh picks them up</div>';
-  if(qty<36&&PRICE_SHEET==='cc')html+='';
   if(capped)html+='<div class="pr-note">7+ screens — priced at the 6-color row, quote by hand</div>';
   if(isDTF())html+='<div class="pr-note">DTF job — these sheets are screen-print pricing; quote DTF by hand</div>';
   out.innerHTML=html;
@@ -4006,10 +4003,6 @@ function renderPricing(){
   hd.onclick=()=>{const el=$(b);el.hidden=!el.hidden;hd.classList.toggle('open',!el.hidden);
     if(!el.hidden){renderSizeRun();}};
 });
-if($('shMayhem')){
-  $('shMayhem').onclick=()=>{PRICE_SHEET='mayhem';renderPricing();if(typeof scheduleAutosave==='function')scheduleAutosave();};
-  $('shCC').onclick=()=>{PRICE_SHEET='cc';renderPricing();if(typeof scheduleAutosave==='function')scheduleAutosave();};
-}
 if($('srAll'))$('srAll').onchange=()=>{
   if($('srAll').checked){
     const items=activeSet().items;
@@ -4045,12 +4038,19 @@ async function openCartelSheet(){
         c.getContext('2d').drawImage(pg,0,0,c.width,c.height);
         img=c.toDataURL('image/jpeg',0.85);
       }
-      mocks.push({styleKey:it.styleKey,colorName:it.colorName,img,sizeRun:it.sizeRun||null});
+      mocks.push({styleKey:it.styleKey,colorName:it.colorName,img,sizeRun:it.sizeRun||null,dark:itemUsesDark(it)});
     }
+    /* v8.18: ink-only colors + per-colorway dark flags — the cartel prices each
+       colorway at its own count (light 1c, dark +UB) and knows when a real
+       underbase SCREEN is needed (darks printing anything but white). */
+    const anyDark=items.some(it=>itemUsesDark(it));
+    const ub=state.autoUnderbase&&!isDTF();
+    const allWhiteOnDarks=sd=>enabledAssignSide(sd).every(a=>PMS[inkIdxFor(a,true,sd)][0]==='White');
     const payload={v:1,when:Date.now(),
       customer:$('jobCustomer').value,quote:$('jobQuote').value,
-      locs:jobPrintLocs().map(sd=>({side:sd,colors:locColorCount(sd)})),
-      underbase:state.autoUnderbase&&!isDTF()&&items.some(it=>itemUsesDark(it)),
+      locs:jobPrintLocs().map(sd=>({side:sd,colors:locColorCount(sd),ubScreen:ub&&anyDark&&!allWhiteOnDarks(sd)})),
+      underbase:ub&&anyDark,
+      mixed:anyDark&&items.some(it=>!itemUsesDark(it)),
       mocks};
     try{localStorage.setItem('mockuplab.cartel.handoff.v1',JSON.stringify(payload));}
     catch(e){
