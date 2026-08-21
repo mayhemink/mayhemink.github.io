@@ -480,13 +480,14 @@
   .col-head h3{width:100%;}
   .col-head .arrow{margin-left:auto;color:var(--muted);transition:transform .15s;}
   .col-head.open .arrow{transform:rotate(90deg);}
-  .sr-item{border:1px solid var(--line2);border-radius:6px;padding:10px;margin-top:10px;}
-  .sr-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;gap:8px;}
-  .sr-head span{color:var(--muted);font-size:10.5px;font-family:'JetBrains Mono',monospace;text-align:right;}
-  .sr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;}
-  .sr-grid label span{display:block;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;text-align:center;}
-  .sr-grid input{width:100%;text-align:center;padding:6px 2px;}
-  .sr-append{margin-top:8px;font-size:11.5px;}
+  /* v8.17: run-* classes — the old sr-* names collided with the search dropdown's .sr-item */
+  .run-item{border:1px solid var(--line2);border-radius:6px;padding:10px;margin-top:10px;}
+  .run-head{display:flex;flex-direction:column;gap:1px;margin-bottom:6px;}
+  .run-head b{font-size:12.5px;}
+  .run-head span{color:var(--muted);font-size:10px;font-family:'JetBrains Mono',monospace;}
+  .run-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px;}
+  .run-grid label span{display:block;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;text-align:center;}
+  .run-grid input{width:100%;text-align:center;padding:6px 2px;color:var(--ink);background:var(--surface2);}
   .pr-block{border:1px solid var(--line2);border-radius:6px;padding:10px;margin-top:10px;}
   .pr-block table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:11.5px;}
   .pr-block td{padding:3px 4px;border-bottom:1px solid var(--line2);}
@@ -741,7 +742,9 @@
     <div class="panel" data-tabs="mock" id="pSizeRun">
       <button class="col-head" id="srHead" type="button"><h3 style="margin:0;">Size run <span class="arrow">&#9656;</span></h3></button>
       <div id="srBody" hidden>
-        <p class="desc">Quantities per size, per shirt color. Every color adds to the same total for price breaks.</p>
+        <p class="desc">Quantities per size. Every color adds to the same total for price breaks.</p>
+        <label class="checkline" style="margin-top:0;"><input type="checkbox" id="srAll"><span>same size run for every color</span></label>
+        <label class="checkline"><input type="checkbox" id="srShowAll"><span>show size runs on the approval pages</span></label>
         <div id="srList"></div>
       </div>
     </div>
@@ -753,7 +756,7 @@
           <button id="shMayhem" class="active" style="flex:1;">MAYHEM INK</button>
           <button id="shCC" style="flex:1;">CHRISTIAN</button>
         </div>
-        <label class="checkline" style="margin-top:0;"><input type="checkbox" id="prUB"><span>count the white underbase as a color on dark shirts</span></label>
+        <div class="val" style="margin:2px 0 6px;">white underbase on dark shirts is priced as a color + screen — the NO UNDERBASE toggle removes it</div>
         <div id="prOut"></div>
         <div class="val" id="prFoot" style="margin-top:6px;">shirt costs update weekly from SanMar</div>
       </div>
@@ -787,7 +790,7 @@
 <button id="cartelTab" data-tabs="mock" title="Build the Mayhem customer price sheet for this job — mockups, size runs and colors carry over.">▸ CARTEL PRICE SHEET</button>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.16 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.17 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -3920,34 +3923,32 @@ function renderSizeRun(){
   const el=$('srList');if(!el)return;
   const items=activeSet().items;
   el.innerHTML='';
+  const showAll=$('srShowAll');
+  if(showAll)showAll.checked=items.length>0&&items.every(it=>it.srShow);
   if(!items.length){el.innerHTML='<div class="bk-hint">add shirts in step 4 — each color gets its own size run</div>';renderPricing();return;}
-  items.forEach(it=>{
-    const box=document.createElement('div');box.className='sr-item';
-    const s=STYLES[it.styleKey]||{name:it.styleKey};
-    const pb=window.PRICEBOOK&&PRICEBOOK.styles&&PRICEBOOK.styles[it.styleKey];
-    const hd=document.createElement('div');hd.className='sr-head';
-    hd.innerHTML='<b>'+it.colorName+'</b><span>'+s.name+((pb&&pb.verified===false)?' · size run unverified':'')+'</span>';
+  /* v8.17: color on top, short style tag, optional one-run-for-all mode */
+  const all=$('srAll')&&$('srAll').checked;
+  (all?[items[0]]:items).forEach(it=>{
+    const box=document.createElement('div');box.className='run-item';
+    const hd=document.createElement('div');hd.className='run-head';
+    hd.innerHTML=all?('<b>ALL '+items.length+' COLORS</b><span>same run on every shirt</span>')
+      :('<b>'+it.colorName+'</b><span>'+it.styleKey+'</span>');
     box.appendChild(hd);
-    const grid=document.createElement('div');grid.className='sr-grid';
+    const grid=document.createElement('div');grid.className='run-grid';
     sizesForStyle(it.styleKey).forEach(sz=>{
       const cell=document.createElement('label');
       const cap=document.createElement('span');cap.textContent=sz;cell.appendChild(cap);
       const inp=document.createElement('input');inp.type='number';inp.min='0';inp.step='1';inp.placeholder='0';
       inp.value=(it.sizeRun&&it.sizeRun[sz])||'';
       inp.addEventListener('input',()=>{
-        it.sizeRun=it.sizeRun||{};
-        it.sizeRun[sz]=Math.max(0,Math.round(+inp.value||0));
+        const q=Math.max(0,Math.round(+inp.value||0));
+        (all?items:[it]).forEach(x=>{x.sizeRun=x.sizeRun||{};x.sizeRun[sz]=q;});
         renderPricing();
         if(typeof scheduleAutosave==='function')scheduleAutosave();
       });
       cell.appendChild(inp);grid.appendChild(cell);
     });
     box.appendChild(grid);
-    const tq=Object.values(it.sizeRun||{}).reduce((a,b)=>a+(+b||0),0);
-    const ck=document.createElement('label');ck.className='checkline sr-append';
-    ck.innerHTML='<input type="checkbox"'+(it.srShow?' checked':'')+'><span>show this size run on the approval page'+(tq?' ('+tq+' pcs)':'')+'</span>';
-    ck.querySelector('input').onchange=e=>{it.srShow=e.target.checked;if(typeof scheduleAutosave==='function')scheduleAutosave();};
-    box.appendChild(ck);
     el.appendChild(box);
   });
   renderPricing();
@@ -3958,7 +3959,7 @@ function renderPricing(){
   if(bm){bm.classList.toggle('active',PRICE_SHEET==='mayhem');bc.classList.toggle('active',PRICE_SHEET==='cc');}
   const qty=srTotalQty();
   if(!qty){out.innerHTML='<div class="bk-hint">enter quantities in the SIZE RUN above — pricing goes live from there</div>';return;}
-  const ubCount=$('prUB')&&$('prUB').checked;
+  const ubCount=state.autoUnderbase&&!isDTF();   /* v8.17: underbase is always a color + screen unless NO UNDERBASE */
   const locs=jobPrintLocs();
   const mt=tierFor(MAYHEM_TIERS,qty),ct=tierFor(CC_TIERS,qty);
   let html='',grand=0,pcs=0,capped=false;const missing={};
@@ -4008,8 +4009,17 @@ function renderPricing(){
 if($('shMayhem')){
   $('shMayhem').onclick=()=>{PRICE_SHEET='mayhem';renderPricing();if(typeof scheduleAutosave==='function')scheduleAutosave();};
   $('shCC').onclick=()=>{PRICE_SHEET='cc';renderPricing();if(typeof scheduleAutosave==='function')scheduleAutosave();};
-  $('prUB').onchange=()=>renderPricing();
 }
+if($('srAll'))$('srAll').onchange=()=>{
+  if($('srAll').checked){
+    const items=activeSet().items;
+    const src=(items[0]&&items[0].sizeRun)||{};
+    items.forEach(x=>{x.sizeRun=Object.assign({},src);});
+  }
+  renderSizeRun();
+  if(typeof scheduleAutosave==='function')scheduleAutosave();
+};
+if($('srShowAll'))$('srShowAll').onchange=e=>{activeSet().items.forEach(it=>it.srShow=e.target.checked);if(typeof scheduleAutosave==='function')scheduleAutosave();};
 if($('exSize'))$('exSize').onchange=e=>{state.exportNoSize=e.target.checked;if(typeof scheduleAutosave==='function')scheduleAutosave();};
 const __v815rsi=renderSetItems;renderSetItems=function(){__v815rsi();if($('srBody')&&!$('srBody').hidden)renderSizeRun();};
 const __v815ril=refreshInkList;refreshInkList=function(){__v815ril();if($('prBody')&&!$('prBody').hidden)renderPricing();};

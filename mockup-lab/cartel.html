@@ -25,10 +25,9 @@
   .lbl{display:block;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.07em;margin:10px 0 4px;}
   input[type=text],input[type=number],select,textarea{width:100%;background:var(--surface2);border:1px solid var(--line2);border-radius:4px;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:8px 9px;outline:none;}
   input:focus,select:focus,textarea:focus{border-color:var(--accent);}
-  textarea{min-height:110px;resize:vertical;font-size:11px;line-height:1.5;}
+  textarea{min-height:90px;resize:vertical;font-size:11px;line-height:1.5;}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
   .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-  .row4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
   .btn{background:var(--accent);border:none;border-radius:4px;color:#0B0C0D;cursor:pointer;font-family:'Archivo Black',sans-serif;font-size:12px;letter-spacing:.05em;padding:12px 14px;width:100%;}
   .btn:hover{background:var(--accent2);}
   .btn.ghost{background:none;border:1px solid var(--line2);color:var(--ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
@@ -37,28 +36,32 @@
   .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
   .checkline{display:flex;align-items:center;gap:8px;font-size:12px;margin-top:8px;color:var(--ink);}
   .checkline input{width:auto;}
-  .checkline .pr{margin-left:auto;width:64px;}
   .internal{border-left:3px solid var(--warn);}
   .internal h3::after{content:'INTERNAL — NEVER ON EXPORTS';color:var(--warn);font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.05em;margin-left:auto;}
   .loc-row{display:grid;grid-template-columns:1fr 84px 26px;gap:6px;margin-top:6px;align-items:center;}
   .loc-row .x{background:none;border:1px solid var(--line2);border-radius:3px;color:var(--muted);cursor:pointer;height:30px;}
   .loc-row .x:hover{color:#E05252;border-color:#E05252;}
-  .sr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px;}
-  .sr-grid label span{display:block;font-size:9.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;text-align:center;}
-  .sr-grid input{text-align:center;padding:6px 2px;}
+  .run-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px;}
+  .run-grid label span{display:block;font-size:9.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;text-align:center;}
+  .run-grid input{text-align:center;padding:6px 2px;}
   .cw-item{border:1px solid var(--line2);border-radius:6px;padding:10px;margin-top:8px;}
-  .cw-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;}
+  .cw-head{display:flex;gap:6px;align-items:center;}
   .cw-head img{height:34px;border-radius:3px;background:#fff;}
+  .cw-head select{width:110px;flex:none;padding:6px 4px;font-size:10.5px;}
+  .cw-head .x{background:none;border:1px solid var(--line2);border-radius:3px;color:var(--muted);cursor:pointer;height:30px;width:30px;flex:none;}
+  .cw-head .x:hover{color:#E05252;border-color:#E05252;}
   .rate-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:4px;}
   .rate-grid input{padding:5px 2px;font-size:10.5px;text-align:center;}
   .rate-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--muted);text-align:center;}
   .mu-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
   .mu-grid input{padding:5px 2px;font-size:10.5px;text-align:center;}
+  .sc-row{display:grid;grid-template-columns:74px repeat(5,1fr);gap:4px;margin-top:4px;align-items:center;}
+  .sc-row .sc-name{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--accent2);}
+  .sc-row input{padding:5px 2px;font-size:10.5px;text-align:center;}
   .pages{display:flex;flex-direction:column;gap:18px;}
   .pagebox{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;}
   .pagebox canvas{width:100%;height:auto;display:block;border-radius:3px;}
   .pagecap{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;margin:0 0 8px;display:flex;align-items:center;}
-  .hint{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10.5px;}
   .warnline{color:var(--warn);font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:8px;}
   .drop{border:1.5px dashed var(--line2);border-radius:6px;color:var(--muted);cursor:pointer;font-size:11px;margin-top:8px;padding:10px;text-align:center;position:relative;}
   .drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
@@ -82,24 +85,24 @@
       <h3>Job</h3>
       <div class="row2">
         <div><label class="lbl">Customer</label><input type="text" id="jCustomer" placeholder="Customer name"></div>
-        <div><label class="lbl">Quote #</label><input type="text" id="jQuote" placeholder="#"></div>
+        <div><label class="lbl">Job nickname</label><input type="text" id="jQuote" placeholder="nickname"></div>
       </div>
-      <label class="lbl">Shirt style</label>
+      <label class="lbl">Style for new shirt colors</label>
       <select id="jStyle"></select>
       <label class="lbl">Description line (on the sheet)</label>
-      <input type="text" id="jDesc" placeholder="3 COLOR FRONT + 3 COLOR BACK — NO UNDERBASE NEEDED">
+      <input type="text" id="jDesc" placeholder="3 COLOR FRONT + 3 COLOR BACK">
     </div>
 
     <div class="panel">
       <h3>Print locations</h3>
-      <p class="desc">Color count is what the customer is billed for — count the white underbase as a color when it prints.</p>
+      <p class="desc">Color count is what the customer is billed for — the underbase counts as a color when it prints.</p>
       <div id="locList"></div>
       <div class="btnrow"><button class="btn ghost sm" id="addLoc">+ add location</button></div>
     </div>
 
     <div class="panel">
       <h3>Shirts &amp; size runs</h3>
-      <p class="desc">Quantities per size, per shirt color. All colors add to one total for the price tier.</p>
+      <p class="desc">Quantities per size, per shirt color. All colors add to one total for the price tier. Same style = same section on the sheet; a different style gets its own section.</p>
       <div id="cwList"></div>
       <div class="btnrow"><button class="btn ghost sm" id="addCw">+ add shirt color</button></div>
       <div class="drop"><b>Drop / pick mockup images</b> — they go on the sheet<input type="file" id="mockInput" accept="image/*" multiple></div>
@@ -113,34 +116,29 @@
         <div><label class="lbl">Ink changes</label><input type="number" id="scInk" min="0" step="1" value="0"></div>
         <div><label class="lbl">Pantone match</label><input type="number" id="scPms" min="0" step="1" value="0"></div>
       </div>
-      <label class="checkline"><input type="checkbox" id="exFold"><span>Fold / bag / size sticker</span><input type="number" class="pr" id="exFoldP" step="0.05" value="0.80"></label>
-      <label class="checkline"><input type="checkbox" id="exNeck"><span>Custom printed neck label</span><input type="number" class="pr" id="exNeckP" step="0.05" value="0.80"></label>
-      <label class="checkline"><input type="checkbox" id="exNeckB"><span>Basic transfer neck label</span><input type="number" class="pr" id="exNeckBP" step="0.05" value="0.60"></label>
-      <label class="checkline"><input type="checkbox" id="exHang"><span>Apply hang tags (supplied)</span><input type="number" class="pr" id="exHangP" step="0.05" value="0.20"></label>
-      <label class="checkline"><input type="checkbox" id="exUpc"><span>Print &amp; apply UPC / SKU</span><input type="number" class="pr" id="exUpcP" step="0.05" value="0.30"></label>
+      <label class="checkline"><input type="checkbox" id="exFold"><span>Fold / bag / size sticker</span><input type="number" class="pr" id="exFoldP" step="0.05" value="0.80" style="margin-left:auto;width:64px;"></label>
+      <label class="checkline"><input type="checkbox" id="exNeck"><span>Custom printed neck label</span><input type="number" class="pr" id="exNeckP" step="0.05" value="0.80" style="margin-left:auto;width:64px;"></label>
+      <label class="checkline"><input type="checkbox" id="exNeckB"><span>Basic transfer neck label</span><input type="number" class="pr" id="exNeckBP" step="0.05" value="0.60" style="margin-left:auto;width:64px;"></label>
+      <label class="checkline"><input type="checkbox" id="exHang"><span>Apply hang tags (supplied)</span><input type="number" class="pr" id="exHangP" step="0.05" value="0.20" style="margin-left:auto;width:64px;"></label>
+      <label class="checkline"><input type="checkbox" id="exUpc"><span>Print &amp; apply UPC / SKU</span><input type="number" class="pr" id="exUpcP" step="0.05" value="0.30" style="margin-left:auto;width:64px;"></label>
     </div>
 
     <div class="panel internal">
       <h3>Pricing engine</h3>
       <p class="desc">These numbers build the sheet but are never printed on it. Saved in this browser.</p>
-      <label class="lbl">Shirt figure — base size (auto from SanMar feed when available)</label>
-      <input type="number" id="pShirt" step="0.01" value="0">
-      <label class="lbl">Size upcharges (added to shirt figure)</label>
-      <div class="row4">
-        <div><div class="rate-lbl">2XL</div><input type="number" id="up2" step="0.01" value="0"></div>
-        <div><div class="rate-lbl">3XL</div><input type="number" id="up3" step="0.01" value="0"></div>
-        <div><div class="rate-lbl">4XL</div><input type="number" id="up4" step="0.01" value="0"></div>
-        <div><div class="rate-lbl">5XL</div><input type="number" id="up5" step="0.01" value="0"></div>
+      <label class="lbl">Shirt figures by style — base · 2XL · 3XL · 4XL · 5XL (auto from SanMar feed)</label>
+      <div id="styleCostList"></div>
+      <div class="row2" style="margin-top:8px;">
+        <div><label class="lbl">Shipping / pc</label><input type="number" id="pShip" step="0.05" value="0.75"></div>
+        <div><label class="lbl">Screen fee</label><input type="number" id="pScreenFee" step="0.5" value="10"></div>
       </div>
+      <label class="lbl">Ink change / Pantone fee</label>
+      <input type="number" id="pInkFee" step="0.5" value="10">
       <label class="lbl">Garment margin (MU) per tier</label>
       <div class="mu-grid" id="muGrid"></div>
       <div class="rate-lbl" style="margin-top:2px;">36 · 72 · 144 · 288 · 576 · 864 · 1152+</div>
       <label class="lbl">Customer print rates — rows 1→6 colors, columns = tiers</label>
       <div id="rateGrids"></div>
-      <div class="row2" style="margin-top:8px;">
-        <div><label class="lbl">Screen fee</label><input type="number" id="pScreenFee" step="0.5" value="10"></div>
-        <div><label class="lbl">Ink change fee</label><input type="number" id="pInkFee" step="0.5" value="10"></div>
-      </div>
       <div class="btnrow"><button class="btn ghost sm" id="resetEngine">↺ reset engine to defaults</button></div>
     </div>
 
@@ -170,18 +168,19 @@
 </div>
 
 <footer>
-  <span>MAYHEM CARTEL SHEET · V1.0 · CUSTOMER PRICING</span>
+  <span>MAYHEM CARTEL SHEET · V1.1 · CUSTOMER PRICING</span>
   <span>internal numbers stay off every export</span>
 </footer>
 
 <script>
-/* ============ MAYHEM CARTEL SHEET v1.0 ============
+/* ============ MAYHEM CARTEL SHEET v1.1 ============
    Customer-facing pricing sheets, built from a Mockup Lab job handoff
    (localStorage 'mockuplab.cartel.handoff.v1') or standalone by hand.
-   Customer price = shirt figure (SanMar dealer cost + handling) + garment
-   margin (MU, per tier) + customer print rate per location (per tier, per
-   color count). MU / shirt figure / rates live ONLY in the settings rail —
-   exports show combined numbers only. */
+   Customer price = shirt figure (SanMar dealer cost + handling, PER STYLE)
+   + garment margin (MU, per tier) + customer print rate per location
+   + shipping per pc. Internals live ONLY in the settings rail — exports show
+   combined numbers only. v1.1: mockups inside per-style sections, price-break
+   upsell highlights, shipping line, Job nickname, no date, trimmed conditions. */
 const $=id=>document.getElementById(id);
 const TIER_MIN=[36,72,144,288,576,864,1152];
 const TIER_LBL=['36–71','72–143','144–287','288–575','576–863','864–1,151','1,152+'];
@@ -195,28 +194,24 @@ const DEF_RATES=[            /* [tier][colors-1] — customer print $/pc */
   [0.84,0.93,1.03,1.26,1.42,1.59],
   [0.80,0.89,0.99,1.22,1.38,1.55]];
 const SHIRT_ADJ=0.10;        /* handling — folded silently into the shirt figure */
+const DEF_SHIP=0.75;         /* ground shipping per pc — adjust for distance from Utah */
 const DEF_COND=[
-'SCREENS — $10.00 per screen. Ink color changes $10.00 per color/location. Pantone color matching $10.00 per match.',
 'UNDERBASE — light or bright inks on dark shirts require an additional underbase color for all print locations, with an additional screen fee per location.',
-'RUSH FEES — 7 day turnaround add 20% · 5 day add 30% · 3 day add 40% to total invoice.',
-'NECK LABELS — $0.80 custom printed label · $0.60 basic transfer label. Printed cool grey 7C or metallic silver transfer. Custom prints add one screen (5 sizes per screen).',
-'FINISHING — $0.80 fold / poly bag / size sticker · $0.20 apply supplied hang tags · $0.20 apply size strip stickers · $0.30 print & apply UPC/SKU stickers.',
-'ADDITIONAL — split shipment $5.00 per box · on/above pocket prints add $0.25/pc · stretch/puff additive add $0.25/pc · long sleeve prints add $0.25/pc.',
 '*Prices subject to blank shirt price adjustments until the order is confirmed.  **Price includes ground shipping.'].join('\n');
-const SIZE_ORDER=['XS','S','M','L','XL','2XL','3XL','4XL','5XL','YXS','YS','YM','YL','YXL'];
-const UP_KEY={'2XL':'up2','3XL':'up3','4XL':'up4','5XL':'up5'};
+const UPS=['2XL','3XL','4XL','5XL'];
 
 let STYLES={},PRICEBOOK=null;
 let locs=[];            /* [{label,colors}] */
-let cws=[];             /* [{colorName,styleKey,sizeRun:{},img:HTMLImage|null,imgSrc:dataURL}] */
+let cws=[];             /* [{colorName,styleKey,sizeRun:{},img,imgSrc}] */
+let styleCosts={};      /* {styleKey:{base,'2XL','3XL','4XL','5XL'}} — per job, auto-seeded */
 let engine={mu:DEF_MU.slice(),rates:DEF_RATES.map(r=>r.slice())};
 
-/* ---------- settings persistence (engine + extras + conditions) ---------- */
-const SETKEY='cartel.settings.v1';
+/* ---------- settings persistence (engine + extras + conditions + ship) ---------- */
+const SETKEY='cartel.settings.v2';
 function saveSettings(){
   try{localStorage.setItem(SETKEY,JSON.stringify({
     mu:engine.mu,rates:engine.rates,
-    shirt:+$('pShirt').value||0,ups:['up2','up3','up4','up5'].map(k=>+$(k).value||0),
+    ship:+$('pShip').value||0,
     screenFee:+$('pScreenFee').value||10,inkFee:+$('pInkFee').value||10,
     cond:$('pCond').value,
     ex:['exFold','exNeck','exNeckB','exHang','exUpc'].map(k=>$(k).checked),
@@ -228,6 +223,7 @@ function loadSettings(){
   if(!s)return;
   if(s.mu&&s.mu.length===7)engine.mu=s.mu.map(Number);
   if(s.rates&&s.rates.length===7)engine.rates=s.rates.map(r=>r.map(Number));
+  if(s.ship!=null)$('pShip').value=s.ship;
   if(s.screenFee)$('pScreenFee').value=s.screenFee;
   if(s.inkFee)$('pInkFee').value=s.inkFee;
   if(s.cond)$('pCond').value=s.cond;
@@ -239,9 +235,23 @@ function loadSettings(){
 function totalQty(){let n=0;cws.forEach(c=>Object.values(c.sizeRun||{}).forEach(q=>n+=(+q||0)));return n;}
 function tierIdx(){const q=totalQty();let t=0;TIER_MIN.forEach((m,i)=>{if(q>=m)t=i;});return t;}
 function locPrint(t){let s=0;locs.forEach(l=>{const c=Math.min(6,Math.max(1,+l.colors||1));s+=engine.rates[t][c-1];});return s;}
-function shirtFigure(sz){
-  let f=+$('pShirt').value||0;
-  const k=UP_KEY[sz];if(k)f+=+$(k).value||0;
+function seedStyleCost(sk){
+  if(styleCosts[sk])return;
+  const c={base:0};
+  const pb=PRICEBOOK&&PRICEBOOK.styles&&PRICEBOOK.styles[sk];
+  if(pb&&pb.costs){
+    const v=pb.costs.color||pb.costs.white;
+    if(v&&v.base!=null){
+      c.base=round2(+v.base+SHIRT_ADJ);
+      UPS.forEach(sz=>{if(v[sz]!=null)c[sz]=round2(v[sz]-v.base);});
+    }
+  }
+  styleCosts[sk]=c;
+}
+function shirtFigureFor(sk,sz){
+  const c=styleCosts[sk]||{base:0};
+  let f=+c.base||0;
+  if(UPS.includes(sz)&&c[sz]!=null)f+=+c[sz];
   return f;
 }
 function extrasPerPc(){
@@ -250,7 +260,8 @@ function extrasPerPc(){
     .forEach(([c,p])=>{if($(c).checked)s+=+$(p).value||0;});
   return s;
 }
-function perPc(sz,t){return round2(shirtFigure(sz)+engine.mu[t]+locPrint(t)+extrasPerPc());}
+function shipPc(){return +$('pShip').value||0;}
+function perPcFor(sk,sz,t){return round2(shirtFigureFor(sk,sz)+engine.mu[t]+locPrint(t)+extrasPerPc()+shipPc());}
 function round2(x){return Math.round(x*100)/100;}
 function money(x){return '$'+x.toFixed(2);}
 function setupTotal(){
@@ -265,27 +276,28 @@ function extrasList(){
    ['exUpc','exUpcP','Print & apply UPC / SKU']].forEach(([c,p,n])=>{if($(c).checked)out.push([n,+$(p).value||0]);});
   return out;
 }
-function autoShirtCost(){
-  const sk=$('jStyle').value;
-  const pb=PRICEBOOK&&PRICEBOOK.styles&&PRICEBOOK.styles[sk];
-  if(!pb||!pb.costs)return null;
-  const v=pb.costs.color||pb.costs.white;if(!v||v.base==null)return null;
-  const ups={};
-  ['2XL','3XL','4XL','5XL'].forEach(sz=>{if(v[sz]!=null)ups[sz]=round2(v[sz]-v.base);});
-  return {base:round2(+v.base+SHIRT_ADJ),ups};
-}
-function applyAutoShirt(){
-  const a=autoShirtCost();
-  if(!a)return false;
-  $('pShirt').value=a.base.toFixed(2);
-  ['2XL','3XL','4XL','5XL'].forEach(sz=>{$(UP_KEY[sz]).value=(a.ups[sz]!=null?a.ups[sz]:0).toFixed(2);});
-  return true;
-}
 function sizesForStyle(sk){
   const pb=PRICEBOOK&&PRICEBOOK.styles&&PRICEBOOK.styles[sk];
   return (pb&&pb.sizes&&pb.sizes.length)?pb.sizes:['S','M','L','XL','2XL','3XL','4XL'];
 }
 function styleName(sk){const s=STYLES[sk];return s?(s.name+(s.sub?' · '+s.sub:'')):sk;}
+function primaryStyle(){
+  let best=null,bq=-1;
+  cws.forEach(c=>{
+    const q=Object.values(c.sizeRun||{}).reduce((a,b)=>a+(+b||0),0);
+    if(q>bq){bq=q;best=c.styleKey;}
+  });
+  return best||$('jStyle').value||(cws[0]&&cws[0].styleKey)||'';
+}
+function styleGroups(){
+  const order=[],map={};
+  cws.forEach(c=>{
+    const k=c.styleKey||'';
+    if(!map[k]){map[k]=[];order.push(k);}
+    map[k].push(c);
+  });
+  return order.map(k=>({styleKey:k,cws:map[k]}));
+}
 
 /* ---------- settings rail rendering ---------- */
 function renderLocs(){
@@ -305,18 +317,24 @@ function renderLocs(){
 function renderCws(){
   const el=$('cwList');el.innerHTML='';
   cws.forEach((cw,i)=>{
+    seedStyleCost(cw.styleKey);
     const box=document.createElement('div');box.className='cw-item';
     const hd=document.createElement('div');hd.className='cw-head';
-    const nm=document.createElement('input');nm.type='text';nm.value=cw.colorName;nm.style.width='55%';
+    const nm=document.createElement('input');nm.type='text';nm.value=cw.colorName;
     nm.oninput=()=>{cw.colorName=nm.value;refresh();};
     hd.appendChild(nm);
+    const st=document.createElement('select');
+    Object.keys(STYLES).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k;st.appendChild(o);});
+    st.value=cw.styleKey||'';
+    st.onchange=()=>{cw.styleKey=st.value;seedStyleCost(cw.styleKey);renderCws();renderStyleCosts();refresh();};
+    hd.appendChild(st);
     if(cw.imgSrc){const im=document.createElement('img');im.src=cw.imgSrc;hd.appendChild(im);}
-    const x=document.createElement('button');x.className='x';x.textContent='✕';x.style.cssText='background:none;border:1px solid var(--line2);border-radius:3px;color:var(--muted);cursor:pointer;height:28px;width:28px;';
-    x.onclick=()=>{cws.splice(i,1);renderCws();refresh();};
+    const x=document.createElement('button');x.className='x';x.textContent='✕';
+    x.onclick=()=>{cws.splice(i,1);renderCws();renderStyleCosts();refresh();};
     hd.appendChild(x);
     box.appendChild(hd);
-    const grid=document.createElement('div');grid.className='sr-grid';
-    sizesForStyle($('jStyle').value).forEach(sz=>{
+    const grid=document.createElement('div');grid.className='run-grid';
+    sizesForStyle(cw.styleKey).forEach(sz=>{
       const cell=document.createElement('label');
       const cap=document.createElement('span');cap.textContent=sz;cell.appendChild(cap);
       const inp=document.createElement('input');inp.type='number';inp.min='0';inp.step='1';inp.placeholder='0';
@@ -326,6 +344,27 @@ function renderCws(){
     });
     box.appendChild(grid);
     el.appendChild(box);
+  });
+}
+function renderStyleCosts(){
+  const el=$('styleCostList');if(!el)return;
+  el.innerHTML='';
+  const seen=[];
+  cws.forEach(c=>{if(c.styleKey&&!seen.includes(c.styleKey))seen.push(c.styleKey);});
+  if(!seen.length){el.innerHTML='<div class="rate-lbl" style="text-align:left;">add shirts first</div>';return;}
+  seen.forEach(sk=>{
+    seedStyleCost(sk);
+    const row=document.createElement('div');row.className='sc-row';
+    const nm=document.createElement('div');nm.className='sc-name';nm.textContent=sk;
+    row.appendChild(nm);
+    ['base','2XL','3XL','4XL','5XL'].forEach(kk=>{
+      const inp=document.createElement('input');inp.type='number';inp.step='0.01';
+      inp.value=(styleCosts[sk][kk]!=null)?styleCosts[sk][kk]:'';
+      inp.placeholder=kk==='base'?'base':kk;
+      inp.oninput=()=>{styleCosts[sk][kk]=+inp.value||0;refresh();};
+      row.appendChild(inp);
+    });
+    el.appendChild(row);
   });
 }
 function renderEngine(){
@@ -355,8 +394,6 @@ function renderStyleSel(){
     const o=document.createElement('option');o.value=k;o.textContent=k+' — '+(STYLES[k].name||k);
     sel.appendChild(o);
   });
-  const free=document.createElement('option');free.value='';free.textContent='(other / not in catalog)';
-  sel.appendChild(free);
   if(cur)sel.value=cur;
 }
 function autoDesc(){
@@ -375,9 +412,11 @@ function pgHeader(ctx,sub){
   ctx.textAlign='right';
   ctx.fillStyle='#E8EAEC';ctx.font='900 24px "Archivo Black", Arial Black, sans-serif';
   ctx.fillText((($('jCustomer').value||'Customer name')).toUpperCase(),W-MX,66);
-  ctx.fillStyle='#98A0A6';ctx.font='500 12px "JetBrains Mono", monospace';
   const q=($('jQuote').value||'').trim();
-  ctx.fillText((q?('QUOTE '+q+'  ·  '):'')+new Date().toLocaleDateString(),W-MX,92);
+  if(q){
+    ctx.fillStyle='#98A0A6';ctx.font='500 12px "JetBrains Mono", monospace';
+    ctx.fillText(q.toUpperCase(),W-MX,92);
+  }
   ctx.textAlign='left';
   ctx.fillStyle='#4B9CD3';ctx.fillRect(MX,132,W-2*MX,3);
 }
@@ -401,67 +440,74 @@ function drawPage1(pg){
   ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);
   pgHeader(ctx,'CUSTOM APPAREL PRICING');
   const t=tierIdx(),qty=totalQty();
-  let y=186;
-  /* mockups */
-  const imgs=cws.filter(c=>c.img&&c.img.complete&&c.img.naturalWidth);
-  if(imgs.length){
-    const n=Math.min(3,imgs.length);
-    const bw=(W-2*MX-(n-1)*24)/n,bh=360;
-    let x=MX+(W-2*MX-(bw*n+24*(n-1)))/2;
-    imgs.slice(0,3).forEach(c=>{
-      const im=c.img,scl=Math.min(bw/im.naturalWidth,(bh-26)/im.naturalHeight);
-      const fw=im.naturalWidth*scl,fh=im.naturalHeight*scl;
-      ctx.drawImage(im,x+(bw-fw)/2,y+(bh-26-fh)/2,fw,fh);
-      ctx.fillStyle='#666';ctx.font='700 12px "JetBrains Mono", monospace';ctx.textAlign='center';
-      ctx.fillText((c.colorName||'').toUpperCase(),x+bw/2,y+bh-4);
-      ctx.textAlign='left';
-      x+=bw+24;
-    });
-    y+=bh+26;
-  }
-  /* style + description */
-  ctx.fillStyle='#131517';ctx.font='900 21px "Archivo Black", Arial Black, sans-serif';
-  ctx.fillText(styleName($('jStyle').value)||'—',MX,y);
-  ctx.fillStyle='#4B9CD3';ctx.font='700 13px "JetBrains Mono", monospace';
-  ctx.fillText(($('jDesc').value||autoDesc()).toUpperCase(),MX,y+24);
+  let y=180;
+  /* job line: description left, qty·tier right */
+  ctx.fillStyle='#4B9CD3';ctx.font='700 14px "JetBrains Mono", monospace';
+  ctx.fillText(($('jDesc').value||autoDesc()).toUpperCase(),MX,y);
   ctx.fillStyle='#98A0A6';ctx.font='500 12px "JetBrains Mono", monospace';
   ctx.textAlign='right';
-  ctx.fillText(qty+' PCS TOTAL · '+TIER_LBL[t]+' PRICE TIER',W-MX,y+24);
+  ctx.fillText(qty+' PCS TOTAL · '+TIER_LBL[t]+' PRICE TIER',W-MX,y);
   ctx.textAlign='left';
-  y+=48;
-  /* size tables per colorway */
-  const colX=[MX,MX+340,MX+560,MX+800,W-MX];
+  y+=22;
+  /* per-style sections, colorway mockup beside its size table */
+  const imgW=195;
+  const colX=[MX+imgW+20,MX+imgW+140,MX+imgW+260,MX+imgW+420,W-MX];
   let grand=0;
-  cws.forEach(cw=>{
-    const ord=sizesForStyle($('jStyle').value);
-    const rows=Object.entries(cw.sizeRun||{}).filter(([k,q])=>+q>0)
-      .sort((a,b)=>ord.indexOf(a[0])-ord.indexOf(b[0]));
-    if(!rows.length)return;
-    ctx.fillStyle='#F2F3F4';ctx.fillRect(MX,y,W-2*MX,30);
-    ctx.fillStyle='#131517';ctx.font='900 13px "Archivo Black", Arial Black, sans-serif';
-    ctx.fillText((cw.colorName||'').toUpperCase(),colX[0]+10,y+20);
-    ctx.fillStyle='#98A0A6';ctx.font='700 10.5px "JetBrains Mono", monospace';
-    ctx.fillText('SIZE',colX[1],y+20);ctx.fillText('QTY',colX[2],y+20);
-    ctx.fillText('PER PIECE',colX[3],y+20);
-    ctx.textAlign='right';ctx.fillText('TOTAL',colX[4]-10,y+20);ctx.textAlign='left';
-    y+=30;
-    let sub=0,subq=0;
-    rows.forEach(([sz,q])=>{
-      const pc=perPc(sz,t),ln=round2(pc*q);
-      sub+=ln;subq+=+q;
-      ctx.fillStyle='#333';ctx.font='500 13px "JetBrains Mono", monospace';
-      ctx.fillText(sz,colX[1],y+20);
-      ctx.fillText('× '+q,colX[2],y+20);
-      ctx.fillText(money(pc),colX[3],y+20);
-      ctx.textAlign='right';ctx.fillText(money(ln),colX[4]-10,y+20);ctx.textAlign='left';
-      ctx.strokeStyle='#EBECEC';ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(MX,y+28);ctx.lineTo(W-MX,y+28);ctx.stroke();
-      y+=28;
+  styleGroups().forEach(gr=>{
+    const rowsPer=gr.cws.map(cw=>{
+      const ord=sizesForStyle(cw.styleKey);
+      return Object.entries(cw.sizeRun||{}).filter(([k,q])=>+q>0)
+        .sort((a,b)=>ord.indexOf(a[0])-ord.indexOf(b[0]));
     });
-    ctx.fillStyle='#666';ctx.font='700 12px "JetBrains Mono", monospace';
-    ctx.fillText(subq+' pcs',colX[2],y+19);
-    ctx.textAlign='right';ctx.fillText(money(sub),colX[4]-10,y+19);ctx.textAlign='left';
-    grand+=sub;y+=34;
+    if(!rowsPer.some(r=>r.length))return;
+    /* style band */
+    ctx.fillStyle='#131517';ctx.fillRect(MX,y,W-2*MX,34);
+    ctx.fillStyle='#E8EAEC';ctx.font='900 15px "Archivo Black", Arial Black, sans-serif';
+    ctx.fillText(styleName(gr.styleKey).toUpperCase(),MX+14,y+23);
+    y+=42;
+    gr.cws.forEach((cw,ci)=>{
+      const rows=rowsPer[ci];
+      if(!rows.length)return;
+      const blockTop=y;
+      const tableH=30+rows.length*28+26;
+      const blockH=Math.max(tableH,cw.img&&cw.img.complete&&cw.img.naturalWidth?150:0);
+      /* mockup left */
+      if(cw.img&&cw.img.complete&&cw.img.naturalWidth){
+        const im=cw.img,boxH=Math.min(blockH,190);
+        const scl=Math.min(imgW/im.naturalWidth,boxH/im.naturalHeight);
+        const fw=im.naturalWidth*scl,fh=im.naturalHeight*scl;
+        ctx.drawImage(im,MX+(imgW-fw)/2,blockTop+(blockH-fh)/2,fw,fh);
+      }
+      /* table right */
+      let ty=blockTop;
+      ctx.fillStyle='#F2F3F4';ctx.fillRect(colX[0]-10,ty,W-MX-(colX[0]-10),30);
+      ctx.fillStyle='#131517';ctx.font='900 13px "Archivo Black", Arial Black, sans-serif';
+      ctx.fillText((cw.colorName||'').toUpperCase(),colX[0],ty+20);
+      ctx.fillStyle='#98A0A6';ctx.font='700 10.5px "JetBrains Mono", monospace';
+      ctx.fillText('SIZE',colX[1],ty+20);ctx.fillText('QTY',colX[2],ty+20);
+      ctx.fillText('PER PIECE',colX[3],ty+20);
+      ctx.textAlign='right';ctx.fillText('TOTAL',colX[4]-10,ty+20);ctx.textAlign='left';
+      ty+=30;
+      let sub=0,subq=0;
+      rows.forEach(([sz,q])=>{
+        const pc=perPcFor(cw.styleKey,sz,t),ln=round2(pc*q);
+        sub+=ln;subq+=+q;
+        ctx.fillStyle='#333';ctx.font='500 13px "JetBrains Mono", monospace';
+        ctx.fillText(sz,colX[1],ty+20);
+        ctx.fillText('× '+q,colX[2],ty+20);
+        ctx.fillText(money(pc),colX[3],ty+20);
+        ctx.textAlign='right';ctx.fillText(money(ln),colX[4]-10,ty+20);ctx.textAlign='left';
+        ctx.strokeStyle='#EBECEC';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(colX[0]-10,ty+28);ctx.lineTo(W-MX,ty+28);ctx.stroke();
+        ty+=28;
+      });
+      ctx.fillStyle='#666';ctx.font='700 12px "JetBrains Mono", monospace';
+      ctx.fillText(subq+' pcs',colX[2],ty+19);
+      ctx.textAlign='right';ctx.fillText(money(sub),colX[4]-10,ty+19);ctx.textAlign='left';
+      grand+=sub;
+      y=blockTop+Math.max(blockH,ty+26-blockTop)+10;
+    });
+    y+=6;
   });
   /* setup + extras */
   const setup=setupTotal();
@@ -511,55 +557,72 @@ function drawPage2(pg){
   pg.width=W;pg.height=H;
   const ctx=pg.getContext('2d');
   ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);
-  pgHeader(ctx,'FULL PRICE LIST — '+(styleName($('jStyle').value)||'').toUpperCase());
-  const t=tierIdx();
+  const psk=primaryStyle();
+  pgHeader(ctx,'FULL PRICE LIST — '+(styleName(psk)||'').toUpperCase());
+  const t=tierIdx(),qty=totalQty();
+  const nextT=(qty>0&&t<6)?t+1:-1;
   let y=196;
   const gx=MX,gw=W-2*MX,cw0=110,cwT=(gw-cw0)/7;
-  const grid=(title,valFn)=>{
+  /* v1.1: highlight only the color-count rows this job uses, on the current
+     tier (blue) and the next price break (yellow) — Christian's upsell trick. */
+  const grid=(title,valFn,usedRows)=>{
     ctx.fillStyle='#131517';ctx.font='900 14px "Archivo Black", Arial Black, sans-serif';
     ctx.fillText(title,gx,y);y+=14;
-    /* header row */
     ctx.fillStyle='#F2F3F4';ctx.fillRect(gx,y,gw,28);
-    if(totalQty()){ctx.fillStyle='rgba(75,156,211,0.14)';ctx.fillRect(gx+cw0+t*cwT,y,cwT,28+6*30);}
     ctx.fillStyle='#98A0A6';ctx.font='700 10px "JetBrains Mono", monospace';
     TIER_LBL.forEach((l,i)=>{ctx.textAlign='center';ctx.fillText(l.toUpperCase()+' PCS',gx+cw0+i*cwT+cwT/2,y+18);});
     ctx.textAlign='left';
     y+=28;
     for(let c=0;c<6;c++){
-      ctx.fillStyle='#131517';ctx.font='700 12px "JetBrains Mono", monospace';
+      const used=qty>0&&usedRows.includes(c+1);
+      if(used){ctx.fillStyle='rgba(75,156,211,0.07)';ctx.fillRect(gx,y,gw,30);}
+      ctx.fillStyle=used?'#131517':'#555';
+      ctx.font=used?'700 12px "JetBrains Mono", monospace':'500 12px "JetBrains Mono", monospace';
       ctx.fillText((c+1)+' COLOR',gx+8,y+20);
       for(let i=0;i<7;i++){
-        ctx.fillStyle=(i===t&&totalQty())?'#2A6E9E':'#333';
-        ctx.font=(i===t&&totalQty())?'700 13px "JetBrains Mono", monospace':'500 13px "JetBrains Mono", monospace';
+        const cx=gx+cw0+i*cwT;
+        if(used&&i===t){ctx.fillStyle='rgba(75,156,211,0.22)';ctx.fillRect(cx,y,cwT,30);}
+        if(used&&i===nextT){ctx.fillStyle='rgba(232,196,71,0.30)';ctx.fillRect(cx,y,cwT,30);}
+        ctx.fillStyle=(used&&i===t)?'#1F5E8C':(used&&i===nextT)?'#7A5E00':'#333';
+        ctx.font=(used&&(i===t||i===nextT))?'700 13px "JetBrains Mono", monospace':'500 13px "JetBrains Mono", monospace';
         ctx.textAlign='center';
-        ctx.fillText(money(valFn(i,c)),gx+cw0+i*cwT+cwT/2,y+20);
+        ctx.fillText(money(valFn(i,c)),cx+cwT/2,y+20);
       }
       ctx.textAlign='left';
-      ctx.strokeStyle='#EBECEC';ctx.beginPath();ctx.moveTo(gx,y+28);ctx.lineTo(gx+gw,y+28);ctx.stroke();
+      ctx.strokeStyle='#EBECEC';ctx.beginPath();ctx.moveTo(gx,y+30);ctx.lineTo(gx+gw,y+30);ctx.stroke();
       y+=30;
     }
     y+=8;
   };
-  grid('SHIRT + FIRST PRINT LOCATION — PER PIECE',(i,c)=>round2(shirtFigure('M')+engine.mu[i]+engine.rates[i][c]));
+  const firstColors=locs.length?Math.min(6,Math.max(1,+locs[0].colors||1)):1;
+  grid('SHIRT + FIRST PRINT LOCATION — PER PIECE',
+    (i,c)=>round2(shirtFigureFor(psk,'M')+engine.mu[i]+engine.rates[i][c]+shipPc()),
+    [firstColors]);
+  /* upsell line — how close to the next break */
+  if(nextT>-1){
+    const need=TIER_MIN[nextT]-qty;
+    const cur=perPcFor(psk,'M',t),nxt=perPcFor(psk,'M',nextT);
+    ctx.fillStyle='rgba(232,196,71,0.30)';ctx.fillRect(gx,y-4,gw,30);
+    ctx.fillStyle='#7A5E00';ctx.font='700 12.5px "JetBrains Mono", monospace';
+    ctx.fillText('★ ADD '+need+' MORE PIECES TO HIT '+TIER_LBL[nextT].toUpperCase()+' PRICING — '+money(nxt)+'/PC INSTEAD OF '+money(cur)+' (SAVE '+money(round2(cur-nxt))+'/PC)',gx+10,y+16);
+    y+=40;
+  }
+  const addlRows=[...new Set(locs.slice(1).map(l=>Math.min(6,Math.max(1,+l.colors||1))))];
+  grid('ADDITIONAL PRINT LOCATIONS — PER PIECE',(i,c)=>engine.rates[i][c],addlRows);
   ctx.fillStyle='#98A0A6';ctx.font='500 11px "JetBrains Mono", monospace';
-  const ups=['2XL','3XL','4XL','5XL'].map(sz=>({sz,v:+$(UP_KEY[sz]).value||0})).filter(u=>u.v>0);
+  const c0=styleCosts[psk]||{};
+  const ups=UPS.map(sz=>({sz,v:+c0[sz]||0})).filter(u=>u.v>0);
   if(ups.length){ctx.fillText('Size upcharges: '+ups.map(u=>u.sz+' +'+money(u.v)).join('   ·   '),gx,y);y+=26;}
   else y+=8;
-  grid('ADDITIONAL PRINT LOCATIONS — PER PIECE',(i,c)=>engine.rates[i][c]);
-  ctx.fillStyle='#8A6D1D';ctx.font='700 11px "JetBrains Mono", monospace';
-  wrapText(ctx,'*** Light or bright inks on dark shirts require an additional underbase color for all print locations — counted as a color above, plus one screen fee per location. ***',gx,y+4,gw,16);
-  y+=48;
   /* conditions */
   ctx.fillStyle='#131517';ctx.font='900 14px "Archivo Black", Arial Black, sans-serif';
-  ctx.fillText('CONDITIONS & ADDITIONAL CHARGES',gx,y);y+=10;
+  ctx.fillText('CONDITIONS',gx,y);y+=10;
   ctx.fillStyle='#555';ctx.font='500 11px "JetBrains Mono", monospace';
   const lines=($('pCond').value||DEF_COND).split('\n').filter(Boolean);
-  const colW=(gw-30)/2;
-  let ly=y+14,lx=gx,col=0;
+  let ly=y+14;
   lines.forEach(txt=>{
-    const used=wrapText(ctx,'· '+txt,lx,ly,colW,15);
+    const used=wrapText(ctx,'· '+txt,gx,ly,gw,15);
     ly+=used+10;
-    if(ly>H-110&&col===0){col=1;lx=gx+colW+30;ly=y+14;}
   });
   pgFooter(ctx);
 }
@@ -588,7 +651,6 @@ function refresh(){
     const q=totalQty(),t=tierIdx();
     $('tierWarn').hidden=!(q&&q<TIER_MIN[0]);
     $('tierTag').textContent=q?(q+' PCS · '+TIER_LBL[t]+' TIER'):'';
-    /* auto screens = sum of colors when untouched */
     if(!$('scScreens').dataset.touched){
       $('scScreens').value=locs.reduce((a,l)=>a+(+l.colors||0),0);
     }
@@ -644,18 +706,24 @@ $('dlPdf').onclick=async()=>{
 };
 
 /* ---------- wiring ---------- */
-['jCustomer','jQuote','scInk','scPms','pShirt','up2','up3','up4','up5','pScreenFee','pInkFee','pCond',
+['jCustomer','jQuote','scInk','scPms','pShip','pScreenFee','pInkFee','pCond',
  'exFoldP','exNeckP','exNeckBP','exHangP','exUpcP'].forEach(id=>$(id).addEventListener('input',refresh));
 ['exFold','exNeck','exNeckB','exHang','exUpc','incGrid'].forEach(id=>$(id).addEventListener('change',refresh));
 $('scScreens').addEventListener('input',()=>{$('scScreens').dataset.touched='1';refresh();});
 $('jDesc').addEventListener('input',()=>{$('jDesc').dataset.touched='1';refresh();});
-$('jStyle').addEventListener('change',()=>{applyAutoShirt();renderCws();refresh();});
+$('jStyle').addEventListener('change',()=>{refresh();});
 $('addLoc').onclick=()=>{locs.push({label:locs.length?'Back':'Front',colors:1});renderLocs();refresh();};
-$('addCw').onclick=()=>{cws.push({colorName:'Color '+(cws.length+1),sizeRun:{},img:null,imgSrc:null});renderCws();refresh();};
+$('addCw').onclick=()=>{
+  const sk=$('jStyle').value||(cws[0]&&cws[0].styleKey)||'';
+  cws.push({colorName:'Color '+(cws.length+1),styleKey:sk,sizeRun:{},img:null,imgSrc:null});
+  seedStyleCost(sk);renderCws();renderStyleCosts();refresh();
+};
 $('resetEngine').onclick=()=>{
   engine={mu:DEF_MU.slice(),rates:DEF_RATES.map(r=>r.slice())};
-  $('pScreenFee').value=10;$('pInkFee').value=10;$('pCond').value=DEF_COND;
-  applyAutoShirt();renderEngine();refresh();
+  $('pScreenFee').value=10;$('pInkFee').value=10;$('pShip').value=DEF_SHIP;$('pCond').value=DEF_COND;
+  styleCosts={};
+  cws.forEach(c=>seedStyleCost(c.styleKey));
+  renderEngine();renderStyleCosts();refresh();
 };
 $('mockInput').addEventListener('change',e=>{
   [...e.target.files].forEach((f,idx)=>{
@@ -665,7 +733,7 @@ $('mockInput').addEventListener('change',e=>{
       const src=rd.result;
       const im=new Image();im.onload=()=>refresh();im.src=src;
       if(tgt){tgt.imgSrc=src;tgt.img=im;}
-      else{cws.push({colorName:f.name.replace(/\.[a-z]+$/i,''),sizeRun:{},img:im,imgSrc:src});}
+      else{cws.push({colorName:f.name.replace(/\.[a-z]+$/i,''),styleKey:$('jStyle').value||'',sizeRun:{},img:im,imgSrc:src});}
       renderCws();refresh();
     };
     rd.readAsDataURL(f);
@@ -699,10 +767,10 @@ Promise.all([
     if(ho.underbase)$('jDesc').dataset.touched='';
   } else {
     locs=[{label:'Front',colors:1}];
-    cws=[{colorName:'Color 1',sizeRun:{},img:null,imgSrc:null}];
+    cws=[{colorName:'Color 1',styleKey:$('jStyle').value||'',sizeRun:{},img:null,imgSrc:null}];
   }
-  applyAutoShirt();
-  renderLocs();renderCws();renderEngine();
+  cws.forEach(c=>seedStyleCost(c.styleKey));
+  renderLocs();renderCws();renderStyleCosts();renderEngine();
   const kick=()=>refresh();
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(kick);
   kick();
