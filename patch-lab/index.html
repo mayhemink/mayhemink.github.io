@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.12.1 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
+<title>Mayhem Patch Lab v0.12.2 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -162,7 +162,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.12.1</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.12.2</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -1717,7 +1717,7 @@ function remapSvgColors(text,map){
   }
   return text;
 }
-/* v0.12.1: make an uploaded SVG legal to NEST inside our spec sheet.
+/* v0.12.2: make an uploaded SVG legal to NEST inside our spec sheet.
    Illustrator/Corel emit <?xml?> + <!DOCTYPE ...> + comments, all of which are
    fatal ("StartTag: invalid element name") once embedded. Also namespaces every
    id so multiple layers can't collide on gradients/clipPaths/filters. */
@@ -1751,8 +1751,11 @@ function buildWovenVectorSvg(){
   const e={w:state.edge.w,color:state.edge.color};
   const bp=nearestPMS(e.color);
   const pms=artPantones();
-  const M=0.6, annW=4.1;
-  const W=M+cw+0.9+annW, H=Math.max(ch+2*M+1.2, 2.2+(2+pms.length)*0.62+1.2);
+  const M=0.6;
+  const bpName=(nearestPMS(e.color)||{}).name||'';
+  /* v0.12.2: size the annotation column to its longest line (~0.105in per char at 0.21) */
+  const annW=Math.max(4.4,Math.min(7.5,('MERROW BORDER — '+bpName+' ('+e.color+')').length*0.108));
+  const W=M+cw+0.9+annW+M, H=Math.max(ch+2*M+1.2, 2.2+(2+pms.length)*0.62+1.2);
   const px=M, py=Math.max(M+0.6,(H-ch)/2);
   const k=state.cut.art.w/state.artBox.w;
   let art='',uidN=0;
@@ -1787,7 +1790,7 @@ function buildWovenVectorSvg(){
   ann+='<line x1="'+cx1.toFixed(3)+'" y1="'+cy1.toFixed(3)+'" x2="'+ax.toFixed(3)+'" y2="'+ay.toFixed(3)+'" stroke="#C1272D" stroke-width="0.022"/>\n';
   ann+='<circle cx="'+cx1.toFixed(3)+'" cy="'+cy1.toFixed(3)+'" r="0.055" fill="#C1272D"/>\n';
   ann+=T(ax,ay-0.06,0.21,'MERROW BORDER — '+(bp?bp.name:'')+' ('+e.color.toUpperCase()+')',1);
-  ann+=T(ax,ay+0.2,0.15,'stitched overlock edge, '+e.w.toFixed(3)+'&#8243; wide — NOT part of the artwork',0);
+  ann+=T(ax,ay+0.2,0.15,'stitched overlock edge, '+e.w.toFixed(3)+'″ wide — NOT part of the artwork',0);
   let sy=ay+0.75;
   ann+=T(ax,sy-0.16,0.16,'THREAD COLORS — CLOSEST PANTONE SOLID COATED',1);
   const chip=(hex,label)=>{
@@ -1803,7 +1806,7 @@ function buildWovenVectorSvg(){
   return '<?xml version="1.0" encoding="UTF-8"?>\n'+
   '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="'+W.toFixed(3)+'in" height="'+H.toFixed(3)+'in" viewBox="0 0 '+W.toFixed(3)+' '+H.toFixed(3)+'">\n'+
   '<rect width="'+W.toFixed(3)+'" height="'+H.toFixed(3)+'" fill="#FFFFFF"/>\n'+
-  T(M,0.42,0.26,'WOVEN PATCH SPEC — TRUE SIZE '+cw.toFixed(2)+'&#8243; × '+ch.toFixed(2)+'&#8243; ('+Math.round(cw*25.4)+'×'+Math.round(ch*25.4)+' mm)',1)+
+  T(M,0.42,0.26,'WOVEN PATCH SPEC — TRUE SIZE '+cw.toFixed(2)+'″ × '+ch.toFixed(2)+'″ ('+Math.round(cw*25.4)+'×'+Math.round(ch*25.4)+' mm)',1)+
   T(M,0.72,0.15,(cust||'Mayhem Ink')+(q?' — REF #'+q:'')+' — QTY '+qty+' — '+new Date().toLocaleDateString(),0)+
   '<defs><clipPath id="pc"><path d="'+outline+'" transform="translate('+px.toFixed(3)+' '+py.toFixed(3)+')"/></clipPath></defs>\n'+
   '<g clip-path="url(#pc)">\n'+
