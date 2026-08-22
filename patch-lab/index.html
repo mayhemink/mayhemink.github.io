@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.11 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
+<title>Mayhem Patch Lab v0.12 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -124,6 +124,15 @@
   .lea-cat{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);margin:10px 0 2px;}
   details.cfg summary{font-size:11px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;}
   .preset-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px;}
+  .shape-grid{grid-template-columns:repeat(3,1fr);}
+  /* v0.12 collapsible panels */
+  .panel>h3{cursor:pointer;user-select:none;}
+  .panel>h3::after{content:'▾';margin-left:auto;color:var(--muted);font-size:11px;}
+  .panel.closed>h3::after{content:'▸';}
+  .panel.closed>h3{margin-bottom:0;}
+  .panel.closed>*:not(h3){display:none!important;}
+  #dlBar .panel>h3{cursor:default;}
+  #dlBar .panel>h3::after{content:'';}
   .preset-row button{background:var(--surface2);border:1px solid var(--line2);color:var(--muted);padding:7px 6px;cursor:pointer;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;}
   .preset-row button:hover{border-color:var(--accent2);color:var(--ink);}
   .preset-row button.on{background:var(--accent);border-color:var(--accent);color:#111;}
@@ -153,7 +162,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.11</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.12</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -192,7 +201,10 @@
         <button class="btn sm ghost" id="redoBtn">↷ REDO</button>
       </div>
       <div class="note warn" id="dpiWarn" hidden></div>
-      <div class="btnrow"><button class="btn sm ghost" id="vecBtn" disabled>✦ VECTORIZE ART — vectorizer.ai</button></div>
+      <div class="btnrow">
+        <button class="btn sm" id="traceBtn" disabled>✦ VECTORIZE — TRACE BY COLOR</button>
+        <button class="btn sm ghost" id="vecBtn" disabled>vectorizer.ai</button>
+      </div>
       <div class="val" id="vecStatus"></div>
       <details class="cfg" style="margin-top:8px;">
         <summary>vectorizer.ai API credentials</summary>
@@ -226,19 +238,9 @@
         <div class="note" id="embPuffNote" hidden>3D puff: bold shapes ≥ 0.25″ wide read best — fine detail gets lost in the foam.</div>
       </div>
       <div id="wovenBox" hidden>
-        <label class="lbl">Merrow border width (inches)</label>
-        <input type="range" id="wovenBorder" min="0.06" max="0.18" step="0.005" value="0.11">
-        <div class="val" id="wovenBorderVal">0.110"</div>
-        <label class="lbl">Merrow border color</label>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="color" id="wovenColor" value="#1A1A1A">
-          <button class="btn sm ghost" id="wovenPick">◉ EYEDROPPER</button>
-          <span class="val" id="wovenBorderPMS" style="margin-top:0;"></span>
-        </div>
-        <div class="chip-row" id="wovenChips"></div>
         <label class="lbl">Pantone callouts — closest solid coated</label>
         <div id="wovenPMS"></div>
-        <div class="note">Outsourced (China vendor) — no cut files. Merrow needs a simple shape: RECT / ROUND / OVAL / HEX / PILL. Complex contours get a laser heat-cut edge instead of merrow.</div>
+        <div class="note">Outsourced (China vendor) — no cut files. Merrow needs a simple shape: RECT / ROUND / OVAL / HEX / PILL. Complex contours get a laser heat-cut edge instead of merrow. Border controls are under EDGE FINISH below.</div>
       </div>
       <div id="engBox" hidden>
         <label class="lbl">Material — top / engrave reveal</label>
@@ -264,15 +266,22 @@
       </div>
       <div id="cutControls">
       <label class="lbl">Cut shape</label>
-      <div class="segmented" id="shapeSeg">
+      <div class="preset-row shape-grid" id="shapeSeg">
         <button data-shape="contour" class="on">CONTOUR</button>
         <button data-shape="rect">RECT</button>
         <button data-shape="round">ROUND</button>
         <button data-shape="oval">OVAL</button>
         <button data-shape="hexcut">HEX</button>
         <button data-shape="capsule">PILL</button>
+        <button data-shape="shield">SHIELD</button>
+        <button data-shape="badge">BADGE</button>
+        <button data-shape="banner">BANNER</button>
+        <button data-shape="star">STAR</button>
+        <button data-shape="scallop">SCALLOP</button>
+        <button data-shape="diamond">DIAMOND</button>
+        <button data-shape="oct">OCTAGON</button>
       </div>
-      <label class="lbl">Hat presets — one click, standard sizes</label>
+      <label class="lbl">Templates — one click, standard patch sizes</label>
       <div class="preset-row" id="presetRow"></div>
       </div>
       <label class="lbl">Design height (inches)</label>
@@ -288,9 +297,33 @@
         <input type="range" id="cornerR" min="0" max="1" step="0.02" value="0.25">
         <div class="val" id="cornerRVal">0.25"</div>
       </div>
-      <label class="checkline"><input type="checkbox" id="smoothChk" checked> Smooth contour</label>
-      <label class="checkline"><input type="checkbox" id="bgChk"> Printed background fill
+      <label class="checkline" id="smoothLine"><input type="checkbox" id="smoothChk" checked> Smooth contour</label>
+      <label class="checkline" id="bgLine"><input type="checkbox" id="bgChk"> Printed background fill
         <input type="color" id="bgColor" value="#F5F0E6" style="margin-left:auto;"></label>
+      <div id="edgeBox" hidden>
+        <label class="lbl">Edge finish — border rendered on the cut line</label>
+        <div class="preset-row shape-grid" id="edgeSeg">
+          <button data-edge="none" class="on">NONE</button>
+          <button data-edge="merrow">MERROW</button>
+          <button data-edge="satin">SATIN</button>
+          <button data-edge="run">RUN STITCH</button>
+          <button data-edge="faux">FAUX STITCH</button>
+          <button data-edge="blanket">BLANKET</button>
+          <button data-edge="hotcut">HOT CUT</button>
+        </div>
+        <div id="edgeOpts" hidden>
+          <label class="lbl">Border width (inches)</label>
+          <input type="range" id="edgeW" min="0.05" max="0.2" step="0.005" value="0.11">
+          <div class="val" id="edgeWVal">0.110"</div>
+          <label class="lbl">Border color</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="color" id="edgeColor" value="#1A1A1A">
+            <button class="btn sm ghost" id="wovenPick">◉ EYEDROPPER</button>
+            <span class="val" id="edgeColorPMS" style="margin-top:0;"></span>
+          </div>
+          <div class="chip-row" id="edgeChips"></div>
+        </div>
+      </div>
       <div id="colorBox">
         <label class="lbl">Art colors — click a chip, pick or type a hex</label>
         <div class="chip-row" id="colorChips"></div>
@@ -337,7 +370,7 @@
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="gangPanel">
       <h3><span class="stepnum">5</span> GANG SHEET</h3>
       <p class="desc">Batch a full run: auto-nest patches onto one sheet — one E1 print, one P3 cut job.</p>
       <div class="row2">
@@ -350,6 +383,9 @@
       </div>
       <label class="checkline"><input type="checkbox" id="gsMarks" checked> Registration marks — UV print only, framed to the used area</label>
       <label class="checkline"><input type="checkbox" id="gsRotate" checked> Allow 90° rotation</label>
+      <label class="checkline"><input type="checkbox" id="gsSnap" checked> Snap when dragging patches</label>
+      <div class="btnrow"><button class="btn sm" id="gsNestBtn">⊞ AUTO NEST</button><span class="val" id="gsManual" style="margin:auto 0;"></span></div>
+      <div class="note">Drag any patch on the sheet to place it by hand — auto-nest stops until you hit AUTO NEST again.</div>
       <label class="lbl">Add current patch × quantity</label>
       <div class="row2">
         <input type="number" id="gsQty" value="12" min="1" max="500" step="1">
@@ -390,7 +426,7 @@
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="pricePanel">
       <h3><span class="stepnum">6</span> PRICE</h3>
       <p class="desc">Live price from the shop's own costs — PatchForge can't do this. Edit costs below; they save in this browser.</p>
       <label class="lbl">Quantity</label>
@@ -516,12 +552,12 @@ const state={
   cut:null,            /* {polys:[[{x,y}in]], w,h, art:{x,y,w,h}, blobCount} */
   tab:'patch',
   hat:{photo:null,cx:0.5,cy:0.42,scale:0.30,shade:false,rot:0},
-  gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,items:[],placed:null,unplaced:0,util:0},
+  gang:{w:12,h:24,margin:0.25,gap:0.125,marks:true,rotate:true,snap:true,manual:false,items:[],placed:null,unplaced:0,util:0},
   eng:{on:false,cat:'',name:'',top:'#151515',engC:'#C8A24B',override:false,invert:false,settings:'',blank:false},
   embOn:false,
   embStyle:'flat',                      /* v0.10: 'flat' | 'puff' */
   wovenOn:false,                        /* v0.10: woven patch w/ merrow border */
-  woven:{border:0.11,color:'#1A1A1A'},
+  edge:{style:'none',color:'#1A1A1A',w:0.11},  /* v0.12: edge finish (UV print + woven) */
   blank:{shape:'rect',border:0.19,shapes:null},
   presetId:null
 };
@@ -529,12 +565,14 @@ function styleSnap(){
   if(state.embOn)return {mode:'emb',embStyle:state.embStyle,bgOn:false,bgColor:'#000',top:'',engC:'',invert:false,matName:'Direct embroidery'+(state.embStyle==='puff'?' — 3D puff':''),settings:'',blank:false,border:0};
   if(state.wovenOn)return {mode:'woven',bgOn:state.bgOn,bgColor:state.bgColor,top:'',engC:'',invert:false,
     matName:'Woven patch — merrow border',settings:'',blank:false,
-    border:state.woven.border,borderC:state.woven.color};
+    border:state.edge.w,borderC:state.edge.color,
+    edgeStyle:(state.edge.style==='none'?'merrow':state.edge.style),edgeC:state.edge.color,edgeW:state.edge.w};
   return state.eng.on
     ?{mode:'engrave',top:state.eng.top,engC:state.eng.engC,invert:state.eng.invert,
       matName:state.eng.cat+' '+state.eng.name,settings:state.eng.settings,bgOn:false,bgColor:'#000',
       blank:state.eng.blank,border:state.blank.border}
-    :{mode:'print',bgOn:state.bgOn,bgColor:state.bgColor,top:'',engC:'',invert:false,matName:'',settings:'',blank:false,border:0};
+    :{mode:'print',bgOn:state.bgOn,bgColor:state.bgColor,top:'',engC:'',invert:false,matName:'',settings:'',blank:false,border:0,
+      edgeStyle:state.edge.style,edgeC:state.edge.color,edgeW:state.edge.w};
 }
 
 /* ---------- art loading (Mockup Lab pattern: trim to alpha bbox, SVG rasterized big) ---------- */
@@ -577,9 +615,12 @@ function loadArtFile(file,cb){
     return;
   }
   file.text().then(t=>{
-    let aspect=1;
-    const vb=t.match(/viewBox\s*=\s*["']\s*[\d.+-]+[\s,]+[\d.+-]+[\s,]+([\d.eE+-]+)[\s,]+([\d.eE+-]+)/i);
-    if(vb){const vw=parseFloat(vb[1]),vh=parseFloat(vb[2]);if(vw>0&&vh>0)aspect=vh/vw;}
+    let aspect=1,vbFull=null;
+    const vb=t.match(/viewBox\s*=\s*["']\s*([\d.eE+-]+)[\s,]+([\d.eE+-]+)[\s,]+([\d.eE+-]+)[\s,]+([\d.eE+-]+)/i);
+    if(vb){
+      const vx=parseFloat(vb[1]),vy=parseFloat(vb[2]),vw=parseFloat(vb[3]),vh=parseFloat(vb[4]);
+      if(vw>0&&vh>0){aspect=vh/vw;vbFull=[vx,vy,vw,vh];}
+    }
     const W=2400,H=Math.max(2,Math.round(W*aspect));
     /* force explicit raster size so drawImage is crisp everywhere */
     let src=t.replace(/(<svg[^>]*?)\swidth\s*=\s*["'][^"']*["']/i,'$1')
@@ -589,7 +630,16 @@ function loadArtFile(file,cb){
     loadImgFile(blob,img=>{
       const c=document.createElement('canvas');c.width=W;c.height=H;
       c.getContext('2d').drawImage(img,0,0,W,H);
-      cb(trimCanvas(c),true);
+      /* v0.12: retain the SVG source + a viewBox CROPPED to the alpha trim so
+         vector exports (woven vendor spec) can embed the true vector art */
+      let cvb=null;
+      if(vbFull){
+        const bb=alphaBBox(c);
+        cvb=bb?[vbFull[0]+bb.minX/W*vbFull[2], vbFull[1]+bb.minY/H*vbFull[3],
+                (bb.maxX-bb.minX+1)/W*vbFull[2], (bb.maxY-bb.minY+1)/H*vbFull[3]]
+              :vbFull.slice();
+      }
+      cb(trimCanvas(c),true,{svgText:t,vb:cvb});
     });
   });
 }
@@ -764,25 +814,79 @@ function roundPoly(src,r,steps){
   }
   return out;
 }
-function blankShapePoly(w,h,shape,r,inset){
-  const iw=w-2*inset, ih=h-2*inset, o=inset;
-  const pts=[];
-  if(shape==='circle'){
-    const rx=iw/2, ry=ih/2;
-    for(let i=0;i<160;i++){const a=i/160*Math.PI*2;pts.push([o+iw/2+rx*Math.cos(a),o+ih/2+ry*Math.sin(a)]);}
-  }else if(shape==='hex'){
-    /* traditional elongated hex w/ ROUNDED corners (v0.9 — was too sharp) */
-    const cx=Math.min(iw*0.22,ih*0.7);
-    const hexPts=[[o+cx,o],[o+iw-cx,o],[o+iw,o+ih/2],[o+iw-cx,o+ih],[o+cx,o+ih],[o,o+ih/2]];
-    const rr=(r!=null&&r>0.002)?Math.min(r,ih*0.32):Math.min(0.2,ih*0.14);
-    return roundPoly(hexPts,rr,8);
-  }else{ /* rounded rect */
-    const rr=Math.max(0.02,Math.min((r||0.25),iw/2,ih/2));
-    const seg=(ccx,ccy,a0,a1)=>{for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;pts.push([ccx+rr*Math.cos(a),ccy+rr*Math.sin(a)]);}};
-    seg(o+iw-rr,o+rr,-Math.PI/2,0);seg(o+iw-rr,o+ih-rr,0,Math.PI/2);
-    seg(o+rr,o+ih-rr,Math.PI/2,Math.PI);seg(o+rr,o+rr,Math.PI,Math.PI*1.5);
+/* ---------- SHAPE PACK (v0.12) ----------
+   Master outline generator: every cut shape, preset, and blank routes through
+   here. All shapes in a w×h frame, origin top-left, real inches. */
+const SHAPE_DEFS={ /* art safe-area fractions + vertical art bias */
+  contour:{sx:1,sy:1}, rect:{sx:1,sy:1}, round:{sx:1,sy:1}, capsule:{sx:0.94,sy:0.9},
+  oval:{sx:0.72,sy:0.72}, circle:{sx:0.72,sy:0.72},
+  hexcut:{sx:0.88,sy:0.94}, hex:{sx:0.88,sy:0.94},
+  shield:{sx:0.78,sy:0.62,dy:-0.1}, badge:{sx:0.82,sy:0.56,dy:-0.13},
+  banner:{sx:0.6,sy:0.78}, star:{sx:0.5,sy:0.5}, scallop:{sx:0.72,sy:0.72},
+  diamond:{sx:0.55,sy:0.55}, oct:{sx:0.82,sy:0.82}
+};
+function shapePoly(shape,w,h,r){
+  const rr=(v,def)=>((v!=null&&v>0.002)?v:def);
+  const mm=Math.min(w,h);
+  if(shape==='circle'||shape==='oval'){
+    const pts=[];
+    for(let i=0;i<160;i++){const a=i/160*Math.PI*2;pts.push([w/2+w/2*Math.cos(a),h/2+h/2*Math.sin(a)]);}
+    return pts;
   }
+  if(shape==='scallop'){
+    const pts=[],N=12;
+    for(let i=0;i<288;i++){
+      const a=i/288*Math.PI*2;
+      const rad=0.88+0.12*Math.pow(Math.abs(Math.sin(N*a/2)),0.65);
+      pts.push([w/2+w/2*rad*Math.cos(a),h/2+h/2*rad*Math.sin(a)]);
+    }
+    return pts;
+  }
+  if(shape==='hex'||shape==='hexcut'){
+    const cx=Math.min(w*0.22,h*0.7);
+    return roundPoly([[cx,0],[w-cx,0],[w,h/2],[w-cx,h],[cx,h],[0,h/2]],
+      Math.min(rr(r,Math.min(0.2,h*0.14)),h*0.32),8);
+  }
+  if(shape==='oct'){
+    const c=mm*0.29;
+    return roundPoly([[c,0],[w-c,0],[w,c],[w,h-c],[w-c,h],[c,h],[0,h-c],[0,c]],rr(r,0.07),6);
+  }
+  if(shape==='diamond')return roundPoly([[w/2,0],[w,h/2],[w/2,h],[0,h/2]],rr(r,mm*0.12),8);
+  if(shape==='star'){
+    const p=[];
+    for(let i=0;i<10;i++){
+      const a=-Math.PI/2+i*Math.PI/5, rad=(i%2===0)?1:0.5;
+      p.push([w/2+w/2*rad*Math.cos(a),h/2+h/2*rad*Math.sin(a)]);
+    }
+    return roundPoly(p,rr(r,mm*0.05),6);
+  }
+  if(shape==='shield'){
+    const p=[[0,0],[w,0]];
+    const y1=h*0.52;
+    p.push([w,y1]);
+    for(let i=1;i<=14;i++){const t=i/14,q=1-t;
+      p.push([q*q*w+2*q*t*w*0.86+t*t*w/2, q*q*y1+2*q*t*h*0.9+t*t*h]);}
+    for(let i=1;i<=14;i++){const t=i/14,q=1-t;
+      p.push([q*q*w/2+2*q*t*w*0.14, q*q*h+2*q*t*h*0.9+t*t*y1]);}
+    return roundPoly(p,rr(r,mm*0.07),5);
+  }
+  if(shape==='badge') /* ribbon swallowtail bottom */
+    return roundPoly([[0,0],[w,0],[w,h],[w/2,h*0.74],[0,h]],rr(r,mm*0.06),6);
+  if(shape==='banner'){ /* ribbon w/ notched ends */
+    const nx=Math.min(w*0.18,h*0.5);
+    return roundPoly([[0,0],[w,0],[w-nx,h/2],[w,h],[0,h],[nx,h/2]],rr(r,0.05),5);
+  }
+  /* rect / round / capsule / fallback: rounded rectangle */
+  const pts=[];
+  const rad=Math.max(0.02,Math.min(shape==='capsule'?mm/2:rr(r,0.02),w/2,h/2));
+  const seg=(ccx,ccy,a0,a1)=>{for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;pts.push([ccx+rad*Math.cos(a),ccy+rad*Math.sin(a)]);}};
+  seg(w-rad,rad,-Math.PI/2,0);seg(w-rad,h-rad,0,Math.PI/2);
+  seg(rad,h-rad,Math.PI/2,Math.PI);seg(rad,rad,Math.PI,Math.PI*1.5);
   return pts;
+}
+function blankShapePoly(w,h,shape,r,inset){
+  const iw=w-2*inset, ih=h-2*inset;
+  return shapePoly(shape,iw,ih,r).map(p=>[p[0]+inset,p[1]+inset]);
 }
 function buildBlankCut(){
   const shp=(state.blank.shapes||[]).find(s=>s.id===state.blank.shape)||{id:'rect',w:3,h:2,r:0.25};
@@ -819,54 +923,18 @@ function computeCut(){
   const m=state.offset;
 
   if(state.shape!=='contour'){
-    /* geometric frames: art centered with margin m */
-    let fw,fh,polys,svgPath;
-    if(state.shape==='oval'){
-      /* ellipse circumscribing the art rect, plus margin */
-      const rx=artWin/2*Math.SQRT2+m, ry=artHin/2*Math.SQRT2+m;
-      fw=rx*2;fh=ry*2;
-      const pts=[];
-      for(let i=0;i<160;i++){
-        const a=i/160*Math.PI*2;
-        pts.push([rx+rx*Math.cos(a),ry+ry*Math.sin(a)]);
-      }
-      polys=[pts];
-      svgPath='M '+(rx*2).toFixed(4)+' '+ry.toFixed(4)+
-        ' A '+rx.toFixed(4)+' '+ry.toFixed(4)+' 0 1 0 0 '+ry.toFixed(4)+
-        ' A '+rx.toFixed(4)+' '+ry.toFixed(4)+' 0 1 0 '+(rx*2).toFixed(4)+' '+ry.toFixed(4)+' Z';
-      state.cut={polys,w:fw,h:fh,svgPath,
-        art:{x:fw/2-artWin/2,y:fh/2-artHin/2,w:artWin,h:artHin},blobCount:1};
-    }else if(state.shape==='hexcut'){
-      fw=artWin+2*m;fh=artHin+2*m;
-      polys=[blankShapePoly(fw,fh,'hex',state.radius,0)];
-      state.cut={polys,w:fw,h:fh,svgPath:null,
-        art:{x:m,y:m,w:artWin,h:artHin},blobCount:1};
-    }else{
-      fw=artWin+2*m;fh=artHin+2*m;
-      const r=state.shape==='round'?Math.min(state.radius,fw/2,fh/2)
-             :(state.shape==='capsule'?Math.min(fw,fh)/2:0);
-      const pts=[];
-      const seg=(cx,cy,a0,a1)=>{for(let i=0;i<=14;i++){const a=a0+(a1-a0)*i/14;pts.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}};
-      if(r>0.001){
-        seg(fw-r,r,-Math.PI/2,0);seg(fw-r,fh-r,0,Math.PI/2);
-        seg(r,fh-r,Math.PI/2,Math.PI);seg(r,r,Math.PI,Math.PI*1.5);
-      }else{
-        pts.push([0,0],[fw,0],[fw,fh],[0,fh]);
-      }
-      polys=[pts];
-      svgPath=r>0.001
-        ?('M '+r.toFixed(4)+' 0 H '+(fw-r).toFixed(4)+
-          ' A '+r.toFixed(4)+' '+r.toFixed(4)+' 0 0 1 '+fw.toFixed(4)+' '+r.toFixed(4)+
-          ' V '+(fh-r).toFixed(4)+
-          ' A '+r.toFixed(4)+' '+r.toFixed(4)+' 0 0 1 '+(fw-r).toFixed(4)+' '+fh.toFixed(4)+
-          ' H '+r.toFixed(4)+
-          ' A '+r.toFixed(4)+' '+r.toFixed(4)+' 0 0 1 0 '+(fh-r).toFixed(4)+
-          ' V '+r.toFixed(4)+
-          ' A '+r.toFixed(4)+' '+r.toFixed(4)+' 0 0 1 '+r.toFixed(4)+' 0 Z')
-        :('M 0 0 H '+fw.toFixed(4)+' V '+fh.toFixed(4)+' H 0 Z');
-      state.cut={polys,w:fw,h:fh,svgPath,
-        art:{x:m,y:m,w:artWin,h:artHin},blobCount:1};
-    }
+    /* geometric frames (v0.12): every shape via shapePoly, art centered in the
+       shape's safe area with margin m */
+    const def=SHAPE_DEFS[state.shape]||{sx:1,sy:1};
+    const shapeId=state.shape==='hexcut'?'hex':state.shape;
+    const fw=(artWin+2*m)/def.sx, fh=(artHin+2*m)/def.sy;
+    let rEff=0;
+    if(state.shape==='round')rEff=Math.min(state.radius,fw/2,fh/2);
+    else if(state.shape==='hexcut')rEff=state.radius;
+    else if(state.shape==='rect')rEff=0.02;
+    const polys=[shapePoly(shapeId,fw,fh,rEff)];
+    state.cut={polys,w:fw,h:fh,svgPath:null,
+      art:{x:fw/2-artWin/2,y:fh/2-artHin/2+(def.dy||0)*fh,w:artWin,h:artHin},blobCount:1};
     return;
   }
 
@@ -1047,6 +1115,50 @@ function weaveTile(ppi){
   _weaveTiles[th]=c;
   return c;
 }
+/* ---------- EDGE FINISH (v0.12) ----------
+   Border rendered ON the cut line. Callers must clip(path) first — strokes are
+   2× wide so the inside half is what shows. insetLine = offset line via
+   stroke-difference on a temp canvas (dashes survive the erase). */
+function edgeInsetLine(ctx,path,ppi,inset,th,color,dash){
+  const t=document.createElement('canvas');t.width=ctx.canvas.width;t.height=ctx.canvas.height;
+  const x=t.getContext('2d');
+  x.lineJoin='round';x.lineCap='round';
+  x.strokeStyle=color;x.lineWidth=(2*inset+th)*ppi;
+  if(dash)x.setLineDash(dash.map(d=>d*ppi));
+  x.stroke(path);
+  x.setLineDash([]);
+  x.globalCompositeOperation='destination-out';
+  x.lineWidth=Math.max(0.5,(2*inset-th)*ppi);
+  x.stroke(path);
+  ctx.drawImage(t,0,0);
+}
+function drawEdgeFinish(ctx,path,ppi,e){
+  const w=e.w||0.11,c=e.color||'#1A1A1A';
+  ctx.save();ctx.lineJoin='round';ctx.lineCap='round';
+  const tick=Math.max(1.5,0.014*ppi);
+  if(e.style==='merrow'||e.style==='satin'){
+    ctx.strokeStyle=c;ctx.lineWidth=w*2*ppi;ctx.stroke(path);
+    const t2=e.style==='satin'?Math.max(1,0.008*ppi):tick;
+    const gap=e.style==='satin'?0.8:1.3;
+    ctx.strokeStyle='rgba(0,0,0,0.30)';ctx.lineWidth=w*1.9*ppi;
+    ctx.setLineDash([t2,t2*gap]);ctx.stroke(path);
+    ctx.strokeStyle='rgba(255,255,255,0.22)';ctx.lineWidth=w*1.1*ppi;
+    ctx.setLineDash([t2,t2*gap]);ctx.lineDashOffset=t2*0.6;ctx.stroke(path);
+    ctx.setLineDash([]);
+  }else if(e.style==='run'){
+    edgeInsetLine(ctx,path,ppi,w*0.55,0.028,c,[0.1,0.08]);
+  }else if(e.style==='faux'){
+    edgeInsetLine(ctx,path,ppi,w*0.5,0.02,c,[0.085,0.055]);
+    edgeInsetLine(ctx,path,ppi,w*0.85,0.02,c,[0.085,0.055]);
+  }else if(e.style==='blanket'){
+    ctx.strokeStyle=c;ctx.lineWidth=w*2*ppi;
+    ctx.setLineDash([0.03*ppi,0.11*ppi]);ctx.stroke(path);ctx.setLineDash([]);
+    edgeInsetLine(ctx,path,ppi,w,0.024,c,null);
+  }else if(e.style==='hotcut'){
+    ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=Math.max(1,0.014*ppi);ctx.stroke(path);
+  }
+  ctx.restore();
+}
 function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
   const c=document.createElement('canvas');
   c.width=Math.max(2,Math.round(cut.w*scalePxPerIn));
@@ -1117,22 +1229,8 @@ function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
     ctx.fillStyle=ctx.createPattern(weaveTile(scalePxPerIn),'repeat');
     ctx.fillRect(0,0,c.width,c.height);
     ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
-    /* merrow border: thick wrap on the edge + rib ticks + sheen */
-    ctx.lineJoin='round';ctx.lineCap='round';
-    ctx.strokeStyle=bC;
-    ctx.lineWidth=bw*2*scalePxPerIn;      /* clipped: visible width = bw */
-    ctx.stroke(path);
-    const tick=Math.max(1.5,0.014*scalePxPerIn);
-    ctx.strokeStyle='rgba(0,0,0,0.30)';
-    ctx.lineWidth=bw*1.9*scalePxPerIn;
-    ctx.setLineDash([tick,tick*1.3]);
-    ctx.stroke(path);
-    ctx.strokeStyle='rgba(255,255,255,0.22)';
-    ctx.lineWidth=bw*1.1*scalePxPerIn;
-    ctx.setLineDash([tick,tick*1.3]);
-    ctx.lineDashOffset=tick*0.6;
-    ctx.stroke(path);
-    ctx.setLineDash([]);
+    /* edge finish (v0.12) — woven defaults to merrow */
+    drawEdgeFinish(ctx,path,scalePxPerIn,{style:sty.edgeStyle||'merrow',color:bC,w:bw});
     ctx.restore();
     if(!forPrint){
       ctx.save();ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=Math.max(1,scalePxPerIn*0.012);ctx.stroke(path);ctx.restore();
@@ -1212,6 +1310,13 @@ function renderPatchG(cut,art,sty,scalePxPerIn,forPrint){
   ctx.imageSmoothingQuality='high';
   ctx.drawImage(art,a.x*scalePxPerIn,a.y*scalePxPerIn,a.w*scalePxPerIn,a.h*scalePxPerIn);
   ctx.restore();
+  /* v0.12: printed edge finish (faux merrow / stitch borders) — goes in the
+     PRODUCTION print file too, it's printed ink */
+  if(sty.edgeStyle&&sty.edgeStyle!=='none'){
+    ctx.save();ctx.clip(path);
+    drawEdgeFinish(ctx,path,scalePxPerIn,{style:sty.edgeStyle,color:sty.edgeC,w:sty.edgeW});
+    ctx.restore();
+  }
   if(!forPrint){ /* preview edge hint */
     ctx.save();ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=Math.max(1,scalePxPerIn*0.012);ctx.stroke(path);ctx.restore();
   }
@@ -1358,7 +1463,9 @@ function refresh(){
   const isEmb=!!(state.cut&&state.cut.emb);
   const isWoven=state.wovenOn;
   ['dlPrint','dlApproval','dlZip'].forEach(id=>$(id).disabled=!ready);
-  ['dlSvg','dlDxf'].forEach(id=>$(id).disabled=!ready||isBlank||isEmb||isWoven); /* blanks + emb + woven: nothing WE cut */
+  /* v0.12: in woven mode the SVG button becomes the VECTOR SPEC export */
+  $('dlSvg').disabled=!ready||isBlank||isEmb;
+  $('dlDxf').disabled=!ready||isBlank||isEmb||isWoven;
   $('gsAdd').disabled=!ready||isBlank||isEmb||isWoven;
   if(state.embOn)updateEmbEst();
   $('copyPrintavo').disabled=!ready;
@@ -1511,7 +1618,7 @@ function buildApprovalCanvas(){
     ctx.fillText('DIRECT EMBROIDERY'+(state.embStyle==='puff'?' · 3D PUFF':'')+' — STITCHED PREVIEW, FINAL THREAD COLORS AT DIGITIZING',W/2,Hh-64);
   }
   if(state.wovenOn){
-    const bp=nearestPMS(state.woven.color);
+    const bp=nearestPMS(state.edge.color);
     ctx.fillStyle='#98A0A6';ctx.font='700 18px "JetBrains Mono",monospace';
     ctx.fillText('WOVEN PATCH · MERROW BORDER '+(bp?bp.name.toUpperCase():'')+' — WOVEN PREVIEW, FINAL THREADS MATCHED TO PANTONE',W/2,Hh-64);
   }
@@ -1535,7 +1642,7 @@ function buildWovenArtCanvas(){
 }
 function buildWovenSpecCanvas(){
   /* WHITE spec card for the vendor: patch visual + size + every pantone callout */
-  const W=1500,Hh=1100;
+  const W=1500,Hh=1210;
   const c=document.createElement('canvas');c.width=W;c.height=Hh;
   const ctx=c.getContext('2d');
   ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,Hh);
@@ -1567,7 +1674,7 @@ function buildWovenSpecCanvas(){
     ctx.fillText(val,rx,ry);ry+=40;
   };
   line('Patch size',state.cut.w.toFixed(2)+'" × '+state.cut.h.toFixed(2)+'"  ('+Math.round(state.cut.w*25.4)+'×'+Math.round(state.cut.h*25.4)+' mm)');
-  line('Border','Merrow / overlock · '+state.woven.border.toFixed(3)+'" wide');
+  line('Border','Merrow / overlock · '+state.edge.w.toFixed(3)+'" wide');
   line('Backing','Standard — confirm iron-on / velcro / plain');
   const chip=(hex,pmsName)=>{
     ctx.fillStyle=hex;ctx.fillRect(rx,ry-6,44,30);
@@ -1580,15 +1687,107 @@ function buildWovenSpecCanvas(){
   };
   ctx.fillStyle='#888';ctx.font='700 14px "JetBrains Mono",monospace';
   ctx.fillText('MERROW BORDER THREAD',rx,ry);ry+=30;
-  const bp=nearestPMS(state.woven.color);
-  chip(state.woven.color,bp?bp.name:'—');
+  const bp=nearestPMS(state.edge.color);
+  chip(state.edge.color,bp?bp.name:'—');
   ry+=8;
   ctx.fillStyle='#888';ctx.font='700 14px "JetBrains Mono",monospace';
   ctx.fillText('ART THREAD COLORS — CLOSEST PANTONE SOLID COATED',rx,ry);ry+=30;
   artPantones().forEach(o=>{if(ry<Hh-120)chip(o.hex,o.pms?o.pms.name:'—');});
+  /* v0.12: leader-line callout — make the merrow border unmistakable */
+  const bpx=px+Math.max(4,state.edge.w*s*0.5), bpy=py+patch.height*0.55;
+  const lx=90, ly=ay+areaH+130;
+  ctx.strokeStyle='#C1272D';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(bpx,bpy);ctx.lineTo(lx+150,ly-14);ctx.stroke();
+  ctx.fillStyle='#C1272D';ctx.beginPath();ctx.arc(bpx,bpy,7,0,Math.PI*2);ctx.fill();
+  ctx.font='700 20px "JetBrains Mono",monospace';ctx.textAlign='left';
+  ctx.fillText('MERROW BORDER — '+(bp?bp.name:'')+' ('+state.edge.color.toUpperCase()+')',lx,ly+14);
+  ctx.fillStyle='#666';ctx.font='500 15px "JetBrains Mono",monospace';
+  ctx.fillText('stitched overlock edge, '+state.edge.w.toFixed(3)+'" wide — NOT part of the artwork',lx,ly+38);
   ctx.fillStyle='#999';ctx.font='500 14px "JetBrains Mono",monospace';ctx.textAlign='left';
   ctx.fillText('MAYHEM INK SCREEN PRINTING · mayhemink.net — match threads to the Pantone callouts, not the screen colors.',50,Hh-40);
   return c;
+}
+/* ---------- WOVEN VECTOR SPEC (v0.12) ----------
+   True-size SVG vendor sheet: vector art (uploaded SVG or in-app trace) inside
+   the patch outline, merrow ring, leader-line border callout, every PMS swatch. */
+function remapSvgColors(text,map){
+  if(!map)return text;
+  for(const [from,to] of Object.entries(map)){
+    try{text=text.replace(new RegExp(from,'gi'),to);}catch(e){}
+  }
+  return text;
+}
+function hasVectorArt(){
+  return state.objects.some(o=>o.type==='image'&&state.assets[o.assetId]&&state.assets[o.assetId].svgText&&state.assets[o.assetId].vb);
+}
+function buildWovenVectorSvg(){
+  if(!state.cut||!state.artBox)return null;
+  const cw=state.cut.w,ch=state.cut.h;
+  const e={w:state.edge.w,color:state.edge.color};
+  const bp=nearestPMS(e.color);
+  const pms=artPantones();
+  const M=0.6, annW=4.1;
+  const W=M+cw+0.9+annW, H=Math.max(ch+2*M+1.2, 2.2+(2+pms.length)*0.62+1.2);
+  const px=M, py=Math.max(M+0.6,(H-ch)/2);
+  const k=state.cut.art.w/state.artBox.w;
+  let art='';
+  for(const o of state.objects){
+    if(o.type!=='image')continue;
+    const a=state.assets[o.assetId];
+    if(!a)continue;
+    const wIn=(o._w||o.w)*k, hIn=(o._h||o.w)*k;
+    const xIn=px+state.cut.art.x+(o.xc-state.artBox.minX)*k;
+    const yIn=py+state.cut.art.y+(o.yc-state.artBox.minY)*k;
+    const rot=(o.rot||0)*180/Math.PI;
+    const tf='translate('+xIn.toFixed(4)+' '+yIn.toFixed(4)+') rotate('+rot.toFixed(2)+') translate('+(-wIn/2).toFixed(4)+' '+(-hIn/2).toFixed(4)+')';
+    if(a.svgText&&a.vb){
+      let inner=remapSvgColors(a.svgText,a.map).replace(/<\?xml[^>]*\?>/i,'');
+      inner=inner.replace(/<svg[^>]*>/i,
+        '<svg xmlns="http://www.w3.org/2000/svg" width="'+wIn.toFixed(4)+'" height="'+hIn.toFixed(4)+
+        '" viewBox="'+a.vb.map(v=>(+v).toFixed(3)).join(' ')+'" preserveAspectRatio="xMidYMid meet">');
+      art+='<g transform="'+tf+'">'+inner+'</g>\n';
+    }else{
+      art+='<g transform="'+tf+'"><image width="'+wIn.toFixed(4)+'" height="'+hIn.toFixed(4)+'" href="'+a.canvas.toDataURL('image/png')+'"/></g>\n';
+    }
+  }
+  const outline=cutSvgD();
+  let mx=-1e9,myy=0;
+  for(const poly of state.cut.polys)for(const p of poly)if(p[0]>mx){mx=p[0];myy=p[1];}
+  const cx1=px+mx-e.w/2, cy1=py+myy;
+  const ax=px+cw+0.9, ay=py+Math.min(ch*0.3,1.0);
+  const T=(x2,y2,sz,txt,bold)=>'<text x="'+x2.toFixed(3)+'" y="'+y2.toFixed(3)+'" font-family="Arial,Helvetica,sans-serif" font-size="'+sz+'" '+(bold?'font-weight="bold" ':'')+'fill="#111">'+txt+'</text>\n';
+  let ann='';
+  ann+='<line x1="'+cx1.toFixed(3)+'" y1="'+cy1.toFixed(3)+'" x2="'+ax.toFixed(3)+'" y2="'+ay.toFixed(3)+'" stroke="#C1272D" stroke-width="0.022"/>\n';
+  ann+='<circle cx="'+cx1.toFixed(3)+'" cy="'+cy1.toFixed(3)+'" r="0.055" fill="#C1272D"/>\n';
+  ann+=T(ax,ay-0.06,0.21,'MERROW BORDER — '+(bp?bp.name:'')+' ('+e.color.toUpperCase()+')',1);
+  ann+=T(ax,ay+0.2,0.15,'stitched overlock edge, '+e.w.toFixed(3)+'&#8243; wide — NOT part of the artwork',0);
+  let sy=ay+0.75;
+  ann+=T(ax,sy-0.16,0.16,'THREAD COLORS — CLOSEST PANTONE SOLID COATED',1);
+  const chip=(hex,label)=>{
+    ann+='<rect x="'+ax.toFixed(3)+'" y="'+sy.toFixed(3)+'" width="0.45" height="0.3" fill="'+hex+'" stroke="#888" stroke-width="0.012"/>\n';
+    ann+=T(ax+0.58,sy+0.17,0.17,label,1);
+    ann+=T(ax+0.58,sy+0.38,0.12,hex.toUpperCase(),0);
+    sy+=0.62;
+  };
+  chip(e.color,(bp?bp.name:'—')+' — merrow border');
+  pms.forEach(o=>chip(o.hex,o.pms?o.pms.name:'—'));
+  const cust=($('jobCustomer').value||'').trim(),q=($('jobQuote').value||'').trim();
+  const qty=Math.max(1,Math.round(parseFloat($('prQty').value)||1));
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'+
+  '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="'+W.toFixed(3)+'in" height="'+H.toFixed(3)+'in" viewBox="0 0 '+W.toFixed(3)+' '+H.toFixed(3)+'">\n'+
+  '<rect width="'+W.toFixed(3)+'" height="'+H.toFixed(3)+'" fill="#FFFFFF"/>\n'+
+  T(M,0.42,0.26,'WOVEN PATCH SPEC — TRUE SIZE '+cw.toFixed(2)+'&#8243; × '+ch.toFixed(2)+'&#8243; ('+Math.round(cw*25.4)+'×'+Math.round(ch*25.4)+' mm)',1)+
+  T(M,0.72,0.15,(cust||'Mayhem Ink')+(q?' — REF #'+q:'')+' — QTY '+qty+' — '+new Date().toLocaleDateString(),0)+
+  '<defs><clipPath id="pc"><path d="'+outline+'" transform="translate('+px.toFixed(3)+' '+py.toFixed(3)+')"/></clipPath></defs>\n'+
+  '<g clip-path="url(#pc)">\n'+
+  '<rect x="'+px.toFixed(3)+'" y="'+py.toFixed(3)+'" width="'+cw.toFixed(3)+'" height="'+ch.toFixed(3)+'" fill="'+(state.bgOn?state.bgColor:'#EDE8DC')+'"/>\n'+
+  art+
+  '<path d="'+outline+'" transform="translate('+px.toFixed(3)+' '+py.toFixed(3)+')" fill="none" stroke="'+e.color+'" stroke-width="'+(e.w*2).toFixed(4)+'" stroke-linejoin="round"/>\n'+
+  '</g>\n'+
+  '<path d="'+outline+'" transform="translate('+px.toFixed(3)+' '+py.toFixed(3)+')" fill="none" stroke="#111" stroke-width="0.008" stroke-dasharray="0.06 0.05"/>\n'+
+  ann+
+  T(M,H-0.3,0.13,'MAYHEM INK SCREEN PRINTING — mayhemink.net — match threads to the Pantone callouts, not screen colors.',0)+
+  '</svg>';
 }
 
 /* ---------- store-mode ZIP (Mockup Lab pattern) ---------- */
@@ -1639,6 +1838,11 @@ $('dlPrint').onclick=async()=>{
   cv.toBlob(b=>downloadBlobFile(b,fileBase()+tag+state.cut.w.toFixed(2)+'x'+state.cut.h.toFixed(2)+'in.png'),'image/png');
 };
 $('dlSvg').onclick=()=>{
+  if(state.wovenOn){
+    const s=buildWovenVectorSvg();
+    if(s)downloadBlobFile(new Blob([s],{type:'image/svg+xml'}),fileBase()+'-woven-vector.svg');
+    return;
+  }
   downloadBlobFile(new Blob([buildCutSvg()],{type:'image/svg+xml'}),fileBase()+'-cutline.svg');
 };
 $('dlDxf').onclick=()=>{
@@ -1659,9 +1863,12 @@ function jobPayload(){
     mode,
     embStyle:state.embOn?state.embStyle:null,
     stitchEstimate:est?est.st:null,
-    merrowBorderIn:state.wovenOn?+state.woven.border.toFixed(3):null,
-    merrowBorderColor:state.wovenOn?state.woven.color:null,
-    merrowBorderPMS:state.wovenOn?(nearestPMS(state.woven.color)||{}).name:null,
+    edgeFinish:(state.embOn||state.eng.on||state.edge.style==='none')?null:{
+      style:state.edge.style,color:state.edge.color,widthIn:+state.edge.w.toFixed(3),
+      pms:(nearestPMS(state.edge.color)||{}).name},
+    merrowBorderIn:state.wovenOn?+state.edge.w.toFixed(3):null,
+    merrowBorderColor:state.wovenOn?state.edge.color:null,
+    merrowBorderPMS:state.wovenOn?(nearestPMS(state.edge.color)||{}).name:null,
     pantones:state.wovenOn?artPantones().map(o=>({hex:o.hex,pms:o.pms?o.pms.name:null})):null,
     material:state.embOn?('Direct embroidery on hat'+(state.embStyle==='puff'?' — 3D puff':'')):(state.eng.on?(state.eng.cat+' — '+state.eng.name):(state.wovenOn?'Woven patch — merrow border (outsourced)':'UV print patch material')),
     blank:!!(state.cut&&state.cut.blank),
@@ -1694,16 +1901,18 @@ $('dlZip').onclick=async()=>{
   if(state.wovenOn){
     /* WOVEN VENDOR PACKAGE (v0.10): clean patch visual + bare art + white spec
        card w/ pantone callouts — everything the China vendor asks for */
-    const bp=nearestPMS(state.woven.color);
+    const bp=nearestPMS(state.edge.color);
     const pms=artPantones();
     entries.push({name:folder+'/'+folder+'-woven-patch.png',data:await canvasPngU8(renderPatch(DPI,true))});
     entries.push({name:folder+'/'+folder+'-woven-art.png',data:await canvasPngU8(buildWovenArtCanvas())});
     entries.push({name:folder+'/'+folder+'-woven-spec.png',data:await canvasPngU8(buildWovenSpecCanvas())});
+    const vsvg=buildWovenVectorSvg();
+    if(vsvg)entries.push({name:folder+'/'+folder+'-woven-vector.svg',data:enc.encode(vsvg)});
     entries.push({name:folder+'/'+folder+'-approval.png',data:await canvasPngU8(buildApprovalCanvas())});
     entries.push({name:folder+'/README.txt',data:enc.encode(
       'MAYHEM PATCH LAB EXPORT — WOVEN PATCH (OUTSOURCED)\n'+
       'Patch size: '+state.cut.w.toFixed(2)+'" x '+state.cut.h.toFixed(2)+'" ('+Math.round(state.cut.w*25.4)+' x '+Math.round(state.cut.h*25.4)+' mm)\n'+
-      'Merrow border: '+state.woven.border.toFixed(3)+'"  ·  '+(bp?bp.name:'')+'  ('+state.woven.color.toUpperCase()+')\n'+
+      'Merrow border: '+state.edge.w.toFixed(3)+'"  ·  '+(bp?bp.name:'')+'  ('+state.edge.color.toUpperCase()+')\n'+
       'Art colors (closest Pantone Solid Coated):\n'+
       pms.map(o=>'  '+(o.pms?o.pms.name:'?')+'  ('+o.hex.toUpperCase()+')').join('\n')+'\n\n'+
       'SEND TO VENDOR: -woven-patch.png (finished look), -woven-art.png (bare art,\n'+
@@ -1961,12 +2170,13 @@ function refreshLayers(){
   renderWovenUI();
 }
 function addImageObject(file){
-  loadArtFile(file,(canvas,isSvg)=>{
+  loadArtFile(file,(canvas,isSvg,meta)=>{
     pushUndo();
     /* v0.9: the default Mayhem mark is a PLACEHOLDER — first real art replaces it */
     state.objects=state.objects.filter(o=>!o.placeholder);
     const id=assetPut(canvas,file.name);
     state.assets[id].vector=isSvg;
+    if(meta){state.assets[id].svgText=meta.svgText;state.assets[id].vb=meta.vb;}
     const base=state.artBox&&state.objects.length?{x:state.artBox.minX+state.artBox.w/2+0.15,y:state.artBox.minY+state.artBox.h/2+0.15}:{x:0,y:0};
     state.objects.push({id:newId(),type:'image',assetId:id,name:file.name,xc:base.x,yc:base.y,w:2.5,rot:0});
     state.selId=state.objects[state.objects.length-1].id;
@@ -2116,40 +2326,55 @@ function pmsRow(label,hex,pms){
   row.append(sw,code,lb,hx);
   return row;
 }
-function renderWovenUI(){
-  if(!$('wovenBox')||$('wovenBox').hidden)return;
-  $('wovenColor').value=state.woven.color;
-  $('wovenBorder').value=String(state.woven.border);
-  $('wovenBorderVal').textContent=state.woven.border.toFixed(3)+'"';
-  const bp=nearestPMS(state.woven.color);
-  $('wovenBorderPMS').textContent=bp?(bp.name+' · '+state.woven.color.toUpperCase()):'';
-  /* quick border chips from the art's own colors */
-  const chips=$('wovenChips');chips.innerHTML='';
+/* ---------- EDGE FINISH UI (v0.12) — shared by UV print + woven ---------- */
+function syncEdgeSeg(){
+  $('edgeSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.edge===state.edge.style));
+  $('edgeOpts').hidden=state.edge.style==='none'||state.edge.style==='hotcut';
+}
+function renderEdgeUI(){
+  if($('edgeBox').hidden)return;
+  $('edgeColor').value=state.edge.color;
+  $('edgeW').value=String(state.edge.w);
+  $('edgeWVal').textContent=state.edge.w.toFixed(3)+'"';
+  const bp=nearestPMS(state.edge.color);
+  $('edgeColorPMS').textContent=bp?(bp.name+' · '+state.edge.color.toUpperCase()):'';
+  const chips=$('edgeChips');chips.innerHTML='';
   if(state.art)extractPalette(state.art).slice(0,6).forEach(p=>{
-    const d=document.createElement('div');d.className='chip'+(p.hex.toLowerCase()===state.woven.color.toLowerCase()?' mod':'');
+    const d=document.createElement('div');d.className='chip'+(p.hex.toLowerCase()===state.edge.color.toLowerCase()?' mod':'');
     d.style.background=p.hex;d.title='Use '+p.hex+' for the border';
-    d.onclick=()=>{state.woven.color=p.hex;renderWovenUI();refresh();autosaveSoon();};
+    d.onclick=()=>{state.edge.color=p.hex;renderEdgeUI();renderWovenPMS();refresh();autosaveSoon();};
     chips.appendChild(d);
   });
+}
+function renderWovenPMS(){
+  if(!$('wovenBox')||$('wovenBox').hidden)return;
   const box=$('wovenPMS');box.innerHTML='';
-  if(bp)box.appendChild(pmsRow('MERROW BORDER',state.woven.color,bp));
+  const bp=nearestPMS(state.edge.color);
+  if(bp)box.appendChild(pmsRow('MERROW BORDER',state.edge.color,bp));
   artPantones().forEach(o=>box.appendChild(pmsRow('art color',o.hex,o.pms)));
 }
-$('wovenBorder').oninput=()=>{
-  state.woven.border=parseFloat($('wovenBorder').value)||0.11;
-  $('wovenBorderVal').textContent=state.woven.border.toFixed(3)+'"';
+function renderWovenUI(){renderEdgeUI();renderWovenPMS();}
+$('edgeSeg').querySelectorAll('button').forEach(b=>{
+  b.onclick=()=>{
+    state.edge.style=b.dataset.edge;
+    syncEdgeSeg();renderEdgeUI();refresh();autosaveSoon();
+  };
+});
+$('edgeW').oninput=()=>{
+  state.edge.w=parseFloat($('edgeW').value)||0.11;
+  $('edgeWVal').textContent=state.edge.w.toFixed(3)+'"';
   refresh();autosaveSoon();
 };
-$('wovenColor').oninput=()=>{
-  state.woven.color=$('wovenColor').value;
-  renderWovenUI();refresh();autosaveSoon();
+$('edgeColor').oninput=()=>{
+  state.edge.color=$('edgeColor').value.toUpperCase();
+  renderEdgeUI();renderWovenPMS();refresh();autosaveSoon();
 };
 if(window.EyeDropper){
   $('wovenPick').onclick=async()=>{
     try{
       const r=await new EyeDropper().open();
-      state.woven.color=r.sRGBHex.toUpperCase();
-      renderWovenUI();refresh();autosaveSoon();
+      state.edge.color=r.sRGBHex.toUpperCase();
+      renderEdgeUI();renderWovenPMS();refresh();autosaveSoon();
     }catch(e){/* user cancelled */}
   };
 }else $('wovenPick').style.display='none';
@@ -2586,8 +2811,7 @@ function selectLea(mi,ii){
 function updateBlankUI(){
   const blank=state.eng.on&&state.eng.blank;
   $('blankBox').hidden=!blank;
-  $('cutControls').style.display=blank?'none':'';
-  $('offsetRow').style.display=blank?'none':'';
+  syncVisibility();
   if(blank){
     const seg=$('blankSeg');seg.innerHTML='';
     (state.blank.shapes||[]).forEach(s=>{
@@ -2601,6 +2825,22 @@ function updateBlankUI(){
     $('blankSel').textContent=shp?('Blank: '+shp.n):'';
   }
 }
+/* v0.12: one place decides what each METHOD shows — emb has no cut/shape/edge/gang,
+   woven has no gang, engrave has no colors/bg/edge */
+function syncVisibility(){
+  const eng=state.eng.on, emb=state.embOn, wov=state.wovenOn;
+  const blank=eng&&state.eng.blank;
+  $('cutControls').style.display=(emb||blank)?'none':'';
+  $('offsetRow').style.display=(emb||blank)?'none':'';
+  $('smoothLine').style.display=emb?'none':'';
+  $('bgLine').style.display=(emb||eng)?'none':'';
+  $('edgeBox').hidden=!(wov||(!eng&&!emb));
+  $('colorBox').style.display=eng?'none':'';
+  $('wovenBox').hidden=!wov;
+  $('embBox').hidden=!emb;
+  $('gangPanel').style.display=(emb||wov)?'none':'';
+  syncEdgeSeg();
+}
 function updateModeUI(){
   const eng=state.eng.on, emb=state.embOn, wov=state.wovenOn;
   const card=$('dlPrint').closest('.dl-card');
@@ -2608,10 +2848,10 @@ function updateModeUI(){
   card.querySelector('h4').textContent=emb?'ART FILE (PNG)':(eng?'ENGRAVE FILE (PNG)':(wov?'WOVEN VENDOR FILE (PNG)':'PRINT FILE (PNG)'));
   ps[0].textContent=emb?'Digitizer':(eng?'xTool P3 · raster engrave':(wov?'Outsource vendor':'eufyMake E1'));
   ps[1].textContent=emb?'Clean art @ 300 DPI for digitizing.':(eng?'Black = engrave, white bg, 300 DPI exact size.':(wov?'Patch visual @ 300 DPI, exact size — spec card in the ZIP.':'Transparent PNG @ 300 DPI, exact size.'));
-  /* v0.10: art color editing for emb / woven / UV only — engrave color comes from the leather */
-  $('colorBox').style.display=eng?'none':'';
-  $('wovenBox').hidden=!wov;
-  $('embBox').hidden=!emb;
+  const svgCard=$('dlSvg').closest('.dl-card');
+  svgCard.querySelector('h4').textContent=wov?'VECTOR SPEC (SVG)':'CUT LINE (SVG)';
+  svgCard.querySelector('p.machine').textContent=wov?'Outsource vendor':'xTool P3 · XCS';
+  syncVisibility();
   if(wov)renderWovenUI();
   if(emb)updateEmbEst();
 }
@@ -2626,8 +2866,10 @@ $('modeSeg').querySelectorAll('button').forEach(b=>{
     $('engBox').hidden=!state.eng.on;
     $('embNote').hidden=!state.embOn;
     if(state.eng.on&&!state.eng.name)selectLea(0,0);
+    if(state.wovenOn&&state.edge.style==='none')state.edge.style='merrow'; /* woven default */
     updateModeUI();
     updateBlankUI();
+    renderEdgeUI();
     recompute();
   };
 });
@@ -2647,27 +2889,39 @@ $('blankBorder').oninput=()=>{
   recompute();
 };
 
-/* ---------- HAT SHAPE PRESETS (v0.6) ---------- */
+/* ---------- TEMPLATES (v0.12 — PatchForge-style pre-sized gallery) ---------- */
 const PRESETS=[
-  {id:'r3525', n:'3.5″×2.5″ RECT',   shape:'rect',  w:3.5,h:2.5,r:0.25},
-  {id:'cap2520',n:'2.5″×2″ CAP FRONT',shape:'rect',  w:2.5,h:2,  r:0.25},
-  {id:'sq25',  n:'2.5″ SQUARE',      shape:'rect',  w:2.5,h:2.5,r:0.25},
-  {id:'cir25', n:'2.5″ CIRCLE',      shape:'circle',w:2.5,h:2.5},
-  {id:'rock3515',n:'3.5″×1.5″ ROCKER',shape:'rect', w:3.5,h:1.5,r:0.6},
-  {id:'r3020', n:'3″×2″ RECT',       shape:'rect',  w:3,  h:2,  r:0.25}
+  {id:'capoval', n:'CAP OVAL 2.5×2″',    shape:'oval',   w:2.5,h:2},
+  {id:'cap2520', n:'CAP FRONT 2.5×2″',   shape:'rect',   w:2.5,h:2,  r:0.25},
+  {id:'sq25',    n:'CAP SQUARE 2.5″',    shape:'rect',   w:2.5,h:2.5,r:0.25},
+  {id:'widecap', n:'WIDE CAP 3.5×2.5″',  shape:'rect',   w:3.5,h:2.5,r:0.3},
+  {id:'cir25',   n:'CIRCLE 2.5″',        shape:'circle', w:2.5,h:2.5},
+  {id:'rnd3',    n:'ROUND 3″',           shape:'circle', w:3,  h:3},
+  {id:'rock3515',n:'ROCKER 3.5×1.5″',    shape:'capsule',w:3.5,h:1.5},
+  {id:'bill351', n:'BILL STRIP 3.5×1″',  shape:'rect',   w:3.5,h:1,  r:0.3},
+  {id:'tab2507', n:'SIDE TAB 2.5×.75″',  shape:'rect',   w:2.5,h:0.75,r:0.2},
+  {id:'shield',  n:'SHIELD 3×3.5″',      shape:'shield', w:3,  h:3.5},
+  {id:'crest',   n:'TALL SHIELD 2.5×3″', shape:'shield', w:2.5,h:3},
+  {id:'badge',   n:'BADGE 3×3.5″',       shape:'badge',  w:3,  h:3.5},
+  {id:'hex3',    n:'HEX 3×2.25″',        shape:'hex',    w:3,  h:2.25},
+  {id:'star3',   n:'STAR 3″',            shape:'star',   w:3,  h:3},
+  {id:'dia',     n:'DIAMOND 3×3.5″',     shape:'diamond',w:3,  h:3.5},
+  {id:'jacket',  n:'JACKET SHIELD 5×6″', shape:'shield', w:5,  h:6},
+  {id:'back8',   n:'BACK PANEL 8×8″',    shape:'rect',   w:8,  h:8,  r:0.5}
 ];
 function buildPresetCut(){
   const p=PRESETS.find(x=>x.id===state.presetId);
   if(!p){state.presetId=null;return;}
   const W=p.w,H=p.h;
-  const outer=blankShapePoly(W,H,p.shape,p.r,0);
+  const outer=shapePoly(p.shape,W,H,p.r);
+  const def=SHAPE_DEFS[p.shape]||{sx:1,sy:1};
   const art=state.art, aspect=art.height/art.width;
   const pad=Math.max(0.06,state.offset);
-  let aw=Math.min(state.artW,W-2*pad), ah=aw*aspect;
-  const maxH=H-2*pad;
+  let aw=Math.min(state.artW,W*def.sx-2*pad), ah=aw*aspect;
+  const maxH=H*(def.sy||1)-2*pad;
   if(ah>maxH){ah=maxH;aw=ah/aspect;}
   state.cut={polys:[outer],w:W,h:H,svgPath:null,
-    art:{x:W/2-aw/2,y:H/2-ah/2,w:aw,h:ah},blobCount:1,preset:p.id};
+    art:{x:W/2-aw/2,y:H/2-ah/2+(def.dy||0)*H,w:aw,h:ah},blobCount:1,preset:p.id};
 }
 function renderPresets(){
   const row=$('presetRow');row.innerHTML='';
@@ -2775,7 +3029,113 @@ function vecAuth(){try{return JSON.parse(localStorage.getItem(VEC_KEY)||'null');
 function updateVecBtn(){
   const a=vecAuth();
   $('vecBtn').disabled=!(state.art&&a&&a.id&&a.secret);
+  $('traceBtn').disabled=!state.art;
 }
+/* ---------- IN-APP VECTORIZE: TRACE BY COLOR (v0.12) ----------
+   No external API. Quantize to the layer's palette, assign every pixel to its
+   nearest color (perfect partition), trace each color's blobs with the Moore
+   tracer + rdp/chaikin smoothing, find enclosed holes via border-BFS, and emit
+   one evenodd path per color. Result swaps in as a vector layer w/ svgText. */
+function traceByColor(){
+  let target=selObj();
+  if(!target||target.type!=='image'){
+    const imgs=state.objects.filter(o=>o.type==='image');
+    target=imgs.length===1?imgs[0]:null;
+  }
+  if(!target){$('vecStatus').textContent='Select an image layer to trace.';return;}
+  const asset=state.assets[target.assetId];
+  if(!asset)return;
+  $('vecStatus').textContent='Tracing by color…';
+  $('traceBtn').disabled=true;
+  setTimeout(()=>{
+    try{
+      const src=asset.canvas;
+      const maxD=560;
+      const s=Math.min(1,maxD/Math.max(src.width,src.height));
+      const w=Math.max(2,Math.round(src.width*s)),h=Math.max(2,Math.round(src.height*s));
+      const t=document.createElement('canvas');t.width=w;t.height=h;
+      const x=t.getContext('2d');x.drawImage(src,0,0,w,h);
+      const d=x.getImageData(0,0,w,h).data;
+      const pal=extractPalette(src);
+      if(!pal.length)throw new Error('no colors found');
+      const idx=new Int16Array(w*h).fill(-1);
+      for(let i=0;i<w*h;i++){
+        if(d[i*4+3]<=64)continue;
+        let bi=0,bd=1e9;
+        for(let k=0;k<pal.length;k++){
+          const dr=d[i*4]-pal[k].r,dg=d[i*4+1]-pal[k].g,db=d[i*4+2]-pal[k].b;
+          const dd=dr*dr+dg*dg+db*db;
+          if(dd<bd){bd=dd;bi=k;}
+        }
+        idx[i]=bi;
+      }
+      const S=src.width/w;
+      const paths=[];
+      for(let k=0;k<pal.length;k++){
+        const mask=new Uint8Array(w*h);
+        let n=0;
+        for(let i=0;i<w*h;i++)if(idx[i]===k){mask[i]=1;n++;}
+        if(n<8)continue;
+        let dstr='';
+        const emit=pts=>{
+          pts=rdp(pts,1.1);
+          if(state.smooth){pts=chaikinClosed(pts,1);pts=rdp(pts,0.5);}
+          if(pts.length<3)return;
+          dstr+=pts.map((p,i)=>(i?'L':'M')+(p[0]*S).toFixed(1)+' '+(p[1]*S).toFixed(1)).join('')+'Z';
+        };
+        const outer=labelBlobs(mask,w,h);
+        for(const b of outer.blobs){
+          if(b.area<6)continue;
+          emit(traceBoundary(outer.lab,w,h,b.label,b.sx,b.sy).map(p=>[p[0]+0.5,p[1]+0.5]));
+        }
+        /* holes: background enclosed by this color layer */
+        const seen=new Uint8Array(w*h);
+        const qx=new Int32Array(w*h),qy=new Int32Array(w*h);
+        let head=0,tail=0;
+        const push=(px,py)=>{const i2=py*w+px;if(!seen[i2]&&!mask[i2]){seen[i2]=1;qx[tail]=px;qy[tail]=py;tail++;}};
+        for(let i2=0;i2<w;i2++){push(i2,0);push(i2,h-1);}
+        for(let j2=0;j2<h;j2++){push(0,j2);push(w-1,j2);}
+        while(head<tail){
+          const px=qx[head],py=qy[head];head++;
+          if(px>0)push(px-1,py);if(px<w-1)push(px+1,py);
+          if(py>0)push(px,py-1);if(py<h-1)push(px,py+1);
+        }
+        const hm=new Uint8Array(w*h);
+        let hn=0;
+        for(let i2=0;i2<w*h;i2++)if(!mask[i2]&&!seen[i2]){hm[i2]=1;hn++;}
+        if(hn>5){
+          const hb=labelBlobs(hm,w,h);
+          for(const b of hb.blobs){
+            if(b.area<6)continue;
+            emit(traceBoundary(hb.lab,w,h,b.label,b.sx,b.sy).map(p=>[p[0]+0.5,p[1]+0.5]));
+          }
+        }
+        if(dstr)paths.push({hex:pal[k].hex,d:dstr,area:n});
+      }
+      if(!paths.length)throw new Error('nothing traceable');
+      paths.sort((a2,b2)=>b2.area-a2.area);
+      const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+src.width+' '+src.height+'">\n'+
+        paths.map(p=>'<path fill="'+p.hex+'" stroke="'+p.hex+'" stroke-width="1" fill-rule="evenodd" d="'+p.d+'"/>').join('\n')+
+        '\n</svg>';
+      const base=(target.name||'art').replace(/\.[a-z0-9]+$/i,'');
+      downloadBlobFile(new Blob([svg],{type:'image/svg+xml'}),base+'-vector.svg');
+      const f=new File([svg],base+'-traced.svg',{type:'image/svg+xml'});
+      loadArtFile(f,(canvas,isSvg,meta)=>{
+        pushUndo();
+        const id=assetPut(canvas,base+'-traced.svg');
+        state.assets[id].vector=true;
+        if(meta){state.assets[id].svgText=meta.svgText;state.assets[id].vb=meta.vb;}
+        target.assetId=id;target.name=base+'-traced.svg';
+        objChanged();
+        $('vecStatus').textContent='✓ Traced to vector — '+paths.length+' colors, layer swapped (SVG also downloaded).';
+      });
+    }catch(e){
+      $('vecStatus').textContent='✗ Trace failed: '+String(e).slice(0,70);
+    }
+    updateVecBtn();
+  },30);
+}
+$('traceBtn').onclick=traceByColor;
 (function vecInit(){
   const a=vecAuth();
   if(a){$('vecId').value=a.id||'';$('vecSecret').value=a.secret||'';$('vecTest').checked=!!a.test;}
@@ -2821,10 +3181,11 @@ $('vecBtn').onclick=async()=>{
     const svg=await resp.text();
     downloadBlobFile(new Blob([svg],{type:'image/svg+xml'}),(target.name||'art').replace(/\.[a-z0-9]+$/i,'')+'-vector.svg');
     const f=new File([svg],'vectorized.svg',{type:'image/svg+xml'});
-    loadArtFile(f,(canvas)=>{
+    loadArtFile(f,(canvas,isSvg,meta)=>{
       pushUndo();
       const id=assetPut(canvas,'vectorized.svg');
       state.assets[id].vector=true;
+      if(meta){state.assets[id].svgText=meta.svgText;state.assets[id].vb=meta.vb;}
       target.assetId=id;target.name='vectorized.svg';
       objChanged();
     });
@@ -3004,24 +3365,48 @@ function renderGangList(){
     dim.textContent=it.cut.w.toFixed(2)+'×'+it.cut.h.toFixed(2)+'"';
     const qty=document.createElement('input');
     qty.type='number';qty.min='1';qty.max='500';qty.step='1';qty.value=String(it.qty);qty.className='gi-qty';
-    qty.oninput=()=>{it.qty=Math.max(1,Math.round(parseFloat(qty.value)||1));gangChanged(false);};
+    qty.oninput=()=>{it.qty=Math.max(1,Math.round(parseFloat(qty.value)||1));state.gang.manual=false;gangChanged(false);};
     const x=document.createElement('button');x.className='gi-x';x.textContent='✕';
-    x.onclick=()=>{state.gang.items=state.gang.items.filter(o=>o.id!==it.id);renderGangList();gangChanged(false);};
+    x.onclick=()=>{state.gang.items=state.gang.items.filter(o=>o.id!==it.id);state.gang.manual=false;renderGangList();gangChanged(false);};
     row.append(nm,dim,qty,x);
     box.appendChild(row);
   });
 }
 function gangChanged(rerenderList){
   if(rerenderList!==false)renderGangList();
-  gangNest();
-  const g=state.gang,total=g.items.reduce((s,i)=>s+i.qty,0);
+  const g=state.gang;
+  if(!g.manual)gangNest();
+  else{ /* manual mode (v0.12): keep hand placements, just recompute util */
+    const u=gangUsable();
+    const area=(g.placed||[]).reduce((s,p)=>s+p.w*p.h,0);
+    g.util=(u.w>0&&u.h>0)?area/(u.w*u.h):0;
+  }
+  const total=g.items.reduce((s,i)=>s+i.qty,0);
+  /* overlaps (manual dragging can collide) */
+  let overlaps=0;
+  if(g.manual&&g.placed){
+    for(let i=0;i<g.placed.length;i++)for(let j=i+1;j<g.placed.length;j++){
+      const a=g.placed[i],b=g.placed[j];
+      if(a.x<b.x+b.w-0.01&&b.x<a.x+a.w-0.01&&a.y<b.y+b.h-0.01&&b.y<a.y+a.h-0.01)overlaps++;
+    }
+  }
+  const C=costs();
+  const shCost=C.sheet*(g.w*g.h)/(12*24)*(1+C.waste/100);
+  const placedN=g.placed?g.placed.length:0;
   $('gsStats').textContent=g.items.length
-    ?('Placed '+(g.placed?g.placed.length:0)+' of '+total+' · utilization '+Math.round(g.util*100)+'%')
+    ?('Placed '+placedN+' of '+total+' · utilization '+Math.round(g.util*100)+'% · sheet material ≈$'+shCost.toFixed(2)+
+      (placedN?' · $'+(shCost/placedN).toFixed(2)+'/patch':''))
     :'';
-  $('gsWarn').hidden=!g.unplaced;
-  if(g.unplaced)$('gsWarn').textContent='⚠ '+g.unplaced+' patch'+(g.unplaced>1?'es':'')+' did not fit — use a bigger sheet, tighter spacing, or fewer pieces.';
+  $('gsManual').textContent=g.manual?'manual placement — AUTO NEST to repack':'';
+  const warn=[];
+  if(g.unplaced)warn.push('⚠ '+g.unplaced+' patch'+(g.unplaced>1?'es':'')+' did not fit — bigger sheet, tighter spacing, or fewer pieces.');
+  if(overlaps)warn.push('⚠ '+overlaps+' overlap'+(overlaps>1?'s':'')+' — nudge the colliding patches apart.');
+  $('gsWarn').hidden=!warn.length;
+  if(warn.length)$('gsWarn').textContent=warn.join(' ');
   refresh();
 }
+$('gsNestBtn').onclick=()=>{state.gang.manual=false;gangChanged(false);};
+$('gsSnap').onchange=()=>{state.gang.snap=$('gsSnap').checked;};
 /* --- gang exports (all share the exact full-sheet frame) --- */
 function gangBase(){
   const b=fileBase().replace(/-patch$/,'');
@@ -3079,6 +3464,7 @@ function buildGangPrintCutSvg(){
 $('gsAdd').onclick=()=>{
   if(!state.cut)return;
   const qty=Math.max(1,Math.round(parseFloat($('gsQty').value)||1));
+  state.gang.manual=false; /* item changes re-nest */
   gangId++;
   const sty=styleSnap();
   state.gang.items.push({
@@ -3089,7 +3475,7 @@ $('gsAdd').onclick=()=>{
   gangChanged();
   setTab('gang');
 };
-$('gsClear').onclick=()=>{state.gang.items=[];state.gang.placed=null;state.gang.unplaced=0;state.gang.util=0;gangChanged();};
+$('gsClear').onclick=()=>{state.gang.items=[];state.gang.placed=null;state.gang.unplaced=0;state.gang.util=0;state.gang.manual=false;gangChanged();};
 const bindGangNum=(id,key,min,max)=>{
   $(id).onchange=()=>{
     let v=parseFloat($(id).value);
@@ -3151,6 +3537,9 @@ $('gsDlZip').onclick=async()=>{
 (()=>{
   const cv=$('stageCv');
   let hatDrag=false;
+  let gangDrag=null; /* v0.12: {p,dx,dy} — hand-placing a gang tile */
+  let gangRaf=false;
+  const gangLive=()=>{if(gangRaf)return;gangRaf=true;requestAnimationFrame(()=>{gangRaf=false;refresh();});};
   let ed=null; /* {mode:'move'|'scale'|'rotate', id, startAx, startAy, startXc, startYc, startW, startRot, startAng} */
   const toPhoto=e=>{
     const r=cv.getBoundingClientRect();
@@ -3187,6 +3576,25 @@ $('gsDlZip').onclick=async()=>{
     requestAnimationFrame(()=>{raf=false;compositeArt();computeCut();refresh();});
   };
   cv.addEventListener('pointerdown',e=>{
+    if(state.tab==='gang'){
+      /* v0.12: hand-place gang tiles */
+      const g=state.gang;
+      if(!g.placed||!g.placed.length)return;
+      const ppi=cv.width/g.w;
+      const sp=toStagePx(e);
+      const sx=sp.x/ppi, sy2=sp.y/ppi;
+      for(let i=g.placed.length-1;i>=0;i--){
+        const p=g.placed[i];
+        if(sx>=p.x&&sx<=p.x+p.w&&sy2>=p.y&&sy2<=p.y+p.h){
+          gangDrag={p,dx:sx-p.x,dy:sy2-p.y};
+          g.manual=true;
+          $('gsManual').textContent='manual placement — AUTO NEST to repack';
+          cv.setPointerCapture(e.pointerId);
+          return;
+        }
+      }
+      return;
+    }
     if(state.tab==='hat'){
       if(!state.hat.photo||!state.cut)return;
       hatDrag=true;cv.setPointerCapture(e.pointerId);
@@ -3231,6 +3639,28 @@ $('gsDlZip').onclick=async()=>{
     }
   });
   cv.addEventListener('pointermove',e=>{
+    if(gangDrag){
+      const g=state.gang;
+      const ppi=cv.width/g.w;
+      const sp=toStagePx(e);
+      let nx=sp.x/ppi-gangDrag.dx, ny=sp.y/ppi-gangDrag.dy;
+      nx=Math.max(g.margin,Math.min(g.w-g.margin-gangDrag.p.w,nx));
+      ny=Math.max(g.margin,Math.min(g.h-g.margin-gangDrag.p.h,ny));
+      if(g.snap){
+        const gr=0.0625, tol=0.07;
+        nx=Math.round(nx/gr)*gr; ny=Math.round(ny/gr)*gr;
+        for(const q of g.placed){
+          if(q===gangDrag.p)continue;
+          for(const cand of [q.x, q.x+q.w+g.gap, q.x-gangDrag.p.w-g.gap, q.x+q.w-gangDrag.p.w])
+            if(Math.abs(nx-cand)<tol)nx=cand;
+          for(const cand of [q.y, q.y+q.h+g.gap, q.y-gangDrag.p.h-g.gap, q.y+q.h-gangDrag.p.h])
+            if(Math.abs(ny-cand)<tol)ny=cand;
+        }
+      }
+      gangDrag.p.x=nx;gangDrag.p.y=ny;
+      gangLive();
+      return;
+    }
     if(hatDrag){
       const p=toPhoto(e);state.hat.cx=p.x;state.hat.cy=p.y;refresh();
       return;
@@ -3255,6 +3685,7 @@ $('gsDlZip').onclick=async()=>{
   });
   const endDrag=()=>{
     hatDrag=false;
+    if(gangDrag){gangDrag=null;gangChanged(false);}
     if(ed){ed=null;objChanged();}
   };
   cv.addEventListener('pointerup',endDrag);
@@ -3268,7 +3699,8 @@ function serializeDesign(){
   for(const o of state.objects){
     if(o.type==='image'&&state.assets[o.assetId]&&!assets[o.assetId]){
       const a=state.assets[o.assetId];
-      assets[o.assetId]={name:a.name,dataURL:a.dataURL,vector:!!a.vector};
+      assets[o.assetId]={name:a.name,dataURL:a.dataURL,vector:!!a.vector,
+        sv:(a.svgText&&a.svgText.length<150000)?a.svgText:undefined,vb:a.vb};
     }
   }
   return {
@@ -3276,7 +3708,7 @@ function serializeDesign(){
     job:{customer:$('jobCustomer').value,quote:$('jobQuote').value},
     mode:state.embOn?'emb':(state.eng.on?'engrave':(state.wovenOn?'woven':'print')),
     embStyle:state.embStyle,
-    woven:{border:state.woven.border,color:state.woven.color},
+    edge:{style:state.edge.style,color:state.edge.color,w:state.edge.w},
     eng:{cat:state.eng.cat,name:state.eng.name,override:state.eng.override,engC:state.eng.engC,invert:state.eng.invert},
     blank:{shape:state.blank.shape,border:state.blank.border},
     presetId:state.presetId,shape:state.shape,offset:state.offset,radius:state.radius,
@@ -3314,10 +3746,12 @@ function restoreDesign(d){
       $('blankBorder').value=String(state.blank.border);$('blankBorderVal').textContent=state.blank.border.toFixed(3)+'"';}
     /* mode + material (v0.10: woven + embStyle restored BEFORE the mode click
        so the mode UI renders with the right values) */
-    if(d.woven){
-      state.woven.border=d.woven.border!=null?d.woven.border:0.11;
-      state.woven.color=d.woven.color||'#1A1A1A';
+    if(d.edge){
+      state.edge={style:d.edge.style||'none',color:d.edge.color||'#1A1A1A',w:d.edge.w!=null?d.edge.w:0.11};
+    }else if(d.woven){ /* pre-v0.12 saves */
+      state.edge={style:'merrow',color:d.woven.color||'#1A1A1A',w:d.woven.border!=null?d.woven.border:0.11};
     }
+    syncEdgeSeg();renderEdgeUI();
     state.embStyle=d.embStyle==='puff'?'puff':'flat';
     $('embStyleSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.es===state.embStyle));
     $('embPuffNote').hidden=state.embStyle!=='puff';
@@ -3374,7 +3808,7 @@ function restoreDesign(d){
       img.onload=()=>{
         const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
         c.getContext('2d').drawImage(img,0,0);
-        state.assets[id]={canvas:c,name:rec.name,dataURL:rec.dataURL,vector:!!rec.vector};
+        state.assets[id]={canvas:c,name:rec.name,dataURL:rec.dataURL,vector:!!rec.vector,svgText:rec.sv,vb:rec.vb};
         if(--left===0)done();
       };
       img.onerror=()=>{if(--left===0)done();};
@@ -3417,10 +3851,11 @@ renderDesigns();
 function loadDefaultLogo(){
   fetch('assets/mayhem-logo.svg').then(r=>{if(!r.ok)throw new Error('404');return r.blob();}).then(b=>{
     const f=new File([b],'mayhem-logo.svg',{type:'image/svg+xml'});
-    loadArtFile(f,(canvas)=>{
+    loadArtFile(f,(canvas,isSvg,meta)=>{
       if(state.objects.length)return; /* user already added something */
       const id=assetPut(canvas,'mayhem-logo.svg');
       state.assets[id].vector=true;
+      if(meta){state.assets[id].svgText=meta.svgText;state.assets[id].vb=meta.vb;}
       state.objects.push({id:newId(),type:'image',assetId:id,name:'mayhem-logo.svg',xc:0,yc:0,w:3,rot:0,placeholder:true});
       objChanged();
     });
@@ -3439,6 +3874,24 @@ try{
     if(eb)eb.onclick();
   }
 }catch(e){}
+
+/* ---------- COLLAPSIBLE PANELS (v0.12) — click a header; PRICE starts closed ---------- */
+(function initCollapse(){
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem('plCollapse')||'{}');}catch(e){}
+  document.querySelectorAll('.col-left>.panel').forEach(p=>{
+    const h=p.querySelector(':scope>h3');
+    if(!h)return;
+    const key=h.textContent.trim();
+    const def=(p.id==='pricePanel'); /* PRICE defaults closed */
+    if(key in saved ? saved[key] : def)p.classList.add('closed');
+    h.addEventListener('click',()=>{
+      p.classList.toggle('closed');
+      saved[key]=p.classList.contains('closed');
+      try{localStorage.setItem('plCollapse',JSON.stringify(saved));}catch(err){}
+    });
+  });
+})();
 
 refresh();
 </script>
