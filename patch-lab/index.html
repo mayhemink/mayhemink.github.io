@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Patch Lab v0.12.2 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
+<title>Mayhem Patch Lab v0.12.3 — Patch Designer / Cut Lines / Hat Mockups / Gang Sheets / Engrave / Embroidery / Woven / Pricing</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -162,7 +162,7 @@
   <div class="head-inner">
     <div>
       <p class="eyebrow">Mayhem Ink — Patch Division</p>
-      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.12.2</span></h1>
+      <h1>Patch <span class="x">Lab</span> <span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v0.12.3</span></h1>
       <p class="head-sub">Design the patch, auto-generate the cut line, mock it on a hat, gang a full run onto one sheet, export production files for the eufyMake E1 (UV print) and xTool P3 (laser cut).</p>
     </div>
     <div class="machine-badge" id="statusBadge">NO ART LOADED</div>
@@ -1717,7 +1717,7 @@ function remapSvgColors(text,map){
   }
   return text;
 }
-/* v0.12.2: make an uploaded SVG legal to NEST inside our spec sheet.
+/* v0.12.3: make an uploaded SVG legal to NEST inside our spec sheet.
    Illustrator/Corel emit <?xml?> + <!DOCTYPE ...> + comments, all of which are
    fatal ("StartTag: invalid element name") once embedded. Also namespaces every
    id so multiple layers can't collide on gradients/clipPaths/filters. */
@@ -1753,10 +1753,14 @@ function buildWovenVectorSvg(){
   const pms=artPantones();
   const M=0.6;
   const bpName=(nearestPMS(e.color)||{}).name||'';
-  /* v0.12.2: size the annotation column to its longest line (~0.105in per char at 0.21) */
+  /* v0.12.3: size the annotation column to its longest line (~0.105in per char at 0.21) */
   const annW=Math.max(4.4,Math.min(7.5,('MERROW BORDER — '+bpName+' ('+e.color+')').length*0.108));
-  const W=M+cw+0.9+annW+M, H=Math.max(ch+2*M+1.2, 2.2+(2+pms.length)*0.62+1.2);
-  const px=M, py=Math.max(M+0.6,(H-ch)/2);
+  /* v0.12.3: lay the sheet out from the TOP so the swatch column can never
+     run off the bottom — height is driven by whichever column is taller */
+  const topY=1.15;
+  const annBottom=topY+0.75+(1+pms.length)*0.62+0.3;
+  const W=M+cw+0.9+annW+M, H=Math.max(topY+ch, annBottom)+0.75;
+  const px=M, py=topY;
   const k=state.cut.art.w/state.artBox.w;
   let art='',uidN=0;
   for(const o of state.objects){
@@ -1782,7 +1786,7 @@ function buildWovenVectorSvg(){
   let mx=-1e9,myy=0;
   for(const poly of state.cut.polys)for(const p of poly)if(p[0]>mx){mx=p[0];myy=p[1];}
   const cx1=px+mx-e.w/2, cy1=py+myy;
-  const ax=px+cw+0.9, ay=py+Math.min(ch*0.3,1.0);
+  const ax=px+cw+0.9, ay=topY+Math.min(ch*0.35,0.9);
   /* escape user-supplied text — "Smith & Sons" would otherwise break the XML */
   const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const T=(x2,y2,sz,txt,bold)=>'<text x="'+x2.toFixed(3)+'" y="'+y2.toFixed(3)+'" font-family="Arial,Helvetica,sans-serif" font-size="'+sz+'" '+(bold?'font-weight="bold" ':'')+'fill="#111">'+esc(txt)+'</text>\n';
