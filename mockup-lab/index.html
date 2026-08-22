@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.26 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.27 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -539,6 +539,13 @@
   /* v8.16 cartel sheet tab */
   #cartelTab{position:fixed;left:14px;bottom:14px;z-index:60;background:var(--surface2);border:1px solid var(--line2);border-radius:4px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.05em;padding:8px 11px;}
   #cartelTab:hover{border-color:var(--accent);color:var(--accent);}
+  /* v8.27 Printavo handoff note — what got saved + the prompt to paste */
+  #pvNote{margin-top:9px;border:1px solid var(--line2);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;
+    background:var(--surface2);padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.65;color:var(--muted);}
+  #pvNote b{color:var(--ink,#e8eaec);font-weight:700;}
+  #pvNote .pv-prompt{display:block;margin-top:7px;padding:7px 9px;background:var(--bg,#0e0f10);border:1px solid var(--line2);
+    border-radius:3px;color:var(--accent);user-select:all;word-break:break-word;}
+  #pvNote .pv-bad{color:#E05252;}
   /* 💡 suggestion box (v8.19) — sends quirks/ideas to the ops worker → Kolton's morning email */
   #sgTab{position:fixed;right:14px;bottom:14px;z-index:70;background:var(--surface2);border:1px solid var(--line2);border-radius:4px;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.05em;padding:8px 11px;}
   #sgTab:hover{border-color:var(--accent);color:var(--accent);}
@@ -786,6 +793,12 @@
       <div class="btnrow" style="margin-top:8px;">
         <button class="btn ghost sm" id="dlCleanZip">⬇ CLEAN MOCKUPS ZIP — JUST LOGOS ON SHIRTS, NO BRANDING</button>
       </div>
+      <!-- v8.27 PRINTAVO HANDOFF — one crop per imprint location per colorway,
+           downloaded together with the shop sheet, then Claude files them. -->
+      <div class="btnrow" id="pvRow" style="margin-top:12px;">
+        <button class="btn ghost sm" id="dlPrintavo">📎 PRINTAVO HANDOFF — SAVE THE FILES + COPY THE PROMPT</button>
+      </div>
+      <div class="pv-note" id="pvNote" hidden></div>
       <div class="mrow" id="manifestRow"></div>
       <div class="btnrow" id="boardCtl" style="margin-top:12px;align-items:center;">
         <select id="boardMode" style="width:auto;">
@@ -4266,6 +4279,172 @@ function cleanMockFor(item,ret){
   if(ret)return pg;
   downloadCanvas(pg,'clean-'+slug(item.styleKey)+'-'+slug(item.colorName)+'.png');
 }
+/* ============ v8.27 PRINTAVO HANDOFF ============
+   Printavo hangs mockups off an IMPRINT (one per print location), not off the
+   job — so this exports ONE CROP PER LOCATION PER COLORWAY: the real mock,
+   cropped tight around that print with enough shirt around it to read as
+   placement. Sleeves keep the flat swatch tile (hard rule — we never fake a
+   print onto a sleeve photo), which is already a per-location image.
+   Everything lands in one ZIP with a manifest so the Printavo side never has
+   to guess what a file is; Claude reads the manifest, matches each entry to a
+   Printavo imprint, and files it. Clean-mock styling: no big watermark, just
+   the corner mark (same Kolton-approved exception the clean ZIP uses). */
+function pvTitleCase(s){
+  return String(s||'').toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase());
+}
+/* the print locations this job actually has art for, in Printavo's language */
+function pvLocations(){
+  const out=[];
+  ['front','back'].forEach(function(side){
+    if(!artFor(side))return;
+    out.push({kind:side,loc:state.loc[side],
+      label:pvTitleCase(locLabel(side)),
+      widthIn:locWidth(side)});
+  });
+  sleevesWithArt().forEach(function(k){
+    const d=sleeveDims(k);
+    out.push({kind:'slv',slv:k,label:k==='L'?'Left Sleeve':'Right Sleeve',
+      widthIn:d?+d.w.toFixed(2):(sleeveObj(k).widthIn||3)});
+  });
+  return out;
+}
+function pvInkNames(spec,dark){
+  if(isDTF())return ['DTF full color'];
+  const list=spec.kind==='slv'?sleeveEnabled(spec.slv,dark):enabledAssignSide(spec.kind,dark);
+  const names=list.map(function(a){
+    const i=spec.kind==='slv'?((dark&&a.darkIdx!=null)?a.darkIdx:a.idx):inkIdxFor(a,dark,spec.kind);
+    const p=PMS[i],st=STD_INKS[p[0]];
+    return st?(st[0]+' (PMS '+p[0]+')'):('PMS '+p[0]);   /* no "PMS 654 (PMS 654)" */
+  });
+  if(dark&&state.autoUnderbase)names.push('White underbase');
+  return names;
+}
+/* the mock, cropped around ONE print, with context margin */
+function renderImprintCrop(item,spec,maxPx){
+  const g=garmentIndex().find(x=>x.styleKey===item.styleKey&&slug(x.colorName)===slug(item.colorName));
+  if(!g)return null;
+  const dark=itemUsesDark(item);
+  if(spec.kind==='slv'){
+    const photo=g.front||g.back;
+    if(!photo||!photo.canvas)return null;
+    return renderSleeveTile(spec.slv,shirtTileColor(photo),dark,(maxPx||900),true);
+  }
+  const photo=spec.kind==='front'?g.front:g.back;
+  const art=artFor(spec.kind);
+  if(!photo||!photo.canvas||!art)return null;
+  const pl=computePlacement(photo,spec.kind,spec.loc);
+  const cal=smartizeCalib(CALIB[photo.styleKey][spec.kind],photo,spec.kind);
+  if(!pl||!cal)return null;
+  const aw=pl.wpx,ah=pl.wpx*(art.height/art.width);
+  /* CONTEXT: a 3.5" left chest cropped tight is just a wall of fabric — you
+     can't tell it's a chest print. The window is therefore never smaller than
+     PV_CROP_MIN_IN inches, which on a front pulls the collar and shoulder in
+     and makes the placement read instantly. Big prints already exceed it. */
+  const PV_CROP_MIN_IN=17;
+  let sq=Math.max(Math.max(aw,ah)*2.2,PV_CROP_MIN_IN*cal.ppi);
+  sq=Math.min(sq,Math.min(photo.canvas.width,photo.canvas.height));
+  let x0=pl.anchorX-sq/2, y0=pl.topY+ah/2-sq/2;
+  x0=Math.max(0,Math.min(x0,photo.canvas.width-sq));
+  y0=Math.max(0,Math.min(y0,photo.canvas.height-sq));
+  /* SHARPNESS: don't crop a bitmap — recomposite at the OUTPUT scale so the
+     art is drawn from its 1600px source straight to final pixels. The garment
+     photo can't gain detail, but the print is what anyone zooms in on. */
+  const outW=maxPx||900,k=outW/sq;
+  const o=document.createElement('canvas');o.width=outW;o.height=outW;
+  const c=o.getContext('2d');c.imageSmoothingQuality='high';
+  c.fillStyle='#FFFFFF';c.fillRect(0,0,outW,outW);
+  c.drawImage(photo.canvas,x0,y0,sq,sq,0,0,outW,outW);
+  const isDk=effectiveDark(photo,regionIsDark(photo,pl.anchorX-aw/2,pl.topY,aw,ah));
+  const drawArt=recoloredArtFor(spec.kind,isDk)||art;
+  c.save();
+  c.translate((pl.anchorX-x0)*k,(pl.topY-y0+ah/2)*k);
+  c.rotate(pl.rot*Math.PI/180);
+  c.globalAlpha=0.97;
+  c.drawImage(drawArt,-aw*k/2,-ah*k/2,aw*k,ah*k);
+  c.restore();
+  if(state.fabricBlend){
+    c.save();c.globalCompositeOperation='multiply';
+    c.drawImage(shadingOverlay(photo.canvas,0.30),x0,y0,sq,sq,0,0,outW,outW);c.restore();
+  }
+  c.fillStyle='rgba(120,126,131,0.55)';
+  c.font='700 '+Math.max(9,Math.round(outW*0.018))+'px "JetBrains Mono", monospace';
+  c.textAlign='right';c.fillText('MAYHEM INK',outW-12,outW-11);c.textAlign='left';
+  return o;
+}
+/* the whole handoff: crops + shop sheet + manifest, in one ZIP */
+async function buildPrintavoHandoff(){
+  const items=activeSet().items;
+  if(!items.length)return {err:'Add shirts to the job first (step 3).'};
+  const locs=pvLocations();
+  if(!locs.length)return {err:'Load some art first — there are no print locations to hand off.'};
+  await ensureSetPhotos();
+  const quote=($('jobQuote').value||'').trim();
+  const customer=($('jobCustomer').value||'').trim();
+  if(!customer&&!quote)return {err:'Put the customer name or the quote number in step 1 first.'};
+  const tag=(quote||slug(customer)).replace(/[^0-9A-Za-z-]+/g,'')||'job';
+  const toU8=cv=>new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/png'));
+  const entries=[],files=[];
+  for(const spec of locs){
+    for(const it of items){
+      const cv=renderImprintCrop(it,spec,900);
+      if(!cv)continue;
+      const name='printavo-'+tag+'-'+slug(spec.label)+'-'+slug(it.styleKey)+'-'+slug(it.colorName)+'.png';
+      entries.push({name:name,data:await toU8(cv)});
+      files.push({file:name,kind:'imprintMockup',imprint:spec.label,
+        widthIn:spec.widthIn,styleKey:it.styleKey,colorName:it.colorName,
+        dark:itemUsesDark(it),inks:pvInkNames(spec,itemUsesDark(it))});
+    }
+  }
+  const sum=document.createElement('canvas');renderSummaryTo(sum);
+  const sheet='printavo-'+tag+'-shop-print-sheet.png';
+  entries.push({name:sheet,data:await toU8(sum)});
+  files.push({file:sheet,kind:'productionFile',note:'shop print sheet — one tile per press setup'});
+  /* the ink + screen summary that goes into the invoice production note */
+  const lines=[];
+  locs.forEach(function(spec){
+    const lite=pvInkNames(spec,false),drk=pvInkNames(spec,true);
+    const same=lite.join('|')===drk.join('|');
+    lines.push(spec.label+' — '+spec.widthIn+'" wide · '+lite.join(', ')
+      +(same?'':'  |  on darks: '+drk.join(', ')));
+  });
+  const manifest={v:1,app:'mockup-lab',when:new Date().toISOString(),
+    customer:customer,quote:quote,
+    locations:locs.map(function(s){return {imprint:s.label,widthIn:s.widthIn};}),
+    productionNote:lines,
+    printMethod:isDTF()?'DTF':'screen',
+    underbase:!!state.autoUnderbase,
+    files:files};
+  entries.push({name:'printavo-'+tag+'-manifest.json',
+    data:new TextEncoder().encode(JSON.stringify(manifest,null,2))});
+  return {blob:zipStore(entries),name:'printavo-handoff-'+tag+'.zip',
+    tag:tag,quote:quote,customer:customer,count:files.length,manifest:manifest};
+}
+$('dlPrintavo').onclick=async()=>{
+  const b=$('dlPrintavo'),orig=b.textContent,note=$('pvNote');
+  b.disabled=true;b.textContent='BUILDING…';
+  try{
+    const r=await buildPrintavoHandoff();
+    if(r.err){
+      note.hidden=false;note.innerHTML='<span class="pv-bad">'+r.err+'</span>';
+      b.textContent=orig;b.disabled=false;return;
+    }
+    const a=document.createElement('a');a.download=r.name;
+    a.href=URL.createObjectURL(r.blob);a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),8000);
+    const prompt='push the mockup lab handoff for '+(r.quote?('quote '+r.quote):r.customer);
+    try{await navigator.clipboard.writeText(prompt);}catch(e){}
+    note.hidden=false;
+    note.innerHTML='<b>Saved '+r.name+'</b> — '+r.count+' file'+(r.count===1?'':'s')
+      +' (one crop per location per shirt, plus the shop sheet).<br>'
+      +'Prompt copied — paste it to Claude:'
+      +'<span class="pv-prompt">'+prompt+'</span>';
+    b.textContent='✓ SAVED — PROMPT COPIED';
+    setTimeout(()=>{b.textContent=orig;b.disabled=false;},2600);
+  }catch(e){
+    b.textContent=orig;b.disabled=false;
+    note.hidden=false;note.innerHTML='<span class="pv-bad">Could not build the handoff — try again.</span>';
+  }
+};
 $('dlCleanZip').onclick=async()=>{
   const items=activeSet().items;
   if(!items.length){alert('Add shirts to the job first (step 3).');return;}
