@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.27.1 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.28 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -4396,15 +4396,63 @@ async function withSetAsync(i,fn){
     recolorCache.clear();
   }
 }
-/* the whole handoff: one clean mock per shirt per GROUP, that group's shop
-   sheet, and a manifest, all in one ZIP.
-   v8.27.1 (Kolton, 8/22): per-location crops are OUT. A Mockup Lab SET maps
-   1:1 onto a Printavo LINE ITEM GROUP, and the artifact the shop already uses
-   is the whole clean mock — the full garment with every location on it, the
-   way Joe has been uploading them by hand. Printavo has no group-level mockup
-   mutation, so these land on the group's FIRST imprint (Joe's own precedent).
-   renderImprintCrop is kept but unused — per-location / per-line-item mockups
-   are still on the table and it already works. */
+/* v8.28: what the shop actually needs written down is the EXCEPTIONS, not a
+   dump of every ink — the print sheet already carries the full breakdown.
+   This returns only the things a printer would otherwise get wrong: an ink
+   that runs in one setup but not the other, an ink that swaps colour between
+   setups, underbase turned off, DTF, or a print over the max area. Empty
+   array = nothing unusual = the handoff leaves the production note alone. */
+function pvExceptions(locs){
+  const out=[];
+  if(isDTF()){out.push('DTF full colour transfer — no screens, no separations.');return out;}
+  if(!state.autoUnderbase)out.push('NO UNDERBASE (soft hand) — darks print straight to garment.');
+  locs.forEach(function(spec){
+    const isSlv=spec.kind==='slv';
+    const lightOn={},darkOn={},swaps=[];
+    const nameOf=function(i){const p=PMS[i],st=STD_INKS[p[0]];return st?(st[0]+' (PMS '+p[0]+')'):('PMS '+p[0]);};
+    const list=isSlv?(sleeveObj(spec.slv).assign||[]):state.inkAssign;
+    list.forEach(function(a,ai){
+      if(!isSlv&&!inkOnSide(ai,spec.kind))return;
+      const li=isSlv?a.idx:inkIdxFor(a,false,spec.kind);
+      const di=isSlv?((a.darkIdx!=null)?a.darkIdx:a.idx):inkIdxFor(a,true,spec.kind);
+      if(!inkIsOff(a,false))lightOn[li]=nameOf(li);
+      if(!inkIsOff(a,true))darkOn[di]=nameOf(di);
+      if(!inkIsOff(a,false)&&!inkIsOff(a,true)&&li!==di)
+        swaps.push(nameOf(li)+' \u2192 '+nameOf(di)+' on darks');
+    });
+    Object.keys(lightOn).forEach(function(i){
+      if(!darkOn[i])out.push(spec.label+': '+lightOn[i]+' prints on LIGHT shirts only.');
+    });
+    Object.keys(darkOn).forEach(function(i){
+      if(!lightOn[i])out.push(spec.label+': '+darkOn[i]+' prints on DARK shirts only.');
+    });
+    swaps.forEach(function(t){out.push(spec.label+': '+t+'.');});
+    /* oversize warning — the shop should know before they burn the screen */
+    const art=isSlv?sleeveObj(spec.slv).art:artFor(spec.kind);
+    if(art){
+      const h=spec.widthIn*art.height/art.width;
+      if(isSlv){
+        const d=sleeveDims(spec.slv);
+        if(d&&d.over)out.push(spec.label+': print is BIGGER than the sleeve area \u2014 check before burning.');
+      } else if(spec.widthIn>12.5||h>17){
+        out.push(spec.label+': '+spec.widthIn+'" \u00d7 '+(Math.round(h*10)/10)+'" is over the 12.5"\u00d717" max.');
+      }
+    }
+  });
+  return out;
+}
+/* the whole handoff, v8.28 (Kolton, 8/22, after the 6441 test):
+   - the group's FIRST imprint gets the full APPROVAL PAGE per colorway — the
+     complete sheet with swatches and screen count, same file the customer
+     signs off on. That is "the whole file" the shop is used to seeing.
+   - EVERY OTHER imprint gets its own per-location CROP per colorway, so no
+     imprint sits empty and each one shows the print it actually is.
+   - the shop print sheet goes on as a production file.
+   - the production note gets EXCEPTIONS ONLY (see pvExceptions) — the guys
+     read the print details off the sheet, not off a wall of text.
+   Crops are emitted for every location including the first; the skill picks
+   which imprint gets what, since only Printavo knows its own imprint order.
+   JPEG throughout — these are photos of shirts, and it keeps the ZIP small. */
 async function buildPrintavoHandoff(){
   const quote=($('jobQuote').value||'').trim();
   const customer=($('jobCustomer').value||'').trim();
@@ -4413,53 +4461,59 @@ async function buildPrintavoHandoff(){
   SETS.forEach(function(s,i){if(s.items&&s.items.length)usable.push(i);});
   if(!usable.length)return {err:'Add shirts to the job first (step 3).'};
   const tag=(quote||slug(customer)).replace(/[^0-9A-Za-z-]+/g,'')||'job';
-  const toU8=cv=>new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/png'));
   const entries=[],groups=[];
-  let nFiles=0,skipped=[];
+  let nFiles=0;const skipped=[];
   for(const i of usable){
     await withSetAsync(i,async function(set){
       const locs=pvLocations();
       if(!locs.length){skipped.push(set.name);return;}
       await ensureSetPhotos();
       const gslug=slug(set.name)||('group-'+(i+1));
-      const files=[];
+      const approvals=[],crops=[];
       for(const it of set.items){
-        const cv=cleanMockFor(it,true);
-        if(!cv)continue;
-        const name='printavo-'+tag+'-'+gslug+'-'+slug(it.styleKey)+'-'+slug(it.colorName)+'.png';
-        entries.push({name:name,data:await toU8(cv)});
-        files.push({file:name,kind:'groupMockup',group:set.name,
-          styleKey:it.styleKey,colorName:it.colorName,dark:itemUsesDark(it)});
-        nFiles++;
+        const csl=slug(it.styleKey)+'-'+slug(it.colorName);
+        const pg=approvalFor(it,true);
+        if(pg){
+          const name='printavo-'+tag+'-'+gslug+'-approval-'+csl+'.jpg';
+          entries.push({name:name,data:await canvasJpeg(pg)});
+          approvals.push({file:name,kind:'groupApproval',group:set.name,
+            styleKey:it.styleKey,colorName:it.colorName,dark:itemUsesDark(it)});
+          nFiles++;
+        }
+        for(const spec of locs){
+          const cv=renderImprintCrop(it,spec,900);
+          if(!cv)continue;
+          const name='printavo-'+tag+'-'+gslug+'-'+slug(spec.label)+'-'+csl+'.jpg';
+          entries.push({name:name,data:await canvasJpeg(cv)});
+          crops.push({file:name,kind:'imprintMockup',imprint:spec.label,widthIn:spec.widthIn,
+            group:set.name,styleKey:it.styleKey,colorName:it.colorName,dark:itemUsesDark(it)});
+          nFiles++;
+        }
       }
       const sum=document.createElement('canvas');renderSummaryTo(sum);
-      const sheet='printavo-'+tag+'-'+gslug+'-shop-print-sheet.png';
-      entries.push({name:sheet,data:await toU8(sum)});
+      const sheet='printavo-'+tag+'-'+gslug+'-shop-print-sheet.jpg';
+      entries.push({name:sheet,data:await canvasJpeg(sum)});
       nFiles++;
-      const note=locs.map(function(spec){
-        const lite=pvInkNames(spec,false),drk=pvInkNames(spec,true);
-        const same=lite.join('|')===drk.join('|');
-        return spec.label+' — '+spec.widthIn+'" wide · '+lite.join(', ')
-          +(same?'':'  |  on darks: '+drk.join(', '));
-      });
       groups.push({name:set.name,
         locations:locs.map(function(s2){return {imprint:s2.label,widthIn:s2.widthIn};}),
-        productionNote:note,
         printMethod:isDTF()?'DTF':'screen',
-        mockups:files,
-        printSheet:{file:sheet,kind:'productionFile',note:'shop print sheet — one tile per press setup'}});
+        firstImprint:approvals,
+        otherImprints:crops,
+        printSheet:{file:sheet,kind:'productionFile',note:'shop print sheet — one tile per press setup'},
+        exceptions:pvExceptions(locs)});
     });
   }
   if(!groups.length)return {err:'Load some art first — there are no print locations to hand off.'};
-  const manifest={v:2,app:'mockup-lab',when:new Date().toISOString(),
+  const nExc=groups.reduce(function(t,g){return t+g.exceptions.length;},0);
+  const manifest={v:3,app:'mockup-lab',when:new Date().toISOString(),
     customer:customer,quote:quote,underbase:!!state.autoUnderbase,
-    mockupTarget:'first imprint of each line item group',
+    plan:'approval pages on the FIRST imprint of each group; each other imprint gets its own location crop; print sheet as a production file; production note gets the exceptions only (skip it entirely when there are none)',
     groups:groups};
   entries.push({name:'printavo-'+tag+'-manifest.json',
     data:new TextEncoder().encode(JSON.stringify(manifest,null,2))});
   return {blob:zipStore(entries),name:'printavo-handoff-'+tag+'.zip',
     tag:tag,quote:quote,customer:customer,count:nFiles,groups:groups.length,
-    skipped:skipped,manifest:manifest};
+    exceptions:nExc,skipped:skipped,manifest:manifest};
 }
 $('dlPrintavo').onclick=async()=>{
   const b=$('dlPrintavo'),orig=b.textContent,note=$('pvNote');
@@ -4478,7 +4532,9 @@ $('dlPrintavo').onclick=async()=>{
     note.hidden=false;
     note.innerHTML='<b>Saved '+r.name+'</b> — '+r.count+' file'+(r.count===1?'':'s')
       +' across '+r.groups+' group'+(r.groups===1?'':'s')
-      +' (a clean mock per shirt, plus each group’s shop sheet).'
+      +' (approval page per shirt, a crop per location, plus the shop sheet).'
+      +(r.exceptions?'<br><b>'+r.exceptions+' thing'+(r.exceptions===1?'':'s')
+        +' flagged for the production note.</b>':'<br>Nothing unusual — the production note stays untouched.')
       +(r.skipped&&r.skipped.length?'<br><span class="pv-bad">Skipped '+r.skipped.join(', ')
         +' — no art loaded.</span>':'')
       +'<br>Prompt copied — paste it to Claude:'
