@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.14.1 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.25 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -1445,12 +1445,26 @@ function activePhoto(){
   const gp=garmentPhotos();
   return state.side==='front'?(gp.front||gp.back):(gp.back||gp.front);
 }
-function renderMock(photo,targetCanvas,side,loc,overlay){
+/* v8.25: how far a mock may be supersampled before it eats memory — the
+   garment photo is only ~50 px per inch, so a 3.5" left chest lands on ~175
+   photo pixels and the ART (a 1600px source) gets thrown away long before the
+   page ever shows it. Rendering the mock 2x and letting the page downscale is
+   the same trick the sleeve tiles use at 170 ppi. Capped at ~9 MP a canvas. */
+function mockSSCap(photo){
+  const px=photo.canvas.width*photo.canvas.height;
+  return px>0?Math.max(1,Math.sqrt(9e6/px)):1;
+}
+function renderMock(photo,targetCanvas,side,loc,overlay,ss){
   if(!photo||!photo.canvas)return targetCanvas;
-  const W=photo.canvas.width,H=photo.canvas.height;
+  /* the calibration overlay draws in raw photo pixels — never supersample it */
+  ss=overlay?1:Math.max(1,Math.min(ss||1,mockSSCap(photo)));
+  const W=Math.round(photo.canvas.width*ss),H=Math.round(photo.canvas.height*ss);
   targetCanvas.width=W;targetCanvas.height=H;
   const ctx=targetCanvas.getContext('2d');ctx.imageSmoothingQuality='high';   /* v8.23: big art → small print without the mush */
-  ctx.drawImage(photo.canvas,0,0);
+  ctx.drawImage(photo.canvas,0,0,W,H);
+  /* everything below stays in PHOTO coordinates — placement, regionIsDark and
+     the overlay all speak photo pixels, so the scale lives on the context. */
+  if(ss!==1)ctx.scale(ss,ss);
   const art=artFor(side);
   const pl=computePlacement(photo,side,loc);
   if(art&&pl&&state.calibStep<0){
@@ -2590,7 +2604,10 @@ function pdfFromJpegs(pages){
   objOff[2]=offset;pushS('2 0 obj\n<< /Type /Pages /Kids ['+kids+'] /Count '+N+' >>\nendobj\n');
   pages.forEach((pg,i)=>{
     const po=3+i*3,co=4+i*3,io=5+i*3;
-    const W=(pg.w*0.5).toFixed(2),H=(pg.h*0.5).toFixed(2);
+    /* v8.25: pages now come in at PGS x their layout size — divide it back out
+       so the PDF page stays the same physical size, just higher resolution */
+    const ps=0.5/(pg.scale||1);
+    const W=(pg.w*ps).toFixed(2),H=(pg.h*ps).toFixed(2);
     objOff[po]=offset;
     pushS(po+' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+W+' '+H+'] /Resources << /XObject << /Im'+i+' '+io+' 0 R >> >> /Contents '+co+' 0 R >>\nendobj\n');
     const cs='q '+W+' 0 0 '+H+' 0 0 cm /Im'+i+' Do Q';
@@ -3297,17 +3314,67 @@ function v7AfterRefresh(){
 const __v7refresh=refresh;refresh=function(){__v7refresh();v7AfterRefresh();};
 
 /* ---------- export helpers ---------- */
+/* v8.25 PAGE RENDER SCALE — the approval page and the shop print sheet are
+   still LAID OUT on a 1500x1080 grid (every coordinate in this file is that
+   grid) but rasterised PGS times larger. That is what finally gives the
+   front/back prints the resolution the sleeve tiles have had since v8.24:
+   a left chest stops being ~100 page pixels wide and becomes ~200.
+   Raise it and both the PNGs and the approval PDF get sharper; the PDF's
+   physical page size is unaffected (pdfFromJpegs divides PGS back out). */
+const PGS=2;
+/* v8.25 WATERMARK — the real Mayhem lockup instead of the word "MAYHEM INK",
+   tiled bigger and sparser so it reads as a mark rather than as noise.
+   WM_MUL is the ONE knob: the logo carries ~3x the ink of the old text at the
+   same alpha, so the alpha is normalised down and then taken 10% lighter on
+   top of that (Kolton, 8/22 — "a little too obnoxious"). Nudge WM_MUL alone. */
+const WM_MUL=0.58;
+const __wmTiles={};
+/* tinted silhouette of the logo, cached per colour+size. source-in paints the
+   watermark colour (alpha included) through the logo's own alpha channel. */
+function wmTile(color,tw){
+  const key=color+'@'+Math.round(tw);
+  if(__wmTiles[key])return __wmTiles[key];
+  if(!(LOGO&&LOGO.__ok&&LOGO.width))return null;
+  const th=Math.max(1,Math.round(tw*LOGO.height/LOGO.width));
+  const c=document.createElement('canvas');c.width=Math.max(1,Math.round(tw));c.height=th;
+  const g=c.getContext('2d');g.imageSmoothingQuality='high';
+  g.drawImage(LOGO,0,0,c.width,c.height);
+  g.globalCompositeOperation='source-in';
+  g.fillStyle=color;g.fillRect(0,0,c.width,c.height);
+  __wmTiles[key]=c;return c;
+}
+/* scale the alpha inside an rgba()/rgb() string */
+function wmFade(color,mul){
+  const m=/^rgba?\(([^)]+)\)$/i.exec(String(color).trim());
+  if(!m)return color;
+  const p=m[1].split(',').map(s=>s.trim());
+  const a=(p.length>3?parseFloat(p[3]):1)*mul;
+  return 'rgba('+p[0]+','+p[1]+','+p[2]+','+(Math.round(a*10000)/10000)+')';
+}
 function stampWatermark(ctx,x,y,w,h,color,size){
   ctx.save();
   ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
   ctx.translate(x+w/2,y+h/2);ctx.rotate(-Math.PI/7);
-  ctx.font='900 '+size+'px "Archivo Black", Arial Black, sans-serif';
-  ctx.fillStyle=color;ctx.textAlign='center';
-  const stepX=size*8.4,stepY=size*3.4;
-  let row=0;
-  for(let yy=-h;yy<h;yy+=stepY){
-    const off=(row++%2)?stepX/2:0;
-    for(let xx=-w;xx<w;xx+=stepX)ctx.fillText('MAYHEM INK',xx+off,yy);
+  const tw=size*7.5;
+  const tile=wmTile(wmFade(color,WM_MUL),tw);
+  if(tile){
+    const stepX=size*10.5,stepY=size*4.6;
+    const tS=tile.width,tH=tile.height;
+    let row=0;
+    for(let yy=-h;yy<h;yy+=stepY){
+      const off=(row++%2)?stepX/2:0;
+      for(let xx=-w;xx<w;xx+=stepX)ctx.drawImage(tile,xx+off-tS/2,yy-tH/2,tS,tH);
+    }
+  } else {
+    /* logo not loaded (offline / first paint) — old text mark, 10% lighter */
+    ctx.font='900 '+size+'px "Archivo Black", Arial Black, sans-serif';
+    ctx.fillStyle=wmFade(color,0.9);ctx.textAlign='center';
+    const stepX=size*8.4,stepY=size*3.4;
+    let row=0;
+    for(let yy=-h;yy<h;yy+=stepY){
+      const off=(row++%2)?stepX/2:0;
+      for(let xx=-w;xx<w;xx+=stepX)ctx.fillText('MAYHEM INK',xx+off,yy);
+    }
   }
   ctx.restore();
   ctx.textAlign='left';
@@ -3376,7 +3443,35 @@ function layoutInkChips(ctx,maxW,dark,ub,side){
     cells.push({x:cx,y:cy,w,...it});
     cx+=w;
   });
-  return {cells,rows:rows||1,rowH,box,f1,f2};
+  return {cells,rows:rows||1,rowH,box,f1,f2,b1:(box>24?13:10),b2:(box>24?28:23)};
+}
+/* v8.25: sleeve prints get REAL ink swatches on the approval page — the same
+   chip language as front/back, just sized down for the rail. Kolton, 8/22:
+   "the sleeve needs its own swatches even if they are small". Sleeve assigns
+   use the plain {idx,darkIdx} contract (no back* fields), so this never goes
+   through inkIdxFor — sleeveObj/slvOf stays the single sleeve path. */
+function layoutSleeveChips(ctx,maxW,k,dark){
+  const dtf=isDTF();
+  const ub=!dtf&&dark&&state.autoUnderbase;
+  const items=dtf?[dtfSwatch(dark,true)]:sleeveEnabled(k).map(a=>{
+    const i=(dark&&a.darkIdx!=null)?a.darkIdx:a.idx,p=PMS[i],st=STD_INKS[p[0]];
+    return {hex:p[1],
+      l1:st?(st[1]?'★ ':'')+st[0]:'PMS '+p[0],
+      l2:(st?'PMS '+p[0]+' · ':'')+p[2]+((i!==a.idx)?' · swap':'')};
+  });
+  if(!dtf&&ub)items.push({hex:'#FFFFFF',l1:'WHITE UNDERBASE',l2:'on dark shirts'});
+  const box=18,f1=10,f2=8.5,rowH=26,gap=10;
+  const cells=[];let cx=0,cy=0,rows=items.length?1:0;
+  items.forEach(it=>{
+    ctx.font='700 '+f1+'px "JetBrains Mono", monospace';const w1=ctx.measureText(it.l1).width;
+    ctx.font='500 '+f2+'px "JetBrains Mono", monospace';const w2=ctx.measureText(it.l2).width;
+    const w=box+7+Math.max(40,w1+6,w2+6)+gap;
+    if(cx>0&&cx+w>maxW){cx=0;cy+=rowH;rows++;}
+    cells.push({x:cx,y:cy,w,...it});
+    cx+=w;
+  });
+  return {cells,rows:rows||1,rowH,box,f1,f2,b1:9,b2:20,
+    width:cells.length?Math.max.apply(null,cells.map(c=>c.x+c.w-gap)):0};
 }
 function drawInkChipsL(ctx,x,y,lay){
   lay.cells.forEach(c=>{
@@ -3385,9 +3480,9 @@ function drawInkChipsL(ctx,x,y,lay){
     ctx.strokeStyle=c.dtf?'#4B9CD3':'#CFCFCB';ctx.lineWidth=c.dtf?2:1;
     ctx.strokeRect(x+c.x,y+c.y,lay.box,lay.box);
     ctx.fillStyle='#131517';ctx.font='700 '+lay.f1+'px "JetBrains Mono", monospace';
-    ctx.fillText(c.l1,x+c.x+lay.box+8,y+c.y+(lay.box>24?13:10));
+    ctx.fillText(c.l1,x+c.x+lay.box+8,y+c.y+lay.b1);
     ctx.fillStyle='#888';ctx.font='500 '+lay.f2+'px "JetBrains Mono", monospace';
-    ctx.fillText(c.l2,x+c.x+lay.box+8,y+c.y+(lay.box>24?28:23));
+    ctx.fillText(c.l2,x+c.x+lay.box+8,y+c.y+lay.b2);
   });
 }
 function locLabel(side){
@@ -3409,7 +3504,9 @@ function garmentBBox(cv){
   let d;
   try{d=cv.getContext('2d').getImageData(0,0,w,h).data;}catch(e){return {x:0,y:0,w,h};}
   let minX=w,minY=h,maxX=-1,maxY=-1;
-  const step=3;
+  /* v8.25: supersampled mocks are 2x the pixels — keep the sample count (and
+     the answer) the same as a native-size photo instead of 4x-ing the work */
+  const step=Math.max(3,Math.round(w/380));
   for(let y=0;y<h;y+=step){
     const row=y*w;
     for(let x=0;x<w;x+=step){
@@ -3432,8 +3529,13 @@ function approvalFor(item,ret){
   const g=garmentIndex().find(x=>x.styleKey===item.styleKey&&slug(x.colorName)===slug(item.colorName));
   if(!g)return;
   const W=1500,H=1080;
-  const pg=document.createElement('canvas');pg.width=W;pg.height=H;
+  /* v8.25: the page is DRAWN at 1500x1080 but RASTERISED at PGS x that, so the
+     front/back prints get the same real resolution the sleeve tiles get. Every
+     coordinate below is unchanged — the scale lives on the context, and
+     pdfFromJpegs divides it back out so the PDF page size never moves. */
+  const pg=document.createElement('canvas');pg.width=W*PGS;pg.height=H*PGS;
   const ctx=pg.getContext('2d');ctx.imageSmoothingQuality='high';
+  ctx.scale(PGS,PGS);
   drawPageHeader(ctx,W,'CUSTOMER APPROVAL MOCKUP');
   stampWatermark(ctx,0,150,W,H-220,'rgba(232,234,236,0.035)',30);
   /* v8.15: a side with no print stays OFF the approval page — the customer
@@ -3448,7 +3550,11 @@ function approvalFor(item,ret){
   /* v8.20: sleeve prints ride in a right-hand rail of flat swatch tiles */
   const __slvKs=sleevesWithArt();
   const railW=__slvKs.length?330:0;
-  const zoneW=W-100-railW;
+  /* v8.25: a real gutter between the shirt cards and the sleeve rail — before
+     this the two zones butted up against each other whenever the shirt cards
+     filled their space, which is the "funky spacing" Kolton flagged. */
+  const railGap=__slvKs.length?36:0;
+  const zoneW=W-100-railW-railGap;
   const cardW=sides.length===2?Math.min(690,(zoneW-40)/2):Math.min(900,zoneW),gap=40;
   const totalW=cardW*sides.length+gap*(sides.length-1);
   let x0=50+(zoneW-totalW)/2;
@@ -3459,7 +3565,7 @@ function approvalFor(item,ret){
     ctx.strokeStyle='#E2E2E0';ctx.lineWidth=2;
     ctx.beginPath();ctx.roundRect(x0,cardY,cardW,cardH,10);ctx.fill();ctx.stroke();
     const cv=document.createElement('canvas');
-    renderMock(photo,cv,side,state.loc[side],false);
+    renderMock(photo,cv,side,state.loc[side],false,PGS);   /* v8.25: crisp print art */
     const sc=screensFor(photo,side,state.loc[side]);
     if(!firstSc)firstSc=sc;
     totScr+=sc.total;
@@ -3481,27 +3587,46 @@ function approvalFor(item,ret){
     stampWatermark(ctx,x0,cardY,cardW,cardH,'rgba(19,21,23,0.0375)',24);
     x0+=cardW+gap;
   });
-  /* v8.20 sleeve rail — one tile per sleeve, garment-sampled background */
+  /* v8.20 sleeve rail — one tile per sleeve, garment-sampled background.
+     v8.25 (Kolton, 8/22): each sleeve now sits on its OWN white card in the
+     same language as the front/back panels — header label + real ink swatches
+     underneath instead of a run-on text line. The cards divide the same
+     cardY..cardY+cardH band the shirt cards use, so the rhythm across the page
+     is even instead of "funky". The tile's own caption bar is switched off
+     (cap=false) — the card header already says which sleeve and how wide. */
   if(__slvKs.length){
     const rx=W-50-railW;
     const __rgb=shirtTileColor(g.front||g.back);
     const __dk=itemUsesDark(item);
-    const tileMax=__slvKs.length===2?350:620;
-    let ry=cardY+10;
-    __slvKs.forEach(k=>{
+    const n=__slvKs.length,rgap=24;
+    const slotH=(cardH-rgap*(n-1))/n;
+    __slvKs.forEach((k,ki)=>{
       totScr+=sleeveScreens(k,__dk);
-      const t=renderSleeveTile(k,__rgb,__dk,tileMax*3,true);   /* v8.24: 3× internal, scaled down below */
-      if(!t)return;
-      const sc2=Math.min(1,railW/t.width,tileMax/t.height);
-      const tw=t.width*sc2,th=t.height*sc2;
-      ctx.drawImage(t,rx+(railW-tw)/2,ry,tw,th);
-      const names=isDTF()?['DTF full color']
-        :sleeveEnabled(k).map(a=>{const i=(__dk&&a.darkIdx!=null)?a.darkIdx:a.idx;return 'PMS '+PMS[i][0];});
-      if(__dk&&state.autoUnderbase&&!isDTF())names.push('White UB');
-      ctx.fillStyle='#98A0A6';ctx.font='500 11px "JetBrains Mono", monospace';ctx.textAlign='center';
-      ctx.fillText(names.join(' · '),rx+railW/2,ry+th+18,railW-8);
-      ctx.textAlign='left';
-      ry+=th+38;
+      const cy0=cardY+ki*(slotH+rgap);
+      ctx.fillStyle='#FFFFFF';
+      ctx.strokeStyle='#E2E2E0';ctx.lineWidth=2;
+      ctx.beginPath();ctx.roundRect(rx,cy0,railW,slotH,10);ctx.fill();ctx.stroke();
+      const lay=layoutSleeveChips(ctx,railW-36,k,__dk);
+      const chipH=lay.cells.length?lay.rows*lay.rowH:0;
+      ctx.fillStyle='#4B9CD3';ctx.font='700 13px "JetBrains Mono", monospace';
+      ctx.fillText(SLV_LABEL[k],rx+18,cy0+26);
+      if(!state.exportNoSize){
+        const __d=sleeveDims(k);
+        ctx.fillStyle='#666';ctx.font='500 12px "JetBrains Mono", monospace';
+        ctx.textAlign='right';
+        ctx.fillText((+__d.w.toFixed(2))+'" wide',rx+railW-18,cy0+26);
+        ctx.textAlign='left';
+      }
+      const zTop=cy0+42,zBot=cy0+slotH-18-chipH;
+      const boxW=railW-40,boxH=Math.max(40,zBot-zTop);
+      const t=renderSleeveTile(k,__rgb,__dk,Math.round(Math.max(boxW,boxH)*3),false);
+      if(t){
+        const sc2=Math.min(1,boxW/t.width,boxH/t.height);
+        const tw=t.width*sc2,th=t.height*sc2;
+        ctx.drawImage(t,rx+(railW-tw)/2,zTop+(boxH-th)/2,tw,th);
+      }
+      if(lay.cells.length)drawInkChipsL(ctx,rx+18,cy0+slotH-12-chipH,lay);
+      stampWatermark(ctx,rx,cy0,railW,slotH,'rgba(19,21,23,0.0375)',24);
     });
   }
   const s=STYLES[item.styleKey]||{name:item.styleKey,sub:''};
@@ -3559,9 +3684,39 @@ function shirtTileColor(photo){
   photo.__tileRGB=n?[r/n,g/n,b/n]:[120,124,128];
   return photo.__tileRGB;
 }
+/* v8.25: find the biggest shared px-per-inch that still fits every print box
+   inside the art zone (max 3 shelf rows), so all boxes stay to ONE scale.
+   Binary search — the greedy row-wrap is monotonic in ppi. */
+function packPrintBoxes(prints,zoneW,zoneH,labH,padPx,gapPx){
+  function tryPpi(ppi){
+    const rows=[];let cur=null;
+    for(let i=0;i<prints.length;i++){
+      const p=prints[i];
+      const bw=p.wIn*ppi+padPx*2,bh=p.hIn*ppi+padPx+labH;
+      if(bw>zoneW||bh>zoneH)return null;
+      if(!cur){cur={items:[],w:0,h:0};}
+      else if(cur.w+gapPx+bw>zoneW){rows.push(cur);cur={items:[],w:0,h:0};}
+      cur.items.push({p:p,w:bw,h:bh});
+      cur.w+=(cur.items.length>1?gapPx:0)+bw;
+      if(bh>cur.h)cur.h=bh;
+    }
+    if(cur&&cur.items.length)rows.push(cur);
+    if(rows.length>3)return null;
+    const totalH=rows.reduce(function(t,r){return t+r.h;},0)+(rows.length-1)*gapPx;
+    if(totalH>zoneH)return null;
+    return {ppi:ppi,rows:rows,totalH:totalH};
+  }
+  let lo=0.5,hi=400,best=null;
+  for(let i=0;i<30;i++){
+    const m=(lo+hi)/2,r=tryPpi(m);
+    if(r){best=r;lo=m;}else hi=m;
+  }
+  return best||{ppi:0.5,rows:[],totalH:0};
+}
 function renderSummaryTo(pg){
-  const W=1500,H=1080;pg.width=W;pg.height=H;
+  const W=1500,H=1080;pg.width=W*PGS;pg.height=H*PGS;   /* v8.25: rasterise 2x, lay out 1x */
   const ctx=pg.getContext('2d');ctx.imageSmoothingQuality='high';
+  ctx.scale(PGS,PGS);
   drawPageHeader(ctx,W,isDTF()?'PRODUCTION PRINT SUMMARY — DTF FULL COLOR':'PRODUCTION PRINT SUMMARY — ONE TILE PER PRESS SETUP');
   const items=activeSet().items.map(function(it){return {it:it,g:itemGarment(it)};})
     .filter(function(x){return x.g&&(x.g.front||x.g.back);});
@@ -3646,30 +3801,47 @@ function renderSummaryTo(pg){
         ctx.beginPath();ctx.moveTo(tx+si*stW,ty);ctx.lineTo(tx+si*stW,ty+tileH);ctx.stroke();
       }
     });
-    /* the art — once per side, BIG, spanning ACROSS every stripe in this
-       setup's inks (front stacked over back so each crosses all the colors) */
-    const azTop=ty+58,azBot=ty+tileH-16;
-    const rowH=(azBot-azTop-(sides.length-1)*10)/sides.length;
-    sides.forEach(function(sd,si){
-      const isSlv=sd.slice(0,3)==='slv';   /* v8.20 sleeve rows print like any other screen */
-      const art=isSlv?(sleeveRecolored(sd.slice(3),gr.dark)||sleeveObj(sd.slice(3)).art)
+    /* v8.25 SIZE-DEPENDENT PRINT BOXES (Kolton, 8/22) — every location gets its
+       OWN box, and the boxes are drawn to ONE shared scale off the real print
+       inches. A 3.5" left chest is literally a quarter the box of a 14" full
+       back, so the crew reads the placement from the shape of the sheet before
+       they read a single word. Boxes sit on a common baseline so the height
+       difference lands too. Replaces the old full-width stacked rows, which
+       blew a left chest up to the same size as a back print. */
+    const azTop=ty+58,azBot=ty+tileH-14;
+    const prints=[];
+    sides.forEach(function(sd){
+      const isSlv=sd.slice(0,3)==='slv';
+      const k=isSlv?sd.slice(3):null;
+      const art=isSlv?(sleeveRecolored(k,gr.dark)||sleeveObj(k).art)
         :(recoloredArtFor(sd,gr.dark)||artFor(sd));
       if(!art)return;
-      const ry=azTop+si*(rowH+10);
-      const lab=sides.length>1;
-      const labH=lab?18:0;
-      if(lab){
-        const labTxt=isSlv?(sd.slice(3)==='L'?'L SLEEVE':'R SLEEVE'):sd.toUpperCase();
-        const labW=isSlv?76:54;
-        ctx.fillStyle='rgba(14,15,16,.75)';
-        ctx.beginPath();ctx.roundRect(tx+16,ry,labW,15,3);ctx.fill();
-        ctx.fillStyle='#E8EAEC';ctx.font='700 9px "JetBrains Mono", monospace';
-        ctx.textAlign='center';ctx.fillText(labTxt,tx+16+labW/2,ry+11);ctx.textAlign='left';
-      }
-      const scl=Math.min((tileW-44)/art.width,(rowH-labH)/art.height)*0.94;
-      const aw=art.width*scl,ah=art.height*scl;
-      ctx.drawImage(art,tx+(tileW-aw)/2,ry+labH+(rowH-labH-ah)/2,aw,ah);
+      const wIn=isSlv?(sleeveObj(k).widthIn||3):locWidth(sd);
+      const hIn=wIn*art.height/art.width;
+      prints.push({art:art,wIn:wIn,hIn:hIn,
+        lab:isSlv?(k==='L'?'L SLEEVE':'R SLEEVE'):locLabel(sd).toUpperCase()});
     });
+    if(prints.length){
+      const pk=packPrintBoxes(prints,tileW-32,azBot-azTop,16,9,14);
+      let py=azTop+Math.max(0,(azBot-azTop-pk.totalH)/2);
+      pk.rows.forEach(function(rw){
+        let px=tx+16+Math.max(0,(tileW-32-rw.w)/2);
+        rw.items.forEach(function(bx){
+          const p=bx.p,bTop=py+rw.h-bx.h;   /* common baseline per row */
+          ctx.save();
+          ctx.fillStyle='rgba(14,15,16,.30)';
+          ctx.beginPath();ctx.roundRect(px,bTop,bx.w,bx.h,5);ctx.fill();
+          ctx.setLineDash([5,4]);ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1;
+          ctx.stroke();ctx.restore();
+          ctx.fillStyle='#E8EAEC';ctx.font='700 9px "JetBrains Mono", monospace';
+          ctx.fillText(p.lab+'  '+(+p.wIn.toFixed(2))+'"',px+6,bTop+11,bx.w-12);
+          const aw=p.wIn*pk.ppi,ah=p.hIn*pk.ppi;
+          ctx.drawImage(p.art,px+(bx.w-aw)/2,bTop+16+(bx.h-16-ah)/2,aw,ah);
+          px+=bx.w+14;
+        });
+        py+=rw.h+14;
+      });
+    }
     ctx.restore();
     ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5;
     ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.stroke();
@@ -3866,7 +4038,7 @@ $('dlAllApprovals').onclick=()=>{
       const pages=[];
       for(const it of items){
         const pg=approvalFor(it,true);
-        if(pg)pages.push({data:await canvasJpeg(pg),w:pg.width,h:pg.height});
+        if(pg)pages.push({data:await canvasJpeg(pg),w:pg.width,h:pg.height,scale:PGS});
       }
       if(!pages.length)throw 0;
       const q=($('jobQuote').value||'').trim().replace(/[^0-9A-Za-z]+/g,'-').replace(/(^-|-$)/g,'');
@@ -3934,7 +4106,7 @@ async function buildJobZip(){
   const pages=[];
   for(const it of items){
     const pg=approvalFor(it,true);
-    if(pg)pages.push({data:await canvasJpeg(pg),w:pg.width,h:pg.height});
+    if(pg)pages.push({data:await canvasJpeg(pg),w:pg.width,h:pg.height,scale:PGS});
   }
   if(pages.length)entries.push({name:folder+'/customer-approvals.pdf',data:new Uint8Array(await pdfFromJpegs(pages).arrayBuffer())});
   const sum=document.createElement('canvas');
@@ -3985,7 +4157,7 @@ function cleanMockFor(item,ret){
   let x0=gap;
   sides.forEach(([side,photo])=>{
     const cv=document.createElement('canvas');
-    renderMock(photo,cv,side,state.loc[side],false);
+    renderMock(photo,cv,side,state.loc[side],false,PGS);   /* v8.25: match the sleeve tiles */
     const gb=garmentBBox(cv);
     const boxH=H-100;
     const scl=Math.min(cardW/gb.w,boxH/gb.h);
