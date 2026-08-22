@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.25 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.26 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -1149,7 +1149,7 @@ function recoloredArtFor(side,dark){
     if(!inkOnSide(i,side))return;
     const a=state.inkAssign[i]||{};
     const e=sideAssign(a,side);
-    inksS.push(ink);assignS.push({idx:e.idx,darkIdx:e.darkIdx,off:!!a.off});
+    inksS.push(ink);assignS.push({idx:e.idx,darkIdx:e.darkIdx,off:inkIsOff(a,dark)});   /* v8.26 per-setup off */
   });
   const anyOff=assignS.some(a=>a.off);
   if((set.liveInk===false&&!anyOff)||!inksS.length)return base;
@@ -1542,7 +1542,6 @@ function renderMock(photo,targetCanvas,side,loc,overlay,ss){
 }
 
 function screensFor(photo,side,loc){
-  const inks=state.artInks.length?enabledAssignSide(side).length:1;
   const pl=computePlacement(photo,side,loc);
   let dark=false;
   if(pl){
@@ -1551,6 +1550,9 @@ function screensFor(photo,side,loc){
     dark=regionIsDark(photo,pl.anchorX-pl.wpx/2,pl.topY,pl.wpx,artH);
   }
   dark=effectiveDark(photo,dark);
+  /* v8.26: which shirt bucket this garment is in decides which inks are OFF,
+     so the screen count can only be taken AFTER dark is resolved. */
+  const inks=state.artInks.length?enabledAssignSide(side,dark).length:1;
   /* v8.8: DTF has no screens and no separate underbase — the transfer carries
      its own white. Ink assignment (and therefore the mockup) is untouched. */
   if(isDTF())return {inks,ub:0,total:0,dark,side,dtf:true};
@@ -1578,8 +1580,24 @@ function inkOnSide(i,side){
   if(!s||s==='FB')return true;
   return s===(side==='back'?'B':'F');
 }
-function enabledAssignSide(side){
-  return state.inkAssign.filter((a,i)=>!a.off&&inkOnSide(i,side));
+/* ===== v8.26 PER-SETUP INK OFF =====
+   Kolton, 8/22: turning an ink off on the LIGHT tab was killing it on the DARK
+   tab too, because `off` was ONE flag shared by both setups. It is now per
+   setup — `a.off` is the light/standard setup, `a.darkOff` is the dark one.
+   `a.darkOff == null` means "the dark setup still follows the light one",
+   exactly like `a.darkIdx == null` means "same as the standard ink", so every
+   job saved before v8.26 loads unchanged. Read it ONLY through inkIsOff —
+   never touch a.off/a.darkOff directly outside toggleInkOff. */
+function inkIsOff(a,dark){
+  if(!a)return false;
+  return (dark&&a.darkOff!=null)?!!a.darkOff:!!a.off;
+}
+function enabledAssignSide(side,dark){
+  return state.inkAssign.filter((a,i)=>!inkIsOff(a,dark)&&inkOnSide(i,side));
+}
+/* an ink that prints in EITHER setup — for questions about the job as a whole */
+function assignOnInEither(){
+  return state.inkAssign.filter(a=>!inkIsOff(a,false)||!inkIsOff(a,true));
 }
 
 /* ================= v8.8 DTF — FULL COLOR =================
@@ -1593,7 +1611,7 @@ function enabledAssignSide(side){
    second file the press operator has to load. */
 function isDTF(){return state.printMethod==='dtf';}
 function dtfVariantsDiffer(){
-  return enabledAssign().some(function(a){
+  return assignOnInEither().some(function(a){
     return inkIdxFor(a,true,'front')!==inkIdxFor(a,false,'front')
       ||inkIdxFor(a,true,'back')!==inkIdxFor(a,false,'back');
   });
@@ -1617,7 +1635,7 @@ function screensText(sc){
 }
 function pmsCalloutText(sc){
   if(sc&&sc.dtf)return 'DTF full color transfer';
-  const names=enabledAssignSide(sc.side||'front').map(a=>{
+  const names=enabledAssignSide(sc.side||'front',sc.dark).map(a=>{
     const i=inkIdxFor(a,sc.dark,sc.side||'front'),s=STD_INKS[PMS[i][0]];
     return `PMS ${PMS[i][0]}${s?' '+s[0]:''} (${PMS[i][2]})`;
   });
@@ -1681,10 +1699,18 @@ function refreshCalibStatus(){
 function buildGallery(){/* v6.1: gallery removed — search is the picker */}
 /* v7.7: click-to-disable inks — an OFF ink renders transparent and drops out of
    mockups, print sheets, screen counts, and callouts. Click the swatch to toggle. */
-function enabledAssign(){return state.inkAssign.filter(a=>!a.off);}
+function enabledAssign(dark){return state.inkAssign.filter(a=>!inkIsOff(a,dark));}
+/* v8.26: ON/OFF now edits the setup you are LOOKING at. Turning an ink off on
+   the light tab pins the dark setup where it was first — the same "pin the
+   other one before you diverge" move applyPick already makes for colours. */
 function toggleInkOff(idx){
   const a=state.inkAssign[idx];if(!a)return;
-  a.off=!a.off;
+  if(inkView==='dark'){
+    a.darkOff=!inkIsOff(a,true);
+  }else{
+    if(a.darkOff==null)a.darkOff=!!a.off;   /* pin the dark setup, then diverge */
+    a.off=!a.off;
+  }
   activeSet().inkAssign=state.inkAssign;
   recolorCache.clear();
   refreshInkList();refresh();buildBoard();
@@ -1811,10 +1837,14 @@ function refreshInkList(){
   const el=$('inkList');el.innerHTML='';
   const dv=inkView==='dark';
   const two=twoSidedArt();
+  /* v8.26: ON/OFF is per setup — the button shows THIS tab's state and says so */
+  const setupWord=dv?'the dark shirts':'the light shirts';
   function onOffBtn(a,idx){
-    const oo=document.createElement('button');oo.className='inkonoff'+(a.off?' isoff':'');
-    oo.textContent=a.off?'OFF':'ON';
-    oo.title=a.off?'Not printing \u2014 click to turn this ink back on':'Printing \u2014 click to turn OFF (goes transparent, drops a screen)';
+    const isOff=inkIsOff(a,dv);
+    const oo=document.createElement('button');oo.className='inkonoff'+(isOff?' isoff':'');
+    oo.textContent=isOff?'OFF':'ON';
+    oo.title=isOff?'Not printing on '+setupWord+' \u2014 click to print it again'
+      :'Printing on '+setupWord+' \u2014 click to turn OFF here only (the other setup keeps its own on/off)';
     oo.onclick=function(){toggleInkOff(idx);};
     return oo;
   }
@@ -1829,15 +1859,16 @@ function refreshInkList(){
       return cell;
     }
     cell.className='inkcell';
+    const isOff=inkIsOff(a,dv);
     const useIdx=inkIdxFor(a,dv,side);
     const p=PMS[useIdx],s=STD_INKS[p[0]];
     const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=p[1];
-    chip.title=a.off?'OFF \u2014 click to print this ink again':'Click to turn this ink OFF (transparent \u2014 not printed, not a screen)';
+    chip.title=isOff?'OFF on '+setupWord+' \u2014 click to print it again':'Click to turn this ink OFF on '+setupWord+' (transparent \u2014 not printed, not a screen)';
     chip.onclick=function(){toggleInkOff(idx);};
     const nm=document.createElement('div');nm.className='inkname';
     const follows=side==='back'&&inkOnSide(idx,'front')&&(dv?(a.backDarkIdx==null&&a.backIdx==null):(a.backIdx==null));
     nm.innerHTML=(s?(s[1]?'<b class="star">\u2605</b> ':'')+s[0]:'PMS '+p[0])
-      +(a.off?' <b class="offtag">OFF</b>':'')
+      +(isOff?' <b class="offtag">OFF</b>':'')
       +(dv&&side==='front'&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'')
       +(follows?'<span class="samet">same as front</span>':'');
     nm.title=s?('Mayhem standard ink \u00b7 PMS '+p[0]):('PMS '+p[0]+' \u2014 custom mix');
@@ -1855,7 +1886,7 @@ function refreshInkList(){
   state.artInks.forEach(function(ink,idx){
     const a=state.inkAssign[idx];if(!a)return;
     if(two){
-      const row=document.createElement('div');row.className='inkrow two'+(a.off?' inkoff':'');
+      const row=document.createElement('div');row.className='inkrow two'+(inkIsOff(a,dv)?' inkoff':'');
       row.appendChild(inkCell(ink,idx,a,'front'));
       row.appendChild(inkCell(ink,idx,a,'back'));
       row.appendChild(onOffBtn(a,idx));
@@ -1863,15 +1894,17 @@ function refreshInkList(){
       return;
     }
     const useIdx=dv?(a.darkIdx==null?a.idx:a.darkIdx):a.idx;
+    const isOff=inkIsOff(a,dv);
     const p=PMS[useIdx],s=STD_INKS[p[0]];
-    const row=document.createElement('div');row.className='inkrow'+(a.off?' inkoff':'');
+    const row=document.createElement('div');row.className='inkrow'+(isOff?' inkoff':'');
     const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=p[1];
-    chip.title=a.off?'OFF \u2014 click to print this ink again':'Click to turn this ink OFF (transparent \u2014 not printed, not a screen)';
+    chip.title=isOff?'OFF on '+setupWord+' \u2014 click to print it again':'Click to turn this ink OFF on '+setupWord+' (transparent \u2014 not printed, not a screen)';
     chip.onclick=function(){toggleInkOff(idx);};
     const nm=document.createElement('div');nm.className='inkname';
     nm.innerHTML=(s?(s[1]?'<b class="star">\u2605</b> ':'')+s[0]:'PMS '+p[0])
-      +(a.off?' <b class="offtag">OFF</b>':'')
-      +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'');
+      +(isOff?' <b class="offtag">OFF</b>':'')
+      +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'')
+      +(dv&&a.darkOff==null&&a.off?'<span class="samet">off on both setups</span>':'');
     nm.title=s?('Mayhem standard ink \u00b7 PMS '+p[0]):('PMS '+p[0]+' \u2014 custom mix');
     const btn=document.createElement('button');btn.className='inkchg';btn.textContent='CHANGE';
     btn.title=dv?'Pick what this ink becomes on the dark shirts':'Pick this ink';
@@ -1880,7 +1913,7 @@ function refreshInkList(){
     el.appendChild(row);
   });
   const tot=state.artInks.length;
-  const en=tot?enabledAssign().length:0;
+  const en=tot?enabledAssign(dv).length:0;
   const offN=tot-en;
   if(isDTF()){
     $('screensPill').innerHTML=tot&&en
@@ -1890,7 +1923,7 @@ function refreshInkList(){
     return;
   }
   if(tot&&twoSidedArt()){
-    const nF=enabledAssignSide('front').length,nB=enabledAssignSide('back').length,nT=nF+nB;
+    const nF=enabledAssignSide('front',dv).length,nB=enabledAssignSide('back',dv).length,nT=nF+nB;
     $('screensPill').innerHTML=nT
       ?'<b>front '+nF+' + back '+nB+' ink'+(nT>1?'s':'')+'</b>'+(offN?' ('+offN+' off)':'')
         +' \u2192 '+nT+' screen'+(nT>1?'s':'')+(state.autoUnderbase
@@ -2102,7 +2135,7 @@ function refresh(){
   }
   const plel=$('previewPms');plel.innerHTML='';
   state.inkAssign.forEach((a,ai)=>{
-    if(a.off||!inkOnSide(ai,state.side))return;
+    if(inkIsOff(a,sc.dark)||!inkOnSide(ai,state.side))return;   /* v8.26 */
     const i=inkIdxFor(a,sc.dark,state.side);
     const p=PMS[i];
     const swapped=i!==inkIdxFor(a,false,state.side);
@@ -3421,7 +3454,7 @@ function drawPageFooter(ctx,W,H,note){
    rows instead of running off the page. layoutInkChips measures, drawInkChipsL
    draws; callers anchor the block using lay.rows*lay.rowH. */
 function layoutInkChips(ctx,maxW,dark,ub,side){
-  const list=side?enabledAssignSide(side):enabledAssign();
+  const list=side?enabledAssignSide(side,dark):enabledAssign(dark);
   const dtf=isDTF();
   const n=dtf?1:list.length+(ub?1:0);
   const small=n>4;
@@ -3453,7 +3486,7 @@ function layoutInkChips(ctx,maxW,dark,ub,side){
 function layoutSleeveChips(ctx,maxW,k,dark){
   const dtf=isDTF();
   const ub=!dtf&&dark&&state.autoUnderbase;
-  const items=dtf?[dtfSwatch(dark,true)]:sleeveEnabled(k).map(a=>{
+  const items=dtf?[dtfSwatch(dark,true)]:sleeveEnabled(k,dark).map(a=>{
     const i=(dark&&a.darkIdx!=null)?a.darkIdx:a.idx,p=PMS[i],st=STD_INKS[p[0]];
     return {hex:p[1],
       l1:st?(st[1]?'★ ':'')+st[0]:'PMS '+p[0],
@@ -3684,15 +3717,76 @@ function shirtTileColor(photo){
   photo.__tileRGB=n?[r/n,g/n,b/n]:[120,124,128];
   return photo.__tileRGB;
 }
+/* v8.26 PER-BOX SWATCHES (Kolton, 8/22) — every print box carries the inks
+   THAT location prints, on its own setup's tile, instead of one merged strip
+   at the bottom of the whole sheet. Chips sit on a translucent dark bar so
+   they read on a white shirt and a black one alike, and they degrade by width:
+   shop name → PMS code → swatch only. Underbase always leads. */
+const BOXCHIP={pad:5};
+/* v8.26: the ladder a box walks down as it runs out of room. Shop NAMES are
+   worth more to the press than a short box, so the compact tiers come before
+   dropping to PMS codes, and PMS codes before bare swatches. */
+const BOXCHIP_TIERS=[
+  {mode:'name',sw:11,font:8,gap:5,rowH:17},
+  {mode:'name',sw:9, font:7,gap:3,rowH:14},
+  {mode:'pms', sw:11,font:8,gap:5,rowH:17},
+  {mode:'pms', sw:9, font:7,gap:3,rowH:14},
+  {mode:'none',sw:11,font:8,gap:5,rowH:17}
+];
+const BOXCHIP_MODES=BOXCHIP_TIERS.map(t=>t.mode);
+const BOXCHIP_MAXROWS=4;
+function layoutBoxChips(ctx,maxW,inks,forceTier){
+  const P=BOXCHIP.pad;
+  if(!inks||!inks.length)return {rows:0,h:0,cells:[],tier:forceTier||0};
+  const from=forceTier==null?0:forceTier;
+  for(let t=from;t<BOXCHIP_TIERS.length;t++){
+    const T=BOXCHIP_TIERS[t],last=t===BOXCHIP_TIERS.length-1;
+    const cells=[];let cx=0,cy=0,rows=1,fits=true;
+    ctx.font='700 '+T.font+'px "JetBrains Mono", monospace';
+    for(const ink of inks){
+      const lab=T.mode==='name'?ink.name:(T.mode==='pms'?ink.code:'');
+      const w=T.sw+(lab?4+ctx.measureText(lab).width:0)+T.gap+4;
+      if(w>maxW-P*2){if(last){cells.push({x:cx,y:cy,lab:'',hex:ink.hex,ub:!!ink.ub});cx+=T.sw+T.gap+4;continue;}fits=false;break;}
+      if(cx>0&&cx+w>maxW-P*2){cx=0;cy+=T.rowH;rows++;}
+      cells.push({x:cx,y:cy,lab:lab,hex:ink.hex,ub:!!ink.ub});
+      cx+=w;
+    }
+    if((!fits||rows>BOXCHIP_MAXROWS)&&!last&&forceTier==null)continue;
+    return {rows:rows,h:rows*T.rowH+P*2-3,cells:cells,tier:t,T:T};
+  }
+  return {rows:1,h:BOXCHIP_TIERS[0].rowH+P*2-3,cells:[],tier:BOXCHIP_TIERS.length-1,T:BOXCHIP_TIERS[0]};
+}
+function drawBoxChips(ctx,x,y,w,lay){
+  if(!lay.cells.length)return;
+  const P=BOXCHIP.pad,T=lay.T||BOXCHIP_TIERS[0];
+  ctx.save();
+  ctx.fillStyle='rgba(14,15,16,.72)';
+  ctx.beginPath();ctx.roundRect(x,y,w,lay.h,4);ctx.fill();
+  lay.cells.forEach(c=>{
+    const cx=x+P+c.x,cy=y+P+c.y;
+    ctx.fillStyle=c.hex;ctx.fillRect(cx,cy,T.sw,T.sw);
+    ctx.strokeStyle=c.ub?'#7BAFD4':'rgba(255,255,255,.55)';ctx.lineWidth=c.ub?1.6:1;
+    ctx.strokeRect(cx,cy,T.sw,T.sw);
+    if(c.lab){
+      ctx.fillStyle='#E8EAEC';ctx.font='700 '+T.font+'px "JetBrains Mono", monospace';
+      ctx.fillText(c.lab,cx+T.sw+4,cy+T.sw-1);
+    }
+  });
+  ctx.restore();
+}
 /* v8.25: find the biggest shared px-per-inch that still fits every print box
    inside the art zone (max 3 shelf rows), so all boxes stay to ONE scale.
-   Binary search — the greedy row-wrap is monotonic in ppi. */
-function packPrintBoxes(prints,zoneW,zoneH,labH,padPx,gapPx){
+   Binary search — the greedy row-wrap is monotonic in ppi.
+   v8.26: box height also has to swallow that location's own swatch bar, whose
+   height depends on the box WIDTH — so chipsH is measured per candidate. */
+function packPrintBoxes(prints,zoneW,zoneH,labH,padPx,gapPx,chipsH){
   function tryPpi(ppi){
     const rows=[];let cur=null;
     for(let i=0;i<prints.length;i++){
       const p=prints[i];
-      const bw=p.wIn*ppi+padPx*2,bh=p.hIn*ppi+padPx+labH;
+      const bw=p.wIn*ppi+padPx*2;
+      const ch=chipsH?chipsH(p,bw):0;
+      const bh=p.hIn*ppi+padPx+labH+ch;
       if(bw>zoneW||bh>zoneH)return null;
       if(!cur){cur={items:[],w:0,h:0};}
       else if(cur.w+gapPx+bw>zoneW){rows.push(cur);cur={items:[],w:0,h:0};}
@@ -3757,7 +3851,7 @@ function renderSummaryTo(pg){
   }
   const gx=50,gy=168,gw=1400,gh=842,gap=16;
   const tileW=groups.length===2?(gw-gap)/2:gw;
-  const headH=34,swH=58;
+  const headH=34,swH=30;   /* v8.26: strip removed \u2192 the tile gets the height */
   const tileH=gh-headH-swH-14;
   groups.forEach(function(gr,gi){
     const tx=gx+gi*(tileW+gap);
@@ -3810,6 +3904,19 @@ function renderSummaryTo(pg){
        blew a left chest up to the same size as a back print. */
     const azTop=ty+58,azBot=ty+tileH-14;
     const prints=[];
+    /* v8.26: each location carries the inks IT prints, in THIS setup */
+    const ubHere=!isDTF()&&gr.dark&&state.autoUnderbase;
+    function inksForLoc(sd,isSlv,k){
+      if(isDTF())return [{hex:'#7BAFD4',name:'DTF FULL COLOR',code:'DTF'}];
+      const list=isSlv?sleeveEnabled(k,gr.dark):enabledAssignSide(sd,gr.dark);
+      const out=list.map(function(a){
+        const i=isSlv?((gr.dark&&a.darkIdx!=null)?a.darkIdx:a.idx):inkIdxFor(a,gr.dark,sd);
+        const p=PMS[i],st=STD_INKS[p[0]];
+        return {hex:p[1],name:(st?st[0]:'PMS '+p[0]),code:'PMS '+p[0]};
+      });
+      if(ubHere)out.unshift({hex:'#FFFFFF',name:'UNDERBASE',code:'UB',ub:true});
+      return out;
+    }
     sides.forEach(function(sd){
       const isSlv=sd.slice(0,3)==='slv';
       const k=isSlv?sd.slice(3):null;
@@ -3818,25 +3925,41 @@ function renderSummaryTo(pg){
       if(!art)return;
       const wIn=isSlv?(sleeveObj(k).widthIn||3):locWidth(sd);
       const hIn=wIn*art.height/art.width;
-      prints.push({art:art,wIn:wIn,hIn:hIn,
+      prints.push({art:art,wIn:wIn,hIn:hIn,inks:inksForLoc(sd,isSlv,k),
         lab:isSlv?(k==='L'?'L SLEEVE':'R SLEEVE'):locLabel(sd).toUpperCase()});
     });
     if(prints.length){
-      const pk=packPrintBoxes(prints,tileW-32,azBot-azTop,16,9,14);
+      let lockTier=null;
+      const chipsH=function(p,bw){return layoutBoxChips(ctx,bw-12,p.inks,lockTier).h+6;};
+      let pk=packPrintBoxes(prints,tileW-32,azBot-azTop,16,9,14,chipsH);
+      /* v8.26: settle on the ONE chip tier every box in this tile can carry, so
+         a tile never mixes "BRIGHT RED" in one box with a bare swatch in the next */
+      let worst=0;
+      pk.rows.forEach(function(rw){rw.items.forEach(function(bx){
+        worst=Math.max(worst,layoutBoxChips(ctx,bx.w-12,bx.p.inks).tier);
+      });});
+      if(worst>0){lockTier=worst;pk=packPrintBoxes(prints,tileW-32,azBot-azTop,16,9,14,chipsH);}
       let py=azTop+Math.max(0,(azBot-azTop-pk.totalH)/2);
       pk.rows.forEach(function(rw){
         let px=tx+16+Math.max(0,(tileW-32-rw.w)/2);
         rw.items.forEach(function(bx){
           const p=bx.p,bTop=py+rw.h-bx.h;   /* common baseline per row */
+          const clay=layoutBoxChips(ctx,bx.w-12,p.inks,lockTier);
           ctx.save();
           ctx.fillStyle='rgba(14,15,16,.30)';
           ctx.beginPath();ctx.roundRect(px,bTop,bx.w,bx.h,5);ctx.fill();
           ctx.setLineDash([5,4]);ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1;
           ctx.stroke();ctx.restore();
           ctx.fillStyle='#E8EAEC';ctx.font='700 9px "JetBrains Mono", monospace';
-          ctx.fillText(p.lab+'  '+(+p.wIn.toFixed(2))+'"',px+6,bTop+11,bx.w-12);
+          const nScr=p.inks.length;
+          ctx.fillText(p.lab+'  '+(+p.wIn.toFixed(2))+'"',px+6,bTop+11,bx.w-58);
+          ctx.textAlign='right';ctx.fillStyle='rgba(232,234,236,.7)';
+          ctx.fillText(nScr+(isDTF()?'':' SCR'),px+bx.w-6,bTop+11);
+          ctx.textAlign='left';
           const aw=p.wIn*pk.ppi,ah=p.hIn*pk.ppi;
-          ctx.drawImage(p.art,px+(bx.w-aw)/2,bTop+16+(bx.h-16-ah)/2,aw,ah);
+          const artZ=bx.h-16-clay.h-6;
+          ctx.drawImage(p.art,px+(bx.w-aw)/2,bTop+16+(artZ-ah)/2,aw,ah);
+          drawBoxChips(ctx,px+6,bTop+bx.h-clay.h-4,bx.w-12,clay);
           px+=bx.w+14;
         });
         py+=rw.h+14;
@@ -3845,58 +3968,17 @@ function renderSummaryTo(pg){
     ctx.restore();
     ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5;
     ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.stroke();
-    /* swatch strip below the tile, on the page background */
-    const swatches=[];
-    if(isDTF()){
-      swatches.push(dtfSwatch(gr.dark));   /* v8.8: one process-colour chip, that's the whole strip */
-    }else{
-      if(gr.dark&&sc.ub)swatches.push({hex:'#FFFFFF',l1:'UNDERBASE',l2:'prints first',ub:true});
-      /* v8.10: union of each side's effective inks — side-tagged when they differ */
-      const fbSides=sides.filter(function(sd){return sd==='front'||sd==='back';});   /* v8.20 */
-      const two=twoSidedArt()&&fbSides.length===2;
-      const seen={};
-      fbSides.forEach(function(sd){
-        state.inkAssign.forEach(function(a,ai){
-          if(a.off||!inkOnSide(ai,sd))return;
-          const ii=inkIdxFor(a,gr.dark,sd);
-          const tag=two?(sd==='front'?'F':'B'):'';
-          if(seen[ii]!=null){
-            const sw=swatches[seen[ii]];
-            if(tag&&sw.tag&&sw.tag!==tag&&sw.tag!=='FB'){sw.l2='PMS '+PMS[ii][0];sw.tag='FB';}
-            return;
-          }
-          const p=PMS[ii],st=STD_INKS[p[0]];
-          seen[ii]=swatches.length;
-          swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]+(tag?' · '+(sd==='front'?'FRONT':'BACK'):''),tag:tag});
-        });
-      });
-      /* v8.20: sleeve inks join the strip (deduped against the body inks) */
-      sleevesWithArt().forEach(function(k){
-        sleeveEnabled(k).forEach(function(a){
-          const ii=(gr.dark&&a.darkIdx!=null)?a.darkIdx:a.idx;
-          if(seen[ii]!=null)return;
-          const p=PMS[ii],st=STD_INKS[p[0]];
-          seen[ii]=swatches.length;
-          swatches.push({hex:p[1],l1:(st?st[0]:'PMS '+p[0]),l2:'PMS '+p[0]+' · '+(k==='L'?'L':'R')+' SLV'});
-        });
-      });
+    /* v8.26: the merged swatch strip is GONE — every print box now carries its
+       own inks, so one shared strip underneath only invited the "which colour
+       belongs to which print?" confusion Kolton flagged. The tile takes the
+       reclaimed height instead. A short setup line stays for the underbase. */
+    if(!isDTF()&&gr.dark&&sc.ub){
+      ctx.fillStyle='#7BAFD4';ctx.font='700 12px "JetBrains Mono", monospace';
+      ctx.fillText('WHITE UNDERBASE PRINTS FIRST ON EVERY LOCATION',tx,ty+tileH+22);
+    } else if(isDTF()){
+      ctx.fillStyle='#7BAFD4';ctx.font='700 12px "JetBrains Mono", monospace';
+      ctx.fillText('DTF FULL COLOR TRANSFER \u00b7 NO SCREENS, NO SEPARATIONS',tx,ty+tileH+22);
     }
-    let sx=tx,sy=ty+tileH+14;
-    const swz=26;
-    swatches.forEach(function(s2){
-      ctx.font='700 12px "JetBrains Mono", monospace';const w1=ctx.measureText(s2.l1).width;
-      ctx.font='500 10px "JetBrains Mono", monospace';const w2=ctx.measureText(s2.l2).width;
-      const cw=swz+8+Math.max(56,w1+6,w2+6)+16;
-      if(sx>tx&&sx+cw>tx+tileW){return;}   /* clip overflow — approval page carries the full list */
-      ctx.fillStyle=s2.dtf?dtfGrad(ctx,sx,sy,swz,swz):s2.hex;ctx.fillRect(sx,sy,swz,swz);
-      ctx.strokeStyle=(s2.ub||s2.dtf)?'#7BAFD4':'rgba(255,255,255,.5)';ctx.lineWidth=(s2.ub||s2.dtf)?2.5:1;
-      ctx.strokeRect(sx,sy,swz,swz);
-      ctx.fillStyle='#E8EAEC';ctx.font='700 12px "JetBrains Mono", monospace';
-      ctx.fillText(s2.l1,sx+swz+8,sy+11);
-      ctx.fillStyle='#98A0A6';ctx.font='500 10px "JetBrains Mono", monospace';
-      ctx.fillText(s2.l2,sx+swz+8,sy+25);
-      sx+=cw;
-    });
   });
   stampWatermark(ctx,gx,gy,gw,gh,'rgba(127,127,127,0.05)',26);
   drawPageFooter(ctx,W,H,foot);
@@ -3998,7 +4080,7 @@ function setHasDarkGarment(){
 }
 function updateFlipBanner(){
   const el=$('flipBanner');if(!el)return;
-  const en=enabledAssign();
+  const en=enabledAssign(false);
   const c=setupCounts();
   if(en.length!==1||!activeSet().items.length||!c.dark){el.hidden=true;return;}
   const a=en[0];
@@ -4014,7 +4096,7 @@ function updateFlipBanner(){
 }
 $('flipYes').onclick=()=>{
   const w=PMS.findIndex(p=>p[0]==='White');
-  const a=enabledAssign()[0];if(a)a.darkIdx=w;
+  const a=enabledAssign(false)[0];if(a)a.darkIdx=w;
   activeSet().inkAssign=state.inkAssign;
   inkView='dark';
   recolorCache.clear();
@@ -4022,7 +4104,7 @@ $('flipYes').onclick=()=>{
   previewSetup('dark');
 };
 $('flipUndo').onclick=()=>{
-  const a=enabledAssign()[0];if(a)a.darkIdx=null;
+  const a=enabledAssign(false)[0];if(a)a.darkIdx=null;
   activeSet().inkAssign=state.inkAssign;
   recolorCache.clear();
   refreshInkList();refresh();buildBoard();
@@ -4253,7 +4335,13 @@ function jobPrintLocs(){const L=[];if(artFor('front'))L.push('front');if(artFor(
   /* v8.20: sleeve-only jobs must not bill a phantom front location */
   if(!L.length&&!sleevesWithArt().length)L.push('front');
   return L;}
-function locColorCount(side){return Math.max(1,state.artInks.length?enabledAssignSide(side).length:1);}
+/* v8.26: light and dark setups can now have different inks switched off, but
+   the cartel sheet bills ONE colour count per location — take the heavier of
+   the two so a job is never under-quoted. */
+function locColorCount(side){
+  if(!state.artInks.length)return 1;
+  return Math.max(1,enabledAssignSide(side,false).length,enabledAssignSide(side,true).length);
+}
 function renderSizeRun(){
   const el=$('srList');if(!el)return;
   const items=activeSet().items;
@@ -4310,7 +4398,7 @@ function renderPricing(){
     });
     /* v8.20: each sleeve is one more print location, same matrix */
     sleevesWithArt().forEach(k=>{
-      let n=sleeveColorCount(k)+((ubCount&&itemUsesDark(it))?1:0);
+      let n=sleeveColorCountMax(k)+((ubCount&&itemUsesDark(it))?1:0);
       if(n>6){n=6;capped=true;}
       printPc+=mt[1][n-1];
     });
@@ -4343,7 +4431,7 @@ function renderPricing(){
   }));
   html+='<div class="pr-total"><span>'+pcs+' PCS</span><span>$'+grand.toFixed(2)+'</span></div>';
   html+='<div class="pr-sub">'+mt[0]+'+ piece pricing · '+locs.map(sd=>sd+' '+locColorCount(sd)+'-color')
-    .concat(sleevesWithArt().map(k=>(k==='L'?'left':'right')+' sleeve '+sleeveColorCount(k)+'-color'))
+    .concat(sleevesWithArt().map(k=>(k==='L'?'left':'right')+' sleeve '+sleeveColorCountMax(k)+'-color'))
     .join(' + ')+(ubCount?' · +UB on darks':'')+'</div>';
   const miss=Object.keys(missing);
   if(miss.length)html+='<div class="pr-note">no SanMar cost yet for '+miss.join(', ')+' — those rows show — until the weekly price refresh picks them up</div>';
@@ -4398,11 +4486,11 @@ async function openCartelSheet(){
        underbase SCREEN is needed (darks printing anything but white). */
     const anyDark=items.some(it=>itemUsesDark(it));
     const ub=state.autoUnderbase&&!isDTF();
-    const allWhiteOnDarks=sd=>enabledAssignSide(sd).every(a=>PMS[inkIdxFor(a,true,sd)][0]==='White');
+    const allWhiteOnDarks=sd=>enabledAssignSide(sd,true).every(a=>PMS[inkIdxFor(a,true,sd)][0]==='White');
     const payload={v:1,when:Date.now(),
       customer:$('jobCustomer').value,quote:$('jobQuote').value,
       locs:jobPrintLocs().map(sd=>({side:sd,colors:locColorCount(sd),ubScreen:ub&&anyDark&&!allWhiteOnDarks(sd)}))
-        .concat(sleevesWithArt().map(k=>({side:k==='L'?'LS':'RS',colors:sleeveColorCount(k),ubScreen:ub&&anyDark&&!sleeveAllWhiteOnDarks(k)}))),   /* v8.20 */
+        .concat(sleevesWithArt().map(k=>({side:k==='L'?'LS':'RS',colors:sleeveColorCountMax(k),ubScreen:ub&&anyDark&&!sleeveAllWhiteOnDarks(k)}))),   /* v8.20 */
       underbase:ub&&anyDark,
       mixed:anyDark&&items.some(it=>!itemUsesDark(it)),
       mocks};
@@ -4433,12 +4521,12 @@ function serializeJob(){
     userArt:!!window.__userArt,
     sets:SETS.map(st=>({name:st.name,items:st.items,dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
       artInks:st.artInks||[],
-      inkAssign:(st.inkAssign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,backIdx:a.backIdx==null?null:a.backIdx,backDarkIdx:a.backDarkIdx==null?null:a.backDarkIdx,off:!!a.off,match:a.match,auto:!!a.auto})),
+      inkAssign:(st.inkAssign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,backIdx:a.backIdx==null?null:a.backIdx,backDarkIdx:a.backDarkIdx==null?null:a.backDarkIdx,off:!!a.off,darkOff:(a.darkOff==null?null:!!a.darkOff),match:a.match,auto:!!a.auto})),
       artF:(window.__userArt&&st.artF)?st.artF.toDataURL('image/png'):null,
       artB:(window.__userArt&&st.artB)?st.artB.toDataURL('image/png'):null,
       sleeves:['L','R'].reduce((o,k)=>{const s=slvOf(st)[k];   /* v8.20 */
         o[k]={art:s.art?s.art.toDataURL('image/png'):null,widthIn:s.widthIn||3,vertical:!!s.vertical,
-          inks:s.inks||[],assign:(s.assign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,off:!!a.off,match:a.match}))};
+          inks:s.inks||[],assign:(s.assign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,off:!!a.off,darkOff:(a.darkOff==null?null:!!a.darkOff),match:a.match}))};
         return o;},{})}))};
 }
 function autosaveNow(){
@@ -4542,20 +4630,24 @@ function sleeveDims(k){
   const w=s.widthIn||3,h=w*s.art.height/s.art.width;
   return {w,h,area,over:w>area.w+0.01||h>area.h+0.01};
 }
-function sleeveEnabled(k){return (sleeveObj(k).assign||[]).filter(a=>!a.off);}
-function sleeveColorCount(k){const s=sleeveObj(k);return Math.max(1,s.inks.length?sleeveEnabled(k).length:1);}
+/* v8.26: sleeve inks follow the same per-setup off contract as body inks */
+function sleeveEnabled(k,dark){return (sleeveObj(k).assign||[]).filter(a=>!inkIsOff(a,dark));}
+function sleeveColorCount(k,dark){const s=sleeveObj(k);return Math.max(1,s.inks.length?sleeveEnabled(k,dark).length:1);}
+/* v8.26: pricing bills ONE colour count per sleeve — the heavier setup wins so
+   a job is never under-quoted when an ink is off on only one of them. */
+function sleeveColorCountMax(k){return Math.max(sleeveColorCount(k,false),sleeveColorCount(k,true));}
 function sleeveScreens(k,dark){
   if(isDTF())return 0;
-  return sleeveColorCount(k)+((state.autoUnderbase&&dark)?1:0);
+  return sleeveColorCount(k,dark)+((state.autoUnderbase&&dark)?1:0);
 }
 function sleeveAllWhiteOnDarks(k){
-  const en=sleeveEnabled(k);
+  const en=sleeveEnabled(k,true);
   return en.length>0&&en.every(a=>PMS[(a.darkIdx!=null)?a.darkIdx:a.idx][0]==='White');
 }
 function sleeveRecolored(k,dark){
   const s=sleeveObj(k);if(!s.art)return null;
   const set=activeSet();
-  const anyOff=(s.assign||[]).some(a=>a.off);
+  const anyOff=(s.assign||[]).some(a=>inkIsOff(a,dark));
   if((set.liveInk===false&&!anyOff)||!s.inks.length)return s.art;
   if(!s.art.__id)s.art.__id='art'+(artIdSeq++);
   const sig=s.art.__id+'|SLV'+k+'|'+(dark?'D':'L')+'|'+(set.liveInk===false?'K':'R')+'|'
@@ -4716,19 +4808,26 @@ function renderSleeveInks(){
     s.inks.forEach((ink,idx)=>{
       const a=s.assign[idx];if(!a)return;
       const useIdx=dv?((a.darkIdx==null)?a.idx:a.darkIdx):a.idx;
+      const isOff=inkIsOff(a,dv);
       const p=PMS[useIdx],st=STD_INKS[p[0]];
-      const row=document.createElement('div');row.className='inkrow'+(a.off?' inkoff':'');
-      const flip=()=>{a.off=!a.off;recolorCache.clear();refreshInkList();refresh();buildBoard();};
+      const row=document.createElement('div');row.className='inkrow'+(isOff?' inkoff':'');
+      /* v8.26: off is per setup here too — pin the dark before diverging */
+      const flip=()=>{
+        if(dv)a.darkOff=!inkIsOff(a,true);
+        else{if(a.darkOff==null)a.darkOff=!!a.off;a.off=!a.off;}
+        recolorCache.clear();refreshInkList();refresh();buildBoard();
+      };
       const chip=document.createElement('span');chip.className='inkchip';chip.style.backgroundColor=p[1];
-      chip.title=a.off?'OFF — click to print this ink again':'Click to turn this ink OFF';
+      chip.title=isOff?'OFF on '+(dv?'the dark shirts':'the light shirts')+' — click to print it again'
+        :'Click to turn this ink OFF on '+(dv?'the dark shirts':'the light shirts');
       chip.onclick=flip;
       const nm=document.createElement('div');nm.className='inkname';
       nm.innerHTML=(st?(st[1]?'<b class="star">★</b> ':'')+st[0]:'PMS '+p[0])
-        +(a.off?' <b class="offtag">OFF</b>':'')
+        +(isOff?' <b class="offtag">OFF</b>':'')
         +(dv&&a.darkIdx==null?'<span class="samet">same as the standard ink</span>':'');
       nm.title=st?('Mayhem standard ink · PMS '+p[0]):('PMS '+p[0]+' — custom mix');
-      const oo=document.createElement('button');oo.className='inkonoff'+(a.off?' isoff':'');
-      oo.textContent=a.off?'OFF':'ON';oo.onclick=flip;
+      const oo=document.createElement('button');oo.className='inkonoff'+(isOff?' isoff':'');
+      oo.textContent=isOff?'OFF':'ON';oo.onclick=flip;
       const btn=document.createElement('button');btn.className='inkchg';btn.textContent='CHANGE';
       btn.title=dv?'Pick what this sleeve ink becomes on the dark shirts':'Pick this sleeve ink';
       btn.onclick=()=>openSleevePicker(k,idx);
@@ -4740,7 +4839,7 @@ function renderSleeveInks(){
   const pill=$('screensPill');
   if(pill&&!isDTF()){
     sleevesWithArt().forEach(k=>{
-      const n=sleeveColorCount(k);
+      const n=sleeveColorCount(k,inkView==='dark');
       pill.innerHTML+=' · <b>'+(k==='L'?'left':'right')+' sleeve</b> '+n+' ink'+(n>1?'s':'')
         +(state.autoUnderbase?' (+UB on darks)':'');
     });
