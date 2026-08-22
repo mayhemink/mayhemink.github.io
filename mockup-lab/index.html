@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.27 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.27.1 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -4371,53 +4371,95 @@ function renderImprintCrop(item,spec,maxPx){
   c.textAlign='right';c.fillText('MAYHEM INK',outW-12,outW-11);c.textAlign='left';
   return o;
 }
-/* the whole handoff: crops + shop sheet + manifest, in one ZIP */
+/* v8.27.1: run a callback with a DIFFERENT set active, then put everything
+   back. Same stash/restore switchSet does, minus all the DOM repainting — the
+   handoff walks every group without the UI flickering through them. */
+async function withSetAsync(i,fn){
+  const prevIdx=activeSetIdx;
+  const outgoing=SETS[prevIdx];
+  outgoing.artF=state.artF;outgoing.artB=state.artB;
+  outgoing.artInks=state.artInks;outgoing.inkAssign=state.inkAssign;
+  activeSetIdx=i;
+  const s=SETS[i];
+  state.artF=s.artF;state.artB=s.artB;
+  state.artInks=s.artInks||[];state.inkAssign=s.inkAssign||[];
+  recolorCache.clear();
+  try{ return await fn(s); }
+  finally{
+    const done=SETS[activeSetIdx];
+    done.artF=state.artF;done.artB=state.artB;
+    done.artInks=state.artInks;done.inkAssign=state.inkAssign;
+    activeSetIdx=prevIdx;
+    const back=SETS[prevIdx];
+    state.artF=back.artF;state.artB=back.artB;
+    state.artInks=back.artInks||[];state.inkAssign=back.inkAssign||[];
+    recolorCache.clear();
+  }
+}
+/* the whole handoff: one clean mock per shirt per GROUP, that group's shop
+   sheet, and a manifest, all in one ZIP.
+   v8.27.1 (Kolton, 8/22): per-location crops are OUT. A Mockup Lab SET maps
+   1:1 onto a Printavo LINE ITEM GROUP, and the artifact the shop already uses
+   is the whole clean mock — the full garment with every location on it, the
+   way Joe has been uploading them by hand. Printavo has no group-level mockup
+   mutation, so these land on the group's FIRST imprint (Joe's own precedent).
+   renderImprintCrop is kept but unused — per-location / per-line-item mockups
+   are still on the table and it already works. */
 async function buildPrintavoHandoff(){
-  const items=activeSet().items;
-  if(!items.length)return {err:'Add shirts to the job first (step 3).'};
-  const locs=pvLocations();
-  if(!locs.length)return {err:'Load some art first — there are no print locations to hand off.'};
-  await ensureSetPhotos();
   const quote=($('jobQuote').value||'').trim();
   const customer=($('jobCustomer').value||'').trim();
   if(!customer&&!quote)return {err:'Put the customer name or the quote number in step 1 first.'};
+  const usable=[];
+  SETS.forEach(function(s,i){if(s.items&&s.items.length)usable.push(i);});
+  if(!usable.length)return {err:'Add shirts to the job first (step 3).'};
   const tag=(quote||slug(customer)).replace(/[^0-9A-Za-z-]+/g,'')||'job';
   const toU8=cv=>new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/png'));
-  const entries=[],files=[];
-  for(const spec of locs){
-    for(const it of items){
-      const cv=renderImprintCrop(it,spec,900);
-      if(!cv)continue;
-      const name='printavo-'+tag+'-'+slug(spec.label)+'-'+slug(it.styleKey)+'-'+slug(it.colorName)+'.png';
-      entries.push({name:name,data:await toU8(cv)});
-      files.push({file:name,kind:'imprintMockup',imprint:spec.label,
-        widthIn:spec.widthIn,styleKey:it.styleKey,colorName:it.colorName,
-        dark:itemUsesDark(it),inks:pvInkNames(spec,itemUsesDark(it))});
-    }
+  const entries=[],groups=[];
+  let nFiles=0,skipped=[];
+  for(const i of usable){
+    await withSetAsync(i,async function(set){
+      const locs=pvLocations();
+      if(!locs.length){skipped.push(set.name);return;}
+      await ensureSetPhotos();
+      const gslug=slug(set.name)||('group-'+(i+1));
+      const files=[];
+      for(const it of set.items){
+        const cv=cleanMockFor(it,true);
+        if(!cv)continue;
+        const name='printavo-'+tag+'-'+gslug+'-'+slug(it.styleKey)+'-'+slug(it.colorName)+'.png';
+        entries.push({name:name,data:await toU8(cv)});
+        files.push({file:name,kind:'groupMockup',group:set.name,
+          styleKey:it.styleKey,colorName:it.colorName,dark:itemUsesDark(it)});
+        nFiles++;
+      }
+      const sum=document.createElement('canvas');renderSummaryTo(sum);
+      const sheet='printavo-'+tag+'-'+gslug+'-shop-print-sheet.png';
+      entries.push({name:sheet,data:await toU8(sum)});
+      nFiles++;
+      const note=locs.map(function(spec){
+        const lite=pvInkNames(spec,false),drk=pvInkNames(spec,true);
+        const same=lite.join('|')===drk.join('|');
+        return spec.label+' — '+spec.widthIn+'" wide · '+lite.join(', ')
+          +(same?'':'  |  on darks: '+drk.join(', '));
+      });
+      groups.push({name:set.name,
+        locations:locs.map(function(s2){return {imprint:s2.label,widthIn:s2.widthIn};}),
+        productionNote:note,
+        printMethod:isDTF()?'DTF':'screen',
+        mockups:files,
+        printSheet:{file:sheet,kind:'productionFile',note:'shop print sheet — one tile per press setup'}});
+    });
   }
-  const sum=document.createElement('canvas');renderSummaryTo(sum);
-  const sheet='printavo-'+tag+'-shop-print-sheet.png';
-  entries.push({name:sheet,data:await toU8(sum)});
-  files.push({file:sheet,kind:'productionFile',note:'shop print sheet — one tile per press setup'});
-  /* the ink + screen summary that goes into the invoice production note */
-  const lines=[];
-  locs.forEach(function(spec){
-    const lite=pvInkNames(spec,false),drk=pvInkNames(spec,true);
-    const same=lite.join('|')===drk.join('|');
-    lines.push(spec.label+' — '+spec.widthIn+'" wide · '+lite.join(', ')
-      +(same?'':'  |  on darks: '+drk.join(', ')));
-  });
-  const manifest={v:1,app:'mockup-lab',when:new Date().toISOString(),
-    customer:customer,quote:quote,
-    locations:locs.map(function(s){return {imprint:s.label,widthIn:s.widthIn};}),
-    productionNote:lines,
-    printMethod:isDTF()?'DTF':'screen',
-    underbase:!!state.autoUnderbase,
-    files:files};
+  if(!groups.length)return {err:'Load some art first — there are no print locations to hand off.'};
+  const manifest={v:2,app:'mockup-lab',when:new Date().toISOString(),
+    customer:customer,quote:quote,underbase:!!state.autoUnderbase,
+    mockupTarget:'first imprint of each line item group',
+    groups:groups};
   entries.push({name:'printavo-'+tag+'-manifest.json',
     data:new TextEncoder().encode(JSON.stringify(manifest,null,2))});
   return {blob:zipStore(entries),name:'printavo-handoff-'+tag+'.zip',
-    tag:tag,quote:quote,customer:customer,count:files.length,manifest:manifest};
+    tag:tag,quote:quote,customer:customer,count:nFiles,groups:groups.length,
+    skipped:skipped,manifest:manifest};
 }
 $('dlPrintavo').onclick=async()=>{
   const b=$('dlPrintavo'),orig=b.textContent,note=$('pvNote');
@@ -4435,8 +4477,11 @@ $('dlPrintavo').onclick=async()=>{
     try{await navigator.clipboard.writeText(prompt);}catch(e){}
     note.hidden=false;
     note.innerHTML='<b>Saved '+r.name+'</b> — '+r.count+' file'+(r.count===1?'':'s')
-      +' (one crop per location per shirt, plus the shop sheet).<br>'
-      +'Prompt copied — paste it to Claude:'
+      +' across '+r.groups+' group'+(r.groups===1?'':'s')
+      +' (a clean mock per shirt, plus each group’s shop sheet).'
+      +(r.skipped&&r.skipped.length?'<br><span class="pv-bad">Skipped '+r.skipped.join(', ')
+        +' — no art loaded.</span>':'')
+      +'<br>Prompt copied — paste it to Claude:'
       +'<span class="pv-prompt">'+prompt+'</span>';
     b.textContent='✓ SAVED — PROMPT COPIED';
     setTimeout(()=>{b.textContent=orig;b.disabled=false;},2600);
