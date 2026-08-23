@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.28.1 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.29 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -1605,8 +1605,30 @@ function inkIsOff(a,dark){
   if(!a)return false;
   return (dark&&a.darkOff!=null)?!!a.darkOff:!!a.off;
 }
+/* ===== v8.29 MERGED INKS =====
+   Two detected colours in the art can land on the SAME standard ink — either
+   the art had near-duplicates, or Kolton deliberately pointed both at one
+   bucket. On the press that is ONE screen and ONE swatch, so every OUTPUT
+   dedupes on the RESOLVED pms index, per location and per setup.
+   Two things deliberately do NOT dedupe:
+     · the ink LIST in step 5 — you must still be able to edit each detected
+       colour separately, that's how you merge them in the first place;
+     · recolorArt — both source colours still get mapped, they just map to the
+       same target, which is exactly what makes them one screen.
+   Dedupe lives inside enabledAssign/enabledAssignSide/sleeveEnabled so screen
+   counts, swatches, callouts and pricing can never disagree with each other. */
+function dedupeInks(list,resolve){
+  const seen={},out=[];
+  list.forEach(function(a){
+    const i=resolve(a);
+    if(seen[i])return;
+    seen[i]=1;out.push(a);
+  });
+  return out;
+}
 function enabledAssignSide(side,dark){
-  return state.inkAssign.filter((a,i)=>!inkIsOff(a,dark)&&inkOnSide(i,side));
+  const on=state.inkAssign.filter((a,i)=>!inkIsOff(a,dark)&&inkOnSide(i,side));
+  return dedupeInks(on,function(a){return inkIdxFor(a,dark,side);});
 }
 /* an ink that prints in EITHER setup — for questions about the job as a whole */
 function assignOnInEither(){
@@ -1712,7 +1734,11 @@ function refreshCalibStatus(){
 function buildGallery(){/* v6.1: gallery removed — search is the picker */}
 /* v7.7: click-to-disable inks — an OFF ink renders transparent and drops out of
    mockups, print sheets, screen counts, and callouts. Click the swatch to toggle. */
-function enabledAssign(dark){return state.inkAssign.filter(a=>!inkIsOff(a,dark));}
+function enabledAssign(dark){
+  /* v8.29: merged inks collapse — no side context here, so resolve front-side */
+  return dedupeInks(state.inkAssign.filter(a=>!inkIsOff(a,dark)),
+    function(a){return (dark&&a.darkIdx!=null)?a.darkIdx:a.idx;});
+}
 /* v8.26: ON/OFF now edits the setup you are LOOKING at. Turning an ink off on
    the light tab pins the dark setup where it was first — the same "pin the
    other one before you diverge" move applyPick already makes for colours. */
@@ -2147,9 +2173,12 @@ function refresh(){
     });
   }
   const plel=$('previewPms');plel.innerHTML='';
+  const __pvSeen={};   /* v8.29: one chip per resolved ink */
   state.inkAssign.forEach((a,ai)=>{
     if(inkIsOff(a,sc.dark)||!inkOnSide(ai,state.side))return;   /* v8.26 */
     const i=inkIdxFor(a,sc.dark,state.side);
+    if(__pvSeen[i])return;
+    __pvSeen[i]=1;
     const p=PMS[i];
     const swapped=i!==inkIdxFor(a,false,state.side);
     const c=document.createElement('span');c.className='pmschip';
@@ -4417,8 +4446,10 @@ function pvExceptions(locs){
       const di=isSlv?((a.darkIdx!=null)?a.darkIdx:a.idx):inkIdxFor(a,true,spec.kind);
       if(!inkIsOff(a,false))lightOn[li]=nameOf(li);
       if(!inkIsOff(a,true))darkOn[di]=nameOf(di);
-      if(!inkIsOff(a,false)&&!inkIsOff(a,true)&&li!==di)
-        swaps.push(nameOf(li)+' \u2192 '+nameOf(di)+' on darks');
+      if(!inkIsOff(a,false)&&!inkIsOff(a,true)&&li!==di){
+        const t=nameOf(li)+' \u2192 '+nameOf(di)+' on darks';
+        if(swaps.indexOf(t)<0)swaps.push(t);   /* v8.29: merged inks say it once */
+      }
     });
     Object.keys(lightOn).forEach(function(i){
       if(!darkOn[i])out.push(spec.label+': '+lightOn[i]+' prints on LIGHT shirts only.');
@@ -4917,7 +4948,11 @@ function sleeveDims(k){
   return {w,h,area,over:w>area.w+0.01||h>area.h+0.01};
 }
 /* v8.26: sleeve inks follow the same per-setup off contract as body inks */
-function sleeveEnabled(k,dark){return (sleeveObj(k).assign||[]).filter(a=>!inkIsOff(a,dark));}
+function sleeveEnabled(k,dark){
+  /* v8.29: sleeves merge the same way */
+  return dedupeInks((sleeveObj(k).assign||[]).filter(a=>!inkIsOff(a,dark)),
+    function(a){return (dark&&a.darkIdx!=null)?a.darkIdx:a.idx;});
+}
 function sleeveColorCount(k,dark){const s=sleeveObj(k);return Math.max(1,s.inks.length?sleeveEnabled(k,dark).length:1);}
 /* v8.26: pricing bills ONE colour count per sleeve — the heavier setup wins so
    a job is never under-quoted when an ink is off on only one of them. */
