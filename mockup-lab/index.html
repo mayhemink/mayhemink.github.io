@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.29 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.30 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -1130,7 +1130,7 @@ function recolorArt(base,inks,assign,dark,keep){
     const a=assign[i]||{};
     const pi=(dark&&a.darkIdx!=null)?a.darkIdx:a.idx;
     const t=PMS_RGB[pi]||[ink.r,ink.g,ink.b];
-    return {r:ink.r,g:ink.g,b:ink.b,lum:Math.max(0.02,relLum(ink.r,ink.g,ink.b)),tr:t[0],tg:t[1],tb:t[2],kill:!!a.off};
+    return {r:ink.r,g:ink.g,b:ink.b,lum:relLum(ink.r,ink.g,ink.b),tr:t[0],tg:t[1],tb:t[2],kill:!!a.off};
   });
   if(!targets.length)return base;
   for(let p=0;p<d.length;p+=4){
@@ -1145,8 +1145,21 @@ function recolorArt(base,inks,assign,dark,keep){
     const t=targets[bi];
     if(t.kill){d[p+3]=0;continue;}
     if(keep)continue;
-    const f=Math.min(1.5,Math.max(0.35,relLum(r,g,b)/t.lum));
-    d[p]=Math.min(255,t.tr*f);d[p+1]=Math.min(255,t.tg*f);d[p+2]=Math.min(255,t.tb*f);
+    /* v8.30 SHADE MAP. The old model multiplied the target by lum(px)/lum(ink).
+       That divides by zero for BLACK art, so the divisor was clamped to 0.02 and
+       the factor floored at 0.35 — every black-art ink came out 35% of target
+       (white -> #595959, and every light PMS came out muddy). Now we map the
+       pixel's luminance RELATIVE to the source ink: equal luminance reproduces
+       the target EXACTLY, lighter pixels mix toward white, darker toward black.
+       Works from any source ink including pure black. */
+    const s=relLum(r,g,b),s0=t.lum;
+    if(s>=s0){
+      const k=s0>=1?0:Math.min(1,(s-s0)/(1-s0));
+      d[p]=t.tr+(255-t.tr)*k;d[p+1]=t.tg+(255-t.tg)*k;d[p+2]=t.tb+(255-t.tb)*k;
+    }else{
+      const k=s0<=0?0:Math.min(1,(s0-s)/s0);
+      d[p]=t.tr*(1-k);d[p+1]=t.tg*(1-k);d[p+2]=t.tb*(1-k);
+    }
   }
   ctx.putImageData(img,0,0);
   return c;
