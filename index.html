@@ -421,7 +421,7 @@ function save(){
 function rec(id){
   var row = findRow(id);
   var st = stateFor(row);
-  if(!st[id]) st[id] = {printer:null, press:null, setupBy:null, printBy:null, colors:row.colors, screens:row.screens, setupStart:null, setupDone:null, jobDone:null, pauses:[], handoffs:[], notes:""};
+  if(!st[id]) st[id] = {printer:null, press:null, setupBy:null, printBy:null, colors:row.colors, screens:row.screens, setupStart:null, setupDone:null, jobDone:null, emailedAt:null, emailConfirmed:false, pauses:[], handoffs:[], notes:""};
   if(!st[id].pauses) st[id].pauses = [];
   if(!st[id].handoffs) st[id].handoffs = [];
   if(st[id].colors == null) st[id].colors = row.colors;
@@ -898,6 +898,7 @@ function renderDetail(){
     var m = calcRow(row);
     html += '<div class="donebanner">DONE — ' + m.setupMin + ' min setup · ' + m.printMin + ' min print' +
       '<small>' + m.pph + ' pieces/hour</small></div>';
+    html += emailBtnHtml(r);
   } else if(st === "pause"){
     html += '<button class="bigbtn b-resume" onclick="resumeJob()">&#9654; RESUME — job is paused</button>';
   } else if(pausePicking){
@@ -1039,6 +1040,69 @@ function setPress(p){ rec(currentRow.id).press = p; save(); renderDetail(); }
 function setColors(c){ rec(currentRow.id).colors = c; save(); renderDetail(); }
 function setScreens(c){ rec(currentRow.id).screens = c; save(); renderDetail(); }
 function setNotes(v){ rec(currentRow.id).notes = v; save(); }
+// ---------- JOB DONE -> office email (added 2026-08-26) ----------
+// The office lost its "paper work order turned in" signal when the board went
+// digital. A printer taps EMAIL THE OFFICE on a finished card and a Google
+// Apps Script running under info@mayhemink.net sends the mail — no mail app
+// needed on the iPad. The send is stamped on the card so the office can see
+// which finished jobs actually went out.
+var MAILER_URL = "https://script.google.com/macros/s/AKfycbxvp-HJ8o9wgaclA0o-ug_P7KhHefiPvdUfmkYbNCNQAJUEAQk-94bf43QssAnvElcQ/exec";
+var MAILER_KEY = "CXjqc070PNwyzPFP6dkd-9L5";
+var emailing = false;
+
+function emailBtnHtml(r){
+  if(emailing){
+    return '<button class="bigbtn" disabled style="background:var(--gray);margin-bottom:12px">SENDING&#8230;</button>';
+  }
+  if(r.emailedAt){
+    return '<div style="background:#eaf6ee;border:2px solid var(--green);border-radius:14px;padding:14px;text-align:center;margin-bottom:12px">' +
+      '<div style="font-size:16px;font-weight:800;color:var(--green)">&#10003; OFFICE EMAILED ' + fmt(r.emailedAt) +
+      (r.emailConfirmed ? '' : ' <span style="font-weight:700;color:var(--gray)">(unconfirmed)</span>') + '</div>' +
+      '<div onclick="emailOffice()" style="margin-top:8px;font-size:13px;font-weight:800;color:var(--gray);cursor:pointer;text-decoration:underline">send again</div>' +
+      '</div>';
+  }
+  return '<button class="bigbtn" onclick="emailOffice()" style="background:var(--blue);margin-bottom:12px">&#9993; EMAIL THE OFFICE</button>';
+}
+
+function emailOffice(){
+  if(emailing || !currentRow) return;
+  var row = currentRow, r = rec(row.id);
+  emailing = true; renderDetail();
+  var payload = JSON.stringify({
+    key: MAILER_KEY,
+    job: row.job,
+    customer: row.customer || "",
+    nickname: row.nickname || "",
+    location: row.location || "",
+    qty: row.qty || "",
+    printer: r.printBy || r.printer || "",
+    url: row.url || ""
+  });
+  function finish(confirmed){
+    emailing = false;
+    r.emailedAt = now();
+    r.emailConfirmed = !!confirmed;
+    save(); renderDetail();
+    toast("Office emailed.");
+  }
+  function fail(){
+    emailing = false; renderDetail();
+    toast("Email didn't go — check the wifi and tap again.");
+  }
+  var opts = {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:payload};
+  try{
+    fetch(MAILER_URL, opts).then(function(res){
+      finish(!!(res && res.ok));
+    })["catch"](function(){
+      // Some iPad/Safari setups won't let us read the Apps Script redirect.
+      // Fire and forget rather than leave the printer stuck, but label it
+      // unconfirmed so nobody assumes it landed.
+      var o2 = {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:payload};
+      fetch(MAILER_URL, o2).then(function(){ finish(false); })["catch"](fail);
+    });
+  }catch(e){ fail(); }
+}
+
 function stamp(field){
   var r = rec(currentRow.id);
   if(field === "setupDone" && r.setupStart && (now() - r.setupStart) < 120000){
