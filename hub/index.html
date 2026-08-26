@@ -63,7 +63,7 @@ main{
   grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
   gap:16px;
 }
-.tile{
+a.tile{
   display:block;
   background:var(--surface);
   border:1px solid var(--line2);
@@ -75,12 +75,12 @@ main{
   overflow:hidden;
   transition:border-color .15s, transform .15s, background .15s;
 }
-.tile:hover{
+a.tile:hover{
   border-color:var(--blue);
   background:var(--surface2);
   transform:translateY(-2px);
 }
-.tile::before{
+a.tile::before{
   content:"";
   position:absolute;
   left:0;top:0;bottom:0;
@@ -89,7 +89,7 @@ main{
   opacity:0;
   transition:opacity .15s;
 }
-.tile:hover::before{opacity:1}
+a.tile:hover::before{opacity:1}
 .tile .tag{
   font-family:'JetBrains Mono',monospace;
   font-size:11px;
@@ -120,9 +120,6 @@ main{
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-.tile .who{display:flex;gap:10px;margin-top:14px}
-.tile .who a{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);border:1px solid var(--line2);border-radius:8px;padding:9px 0;text-decoration:none;transition:border-color .15s, background .15s}
-.tile .who a:hover{border-color:var(--blue);background:var(--surface2)}
 .sec-label{
   margin-top:30px;
   border-top:1px solid var(--line2);
@@ -192,16 +189,12 @@ footer{
 </header>
 <main>
   <div class="grid">
-    <div class="tile">
+    <a class="tile" href="/ops/" target="_blank" rel="noopener">
       <span class="tag">Prep</span>
       <h2>Ops Board</h2>
       <p>Daily prep lanes — films, woven, DTF, laser, digitizing — plus pending-quote follow-ups.</p>
-      <div class="who">
-        <a href="/ops/#who=joe" target="_blank" rel="noopener">Joe</a>
-        <a href="/ops/#who=kolton" target="_blank" rel="noopener">Kolton</a>
-      </div>
       <span class="url">mayhemink.github.io/ops</span>
-    </div>
+    </a>
     <a class="tile" href="/mockup-lab/" target="_blank" rel="noopener">
       <span class="tag">Sales</span>
       <h2>Mockup Lab</h2>
@@ -270,6 +263,21 @@ footer{
     <a href="https://straightmayhem.com" target="_blank" rel="noopener">
       <img src="https://www.google.com/s2/favicons?domain=straightmayhem.com&sz=64" alt="">
       <span class="name">Straight Mayhem</span><span class="host">straightmayhem.com</span>
+    </a>
+  </div>
+  <div class="sec-label">SHEETS</div>
+  <div class="sitelist">
+    <a href="https://docs.google.com/spreadsheets/d/15wFW0NtbytfNhYawnQa7rqQ64ovxZNtBYvEwh7YMbhw/edit" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=64" alt="">
+      <span class="name">Press Stats</span><span class="host">nightly press-run log</span>
+    </a>
+    <a href="https://docs.google.com/spreadsheets/d/1iupsQN-SjRBNO9hcv-6-Dj4jsao0T3YgKFLRPn9gtkc/edit" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=64" alt="">
+      <span class="name">Job Cost Log</span><span class="host">garment costs per job</span>
+    </a>
+    <a href="https://docs.google.com/spreadsheets/d/1s4tPXwm3Z9_ScXuqXHon6I65j_y3RoHLQHSCvFx7uRw/edit" target="_blank" rel="noopener">
+      <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=64" alt="">
+      <span class="name">Cost Analysis</span><span class="host">run rate &amp; price matrix</span>
     </a>
   </div>
 </main>
