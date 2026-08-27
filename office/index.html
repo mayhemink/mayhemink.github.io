@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Press Floor — Mayhem Ink</title>
+<style>
+  :root{
+    --ink:#111111; --bg:#f4f4f5; --card:#ffffff; --line:#e2e2e6;
+    --gray:#8a8a8e; --green:#1a9c4b; --amber:#e08a00; --blue:#2264c7;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+       font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  header{background:var(--ink); color:#fff; padding:10px 18px;
+         display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+  header .brand{font-weight:800; letter-spacing:.5px; font-size:15px;}
+  header .brand span{color:#469BEB;}
+  header .when{font-size:12px; font-weight:700; color:#b9b9c0;}
+  .wrap{max-width:900px; margin:0 auto; padding:16px 14px 60px;}
+
+  h2{font-size:12px; font-weight:800; letter-spacing:1.1px; text-transform:uppercase;
+     color:var(--gray); margin:26px 0 10px;}
+
+  .presses{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:640px){ .presses{grid-template-columns:1fr;} }
+  .press{background:var(--card); border:1px solid var(--line); border-left:5px solid var(--gray);
+         border-radius:14px; padding:16px 18px;}
+  .press.setup{border-left-color:var(--amber);}
+  .press.print{border-left-color:var(--green);}
+  .press.done{border-left-color:var(--blue);}
+  .press .name{font-size:11px; font-weight:800; letter-spacing:1.1px;
+               text-transform:uppercase; color:var(--gray);}
+  .press .job{font-size:24px; font-weight:800; margin:5px 0 2px; letter-spacing:-.3px;}
+  .press .cust{font-size:14px; font-weight:600; color:var(--gray);}
+  .press .phase{margin-top:10px; font-size:13px; font-weight:800;}
+  .press .phase b{font-size:15px;}
+  .idlebox{color:var(--gray); font-weight:700; font-size:15px; padding:6px 0;}
+
+  .row{background:var(--card); border:1px solid var(--line); border-radius:12px;
+       padding:12px 16px; margin-bottom:8px; display:flex; align-items:baseline;
+       gap:12px; flex-wrap:wrap;}
+  .row .n{font-weight:800; font-size:17px; min-width:56px;}
+  .row .c{flex:1; min-width:150px; font-weight:600;}
+  .row .t{font-size:13px; font-weight:700; color:var(--gray); white-space:nowrap;}
+  .tag{font-size:10.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase;
+       padding:3px 8px; border-radius:20px; white-space:nowrap;}
+  .t-done{background:#eaf6ee; color:var(--green);}
+  .t-wait{background:#fff6e5; color:#8a5a00;}
+  .t-mail{background:#e8f0fc; color:var(--blue);}
+
+  .empty{color:var(--gray); font-weight:600; font-size:14px; padding:10px 2px;}
+  .stale{background:#fff6e5; border:2px solid var(--amber); border-radius:12px;
+         padding:12px 16px; margin-bottom:14px; font-size:14px; font-weight:700; color:#8a5a00;}
+  footer{margin-top:30px; font-size:12px; color:var(--gray); text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">MAYHEM <span>PRESS FLOOR</span></div>
+  <div class="when" id="when">loading…</div>
+</header>
+
+<div class="wrap">
+  <div id="stale" class="stale" style="display:none"></div>
+
+  <h2>On the presses now</h2>
+  <div class="presses" id="presses"></div>
+
+  <h2>Waiting on another location</h2>
+  <div id="waiting"></div>
+
+  <h2>Finished today</h2>
+  <div id="done"></div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+// Read-only window on the press board. Polls the same shared state the iPads
+// use. No pricing, no contact info — this page is public like the board.
+var SYNC_URL = "https://mayhem-press-state.autumn-mountain-14c6.workers.dev";
+var SYNC_KEY = "wVUsmD1WhcoLlb_wDMuDDlXCZx2QsnT0";
+var WEEK_URL = "https://mayhemink.github.io/data/week.json";
+
+var WEEK = null, ROWS = {}, STATE = null, LASTOK = 0;
+
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function fmt(ts){
+  if(!ts) return "";
+  return new Date(ts).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+}
+function since(ts){
+  if(!ts) return "";
+  var m = Math.round((Date.now() - ts) / 60000);
+  if(m < 1) return "just now";
+  if(m < 60) return m + " min";
+  return Math.floor(m/60) + "h " + (m%60) + "m";
+}
+function todayStr(){
+  var d = new Date(), p = function(n){ return (n<10?"0":"") + n; };
+  return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate());
+}
+function titleOf(m){
+  if(!m) return "";
+  if(m.nickname && m.customer && m.nickname !== m.customer) return m.customer + " (" + m.nickname + ")";
+  return m.customer || m.nickname || "";
+}
+
+function loadWeek(){
+  return fetch(WEEK_URL + "?cb=" + Date.now()).then(function(r){ return r.json(); })
+    .then(function(j){
+      WEEK = j; ROWS = {};
+      (j.days || []).forEach(function(d){
+        (d.rows || []).forEach(function(r){ r._day = d.day; ROWS[r.id] = r; });
+      });
+    });
+}
+
+function loadState(){
+  if(!WEEK) return Promise.resolve();
+  return fetch(SYNC_URL + "/state?week=" + encodeURIComponent(WEEK.week) + "&k=" + SYNC_KEY)
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if(j && j.ok){ STATE = j.state; LASTOK = Date.now(); }
+    });
+}
+
+function phaseOf(r){
+  if(!r) return "idle";
+  if(r.jobDone) return "done";
+  if(r.setupDone) return "print";
+  if(r.setupStart) return "setup";
+  return "idle";
+}
+
+function renderPresses(){
+  var el = document.getElementById("presses");
+  var pres = (STATE && STATE.presence) || {};
+  var cut = Date.now() - 300000;   // 5 min — a sleeping iPad falls off
+  var live = Object.keys(pres).map(function(k){ return pres[k]; })
+    .filter(function(p){ return p && p.at > cut; })
+    .sort(function(a,b){ return String(a.press||"").localeCompare(String(b.press||"")); });
+
+  if(!live.length){
+    el.innerHTML = '<div class="press"><div class="name">Presses</div>' +
+      '<div class="idlebox">No iPad has checked in for 5 minutes.</div></div>';
+    return;
+  }
+  var LABEL = {idle:"On deck", setup:"Setting up", print:"Printing", done:"Finished"};
+  el.innerHTML = live.map(function(p){
+    var row = p.rowId ? ROWS[p.rowId] : null;
+    var rec = (STATE.rows || {})[p.rowId];
+    // Prefer the synced card record, but fall back to what the iPad last
+    // reported — a card that hasn't pushed yet shouldn't read as idle.
+    var ph = rec ? phaseOf(rec) : (p.phase || "idle");
+    var started = rec ? (rec.setupDone || rec.setupStart) : null;
+    return '<div class="press ' + ph + '">' +
+      '<div class="name">' + esc(p.press || "Press") + ' &middot; ' + esc(p.printer || "—") + '</div>' +
+      (row
+        ? '<div class="job">' + esc(row.job) + ' <span style="font-size:15px;font-weight:700;color:var(--gray)">' +
+            esc(row.location || "") + '</span></div>' +
+          '<div class="cust">' + esc(titleOf(row)) + ' &middot; ' + esc(row.qty || 0) + ' pcs</div>' +
+          '<div class="phase"><b>' + esc(LABEL[ph] || ph) + '</b>' +
+            (started && ph !== "done" ? ' — ' + since(started) : "") +
+            (ph === "done" && rec ? ' at ' + fmt(rec.jobDone) : "") + '</div>'
+        : '<div class="idlebox">No card open</div>') +
+      '</div>';
+  }).join("");
+}
+
+// Jobs where some locations are done and others aren't — the exact thing the
+// office used to find out by walking back to the press.
+function renderWaiting(){
+  var el = document.getElementById("waiting");
+  var jobs = {};
+  Object.keys(ROWS).forEach(function(id){
+    var j = String(ROWS[id].job);
+    (jobs[j] = jobs[j] || []).push(ROWS[id]);
+  });
+  var out = [];
+  Object.keys(jobs).forEach(function(j){
+    var sibs = jobs[j];
+    var done = sibs.filter(function(r){
+      var rec = (STATE && STATE.rows || {})[r.id];
+      return rec && rec.jobDone;
+    });
+    if(!done.length || done.length === sibs.length) return;
+    var left = sibs.filter(function(r){
+      var rec = (STATE && STATE.rows || {})[r.id];
+      return !(rec && rec.jobDone);
+    });
+    out.push('<div class="row"><div class="n">' + esc(j) + '</div>' +
+      '<div class="c">' + esc(titleOf(sibs[0])) +
+      '<div style="font-size:12.5px;color:var(--gray);font-weight:600">still out: ' +
+        esc(left.map(function(r){ return r.location || "print"; }).join(", ")) + '</div></div>' +
+      '<span class="tag t-wait">' + done.length + ' of ' + sibs.length + '</span></div>');
+  });
+  el.innerHTML = out.length ? out.join("") :
+    '<div class="empty">Nothing half-finished right now.</div>';
+}
+
+function renderDone(){
+  var el = document.getElementById("done");
+  var today = todayStr(), out = [];
+  var recs = (STATE && STATE.rows) || {};
+  var jobsSent = (STATE && STATE.jobs) || {};
+  Object.keys(recs).forEach(function(id){
+    var rec = recs[id], row = ROWS[id];
+    if(!rec || !rec.jobDone || !row) return;
+    var d = new Date(rec.jobDone), p = function(n){ return (n<10?"0":"")+n; };
+    var ds = d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate());
+    if(ds !== today) return;
+    out.push({ ts: rec.jobDone, html:
+      '<div class="row"><div class="n">' + esc(row.job) + '</div>' +
+      '<div class="c">' + esc(titleOf(row)) +
+        '<div style="font-size:12.5px;color:var(--gray);font-weight:600">' +
+        esc(row.location || "") + ' &middot; ' + esc(rec.printBy || rec.printer || "?") + '</div></div>' +
+      (jobsSent[String(row.job)] ? '<span class="tag t-mail">emailed</span>' : '') +
+      '<span class="tag t-done">' + fmt(rec.jobDone) + '</span></div>' });
+  });
+  out.sort(function(a,b){ return b.ts - a.ts; });
+  el.innerHTML = out.length ? out.map(function(x){ return x.html; }).join("") :
+    '<div class="empty">Nothing off the press yet today.</div>';
+}
+
+function renderAll(){
+  document.getElementById("when").textContent =
+    "updated " + new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+  var stale = document.getElementById("stale");
+  if(LASTOK && Date.now() - LASTOK > 120000){
+    stale.style.display = "block";
+    stale.textContent = "⚠ Haven't reached the press board in " + since(LASTOK) +
+      " — what's below may be out of date.";
+  } else {
+    stale.style.display = "none";
+  }
+  renderPresses(); renderWaiting(); renderDone();
+  document.getElementById("foot").textContent =
+    WEEK ? ("Week of " + WEEK.week + " · refreshes every 15 seconds") : "";
+}
+
+function cycle(){
+  loadState()["catch"](function(){}).then(renderAll)["catch"](function(){});
+}
+
+loadWeek()["catch"](function(){}).then(cycle)["catch"](function(){});
+setInterval(cycle, 15000);
+setInterval(function(){ loadWeek()["catch"](function(){}); }, 600000);
+document.addEventListener("visibilitychange", function(){ if(!document.hidden) cycle(); });
+</script>
+</body>
+</html>
