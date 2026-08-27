@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.33 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.34 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -589,7 +589,12 @@
   #supPager{flex-wrap:wrap;}
   #supPager button{background:var(--surface2);border:1px solid var(--line2);border-radius:3px;color:var(--muted);cursor:pointer;font:700 9px 'JetBrains Mono',monospace;padding:4px 8px;}
   #supPager button.on{color:#4B9CD3;border-color:#4B9CD3;}
-  #supInkPop{border:1px solid #4B9CD3;border-radius:8px;background:var(--surface);padding:12px;margin-top:8px;}
+  /* v8.34: the ink popup is a centered MODAL — it used to render inline below a
+     tall workbench canvas, entirely under the fold, which read as "the ink
+     picker doesn't work". Never move it back inline. */
+  #supInkWrap{position:fixed;inset:0;background:rgba(10,11,12,.66);z-index:70;display:flex;align-items:flex-start;justify-content:center;padding:6vh 20px 20px;}
+  #supInkWrap[hidden]{display:none;}
+  #supInkPop{border:1px solid #4B9CD3;border-radius:8px;background:var(--surface);padding:14px;width:100%;max-width:600px;max-height:82vh;overflow:auto;box-shadow:0 18px 60px rgba(0,0,0,.55);}
   #supInkPop .hd{display:flex;align-items:center;gap:8px;font:700 11px 'JetBrains Mono',monospace;color:var(--muted);}
   #supInkPop .hd .sw{width:26px;height:26px;border-radius:4px;border:1px solid var(--line2);}
   #supInkOpts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:10px;max-height:230px;overflow:auto;}
@@ -858,7 +863,8 @@
       </div>
       <div class="btnrow" id="supPager" style="margin-top:6px;"></div>
       <canvas id="supCanvas" style="width:100%;margin-top:8px;border:1px solid var(--line2);border-radius:6px;cursor:crosshair;display:block;"></canvas>
-      <div id="supInkPop" hidden>
+      <div id="supInkWrap" hidden>
+      <div id="supInkPop">
         <div class="hd"><span class="sw" id="supInkSw"></span><span>sampled <b id="supInkHex">—</b> · adding to</span>
           <select id="supInkTarget" style="width:auto;"></select></div>
         <input id="supInkSearch" type="search" placeholder="🔍 closest matches shown — or search any ink / PMS code" style="margin-top:8px;">
@@ -867,6 +873,7 @@
           <button class="btn sm" id="supInkAdd" disabled>PICK AN INK ABOVE</button>
           <button class="btn ghost sm" id="supInkCancel">CANCEL</button>
         </div>
+      </div>
       </div>
       <div id="supMarkForm" hidden style="margin-top:8px;border:1px solid var(--line2);border-radius:6px;padding:10px;">
         <div class="row2">
@@ -1021,7 +1028,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.33 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.34 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -5541,6 +5548,19 @@ function supSetSrc(s){
 }
 $('supSrcArt').onclick=function(){supSetSrc('art');};
 $('supSrcMock').onclick=function(){supSetSrc('mock');};
+/* v8.34: deWhiteRaster pops a blocking confirm() when art has >256 white px
+   INSIDE the design (every Rayco-style file). In supplied mode that froze the
+   drop mid-flow. Quiet variant: strip the white BACKGROUND only, keep interior
+   white — it reads as white ink, which is the safe default here. */
+function supDeWhite(c){
+  if(hasTransparency(c)||!borderMostlyWhite(c))return c;
+  const bak=document.createElement('canvas');bak.width=c.width;bak.height=c.height;
+  bak.getContext('2d').drawImage(c,0,0);
+  knockoutBorderWhite(c,24);
+  if(!alphaBBox(c))return bak;
+  defringeWhite(c);
+  return c;
+}
 function supQueueArt(c){
   if(!c||!alphaBBox(c)){$('supToolMsg').textContent="couldn't read one of those files";return;}
   if(SUP.pendArt||SUP.pend){SUP.artQ.push(c);supRefresh();return;}
@@ -5560,7 +5580,7 @@ wireDrop('supArtDrop','supArtInput',function(files){
       const c=document.createElement('canvas');
       c.width=Math.max(1,Math.round(img.width*sc));c.height=Math.max(1,Math.round(img.height*sc));
       c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      supQueueArt(trimCanvas(hasTransparency(c)?c:deWhiteRaster(c)));
+      supQueueArt(trimCanvas(hasTransparency(c)?c:supDeWhite(c)));
     });
   });
 },true);
@@ -5584,7 +5604,7 @@ function supNewPrintFromArt(c){
   supSyncLocW();
   $('supToolMsg').textContent='→ name the location + width for that art';
   supRefresh();
-  try{$('pSupBench').scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}
+  try{$('supMarkForm').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
 }
 
 /* ---------- workbench: views + drawing ---------- */
@@ -5742,6 +5762,7 @@ window.addEventListener('mouseup',function(e){
   supDrawBench();
   $('supMarkForm').hidden=false;
   supSyncLocW();
+  try{$('supMarkForm').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
 });
 
 /* ---------- add a print (clean art OR marquee crop) ---------- */
@@ -5829,7 +5850,7 @@ function supOpenInkPop(rgb,pid){
   $('supInkSearch').value='';
   supRenderInkOpts('');
   $('supInkAdd').disabled=true;$('supInkAdd').textContent='PICK AN INK ABOVE';
-  $('supInkPop').hidden=false;
+  $('supInkWrap').hidden=false;
 }
 function supRenderInkOpts(q){
   const el=$('supInkOpts');el.innerHTML='';
@@ -5866,7 +5887,9 @@ function supRenderInkOpts(q){
   if(!list.length)el.innerHTML='<div class="val">nothing matches that search</div>';
 }
 $('supInkSearch').oninput=function(e){supRenderInkOpts(e.target.value);};
-$('supInkCancel').onclick=function(){$('supInkPop').hidden=true;};
+$('supInkCancel').onclick=function(){$('supInkWrap').hidden=true;};
+$('supInkWrap').onclick=function(e){if(e.target===$('supInkWrap'))$('supInkWrap').hidden=true;};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('supInkWrap').hidden)$('supInkWrap').hidden=true;});
 $('supInkAdd').onclick=function(){
   const pid=+$('supInkTarget').value,p=supFindPrint(pid);
   if(!p||__supPickI==null)return;
@@ -5877,7 +5900,7 @@ $('supInkAdd').onclick=function(){
     $('supToolMsg').textContent='added '+supInkName(__supPickI)+' → '+p.label+' · keep clicking colors';
   }
   SUP.lastPrint=pid;SUP.touchedInks=true;
-  $('supInkPop').hidden=true;
+  $('supInkWrap').hidden=true;
   supRefresh();
 };
 function supDetectAll(p){
