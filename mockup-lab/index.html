@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.34 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.35 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -890,6 +890,7 @@
           <div><label class="lbl" style="margin-top:0;">Print width (in)</label><input type="number" id="supLocW" step="0.25" min="0.5" value="10"></div>
         </div>
         <input type="text" id="supLocCustom" placeholder="custom location name" hidden style="margin-top:6px;">
+        <div class="val" id="supPendInks" hidden style="margin-top:6px;color:#7BAFD4;"></div>
         <div class="btnrow"><button class="btn sm" id="supMarkAdd">ADD THE PRINT</button><button class="btn ghost sm" id="supMarkCancel">CANCEL</button></div>
       </div>
     </div>
@@ -1028,7 +1029,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.34 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.35 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -5388,7 +5389,7 @@ document.querySelectorAll('.panel').forEach((p,i)=>{
    Inks are added eyedropper-first: click a color on the workbench → nearest
    pantones → confirm → chip lands on the sheet. DETECT ALL pre-fills.
    Fully separate state (SUP) — never touches the normal flow or autosave. */
-const SUP={on:false,src:null,groups:[],act:0,pages:[],artQ:[],seq:1,viewKey:null,tool:'ink',
+const SUP={on:false,src:null,groups:[],act:0,pages:[],artQ:[],pendInks:[],seq:1,viewKey:null,tool:'ink',
   pend:null,pendArt:null,lastPrint:null,touchedG:false,touchedInks:false};
 let __stepperOrig=null;
 const SUP_STEPS=['1 · JOB','2 · TYPE','3 · ART','4 · GARMENT','5 · INKS','6 · SHEET'];
@@ -5721,27 +5722,44 @@ $('supToolInk').onclick=function(){supSetTool('ink');};
 $('supToolG').onclick=function(){supSetTool('garment');};
 $('supToolMark').onclick=function(){supSetTool('mark');};
 
-let __supDrag=null;
-supCv.addEventListener('mousedown',function(e){
-  if(!SUP.on)return;
-  const view=supCurView();if(!view)return;
-  e.preventDefault();
-  const pos=supPos(e);
+let __supDrag=null,__supMdSeen=false;
+/* v8.35: Kolton's real clicks were dying in SILENT early-returns — no view yet
+   (art still sitting in the location form, or nothing dropped). One pointer
+   path now: every dead end talks, eyedropping works while the location form
+   is open (inks buffer into SUP.pendInks and land on the print at ADD), and a
+   click-fallback covers a mousedown that something upstream ate. */
+function supBenchPointer(e,allowDrag){
+  const view=supCurView();
   if(SUP.tool==='mark'){
-    if(view.t!=='pg'){$('supToolMsg').textContent='marking works on mockup pages — clean art is already a print';return;}
-    __supDrag={x0:pos.x,y0:pos.y};
+    if(!view||view.t!=='pg'){$('supToolMsg').textContent='⚠ marking works on mockup pages — clean art is already a print';return;}
+    if(allowDrag){const pos=supPos(e);__supDrag={x0:pos.x,y0:pos.y};}
     return;
   }
-  /* sample from the page canvas when on a page; from the rendered bench when on a print */
-  const src=supViewCanvas()||supCv;
+  if(!view&&!SUP.pendArt){
+    $('supToolMsg').textContent='⚠ drop the customer art first (left panel) — then click a color in it';
+    return;
+  }
+  const pos=supPos(e);
+  const src=(view&&view.t==='pg')?view.obj.canvas:supCv;
   const rgb=supAvgAt(src,pos.x,pos.y,3);
-  if(!rgb){$('supToolMsg').textContent='nothing there — click on the art';return;}
+  if(!rgb){$('supToolMsg').textContent='⚠ nothing there — click on the art itself';return;}
   if(SUP.tool==='garment'){
     supSetGarment(rgb,supNearestSwatchName(rgb));
     $('supToolMsg').textContent='garment set → '+supGroup().name;
   }else{
-    supOpenInkPop(rgb,view.t==='pr'?view.obj.id:null);
+    supOpenInkPop(rgb,(view&&view.t==='pr')?view.obj.id:null);
   }
+}
+supCv.addEventListener('mousedown',function(e){
+  if(!SUP.on)return;
+  __supMdSeen=true;
+  e.preventDefault();
+  supBenchPointer(e,true);
+});
+supCv.addEventListener('click',function(e){
+  if(!SUP.on)return;
+  if(__supMdSeen){__supMdSeen=false;return;}
+  supBenchPointer(e,false);
 });
 window.addEventListener('mousemove',function(e){
   if(!__supDrag)return;
@@ -5772,7 +5790,7 @@ function supSyncLocW(){
   $('supLocCustom').hidden=$('supLocSel').value!=='CUSTOM';
 }
 $('supLocSel').onchange=supSyncLocW;
-$('supMarkCancel').onclick=function(){SUP.pend=null;SUP.pendArt=null;$('supMarkForm').hidden=true;supDrawBench();supNextQueuedArt();};
+$('supMarkCancel').onclick=function(){SUP.pend=null;SUP.pendArt=null;SUP.pendInks=[];$('supMarkForm').hidden=true;supDrawBench();supNextQueuedArt();};
 /* garment knockout for marquee crops — RING-ONLY reference (the local shirt
    color at that spot + its luminance shades). NEVER the group colors: black
    ink sits ~35 RGB from navy and would be eaten (proven in the v8.31 smoke). */
@@ -5815,7 +5833,7 @@ $('supMarkAdd').onclick=function(){
   if(SUP.pendArt){art=SUP.pendArt;}
   else if(SUP.pend){art=supCropFromPage(SUP.pend);srcPage=SUP.pend.pageId;srcRect=SUP.pend.rect;}
   if(!art)return;
-  const p={id:SUP.seq++,label:lab,widthIn:widthIn,art:art,inks:[],srcPage:srcPage,srcRect:srcRect};
+  const p={id:SUP.seq++,label:lab,widthIn:widthIn,art:art,inks:SUP.pendInks.splice(0),srcPage:srcPage,srcRect:srcRect};
   g.prints.push(p);
   SUP.lastPrint=p.id;
   SUP.pendArt=null;SUP.pend=null;$('supMarkForm').hidden=true;
@@ -5834,16 +5852,26 @@ function supEnabledIdx(p){
 let __supDropRGB=null,__supPickI=null;
 function supOpenInkPop(rgb,pid){
   const g=supGroup();
-  if(!g||!g.prints.length){$('supToolMsg').textContent='add a print first — inks live on prints';return;}
+  if(!g)return;
+  const pend=!!SUP.pendArt;
+  if(!pend&&!g.prints.length){$('supToolMsg').textContent='⚠ add a print first — inks live on prints';return;}
   __supDropRGB=rgb;__supPickI=null;
   const sel=$('supInkTarget');sel.innerHTML='';
+  if(pend){
+    const o=document.createElement('option');o.value='pend';
+    o.textContent='THIS NEW PRINT (finish the form below)';
+    sel.appendChild(o);
+  }
   g.prints.forEach(function(p){
     const o=document.createElement('option');o.value=String(p.id);
     o.textContent=(g.name||'COLOR')+' · '+p.label;
     sel.appendChild(o);
   });
-  const want=pid!=null?pid:SUP.lastPrint;
-  if(want!=null&&g.prints.some(function(p){return p.id===want;}))sel.value=String(want);
+  if(pend){sel.value='pend';}
+  else{
+    const want=pid!=null?pid:SUP.lastPrint;
+    if(want!=null&&g.prints.some(function(p){return p.id===want;}))sel.value=String(want);
+  }
   const hex='#'+rgb.map(function(v){return Math.round(v).toString(16).padStart(2,'0');}).join('').toUpperCase();
   $('supInkSw').style.background='rgb('+rgb.map(Math.round).join(',')+')';
   $('supInkHex').textContent=hex;
@@ -5891,8 +5919,18 @@ $('supInkCancel').onclick=function(){$('supInkWrap').hidden=true;};
 $('supInkWrap').onclick=function(e){if(e.target===$('supInkWrap'))$('supInkWrap').hidden=true;};
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('supInkWrap').hidden)$('supInkWrap').hidden=true;});
 $('supInkAdd').onclick=function(){
-  const pid=+$('supInkTarget').value,p=supFindPrint(pid);
-  if(!p||__supPickI==null)return;
+  if(__supPickI==null)return;
+  const tv=$('supInkTarget').value;
+  if(tv==='pend'){
+    if(!SUP.pendInks.some(function(a){return a.idx===__supPickI;}))SUP.pendInks.push({idx:__supPickI,off:false});
+    $('supToolMsg').textContent='added '+supInkName(__supPickI)+' — lands when you ADD THE PRINT · keep clicking colors';
+    SUP.touchedInks=true;
+    $('supInkWrap').hidden=true;
+    supRefresh();
+    return;
+  }
+  const pid=+tv,p=supFindPrint(pid);
+  if(!p)return;
   if(p.inks.some(function(a){return a.idx===__supPickI;})){
     $('supToolMsg').textContent=supInkName(__supPickI)+' is already on '+p.label;
   }else{
@@ -6142,6 +6180,11 @@ function supRefresh(){
   const np=supAllPrints().length;
   $('supArtNote').textContent=(np?np+' print'+(np===1?'':'s')+' in the job':'no prints yet')
     +(SUP.artQ.length?' · '+SUP.artQ.length+' more waiting for a location':'');
+  const pel=$('supPendInks');
+  if(pel){
+    pel.hidden=!SUP.pendInks.length;
+    if(SUP.pendInks.length)pel.textContent='💧 inks waiting on this print: '+SUP.pendInks.map(function(a){return supInkName(a.idx);}).join(' · ');
+  }
   $('supMockNote').textContent=SUP.pages.length
     ?SUP.pages.length+' page'+(SUP.pages.length===1?'':'s')+' on the workbench'
     :'no pages yet';
