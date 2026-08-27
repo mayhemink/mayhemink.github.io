@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.36 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.37 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -885,6 +885,8 @@
       <h3><span class="pn">6</span> Shop print sheet</h3>
       <p class="desc">One tile per shirt color, its own art + PMS chips, location tag + note on every print. Shirt colors are visual only — the invoice is the callout.</p>
       <div class="btnrow"><button class="btn" id="supDlSheet">⬇ DOWNLOAD SHOP PRINT SHEET</button><span class="val" id="supSheetPgNote" style="align-self:center;"></span></div>
+      <div class="btnrow" style="margin-top:8px;"><button class="btn ghost sm" id="supDlPv">📎 PRINTAVO HANDOFF — SHEETS TO PRODUCTION FILES</button></div>
+      <div class="pv-note" id="supPvNote" hidden></div>
       <canvas id="supSheetCanvas" style="width:100%;"></canvas>
     </div>
 
@@ -1029,7 +1031,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.36 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.37 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -6138,6 +6140,66 @@ $('supDlSheet').onclick=async function(){
     pages.push({data:await canvasJpeg(pg),w:pg.width,h:pg.height,scale:PGS});
   }
   downloadBlobFile(pdfFromJpegs(pages),slug(jobCustomerName())+'-shop-print-sheet.pdf');
+};
+
+/* ---------- Printavo handoff (supplied): the SHEETS are the deliverable.
+   Ships one ZIP — every sheet page as JPEG + a mode:"supplied" v3 manifest —
+   and copies the prompt. The Claude side attaches each page as a PRODUCTION
+   FILE on the order: no imprint mockups, no production-note changes (the
+   customer supplied their own mockups — Joe files those by hand if wanted). */
+async function buildSupHandoff(){
+  const quote=($('jobQuote').value||'').trim();
+  const customer=($('jobCustomer').value||'').trim();
+  if(!customer&&!quote)return {err:'Put the customer name or the quote number in step 1 first.'};
+  const groups=supSheetGroups();
+  if(!groups.length)return {err:'Add a print to a color group first — there is nothing to hand off.'};
+  const tag=(quote||slug(customer)).replace(/[^0-9A-Za-z-]+/g,'')||'job';
+  const entries=[],sheets=[];
+  const n=supSheetPageCount();
+  for(let i=0;i<n;i++){
+    const pg=document.createElement('canvas');
+    renderSupSheetTo(pg,i);
+    const name='printavo-'+tag+'-supplied-sheet-p'+(i+1)+'.jpg';
+    entries.push({name:name,data:await canvasJpeg(pg)});
+    sheets.push({file:name,kind:'productionFile',page:i+1});
+  }
+  const manifest={v:3,app:'mockup-lab',mode:'supplied',when:new Date().toISOString(),
+    customer:customer,quote:quote,
+    plan:'SUPPLIED job — attach every sheet page as a PRODUCTION FILE on the order. No imprint mockups, no production-note changes.',
+    sheets:sheets,
+    groups:groups.map(function(g){return {name:g.name,ub:!!g.ub,screens:supScreensG(g),
+      prints:g.prints.map(function(p){return {label:p.label,note:p.note||'',
+        inks:supEnabledIdx(p).map(function(ix){return supInkName(ix)+' · PMS '+PMS[ix][0];})};})};})};
+  entries.push({name:'printavo-'+tag+'-manifest.json',
+    data:new TextEncoder().encode(JSON.stringify(manifest,null,2))});
+  return {blob:zipStore(entries),name:'printavo-handoff-'+tag+'-supplied.zip',
+    customer:customer,quote:quote,pages:n,manifest:manifest};
+}
+$('supDlPv').onclick=async function(){
+  const b=$('supDlPv'),orig=b.textContent,note=$('supPvNote');
+  b.disabled=true;b.textContent='BUILDING…';
+  try{
+    const r=await buildSupHandoff();
+    if(r.err){
+      note.hidden=false;note.innerHTML='<span class="pv-bad">'+r.err+'</span>';
+      b.textContent=orig;b.disabled=false;return;
+    }
+    downloadBlobFile(r.blob,r.name);
+    const pvWho=[r.customer&&('for '+r.customer),r.quote&&('quote '+r.quote)]
+      .filter(Boolean).join(' · ');
+    const prompt='push the mockup lab handoff '+(pvWho||'')+' (supplied)';
+    try{await navigator.clipboard.writeText(prompt);}catch(e){}
+    note.hidden=false;
+    note.innerHTML='<b>Saved '+r.name+'</b> — '+r.pages+' sheet page'+(r.pages===1?'':'s')
+      +' headed for the job\'s PRODUCTION FILES.'
+      +'<br>Prompt copied — paste it to Claude:'
+      +'<span class="pv-prompt">'+prompt+'</span>';
+    b.textContent='✓ SAVED — PROMPT COPIED';
+    setTimeout(function(){b.textContent=orig;b.disabled=false;},2600);
+  }catch(e){
+    b.textContent=orig;b.disabled=false;
+    note.hidden=false;note.innerHTML='<span class="pv-bad">Could not build the handoff — try again.</span>';
+  }
 };
 
 /* ---------- refresh ---------- */
