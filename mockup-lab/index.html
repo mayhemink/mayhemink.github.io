@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.30 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.31 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -564,6 +564,30 @@
   #sgSend:disabled{opacity:.5;cursor:default;}
   .artsize{font-size:10.5px;margin-top:4px;}
   .artsize.maxwarn{color:#E8C447;}
+  /* ===== v8.31 SUPPLIED MOCKUP MODE ===== */
+  .sup-panel{display:none;}
+  body.sup-on .sup-panel{display:block;}
+  .sup-panel[hidden]{display:none!important;}
+  body.sup-on #pArt,body.sup-on #pPlace,body.sup-on #pColors,body.sup-on #pSizeRun,
+  body.sup-on #pPricing,body.sup-on #pInks,body.sup-on #apvCard,body.sup-on .preview-meta,
+  body.sup-on #previewPms,body.sup-on #pDownloads,body.sup-on #cartelTab{display:none!important;}
+  .sup-chip{display:flex;align-items:center;gap:8px;margin-top:8px;}
+  .sup-chip .sw{width:26px;height:26px;border-radius:4px;border:1px solid var(--line2);cursor:pointer;flex:none;position:relative;padding:0;}
+  .sup-chip .sw span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:700 7px 'JetBrains Mono',monospace;}
+  .sup-chip input[type=text]{flex:1;min-width:0;}
+  .sup-chip .del,.sup-mark-h .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 4px;}
+  .sup-chip .del:hover,.sup-mark-h .del:hover{color:#E05252;}
+  .sup-mark-h{display:flex;align-items:center;gap:6px;margin-top:14px;font:700 11px 'JetBrains Mono',monospace;color:#7BAFD4;letter-spacing:.05em;}
+  .sup-mark-h .grow{margin-left:auto;}
+  .sup-ink-row{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:11px;}
+  .sup-ink-row .sw{width:20px;height:20px;border-radius:3px;border:1px solid var(--line2);flex:none;}
+  .sup-ink-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sup-ink-row.offed .nm,.sup-ink-row.offed .sw{opacity:.32;}
+  .sup-ink-row button{background:var(--surface2);border:1px solid var(--line2);border-radius:3px;color:var(--ink);cursor:pointer;font:700 9px 'JetBrains Mono',monospace;padding:3px 7px;flex:none;}
+  #supTools .btn.tool-on{border-color:#4B9CD3;color:#4B9CD3;}
+  #supPager{flex-wrap:wrap;}
+  #supPager button{background:var(--surface2);border:1px solid var(--line2);border-radius:3px;color:var(--muted);cursor:pointer;font:700 9px 'JetBrains Mono',monospace;padding:4px 8px;}
+  #supPager button.on{color:#4B9CD3;border-color:#4B9CD3;}
 </style>
 </head>
 <body class="tab-mock">
@@ -595,6 +619,20 @@
         <div><label class="lbl" style="margin-top:0;">Customer</label><input type="text" id="jobCustomer" placeholder="Customer name"></div>
         <div><label class="lbl" style="margin-top:0;">Quote #</label><input type="text" id="jobQuote" placeholder="#10482"></div>
       </div>
+      <!-- v8.31 SUPPLIED MOCKUP mode toggle -->
+      <label class="lbl">Mockup source</label>
+      <div class="segmented" style="width:100%;display:flex;">
+        <button id="modeOurs" class="active" style="flex:1;" title="Build the mockup here — the normal flow.">OUR MOCKUP</button>
+        <button id="modeSup" style="flex:1;" title="Customer sent their own mockup — mark it up and ship the shop sheet without remaking it.">SUPPLIED MOCKUP</button>
+      </div>
+      <div class="val sup-panel" style="margin-top:6px;">Customer sent their own mockup — drop it in, mark the prints, set the inks. The crew gets the same shop sheet, nothing gets remade.</div>
+    </div>
+
+    <div class="panel sup-panel" data-tabs="mock" id="pSupDrop">
+      <h3><span class="pn">2</span> Customer mockup</h3>
+      <p class="desc">Drop the mockup they sent — image or PDF. Every PDF page loads as its own page.</p>
+      <div class="drop" id="supDrop"><b>Drop mockup pages</b>PNG/JPG or PDF — all pages come in<input type="file" id="supInput" accept="image/*,.pdf,application/pdf" multiple></div>
+      <div class="val" id="supPageInfo" style="margin-top:6px;">no pages yet</div>
     </div>
 
     <div class="panel" data-tabs="mock" id="pArt">
@@ -768,6 +806,42 @@
       </div>
     </div>
 
+    <div class="panel below-card sup-panel" data-tabs="mock" id="pSupMark">
+      <h3><span class="pn">3</span> Mark the mockup</h3>
+      <p class="desc">First 🎨 SAMPLE each shirt color — click the garment. Then ▭ MARK each print — drag a box around it, name the location, type the print width off the PO. Inks detect from inside the box with the garment color knocked out.</p>
+      <div class="btnrow" id="supTools">
+        <button class="btn ghost sm" id="supToolSample">🎨 SAMPLE SHIRT COLOR</button>
+        <button class="btn ghost sm" id="supToolMark">▭ MARK A PRINT</button>
+        <span class="val" id="supToolMsg" style="align-self:center;"></span>
+      </div>
+      <div class="btnrow" id="supPager" style="margin-top:6px;"></div>
+      <canvas id="supCanvas" style="width:100%;margin-top:8px;border:1px solid var(--line2);border-radius:6px;cursor:crosshair;display:block;"></canvas>
+      <div id="supMarkForm" hidden style="margin-top:8px;border:1px solid var(--line2);border-radius:6px;padding:10px;">
+        <div class="row2">
+          <div><label class="lbl" style="margin-top:0;">Location</label>
+            <select id="supLocSel">
+              <option value="FULL FRONT" data-w="10">Full front</option>
+              <option value="LEFT CHEST" data-w="3.5">Left chest</option>
+              <option value="FULL BACK" data-w="10">Full back</option>
+              <option value="BACK YOKE" data-w="4">Back yoke</option>
+              <option value="L SLEEVE" data-w="3">Left sleeve</option>
+              <option value="R SLEEVE" data-w="3">Right sleeve</option>
+              <option value="CUSTOM" data-w="4">Custom…</option>
+            </select></div>
+          <div><label class="lbl" style="margin-top:0;">Print width (in)</label><input type="number" id="supLocW" step="0.25" min="0.5" value="10"></div>
+        </div>
+        <input type="text" id="supLocCustom" placeholder="custom location name" hidden style="margin-top:6px;">
+        <div class="btnrow"><button class="btn sm" id="supMarkAdd">ADD THE PRINT</button><button class="btn ghost sm" id="supMarkCancel">CANCEL</button></div>
+      </div>
+    </div>
+
+    <div class="panel below-card sup-panel" data-tabs="mock" id="pSupSheet">
+      <h3><span class="pn">5</span> Shop print sheet</h3>
+      <p class="desc">The same sheet the crew always gets — print boxes to REAL inches on one shared scale, PMS chips per location, one tile per press setup.</p>
+      <div class="btnrow"><button class="btn" id="supDlSheet">⬇ DOWNLOAD SHOP PRINT SHEET</button></div>
+      <canvas id="supSheetCanvas" style="width:100%;"></canvas>
+    </div>
+
     <div class="preview-meta below-card" data-tabs="mock cal">
       <span class="preview-label" id="previewLabel"></span>
       <span class="preview-label" id="previewScreens"></span>
@@ -874,6 +948,20 @@
       <div class="checkline" id="lineUB"><input type="checkbox" id="autoUnderbase" checked><span>White underbase on dark shirts (+1 screen)</span></div>
     </div>
 
+    <div class="panel sup-panel" data-tabs="mock" id="pSupShirts">
+      <h3><span class="pn">3</span> Shirt colors</h3>
+      <p class="desc">Sampled off the mockup. Name them from the PO · tap the swatch to flip LIGHT / DARK.</p>
+      <div id="supShirtList"></div>
+    </div>
+
+    <div class="panel sup-panel" data-tabs="mock" id="pSupInks">
+      <h3><span class="pn">4</span> Ink colors</h3>
+      <p class="desc">Detected inside each marked print, garment knocked out. CHANGE any ink · set a dark-shirt swap when it runs on darks · ✕ turns one off.</p>
+      <div id="supInkList"></div>
+      <div class="screens-pill" id="supScreensPill">—</div>
+      <div class="checkline"><input type="checkbox" id="supUB" checked><span><b>White underbase on dark shirts</b> (+1 screen per location)</span></div>
+    </div>
+
   </aside>
 </div>
 
@@ -888,7 +976,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.24 · CALIBRATION / MOCKUPS / PRINT SUMMARY</span>
+  <span>MAYHEM MOCKUP LAB · V8.31 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2008,8 +2096,9 @@ function openInkPicker(idx,side){
   $('inkPickWrap').hidden=false;
   setTimeout(function(){$('ipkSearch').focus();},30);
 }
-function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;__slvPick=null;}
+function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;__slvPick=null;__supPick=null;}
 function applyPick(i){
+  if(__supPick){applySupPick(i);return;}   /* v8.31: supplied-mode inks share the overlay */
   if(__slvPick){applySleevePick(i);return;}   /* v8.20: sleeve inks share the overlay */
   const a=state.inkAssign[__pickIdx],ink=state.artInks[__pickIdx];
   if(!a||!ink){closeInkPicker();return;}
@@ -2065,8 +2154,12 @@ function renderPickGrid(query){
   const el=$('ipkGrid');el.innerHTML='';
   const q=(query||'').trim().toLowerCase();
   const a=state.inkAssign[__pickIdx]||{};
+  const pickDark=__supPick?!!__supPick.dark:(inkView==='dark');   /* v8.31 */
   let cur;
-  if(__slvPick){   /* v8.20: sleeve assignments keep the same {idx,darkIdx} contract */
+  if(__supPick){   /* v8.31: supplied-mode assignments keep the same {idx,darkIdx} contract */
+    const sa=__supPick.m.assign[__supPick.idx]||{};
+    cur=pickDark?(sa.darkIdx==null?-1:sa.darkIdx):sa.idx;
+  }else if(__slvPick){   /* v8.20: sleeve assignments keep the same {idx,darkIdx} contract */
     const sa=(sleeveObj(__slvPick.k).assign||[])[__slvPick.idx]||{};
     cur=inkView==='dark'?(sa.darkIdx==null?-1:sa.darkIdx):sa.idx;
   }else{
@@ -2080,7 +2173,7 @@ function renderPickGrid(query){
   };
   const hdr=function(t){const h=document.createElement('div');h.className='ipk-sec';h.textContent=t;el.appendChild(h);};
   const grid=function(){const g=document.createElement('div');g.className='ipk-grid';el.appendChild(g);return g;};
-  if(inkView==='dark'){
+  if(pickDark){
     const b=document.createElement('button');
     b.className='ipk-same'+(cur===-1?' on':'');
     b.textContent='SAME AS THE LIGHT-SHIRT INK';
@@ -5237,6 +5330,576 @@ document.querySelectorAll('.panel').forEach((p,i)=>{
     __clpsSave();
   });
 })();
+
+
+/* ================= v8.31 SUPPLIED MOCKUP MODE =================
+   Clients that send their own finished mockups (Brand Makers / Creation
+   Cartel-style contract work) shouldn't get remade in the Lab. This mode
+   takes THEIR file, samples the shirt colors, marquees each print, detects
+   + assigns inks with the garment knocked out, and ships the exact same
+   shop print sheet the crew already reads. Fully separate state (SUP) —
+   never touches the normal flow, its placement globals, or its autosave. */
+const SUP={on:false,pages:[],shirts:[],marks:[],seq:1,page:0,tool:'mark',pend:null,touchedInks:false};
+let __supPick=null;
+let __stepperOrig=null;
+const SUP_STEPS=['1 · JOB','2 · DROP','3 · MARK','4 · INKS','5 · SHEET'];
+
+function supSetMode(on){
+  SUP.on=!!on;
+  document.body.classList.toggle('sup-on',SUP.on);
+  $('modeOurs').classList.toggle('active',!SUP.on);
+  $('modeSup').classList.toggle('active',SUP.on);
+  const st=$('stepper');
+  if(__stepperOrig==null)__stepperOrig=st.innerHTML;
+  if(SUP.on){
+    st.innerHTML=SUP_STEPS.map(function(t,i){return '<span data-step="'+(i+1)+'">'+t+'</span>';}).join('<i>→</i>');
+    supRefresh();
+  }else{
+    st.innerHTML=__stepperOrig;
+    refresh();
+  }
+  updateStepper();
+}
+$('modeOurs').onclick=function(){supSetMode(false);};
+$('modeSup').onclick=function(){supSetMode(true);};
+/* setTab rewrites body.className wholesale — keep the mode class alive */
+const __v831st=setTab;
+setTab=function(t){__v831st(t);document.body.classList.toggle('sup-on',SUP.on);if(SUP.on)supRefresh();};
+
+function supStep(){
+  if(!SUP.pages.length)return 2;
+  if(!SUP.marks.length)return 3;
+  if(!SUP.touchedInks)return 4;
+  return 5;
+}
+const __v831us=updateStepper;
+updateStepper=function(){
+  if(!SUP.on){__v831us();return;}
+  const cur=supStep();
+  document.querySelectorAll('#stepper span').forEach(function(el){
+    const n=+el.dataset.step;
+    el.classList.toggle('now',n===cur);
+    el.classList.toggle('done',n<cur);
+  });
+  [['pSupDrop',2],['pSupMark',3],['pSupInks',4],['pSupSheet',5]].forEach(function(pr){
+    const el=$(pr[0]);if(el)el.classList.toggle('glow',uiMode==='simple'&&pr[1]===cur);
+  });
+};
+
+/* ---------- intake ---------- */
+function supAddPage(name,canvas){
+  SUP.pages.push({id:SUP.seq++,name:name,canvas:canvas});
+  SUP.page=SUP.pages.length-1;
+  supRefresh();
+}
+function supLoadPdfPages(file){
+  ensurePdfjs()
+    .then(function(pdfjs){return file.arrayBuffer().then(function(buf){return pdfjs.getDocument({data:buf}).promise;});})
+    .then(async function(doc){
+      for(let pn=1;pn<=doc.numPages;pn++){
+        const page=await doc.getPage(pn);
+        const vp1=page.getViewport({scale:1});
+        const s=1600/Math.max(vp1.width,vp1.height);
+        const vp=page.getViewport({scale:s});
+        const c=document.createElement('canvas');
+        c.width=Math.max(1,Math.round(vp.width));c.height=Math.max(1,Math.round(vp.height));
+        const cx=c.getContext('2d');
+        cx.fillStyle='#FFFFFF';cx.fillRect(0,0,c.width,c.height);   /* mockup pages are opaque */
+        await page.render({canvasContext:cx,viewport:vp}).promise;
+        supAddPage(file.name.replace(/\.pdf$/i,'')+(doc.numPages>1?' p'+pn:''),c);
+      }
+    })
+    .catch(function(err){
+      alert(err&&err.message==='offline'
+        ?'PDF support needs an internet connection. Get online, or export a PNG/JPG.'
+        :'Could not read that PDF — re-save it, or export a PNG/JPG.');
+    });
+}
+wireDrop('supDrop','supInput',function(files){
+  files.forEach(function(f){
+    if(isPdfFile(f)){supLoadPdfPages(f);return;}
+    loadImgFile(f,function(img){
+      const max=1600,sc=Math.min(1,max/Math.max(img.width,img.height));
+      const c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(img.width*sc));c.height=Math.max(1,Math.round(img.height*sc));
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      supAddPage(f.name,c);
+    });
+  });
+},true);
+
+/* ---------- marking canvas ---------- */
+const supCv=$('supCanvas');
+function supPage(){return SUP.pages[SUP.page]||null;}
+function supDrawPage(){
+  const p=supPage();
+  if(!p){
+    supCv.width=600;supCv.height=120;
+    const c=supCv.getContext('2d');
+    c.fillStyle='#17181A';c.fillRect(0,0,600,120);
+    c.fillStyle='#98A0A6';c.font='700 13px "JetBrains Mono", monospace';c.textAlign='center';
+    c.fillText('drop the customer mockup (left panel) to start',300,66);c.textAlign='left';
+    return;
+  }
+  supCv.width=p.canvas.width;supCv.height=p.canvas.height;
+  const c=supCv.getContext('2d');
+  c.drawImage(p.canvas,0,0);
+  const sf=Math.max(1,p.canvas.width/760);
+  SUP.marks.forEach(function(m){
+    if(m.pageId!==p.id)return;
+    c.save();
+    c.setLineDash([6*sf,5*sf]);c.lineWidth=2*sf;c.strokeStyle='#4B9CD3';
+    c.strokeRect(m.rect.x,m.rect.y,m.rect.w,m.rect.h);
+    c.setLineDash([]);
+    c.font='700 '+Math.round(11*sf)+'px "JetBrains Mono", monospace';
+    const lab=m.label+' · '+(+m.widthIn.toFixed(2))+'"';
+    const tw=c.measureText(lab).width+10*sf;
+    c.fillStyle='rgba(14,15,16,.82)';
+    c.fillRect(m.rect.x,Math.max(0,m.rect.y-16*sf),tw,16*sf);
+    c.fillStyle='#7BAFD4';
+    c.fillText(lab,m.rect.x+5*sf,Math.max(11*sf,m.rect.y-4.5*sf));
+    c.restore();
+  });
+  if(SUP.pend&&SUP.pend.pageId===p.id&&SUP.pend.rect){
+    c.save();c.setLineDash([4*sf,4*sf]);c.lineWidth=2*sf;c.strokeStyle='#E8C447';
+    c.strokeRect(SUP.pend.rect.x,SUP.pend.rect.y,SUP.pend.rect.w,SUP.pend.rect.h);c.restore();
+  }
+  SUP.shirts.forEach(function(sh){
+    if(sh.pageId!==p.id||!sh.pt)return;
+    c.save();
+    c.beginPath();c.arc(sh.pt.x,sh.pt.y,9*sf,0,Math.PI*2);
+    c.fillStyle='rgb('+sh.rgb.map(Math.round).join(',')+')';c.fill();
+    c.lineWidth=2*sf;c.strokeStyle='#FFFFFF';c.stroke();
+    c.restore();
+  });
+}
+function supPos(e){
+  const r=supCv.getBoundingClientRect();
+  return {x:(e.clientX-r.left)*supCv.width/r.width,
+          y:(e.clientY-r.top)*supCv.height/r.height};
+}
+function supNormRect(x0,y0,x1,y1){
+  const x=Math.max(0,Math.min(x0,x1)),y=Math.max(0,Math.min(y0,y1));
+  return {x:x,y:y,w:Math.min(supCv.width,Math.max(x0,x1))-x,h:Math.min(supCv.height,Math.max(y0,y1))-y};
+}
+function supSetTool(t){
+  SUP.tool=t;
+  $('supToolSample').classList.toggle('tool-on',t==='sample');
+  $('supToolMark').classList.toggle('tool-on',t==='mark');
+  $('supToolMsg').textContent=t==='sample'?'→ click the garment on the mockup':'→ drag a box around one print';
+}
+$('supToolSample').onclick=function(){supSetTool('sample');};
+$('supToolMark').onclick=function(){supSetTool('mark');};
+
+let __supDrag=null;
+supCv.addEventListener('mousedown',function(e){
+  const p=supPage();if(!p||!SUP.on)return;
+  e.preventDefault();
+  const pos=supPos(e);
+  if(SUP.tool==='sample'){supSampleShirt(pos);return;}
+  __supDrag={x0:pos.x,y0:pos.y};
+});
+window.addEventListener('mousemove',function(e){
+  if(!__supDrag)return;
+  const pos=supPos(e);
+  SUP.pend={pageId:supPage().id,rect:supNormRect(__supDrag.x0,__supDrag.y0,pos.x,pos.y)};
+  supDrawPage();
+});
+window.addEventListener('mouseup',function(e){
+  if(!__supDrag)return;
+  const pos=supPos(e);
+  const r=supNormRect(__supDrag.x0,__supDrag.y0,pos.x,pos.y);
+  __supDrag=null;
+  if(r.w<12||r.h<12){SUP.pend=null;supDrawPage();return;}   /* stray click */
+  SUP.pend={pageId:supPage().id,rect:r};
+  supDrawPage();
+  $('supMarkForm').hidden=false;
+  supSyncLocW();
+});
+
+/* ---------- shirts ---------- */
+function supAvgAt(canvas,x,y,rad){
+  const x0=Math.max(0,Math.round(x-rad)),y0=Math.max(0,Math.round(y-rad));
+  const w=Math.max(1,Math.min(canvas.width-x0,rad*2+1)),h=Math.max(1,Math.min(canvas.height-y0,rad*2+1));
+  const d=canvas.getContext('2d').getImageData(x0,y0,w,h).data;
+  let r=0,g=0,b=0,n=0;
+  for(let i=0;i<d.length;i+=4){if(d[i+3]<128)continue;r+=d[i];g+=d[i+1];b+=d[i+2];n++;}
+  return n?[r/n,g/n,b/n]:[128,128,128];
+}
+function supSampleShirt(pos){
+  const p=supPage();
+  const rgb=supAvgAt(p.canvas,pos.x,pos.y,3);
+  SUP.shirts.push({id:SUP.seq++,pageId:p.id,pt:{x:pos.x,y:pos.y},
+    name:'COLOR '+(SUP.shirts.length+1),rgb:rgb,
+    dark:relLum(rgb[0],rgb[1],rgb[2])<0.45});
+  supRefresh();
+}
+function supAnyDark(){return SUP.shirts.some(function(s){return s.dark;});}
+
+/* ---------- mark form ---------- */
+function supSyncLocW(){
+  const o=$('supLocSel').selectedOptions[0];
+  if(o)$('supLocW').value=o.dataset.w;
+  $('supLocCustom').hidden=$('supLocSel').value!=='CUSTOM';
+}
+$('supLocSel').onchange=supSyncLocW;
+$('supMarkCancel').onclick=function(){SUP.pend=null;$('supMarkForm').hidden=true;supDrawPage();};
+$('supMarkAdd').onclick=function(){
+  if(!SUP.pend)return;
+  let lab=$('supLocSel').value;
+  if(lab==='CUSTOM')lab=(($('supLocCustom').value||'').trim()||'CUSTOM').toUpperCase();
+  const widthIn=Math.max(0.5,parseFloat($('supLocW').value)||4);
+  const m={id:SUP.seq++,pageId:SUP.pend.pageId,label:lab,widthIn:widthIn,rect:SUP.pend.rect,
+    crop:null,inks:[],assign:[]};
+  supDetect(m);
+  SUP.marks.push(m);
+  SUP.pend=null;$('supMarkForm').hidden=true;
+  supRefresh();
+};
+
+/* ---------- detection: garment knockout + the SAME detectInks the Lab uses.
+   Garment reference = the rect's border-ring average ONLY — the local shirt
+   color at that exact spot. Deliberately NOT the sampled job shirt colors:
+   black ink sits ~35 RGB from navy, so knocking out every colorway would
+   eat real inks (black-on-navy, white-on-white). Anything within RGB
+   distance 52 of the ring — or a pure luminance-shade of it (garment
+   shading behind the art) — goes transparent BEFORE detection, so the ink
+   list is the print, not the shirt. The crop keeps the knockout, which is
+   what lets the print box draw the art straight onto its shirt stripe. */
+function supDetect(m){
+  const p=SUP.pages.find(function(x){return x.id===m.pageId;});if(!p)return;
+  const r=m.rect;
+  const c=document.createElement('canvas');
+  c.width=Math.max(1,Math.round(r.w));c.height=Math.max(1,Math.round(r.h));
+  const cx=c.getContext('2d');
+  cx.drawImage(p.canvas,r.x,r.y,r.w,r.h,0,0,c.width,c.height);
+  const id=cx.getImageData(0,0,c.width,c.height);
+  const d=id.data,W=c.width,H=c.height;
+  let rr=0,gg=0,bb=0,n=0;
+  const ring=Math.max(1,Math.round(Math.min(W,H)*0.02));
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    if(x>=ring&&x<W-ring&&y>=ring&&y<H-ring)continue;
+    const i=(y*W+x)*4;rr+=d[i];gg+=d[i+1];bb+=d[i+2];n++;
+  }
+  const ringC=n?[rr/n,gg/n,bb/n]:null;
+  const ringL=ringC?relLum(ringC[0],ringC[1],ringC[2]):0;
+  for(let i=0;i<d.length;i+=4){
+    const R=d[i],G=d[i+1],B=d[i+2];
+    let out=false;
+    if(ringC&&Math.hypot(R-ringC[0],G-ringC[1],B-ringC[2])<52)out=true;
+    if(!out&&ringC&&ringL>0.001){
+      const l=relLum(R,G,B);
+      const t=l/ringL;
+      if(t>0.45&&t<1.8&&Math.hypot(R-ringC[0]*t,G-ringC[1]*t,B-ringC[2]*t)<34)out=true;
+    }
+    if(out)d[i+3]=0;
+  }
+  cx.putImageData(id,0,0);
+  m.crop=c;
+  m.inks=detectInks(c);
+  m.assign=m.inks.map(function(ink){
+    const best=nearestPms(ink.r,ink.g,ink.b);
+    return {idx:best.idx,darkIdx:null,off:false,darkOff:null,match:matchPct(best.dist),auto:true};
+  });
+}
+
+/* ---------- ink helpers (dedupe on the RESOLVED index — merged-inks contract) ---------- */
+function supEnabled(m,dark){return m.assign.filter(function(a){return !inkIsOff(a,dark);});}
+function supInksForMark(m,dark){
+  const seen={},out=[];
+  supEnabled(m,dark).forEach(function(a){
+    const i=(dark&&a.darkIdx!=null)?a.darkIdx:a.idx;
+    if(seen[i])return;seen[i]=1;
+    const p=PMS[i],st=STD_INKS[p[0]];
+    out.push({hex:p[1],name:st?st[0]:'PMS '+p[0],code:'PMS '+p[0]});
+  });
+  if(out.length&&dark&&$('supUB').checked)out.unshift({hex:'#FFFFFF',name:'UNDERBASE',code:'UB',ub:true});
+  return out;
+}
+function supScreens(dark){
+  let t=0;
+  SUP.marks.forEach(function(m){
+    const en=supEnabled(m,dark);
+    if(!en.length)return;
+    const seen={};let cnt=0;
+    en.forEach(function(a){const i=(dark&&a.darkIdx!=null)?a.darkIdx:a.idx;if(!seen[i]){seen[i]=1;cnt++;}});
+    t+=cnt+((dark&&$('supUB').checked)?1:0);
+  });
+  return t;
+}
+function supInkName(i){const p=PMS[i],st=STD_INKS[p[0]];return st?st[0]:'PMS '+p[0];}
+
+/* ---------- right-column UI ---------- */
+function supRenderShirts(){
+  const el=$('supShirtList');el.innerHTML='';
+  if(!SUP.shirts.length){
+    el.innerHTML='<div class="val">no shirt colors yet — 🎨 SAMPLE, then click the garment on the mockup</div>';
+    return;
+  }
+  SUP.shirts.forEach(function(sh){
+    const row=document.createElement('div');row.className='sup-chip';
+    const sw=document.createElement('button');sw.className='sw';sw.type='button';
+    sw.style.background='rgb('+sh.rgb.map(Math.round).join(',')+')';
+    sw.title='tap to flip LIGHT / DARK';
+    const tag=document.createElement('span');
+    tag.textContent=sh.dark?'DRK':'LT';
+    tag.style.color=relLum(sh.rgb[0],sh.rgb[1],sh.rgb[2])<0.45?'#FFF':'#000';
+    sw.appendChild(tag);
+    sw.onclick=function(){sh.dark=!sh.dark;supRefresh();};
+    const inp=document.createElement('input');inp.type='text';inp.value=sh.name;
+    inp.placeholder='shirt color name (from the PO)';
+    inp.oninput=function(){sh.name=inp.value;supSheetSoon();};
+    const del=document.createElement('button');del.className='del';del.type='button';del.textContent='✕';
+    del.onclick=function(){SUP.shirts=SUP.shirts.filter(function(x){return x!==sh;});supRefresh();};
+    row.appendChild(sw);row.appendChild(inp);row.appendChild(del);
+    el.appendChild(row);
+  });
+}
+function supRenderInks(){
+  const el=$('supInkList');el.innerHTML='';
+  if(!SUP.marks.length){
+    el.innerHTML='<div class="val">mark a print on the mockup first</div>';
+    return;
+  }
+  const dark=supAnyDark();
+  SUP.marks.forEach(function(m){
+    const h=document.createElement('div');h.className='sup-mark-h';
+    const lab=document.createElement('span');lab.textContent=m.label+' · '+(+m.widthIn.toFixed(2))+'"';
+    const re=document.createElement('button');re.className='del grow';re.type='button';re.textContent='↻';
+    re.title='re-detect the inks in this box (uses the shirt colors sampled so far)';
+    re.onclick=function(){supDetect(m);SUP.touchedInks=true;supRefresh();};
+    const del=document.createElement('button');del.className='del';del.type='button';del.textContent='✕';
+    del.title='remove this print';
+    del.onclick=function(){SUP.marks=SUP.marks.filter(function(x){return x!==m;});supRefresh();};
+    h.appendChild(lab);h.appendChild(re);h.appendChild(del);
+    el.appendChild(h);
+    m.inks.forEach(function(ink,i){
+      const a=m.assign[i];if(!a)return;
+      const row=document.createElement('div');
+      row.className='sup-ink-row'+((inkIsOff(a,false)&&inkIsOff(a,true))?' offed':'');
+      const sw=document.createElement('span');sw.className='sw';sw.style.background=PMS[a.idx][1];
+      const nm=document.createElement('span');nm.className='nm';
+      nm.innerHTML='<b>'+supInkName(a.idx)+'</b> · PMS '+PMS[a.idx][0]
+        +((a.auto&&a.match!=null)?' · '+a.match+'%':'');
+      const ch=document.createElement('button');ch.type='button';ch.textContent='CHANGE';
+      ch.onclick=function(){openSupPicker(m,i,false);};
+      row.appendChild(sw);row.appendChild(nm);row.appendChild(ch);
+      if(dark){
+        const dk=document.createElement('button');dk.type='button';
+        dk.textContent=a.darkIdx==null?'ON DARKS: SAME':'ON DARKS: '+supInkName(a.darkIdx);
+        dk.title='what this ink swaps to on the dark shirts';
+        dk.onclick=function(){openSupPicker(m,i,true);};
+        row.appendChild(dk);
+      }
+      const off=document.createElement('button');off.type='button';
+      off.textContent=inkIsOff(a,false)?'ON':'✕';
+      off.title='turn this ink off / back on';
+      off.onclick=function(){a.off=!a.off;a.darkOff=null;SUP.touchedInks=true;supRefresh();};
+      row.appendChild(off);
+      el.appendChild(row);
+    });
+    const add=document.createElement('button');
+    add.className='btn ghost sm';add.type='button';add.style.marginTop='6px';
+    add.textContent='+ ADD AN INK';
+    add.title="for inks the detector can't see — white art on a white mockup, tone-on-tone";
+    add.onclick=function(){
+      const w=nearestPms(255,255,255);
+      m.inks.push({hex:'#FFFFFF',pct:0,r:255,g:255,b:255});
+      m.assign.push({idx:w.idx,darkIdx:null,off:false,darkOff:null,match:null,auto:false});
+      SUP.touchedInks=true;
+      supRefresh();
+      openSupPicker(m,m.inks.length-1,false);
+    };
+    el.appendChild(add);
+  });
+}
+
+/* ---------- ink picker (shares the overlay, sleeve-picker pattern) ---------- */
+function openSupPicker(m,idx,dark){
+  const ink=m.inks[idx],a=m.assign[idx];
+  if(!ink||!a)return;
+  __supPick={m:m,idx:idx,dark:!!dark};
+  $('ipkTitle').textContent=m.label+' — '+(dark?'PICK THE DARK-SHIRT INK':'PICK THE INK');
+  $('ipkCtx').innerHTML='<span class="ipk-sw" style="background:'+ink.hex+'"></span>'
+    +'in the mockup: <b>'+ink.hex.toUpperCase()+'</b>'+(ink.pct?' · '+ink.pct+'% of the print':'')
+    +(a.match!=null?' · closest standard <b>'+a.match+'%</b> match':'');
+  $('ipkSearch').value='';
+  renderPickGrid('');
+  $('inkPickWrap').hidden=false;
+  setTimeout(function(){$('ipkSearch').focus();},30);
+}
+function applySupPick(i){
+  const a=__supPick.m.assign[__supPick.idx],ink=__supPick.m.inks[__supPick.idx];
+  if(!a){closeInkPicker();return;}
+  if(__supPick.dark){a.darkIdx=(i==null)?null:i;}
+  else if(i!=null){a.idx=i;a.auto=false;a.match=ink.pct?matchPct(pmsDist(ink.r,ink.g,ink.b,i)):null;}
+  SUP.touchedInks=true;
+  closeInkPicker();supRefresh();
+}
+
+/* ---------- the shop print sheet — same visual contract as renderSummaryTo:
+   one tile per press setup, shirt-color stripes, size-proportional print
+   boxes on ONE shared ppi, per-box chips with the tier lock. ---------- */
+function supShirtGroups(){
+  const light=SUP.shirts.filter(function(s){return !s.dark;});
+  const dark=SUP.shirts.filter(function(s){return s.dark;});
+  const g=[];
+  if(light.length||!dark.length)g.push({key:'light',label:SUP.shirts.length?'LIGHT-SHIRT INKS':'PRESS SETUP',shirts:light,dark:false});
+  if(dark.length)g.push({key:'dark',label:'DARK-SHIRT INKS',shirts:dark,dark:true});
+  return g;
+}
+function renderSupSheetTo(pg){
+  const W=1500,H=1080;pg.width=W*PGS;pg.height=H*PGS;
+  const ctx=pg.getContext('2d');ctx.imageSmoothingQuality='high';
+  ctx.scale(PGS,PGS);
+  drawPageHeader(ctx,W,'PRODUCTION PRINT SHEET — CUSTOMER-SUPPLIED MOCKUP');
+  const foot='Customer supplied the mockup — art shown as marked off their file · the background stripes are every shirt color in that run · box sizes are REAL print inches on one shared scale.';
+  const marks=SUP.marks.filter(function(m){return m.crop;});
+  if(!marks.length){
+    ctx.fillStyle='#98A0A6';ctx.font='700 20px "JetBrains Mono", monospace';ctx.textAlign='center';
+    ctx.fillText('Mark the prints on the mockup to build the sheet',W/2,H/2);
+    ctx.textAlign='left';
+    drawPageFooter(ctx,W,H,foot);
+    return;
+  }
+  const groups=supShirtGroups();
+  const gx=50,gy=168,gw=1400,gh=842,gap=16;
+  const tileW=groups.length===2?(gw-gap)/2:gw;
+  const headH=34,swH=30,tileH=gh-headH-swH-14;
+  groups.forEach(function(gr,gi){
+    const tx=gx+gi*(tileW+gap);
+    const totScr=supScreens(gr.dark);
+    ctx.fillStyle='#E8EAEC';ctx.font='900 19px "Archivo Black", Arial Black, sans-serif';
+    ctx.fillText(gr.label,tx,gy+22);
+    ctx.fillStyle='#98A0A6';ctx.font='700 12px "JetBrains Mono", monospace';
+    ctx.textAlign='right';
+    ctx.fillText((gr.shirts.length?gr.shirts.length+' SHIRT'+(gr.shirts.length===1?'':'S')+' · ':'')
+      +totScr+' SCREEN'+(totScr===1?'':'S'),tx+tileW,gy+22);
+    ctx.textAlign='left';
+    const ty=gy+headH;
+    ctx.save();
+    ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.clip();
+    const shirts=gr.shirts.length?gr.shirts:[{name:'— SAMPLE THE SHIRT COLORS —',rgb:[46,49,53]}];
+    const n=shirts.length,stW=tileW/n;
+    shirts.forEach(function(sh,si){
+      const rgb=sh.rgb;
+      ctx.fillStyle='rgb('+Math.round(rgb[0])+','+Math.round(rgb[1])+','+Math.round(rgb[2])+')';
+      ctx.fillRect(tx+si*stW,ty,stW+1,tileH);
+      const lum=relLum(rgb[0],rgb[1],rgb[2]);
+      const inkCol=lum<0.45?'#F2F4F6':'#15181B';
+      const big=stW>150;
+      ctx.textAlign='center';
+      ctx.fillStyle=inkCol;ctx.font='900 '+(big?17:12)+'px "Archivo Black", Arial Black, sans-serif';
+      ctx.fillText((sh.name||'—').toUpperCase(),tx+si*stW+stW/2,ty+(big?28:22),stW-10);
+      ctx.textAlign='left';
+      if(si>0){
+        ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(tx+si*stW,ty);ctx.lineTo(tx+si*stW,ty+tileH);ctx.stroke();
+      }
+    });
+    const azTop=ty+58,azBot=ty+tileH-14;
+    const prints=marks.map(function(m){
+      return {art:m.crop,wIn:m.widthIn,hIn:m.widthIn*m.crop.height/m.crop.width,
+        inks:supInksForMark(m,gr.dark),lab:m.label};
+    }).filter(function(p){return p.inks.length;});
+    if(prints.length){
+      let lockTier=null;
+      const chipsH=function(p,bw){return layoutBoxChips(ctx,bw-12,p.inks,lockTier).h+6;};
+      let pk=packPrintBoxes(prints,tileW-32,azBot-azTop,16,9,14,chipsH);
+      let worst=0;
+      pk.rows.forEach(function(rw){rw.items.forEach(function(bx){
+        worst=Math.max(worst,layoutBoxChips(ctx,bx.w-12,bx.p.inks).tier);
+      });});
+      if(worst>0){lockTier=worst;pk=packPrintBoxes(prints,tileW-32,azBot-azTop,16,9,14,chipsH);}
+      let py=azTop+Math.max(0,(azBot-azTop-pk.totalH)/2);
+      pk.rows.forEach(function(rw){
+        let px=tx+16+Math.max(0,(tileW-32-rw.w)/2);
+        rw.items.forEach(function(bx){
+          const p=bx.p,bTop=py+rw.h-bx.h;
+          const clay=layoutBoxChips(ctx,bx.w-12,p.inks,lockTier);
+          ctx.save();
+          ctx.fillStyle='rgba(14,15,16,.30)';
+          ctx.beginPath();ctx.roundRect(px,bTop,bx.w,bx.h,5);ctx.fill();
+          ctx.setLineDash([5,4]);ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1;
+          ctx.stroke();ctx.restore();
+          ctx.fillStyle='#E8EAEC';ctx.font='700 9px "JetBrains Mono", monospace';
+          ctx.fillText(p.lab+'  '+(+p.wIn.toFixed(2))+'"',px+6,bTop+11,bx.w-58);
+          ctx.textAlign='right';ctx.fillStyle='rgba(232,234,236,.7)';
+          ctx.fillText(p.inks.length+' SCR',px+bx.w-6,bTop+11);
+          ctx.textAlign='left';
+          const aw=p.wIn*pk.ppi,ah=p.hIn*pk.ppi;
+          const artZ=bx.h-16-clay.h-6;
+          ctx.drawImage(p.art,px+(bx.w-aw)/2,bTop+16+(artZ-ah)/2,aw,ah);
+          drawBoxChips(ctx,px+6,bTop+bx.h-clay.h-4,bx.w-12,clay);
+          px+=bx.w+14;
+        });
+        py+=rw.h+14;
+      });
+    }
+    ctx.restore();
+    ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.stroke();
+    if(gr.dark&&$('supUB').checked){
+      ctx.fillStyle='#7BAFD4';ctx.font='700 12px "JetBrains Mono", monospace';
+      ctx.fillText('WHITE UNDERBASE PRINTS FIRST ON EVERY LOCATION',tx,ty+tileH+22);
+    }
+  });
+  stampWatermark(ctx,gx,gy,gw,gh,'rgba(127,127,127,0.05)',26);
+  drawPageFooter(ctx,W,H,foot);
+}
+
+/* ---------- refresh + downloads ---------- */
+let __supSheetT=null;
+function supSheetSoon(){
+  clearTimeout(__supSheetT);
+  __supSheetT=setTimeout(function(){renderSupSheetTo($('supSheetCanvas'));},150);
+}
+function supRenderPager(){
+  const el=$('supPager');el.innerHTML='';
+  SUP.pages.forEach(function(p,i){
+    const b=document.createElement('button');b.type='button';
+    b.textContent='PG '+(i+1);b.title=p.name;
+    b.classList.toggle('on',i===SUP.page);
+    b.onclick=function(){SUP.page=i;supRefresh();};
+    el.appendChild(b);
+  });
+  if(SUP.pages.length){
+    const del=document.createElement('button');del.type='button';del.textContent='✕ REMOVE PAGE';
+    del.onclick=function(){
+      const p=supPage();if(!p)return;
+      SUP.marks=SUP.marks.filter(function(m){return m.pageId!==p.id;});
+      SUP.shirts.forEach(function(s){if(s.pageId===p.id){s.pageId=null;s.pt=null;}});
+      SUP.pages.splice(SUP.page,1);
+      SUP.page=Math.max(0,SUP.page-1);
+      supRefresh();
+    };
+    el.appendChild(del);
+  }
+  $('supPageInfo').textContent=SUP.pages.length
+    ?SUP.pages.length+' page'+(SUP.pages.length===1?'':'s')+' loaded'
+    :'no pages yet';
+}
+function supRefresh(){
+  if(!SUP.on)return;
+  supRenderPager();
+  supDrawPage();
+  supRenderShirts();
+  supRenderInks();
+  const dark=supAnyDark(),light=SUP.shirts.some(function(s){return !s.dark;})||!SUP.shirts.length;
+  const parts=[];
+  if(light)parts.push('LIGHT: '+supScreens(false)+' SCR');
+  if(dark)parts.push('DARK: '+supScreens(true)+' SCR');
+  $('supScreensPill').textContent=SUP.marks.length?parts.join(' · '):'—';
+  supSheetSoon();
+  updateStepper();
+}
+$('supUB').onchange=function(){supRefresh();};
+$('supDlSheet').onclick=function(){
+  const pg=document.createElement('canvas');
+  renderSupSheetTo(pg);
+  downloadCanvas(pg,slug(jobCustomerName())+'-shop-print-sheet.png');
+};
+supSetTool('mark');
 
 setTab('mock');
 buildManifest();
