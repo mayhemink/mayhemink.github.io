@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.35 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.36 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -667,20 +667,6 @@
       <div class="val" id="supMockNote" style="margin-top:6px;">no pages yet</div>
     </div>
 
-    <div class="panel sup-panel" data-tabs="mock" id="pSupGarment">
-      <h3><span class="pn">4</span> Garment color</h3>
-      <p class="desc">One group per shirt color — each gets its own art + inks and its own tile on the sheet. Pick a generic swatch, or 🎨 eyedrop it off the customer file on the workbench. Names are VISUAL ONLY — the invoice is the real callout.</p>
-      <div class="set-tabs" id="supGroupTabs"></div>
-      <div id="supSwatchGrid"></div>
-      <label class="lbl">Name (generic — visual only)</label>
-      <input type="text" id="supGName" placeholder="LIGHT BLUE">
-      <label class="checkline"><input type="checkbox" id="supGUB"><span><b>White underbase</b> on this color (+1 screen per print)</span></label>
-      <div class="btnrow">
-        <button class="btn ghost sm" id="supGAdd">+ ADD ANOTHER COLOR</button>
-        <button class="btn ghost sm" id="supGDel">✕ DELETE COLOR</button>
-      </div>
-    </div>
-
     <div class="panel" data-tabs="mock" id="pArt">
       <h3><span class="pn">2</span> Logos</h3>
       <p class="desc">Drop the art in. SVG is best — one setup covers every shirt in the job.</p>
@@ -887,7 +873,7 @@
               <option value="R SLEEVE" data-w="3">Right sleeve</option>
               <option value="CUSTOM" data-w="4">Custom…</option>
             </select></div>
-          <div><label class="lbl" style="margin-top:0;">Print width (in)</label><input type="number" id="supLocW" step="0.25" min="0.5" value="10"></div>
+          <div><label class="lbl" style="margin-top:0;">Note (prints on the sheet)</label><input type="text" id="supLocNote" placeholder="white womens tank top…"></div>
         </div>
         <input type="text" id="supLocCustom" placeholder="custom location name" hidden style="margin-top:6px;">
         <div class="val" id="supPendInks" hidden style="margin-top:6px;color:#7BAFD4;"></div>
@@ -897,7 +883,7 @@
 
     <div class="panel below-card sup-panel" data-tabs="mock" id="pSupSheet">
       <h3><span class="pn">6</span> Shop print sheet</h3>
-      <p class="desc">One tile per shirt color, its own art + PMS chips, boxes at REAL print inches. Shirt colors are visual only — the invoice is the callout.</p>
+      <p class="desc">One tile per shirt color, its own art + PMS chips, location tag + note on every print. Shirt colors are visual only — the invoice is the callout.</p>
       <div class="btnrow"><button class="btn" id="supDlSheet">⬇ DOWNLOAD SHOP PRINT SHEET</button><span class="val" id="supSheetPgNote" style="align-self:center;"></span></div>
       <canvas id="supSheetCanvas" style="width:100%;"></canvas>
     </div>
@@ -1008,6 +994,20 @@
       <div class="checkline" id="lineUB"><input type="checkbox" id="autoUnderbase" checked><span>White underbase on dark shirts (+1 screen)</span></div>
     </div>
 
+    <div class="panel sup-panel" data-tabs="mock" id="pSupGarment">
+      <h3><span class="pn">4</span> Garment color</h3>
+      <p class="desc">One group per shirt color — each gets its own art + inks and its own tile on the sheet. Pick a generic swatch, or 🎨 eyedrop it off the customer file on the workbench. Names are VISUAL ONLY — the invoice is the real callout.</p>
+      <div class="set-tabs" id="supGroupTabs"></div>
+      <div id="supSwatchGrid"></div>
+      <label class="lbl">Name (generic — visual only)</label>
+      <input type="text" id="supGName" placeholder="LIGHT BLUE">
+      <label class="checkline"><input type="checkbox" id="supGUB"><span><b>White underbase</b> on this color (+1 screen per print)</span></label>
+      <div class="btnrow">
+        <button class="btn ghost sm" id="supGAdd">+ ADD ANOTHER COLOR</button>
+        <button class="btn ghost sm" id="supGDel">✕ DELETE COLOR</button>
+      </div>
+    </div>
+
     <div class="panel sup-panel" data-tabs="mock" id="pSupInks">
       <h3><span class="pn">5</span> Prints &amp; inks</h3>
       <p class="desc">Every print in the active color group. 💧 eyedrop on the workbench to add an ink · DETECT ALL pre-fills busy art · ✕ turns an ink off.</p>
@@ -1029,7 +1029,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.35 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.36 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -5659,7 +5659,7 @@ function supDrawBench(){
     const lum=relLum(g.rgb[0],g.rgb[1],g.rgb[2]);
     c.fillStyle=lum<0.45?'rgba(255,255,255,.85)':'rgba(0,0,0,.7)';
     c.font='700 12px "JetBrains Mono", monospace';
-    c.fillText(p.label+' · '+(+p.widthIn.toFixed(2))+'" · 💧 click a color to add its ink',10,20);
+    c.fillText(p.label+(p.note?' · '+p.note.toUpperCase():'')+' · 💧 click a color to add its ink',10,20,W-20);
     return;
   }
   const p=view.obj;   /* mockup page */
@@ -5674,7 +5674,7 @@ function supDrawBench(){
     c.strokeRect(pr.srcRect.x,pr.srcRect.y,pr.srcRect.w,pr.srcRect.h);
     c.setLineDash([]);
     c.font='700 '+Math.round(11*sf)+'px "JetBrains Mono", monospace';
-    const lab=pr.label+' · '+(+pr.widthIn.toFixed(2))+'"';
+    const lab=pr.label+(pr.note?' · '+pr.note.toUpperCase():'');
     const tw=c.measureText(lab).width+10*sf;
     c.fillStyle='rgba(14,15,16,.82)';
     c.fillRect(pr.srcRect.x,Math.max(0,pr.srcRect.y-16*sf),tw,16*sf);
@@ -5785,8 +5785,6 @@ window.addEventListener('mouseup',function(e){
 
 /* ---------- add a print (clean art OR marquee crop) ---------- */
 function supSyncLocW(){
-  const o=$('supLocSel').selectedOptions[0];
-  if(o)$('supLocW').value=o.dataset.w;
   $('supLocCustom').hidden=$('supLocSel').value!=='CUSTOM';
 }
 $('supLocSel').onchange=supSyncLocW;
@@ -5828,12 +5826,13 @@ $('supMarkAdd').onclick=function(){
   const g=supGroup();if(!g)return;
   let lab=$('supLocSel').value;
   if(lab==='CUSTOM')lab=(($('supLocCustom').value||'').trim()||'CUSTOM').toUpperCase();
-  const widthIn=Math.max(0.5,parseFloat($('supLocW').value)||4);
+  const note=($('supLocNote').value||'').trim();
   let art=null,srcPage=null,srcRect=null;
   if(SUP.pendArt){art=SUP.pendArt;}
   else if(SUP.pend){art=supCropFromPage(SUP.pend);srcPage=SUP.pend.pageId;srcRect=SUP.pend.rect;}
   if(!art)return;
-  const p={id:SUP.seq++,label:lab,widthIn:widthIn,art:art,inks:SUP.pendInks.splice(0),srcPage:srcPage,srcRect:srcRect};
+  const p={id:SUP.seq++,label:lab,note:note,art:art,inks:SUP.pendInks.splice(0),srcPage:srcPage,srcRect:srcRect};
+  $('supLocNote').value='';
   g.prints.push(p);
   SUP.lastPrint=p.id;
   SUP.pendArt=null;SUP.pend=null;$('supMarkForm').hidden=true;
@@ -5961,10 +5960,9 @@ function supRenderInks(){
   g.prints.forEach(function(p){
     const h=document.createElement('div');h.className='sup-print-h';
     const lab=document.createElement('span');lab.textContent=p.label;
-    const w=document.createElement('input');w.type='number';w.step='0.25';w.min='0.5';w.value=p.widthIn;
-    w.title='print width in inches';
-    w.onchange=function(){p.widthIn=Math.max(0.5,parseFloat(w.value)||p.widthIn);supRefresh();};
-    const inch=document.createElement('span');inch.textContent='"';
+    const w=document.createElement('input');w.type='text';w.value=p.note||'';
+    w.placeholder='note → prints on the sheet';w.style.flex='1';w.style.width='auto';
+    w.oninput=function(){p.note=w.value;supSheetSoon();};
     const view=document.createElement('button');view.className='del';view.type='button';view.textContent='👁';
     view.title='show on the workbench';
     view.onclick=function(){SUP.viewKey='pr:'+p.id;SUP.lastPrint=p.id;supRefresh();};
@@ -5972,7 +5970,7 @@ function supRenderInks(){
     del.style.marginLeft='0';
     del.onclick=function(){g.prints=g.prints.filter(function(x){return x!==p;});SUP.viewKey=null;supRefresh();};
     view.style.marginLeft='auto';
-    h.appendChild(lab);h.appendChild(w);h.appendChild(inch);h.appendChild(view);h.appendChild(del);
+    h.appendChild(lab);h.appendChild(w);h.appendChild(view);h.appendChild(del);
     el.appendChild(h);
     p.inks.forEach(function(a){
       const row=document.createElement('div');row.className='sup-ink-row'+(a.off?' offed':'');
@@ -6028,7 +6026,7 @@ function renderSupSheetTo(pg,pageIdx){
   ctx.scale(PGS,PGS);
   const nPages=supSheetPageCount();
   drawPageHeader(ctx,W,'PRODUCTION PRINT SHEET — CUSTOMER-SUPPLIED ART'+(nPages>1?' · PAGE '+(pageIdx+1)+' OF '+nPages:''));
-  const foot='SHIRT COLORS ARE VISUAL ONLY — not a callout, order from the Printavo invoice · one tile per shirt color, its own art + inks · box sizes are REAL print inches.';
+  const foot='SHIRT COLORS ARE VISUAL ONLY — not a callout, order from the Printavo invoice · one tile per shirt color, its own art + inks · sizes come from the customer file / PO.';
   const groups=supSheetGroups().slice(pageIdx*2,pageIdx*2+2);
   if(!groups.length){
     ctx.fillStyle='#98A0A6';ctx.font='700 20px "JetBrains Mono", monospace';ctx.textAlign='center';
@@ -6064,13 +6062,19 @@ function renderSupSheetTo(pg,pageIdx){
     ctx.fillText('SHIRT COLOR VISUAL ONLY — ORDER FROM THE INVOICE',tx+tileW/2,ty+44,tileW-20);
     ctx.textAlign='left';
     const azTop=ty+58,azBot=ty+tileH-14;
+    /* v8.36: no typed widths in supplied mode — the customer file carries no
+       scale and Kolton didn't want the field. Boxes take a NOMINAL size from
+       the art's aspect (10 wide, capped 14 tall) so the pack still lays out;
+       the location tag + free NOTE are the real information. */
     const prints=g.prints.map(function(p){
-      return {art:p.art,wIn:p.widthIn,hIn:p.widthIn*p.art.height/p.art.width,
-        inks:supInksForPrint(g,p),lab:p.label};
+      const ar=p.art.height/p.art.width;
+      const wIn=(10*ar>14)?(14/ar):10;
+      return {art:p.art,wIn:wIn,hIn:wIn*ar,
+        inks:supInksForPrint(g,p),lab:p.label,note:p.note||''};
     }).filter(function(p){return p.art;});
     if(prints.length){
       let lockTier=null;
-      const chipsH=function(p,bw){return layoutBoxChips(ctx,bw-12,p.inks,lockTier).h+6;};
+      const chipsH=function(p,bw){return layoutBoxChips(ctx,bw-12,p.inks,lockTier).h+6+(p.note?13:0);};
       let pk=packPrintBoxes(prints,tileW-32,azBot-azTop,16,9,14,chipsH);
       let worst=0;
       pk.rows.forEach(function(rw){rw.items.forEach(function(bx){
@@ -6089,13 +6093,19 @@ function renderSupSheetTo(pg,pageIdx){
           ctx.setLineDash([5,4]);ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1;
           ctx.stroke();ctx.restore();
           ctx.fillStyle=inkCol;ctx.font='700 9px "JetBrains Mono", monospace';
-          ctx.fillText(p.lab+'  '+(+p.wIn.toFixed(2))+'"',px+6,bTop+11,bx.w-58);
+          ctx.fillText(p.lab,px+6,bTop+11,bx.w-58);
           ctx.textAlign='right';
           ctx.fillText((p.inks.length?p.inks.length+' SCR':'NO INKS YET'),px+bx.w-6,bTop+11);
           ctx.textAlign='left';
+          const noteH=p.note?13:0;
+          if(p.note){
+            ctx.font='500 8px "JetBrains Mono", monospace';
+            ctx.fillText(p.note.toUpperCase(),px+6,bTop+23,bx.w-12);
+            ctx.font='700 9px "JetBrains Mono", monospace';
+          }
           const aw=p.wIn*pk.ppi,ah=p.hIn*pk.ppi;
-          const artZ=bx.h-16-clay.h-6;
-          ctx.drawImage(p.art,px+(bx.w-aw)/2,bTop+16+(artZ-ah)/2,aw,ah);
+          const artZ=bx.h-16-noteH-clay.h-6;
+          ctx.drawImage(p.art,px+(bx.w-aw)/2,bTop+16+noteH+(artZ-ah)/2,aw,ah);
           drawBoxChips(ctx,px+6,bTop+bx.h-clay.h-4,bx.w-12,clay);
           px+=bx.w+14;
         });
