@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.32 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.33 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -639,8 +639,31 @@
       <div class="val sup-panel" style="margin-top:6px;">Customer sent finished art or mockups — one group per shirt color, eyedrop the inks, ship the shop sheet. Nothing gets remade.</div>
     </div>
 
+    <div class="panel sup-panel" data-tabs="mock" id="pSupSrc">
+      <h3><span class="pn">2</span> What did they send?</h3>
+      <p class="desc"><b>Artwork only</b> = logo files (PNG/SVG/PDF) — each file becomes a print. <b>Mockup</b> = the art is already sitting on a shirt photo — you'll mark the prints off it.</p>
+      <div class="segmented" style="width:100%;display:flex;">
+        <button id="supSrcArt" style="flex:1;">ARTWORK ONLY</button>
+        <button id="supSrcMock" style="flex:1;">MOCKUP</button>
+      </div>
+    </div>
+
+    <div class="panel sup-panel" data-tabs="mock" id="pSupArt" hidden>
+      <h3><span class="pn">3</span> Artwork</h3>
+      <p class="desc">Drop the art files — white backgrounds come off automatically. Each file becomes a print: name the location, type the width off the PO. Art lands in <span id="supArtGName" style="color:#7BAFD4;">the active color</span>'s group below.</p>
+      <div class="drop" id="supArtDrop"><b>Drop the art files</b>PNG / SVG / PDF · one file per print location · several at once is fine<input type="file" id="supArtInput" accept="image/*,.svg,.pdf,application/pdf" multiple></div>
+      <div class="val" id="supArtNote" style="margin-top:6px;">no prints yet</div>
+    </div>
+
+    <div class="panel sup-panel" data-tabs="mock" id="pSupMock" hidden>
+      <h3><span class="pn">3</span> Customer mockup</h3>
+      <p class="desc">Drop the mockup they sent — image or PDF (every page loads). It opens on the workbench: 🎨 click the shirt for the garment color, ▭ drag a box around each print.</p>
+      <div class="drop" id="supMockDrop"><b>Drop mockup pages</b>PNG/JPG or PDF<input type="file" id="supMockInput" accept="image/*,.pdf,application/pdf" multiple></div>
+      <div class="val" id="supMockNote" style="margin-top:6px;">no pages yet</div>
+    </div>
+
     <div class="panel sup-panel" data-tabs="mock" id="pSupGarment">
-      <h3><span class="pn">2</span> Garment color</h3>
+      <h3><span class="pn">4</span> Garment color</h3>
       <p class="desc">One group per shirt color — each gets its own art + inks and its own tile on the sheet. Pick a generic swatch, or 🎨 eyedrop it off the customer file on the workbench. Names are VISUAL ONLY — the invoice is the real callout.</p>
       <div class="set-tabs" id="supGroupTabs"></div>
       <div id="supSwatchGrid"></div>
@@ -651,13 +674,6 @@
         <button class="btn ghost sm" id="supGAdd">+ ADD ANOTHER COLOR</button>
         <button class="btn ghost sm" id="supGDel">✕ DELETE COLOR</button>
       </div>
-    </div>
-
-    <div class="panel sup-panel" data-tabs="mock" id="pSupArt">
-      <h3><span class="pn">3</span> Art for <span id="supArtGName" style="color:#7BAFD4;">this color</span></h3>
-      <p class="desc">Clean art (PNG/SVG/PDF — white backgrounds come off) drops straight in as a print. A mockup photo (art already on a shirt) opens on the workbench — ▭ mark the print to clip it out.</p>
-      <div class="drop" id="supArtDrop"><b>Drop art or a mockup</b>PNG/SVG/PDF art · or a mockup image to mark up<input type="file" id="supArtInput" accept="image/*,.svg,.pdf,application/pdf" multiple></div>
-      <div class="val" id="supArtNote" style="margin-top:6px;">no prints yet</div>
     </div>
 
     <div class="panel" data-tabs="mock" id="pArt">
@@ -872,7 +888,7 @@
     </div>
 
     <div class="panel below-card sup-panel" data-tabs="mock" id="pSupSheet">
-      <h3><span class="pn">5</span> Shop print sheet</h3>
+      <h3><span class="pn">6</span> Shop print sheet</h3>
       <p class="desc">One tile per shirt color, its own art + PMS chips, boxes at REAL print inches. Shirt colors are visual only — the invoice is the callout.</p>
       <div class="btnrow"><button class="btn" id="supDlSheet">⬇ DOWNLOAD SHOP PRINT SHEET</button><span class="val" id="supSheetPgNote" style="align-self:center;"></span></div>
       <canvas id="supSheetCanvas" style="width:100%;"></canvas>
@@ -985,7 +1001,7 @@
     </div>
 
     <div class="panel sup-panel" data-tabs="mock" id="pSupInks">
-      <h3><span class="pn">4</span> Prints &amp; inks</h3>
+      <h3><span class="pn">5</span> Prints &amp; inks</h3>
       <p class="desc">Every print in the active color group. 💧 eyedrop on the workbench to add an ink · DETECT ALL pre-fills busy art · ✕ turns an ink off.</p>
       <div id="supInkList"></div>
       <div class="screens-pill" id="supScreensPill">—</div>
@@ -1005,7 +1021,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.32 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.33 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -5365,10 +5381,10 @@ document.querySelectorAll('.panel').forEach((p,i)=>{
    Inks are added eyedropper-first: click a color on the workbench → nearest
    pantones → confirm → chip lands on the sheet. DETECT ALL pre-fills.
    Fully separate state (SUP) — never touches the normal flow or autosave. */
-const SUP={on:false,groups:[],act:0,pages:[],seq:1,viewKey:null,tool:'ink',
+const SUP={on:false,src:null,groups:[],act:0,pages:[],artQ:[],seq:1,viewKey:null,tool:'ink',
   pend:null,pendArt:null,lastPrint:null,touchedG:false,touchedInks:false};
 let __stepperOrig=null;
-const SUP_STEPS=['1 · JOB','2 · GARMENT','3 · ART','4 · INKS','5 · SHEET'];
+const SUP_STEPS=['1 · JOB','2 · TYPE','3 · ART','4 · GARMENT','5 · INKS','6 · SHEET'];
 const SUP_SWATCHES=[
   ['WHITE',[255,255,255]],['NATURAL',[242,233,216]],['TAN',[217,185,140]],['YELLOW GOLD',[232,185,64]],['ORANGE',[231,124,34]],
   ['RED',[192,39,45]],['MAROON',[107,34,49]],['PINK',[242,184,198]],['PURPLE',[78,42,112]],['LIGHT BLUE',[169,199,224]],
@@ -5400,10 +5416,11 @@ const __v832st=setTab;
 setTab=function(t){__v832st(t);document.body.classList.toggle('sup-on',SUP.on);if(SUP.on)supRefresh();};
 
 function supStep(){
-  if(!SUP.touchedG)return 2;
+  if(!SUP.src)return 2;
   if(!SUP.groups.some(function(g){return g.prints.length;}))return 3;
-  if(!SUP.touchedInks)return 4;
-  return 5;
+  if(!SUP.touchedG)return 4;
+  if(!SUP.touchedInks)return 5;
+  return 6;
 }
 const __v832us=updateStepper;
 updateStepper=function(){
@@ -5414,7 +5431,7 @@ updateStepper=function(){
     el.classList.toggle('now',n===cur);
     el.classList.toggle('done',n<cur);
   });
-  [['pSupGarment',2],['pSupArt',3],['pSupInks',4],['pSupSheet',5]].forEach(function(pr){
+  [['pSupSrc',2],['pSupArt',3],['pSupMock',3],['pSupGarment',4],['pSupInks',5],['pSupSheet',6]].forEach(function(pr){
     const el=$(pr[0]);if(el)el.classList.toggle('glow',uiMode==='simple'&&pr[1]===cur);
   });
 };
@@ -5512,45 +5529,62 @@ function supLoadPdfPages(file){
     })
     .catch(function(){alert('Could not read that PDF — re-save it, or export a PNG/JPG.');});
 }
-let __supAsk=null;
-function supAskKind(payload,kind){
-  __supAsk={payload:payload,kind:kind};
-  const el=$('supArtNote');
-  el.innerHTML='<b>'+(kind==='pdf'?payload.name:payload.file.name)+'</b> — clean art, or a mockup photo?&nbsp;&nbsp;';
-  const a=document.createElement('button');a.className='btn ghost sm';a.type='button';a.textContent='CLEAN ART';
-  const b=document.createElement('button');b.className='btn ghost sm';b.type='button';b.textContent='MOCKUP PHOTO';b.style.marginLeft='6px';
-  a.onclick=function(){
-    const p=__supAsk;__supAsk=null;
-    if(p.kind==='pdf')loadArtFile(p.payload,function(c){supNewPrintFromArt(c);});
-    else supNewPrintFromArt(trimCanvas(deWhiteRaster(p.payload.canvas)));
-  };
-  b.onclick=function(){
-    const p=__supAsk;__supAsk=null;
-    if(p.kind==='pdf')supLoadPdfPages(p.payload);
-    else supAddPage(p.payload.file.name,p.payload.canvas);
-  };
-  el.appendChild(a);el.appendChild(b);
+/* v8.33: the TYPE question answers clean-art-vs-mockup ONCE, up front — no
+   per-file buttons (Kolton hit exactly that: dropped art, "nothing happened",
+   because the tiny CLEAN ART / MOCKUP PHOTO prompt was easy to miss and a
+   multi-file drop kept only the last ask). Art mode treats every drop as
+   clean art; mockup mode turns every drop into workbench pages. Multi-file
+   art drops QUEUE — each one asks for its location in turn. */
+function supSetSrc(s){
+  SUP.src=s;
+  supRefresh();
+}
+$('supSrcArt').onclick=function(){supSetSrc('art');};
+$('supSrcMock').onclick=function(){supSetSrc('mock');};
+function supQueueArt(c){
+  if(!c||!alphaBBox(c)){$('supToolMsg').textContent="couldn't read one of those files";return;}
+  if(SUP.pendArt||SUP.pend){SUP.artQ.push(c);supRefresh();return;}
+  supNewPrintFromArt(c);
+}
+function supNextQueuedArt(){
+  if(SUP.artQ.length&&!SUP.pendArt&&!SUP.pend)supNewPrintFromArt(SUP.artQ.shift());
 }
 wireDrop('supArtDrop','supArtInput',function(files){
   files.forEach(function(f){
-    if(isPdfFile(f)){supAskKind(f,'pdf');return;}
-    if(/\.svg$/i.test(f.name||'')||/svg/i.test(f.type||'')){loadArtFile(f,function(c){supNewPrintFromArt(c);});return;}
+    if(isPdfFile(f)||/\.svg$/i.test(f.name||'')||/svg/i.test(f.type||'')){
+      loadArtFile(f,function(c){supQueueArt(c);});
+      return;
+    }
     loadImgFile(f,function(img){
       const max=1600,sc=Math.min(1,max/Math.max(img.width,img.height));
       const c=document.createElement('canvas');
       c.width=Math.max(1,Math.round(img.width*sc));c.height=Math.max(1,Math.round(img.height*sc));
       c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      if(hasTransparency(c)){supNewPrintFromArt(trimCanvas(c));return;}
-      supAskKind({file:f,canvas:c},'img');
+      supQueueArt(trimCanvas(hasTransparency(c)?c:deWhiteRaster(c)));
+    });
+  });
+},true);
+wireDrop('supMockDrop','supMockInput',function(files){
+  files.forEach(function(f){
+    if(isPdfFile(f)){supLoadPdfPages(f);return;}
+    loadImgFile(f,function(img){
+      const max=1600,sc=Math.min(1,max/Math.max(img.width,img.height));
+      const c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(img.width*sc));c.height=Math.max(1,Math.round(img.height*sc));
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      supAddPage(f.name,c);
     });
   });
 },true);
 function supNewPrintFromArt(c){
   if(!c||!alphaBBox(c)){$('supToolMsg').textContent="couldn't read that art";return;}
   SUP.pendArt=c;SUP.pend=null;
+  SUP.viewKey=null;   /* bench falls back to the newest view; pend art draws via the form */
   $('supMarkForm').hidden=false;
   supSyncLocW();
+  $('supToolMsg').textContent='→ name the location + width for that art';
   supRefresh();
+  try{$('pSupBench').scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}
 }
 
 /* ---------- workbench: views + drawing ---------- */
@@ -5568,6 +5602,21 @@ function supCurView(){
   return v.find(function(x){return x.key===SUP.viewKey;})||v[v.length-1];
 }
 function supDrawBench(){
+  if(SUP.pendArt){   /* v8.33: show the just-dropped art while its form is open */
+    const g=supGroup(),c0=SUP.pendArt;
+    const W=Math.max(420,Math.min(900,c0.width+120)),H=Math.round(W*0.72);
+    supCv.width=W;supCv.height=H;
+    const c=supCv.getContext('2d');c.imageSmoothingQuality='high';
+    c.fillStyle=g?'rgb('+g.rgb.map(Math.round).join(',')+')':'#17181A';
+    c.fillRect(0,0,W,H);
+    const s=Math.min((W*0.82)/c0.width,(H*0.78)/c0.height);
+    c.drawImage(c0,(W-c0.width*s)/2,(H-c0.height*s)/2+8,c0.width*s,c0.height*s);
+    const lum=g?relLum(g.rgb[0],g.rgb[1],g.rgb[2]):0;
+    c.fillStyle=lum<0.45?'rgba(255,255,255,.85)':'rgba(0,0,0,.7)';
+    c.font='700 12px "JetBrains Mono", monospace';
+    c.fillText('NEW PRINT — name the location + width below',10,20);
+    return;
+  }
   const view=supCurView();
   if(!view){
     supCv.width=600;supCv.height=120;
@@ -5702,7 +5751,7 @@ function supSyncLocW(){
   $('supLocCustom').hidden=$('supLocSel').value!=='CUSTOM';
 }
 $('supLocSel').onchange=supSyncLocW;
-$('supMarkCancel').onclick=function(){SUP.pend=null;SUP.pendArt=null;$('supMarkForm').hidden=true;supDrawBench();};
+$('supMarkCancel').onclick=function(){SUP.pend=null;SUP.pendArt=null;$('supMarkForm').hidden=true;supDrawBench();supNextQueuedArt();};
 /* garment knockout for marquee crops — RING-ONLY reference (the local shirt
    color at that spot + its luminance shades). NEVER the group colors: black
    ink sits ~35 RGB from navy and would be eaten (proven in the v8.31 smoke). */
@@ -5751,6 +5800,7 @@ $('supMarkAdd').onclick=function(){
   SUP.pendArt=null;SUP.pend=null;$('supMarkForm').hidden=true;
   SUP.viewKey='pr:'+p.id;
   supRefresh();
+  supNextQueuedArt();
 };
 
 /* ---------- inks: eyedropper confirm loop + detect-all ---------- */
@@ -6062,10 +6112,16 @@ function supRefresh(){
   const parts=SUP.groups.filter(function(g){return g.prints.length;})
     .map(function(g){return (g.name||'COLOR')+': '+supScreensG(g)+' SCR';});
   $('supScreensPill').textContent=parts.length?parts.join(' · '):'—';
-  if(!__supAsk){
-    const np=supAllPrints().length;
-    $('supArtNote').textContent=np?np+' print'+(np===1?'':'s')+' in the job':'no prints yet';
-  }
+  $('pSupArt').hidden=SUP.src!=='art';
+  $('pSupMock').hidden=SUP.src!=='mock';
+  $('supSrcArt').classList.toggle('active',SUP.src==='art');
+  $('supSrcMock').classList.toggle('active',SUP.src==='mock');
+  const np=supAllPrints().length;
+  $('supArtNote').textContent=(np?np+' print'+(np===1?'':'s')+' in the job':'no prints yet')
+    +(SUP.artQ.length?' · '+SUP.artQ.length+' more waiting for a location':'');
+  $('supMockNote').textContent=SUP.pages.length
+    ?SUP.pages.length+' page'+(SUP.pages.length===1?'':'s')+' on the workbench'
+    :'no pages yet';
   supSheetSoon();
   updateStepper();
 }
