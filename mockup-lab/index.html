@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.31 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.32 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -564,30 +564,41 @@
   #sgSend:disabled{opacity:.5;cursor:default;}
   .artsize{font-size:10.5px;margin-top:4px;}
   .artsize.maxwarn{color:#E8C447;}
-  /* ===== v8.31 SUPPLIED MOCKUP MODE ===== */
+  /* ===== v8.32 SUPPLIED MOCKUP MODE (groups model) ===== */
   .sup-panel{display:none;}
   body.sup-on .sup-panel{display:block;}
   .sup-panel[hidden]{display:none!important;}
   body.sup-on #pArt,body.sup-on #pPlace,body.sup-on #pColors,body.sup-on #pSizeRun,
   body.sup-on #pPricing,body.sup-on #pInks,body.sup-on #apvCard,body.sup-on .preview-meta,
   body.sup-on #previewPms,body.sup-on #pDownloads,body.sup-on #cartelTab{display:none!important;}
-  .sup-chip{display:flex;align-items:center;gap:8px;margin-top:8px;}
-  .sup-chip .sw{width:26px;height:26px;border-radius:4px;border:1px solid var(--line2);cursor:pointer;flex:none;position:relative;padding:0;}
-  .sup-chip .sw span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:700 7px 'JetBrains Mono',monospace;}
-  .sup-chip input[type=text]{flex:1;min-width:0;}
-  .sup-chip .del,.sup-mark-h .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 4px;}
-  .sup-chip .del:hover,.sup-mark-h .del:hover{color:#E05252;}
-  .sup-mark-h{display:flex;align-items:center;gap:6px;margin-top:14px;font:700 11px 'JetBrains Mono',monospace;color:#7BAFD4;letter-spacing:.05em;}
-  .sup-mark-h .grow{margin-left:auto;}
+  #supSwatchGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;}
+  #supSwatchGrid button{border:1px solid var(--line2);border-radius:4px;background:var(--surface2);cursor:pointer;padding:3px;display:flex;flex-direction:column;gap:3px;align-items:stretch;}
+  #supSwatchGrid button .sw{height:20px;border-radius:3px;border:1px solid rgba(127,127,127,.35);}
+  #supSwatchGrid button .nm{font:700 6.5px 'JetBrains Mono',monospace;color:var(--muted);text-align:center;letter-spacing:.02em;overflow:hidden;white-space:nowrap;}
+  #supSwatchGrid button:hover{border-color:#4B9CD3;}
+  .sup-print-h{display:flex;align-items:center;gap:6px;margin-top:14px;font:700 11px 'JetBrains Mono',monospace;color:#7BAFD4;letter-spacing:.05em;}
+  .sup-print-h input{width:56px;padding:3px 5px;}
+  .sup-print-h .del{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 4px;}
+  .sup-print-h .del:hover{color:#E05252;}
   .sup-ink-row{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:11px;}
   .sup-ink-row .sw{width:20px;height:20px;border-radius:3px;border:1px solid var(--line2);flex:none;}
   .sup-ink-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .sup-ink-row.offed .nm,.sup-ink-row.offed .sw{opacity:.32;}
+  .sup-ink-row.offed .nm,.sup-ink-row.offed .sw{opacity:.32;text-decoration:line-through;}
   .sup-ink-row button{background:var(--surface2);border:1px solid var(--line2);border-radius:3px;color:var(--ink);cursor:pointer;font:700 9px 'JetBrains Mono',monospace;padding:3px 7px;flex:none;}
   #supTools .btn.tool-on{border-color:#4B9CD3;color:#4B9CD3;}
   #supPager{flex-wrap:wrap;}
   #supPager button{background:var(--surface2);border:1px solid var(--line2);border-radius:3px;color:var(--muted);cursor:pointer;font:700 9px 'JetBrains Mono',monospace;padding:4px 8px;}
   #supPager button.on{color:#4B9CD3;border-color:#4B9CD3;}
+  #supInkPop{border:1px solid #4B9CD3;border-radius:8px;background:var(--surface);padding:12px;margin-top:8px;}
+  #supInkPop .hd{display:flex;align-items:center;gap:8px;font:700 11px 'JetBrains Mono',monospace;color:var(--muted);}
+  #supInkPop .hd .sw{width:26px;height:26px;border-radius:4px;border:1px solid var(--line2);}
+  #supInkOpts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:10px;max-height:230px;overflow:auto;}
+  #supInkOpts button{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--line2);border-radius:4px;color:var(--ink);cursor:pointer;font-size:10.5px;padding:6px;}
+  #supInkOpts button.on{border-color:#4B9CD3;box-shadow:0 0 0 1px #4B9CD3 inset;}
+  #supInkOpts .sw{width:22px;height:22px;border-radius:3px;border:1px solid rgba(127,127,127,.4);flex:none;}
+  #supInkOpts .lb{text-align:left;min-width:0;}
+  #supInkOpts .lb b{display:block;font-size:10px;}
+  #supInkOpts .lb span{color:var(--muted);font-size:8.5px;font-family:'JetBrains Mono',monospace;}
 </style>
 </head>
 <body class="tab-mock">
@@ -619,20 +630,34 @@
         <div><label class="lbl" style="margin-top:0;">Customer</label><input type="text" id="jobCustomer" placeholder="Customer name"></div>
         <div><label class="lbl" style="margin-top:0;">Quote #</label><input type="text" id="jobQuote" placeholder="#10482"></div>
       </div>
-      <!-- v8.31 SUPPLIED MOCKUP mode toggle -->
+      <!-- v8.32 SUPPLIED MOCKUP mode toggle (groups model) -->
       <label class="lbl">Mockup source</label>
       <div class="segmented" style="width:100%;display:flex;">
         <button id="modeOurs" class="active" style="flex:1;" title="Build the mockup here — the normal flow.">OUR MOCKUP</button>
         <button id="modeSup" style="flex:1;" title="Customer sent their own mockup — mark it up and ship the shop sheet without remaking it.">SUPPLIED MOCKUP</button>
       </div>
-      <div class="val sup-panel" style="margin-top:6px;">Customer sent their own mockup — drop it in, mark the prints, set the inks. The crew gets the same shop sheet, nothing gets remade.</div>
+      <div class="val sup-panel" style="margin-top:6px;">Customer sent finished art or mockups — one group per shirt color, eyedrop the inks, ship the shop sheet. Nothing gets remade.</div>
     </div>
 
-    <div class="panel sup-panel" data-tabs="mock" id="pSupDrop">
-      <h3><span class="pn">2</span> Customer mockup</h3>
-      <p class="desc">Drop the mockup they sent — image or PDF. Every PDF page loads as its own page.</p>
-      <div class="drop" id="supDrop"><b>Drop mockup pages</b>PNG/JPG or PDF — all pages come in<input type="file" id="supInput" accept="image/*,.pdf,application/pdf" multiple></div>
-      <div class="val" id="supPageInfo" style="margin-top:6px;">no pages yet</div>
+    <div class="panel sup-panel" data-tabs="mock" id="pSupGarment">
+      <h3><span class="pn">2</span> Garment color</h3>
+      <p class="desc">One group per shirt color — each gets its own art + inks and its own tile on the sheet. Pick a generic swatch, or 🎨 eyedrop it off the customer file on the workbench. Names are VISUAL ONLY — the invoice is the real callout.</p>
+      <div class="set-tabs" id="supGroupTabs"></div>
+      <div id="supSwatchGrid"></div>
+      <label class="lbl">Name (generic — visual only)</label>
+      <input type="text" id="supGName" placeholder="LIGHT BLUE">
+      <label class="checkline"><input type="checkbox" id="supGUB"><span><b>White underbase</b> on this color (+1 screen per print)</span></label>
+      <div class="btnrow">
+        <button class="btn ghost sm" id="supGAdd">+ ADD ANOTHER COLOR</button>
+        <button class="btn ghost sm" id="supGDel">✕ DELETE COLOR</button>
+      </div>
+    </div>
+
+    <div class="panel sup-panel" data-tabs="mock" id="pSupArt">
+      <h3><span class="pn">3</span> Art for <span id="supArtGName" style="color:#7BAFD4;">this color</span></h3>
+      <p class="desc">Clean art (PNG/SVG/PDF — white backgrounds come off) drops straight in as a print. A mockup photo (art already on a shirt) opens on the workbench — ▭ mark the print to clip it out.</p>
+      <div class="drop" id="supArtDrop"><b>Drop art or a mockup</b>PNG/SVG/PDF art · or a mockup image to mark up<input type="file" id="supArtInput" accept="image/*,.svg,.pdf,application/pdf" multiple></div>
+      <div class="val" id="supArtNote" style="margin-top:6px;">no prints yet</div>
     </div>
 
     <div class="panel" data-tabs="mock" id="pArt">
@@ -806,16 +831,27 @@
       </div>
     </div>
 
-    <div class="panel below-card sup-panel" data-tabs="mock" id="pSupMark">
-      <h3><span class="pn">3</span> Mark the mockup</h3>
-      <p class="desc">First 🎨 SAMPLE each shirt color — click the garment. Then ▭ MARK each print — drag a box around it, name the location, type the print width off the PO. Inks detect from inside the box with the garment color knocked out.</p>
+    <div class="panel below-card sup-panel" data-tabs="mock" id="pSupBench">
+      <h3><span class="pn">3</span> Workbench</h3>
+      <p class="desc">💧 INK: click a color in the art → pick the pantone → it lands on the print sheet. 🎨 GARMENT: click the shirt to set this group's color. ▭ MARK: drag a box around a print on a mockup photo.</p>
       <div class="btnrow" id="supTools">
-        <button class="btn ghost sm" id="supToolSample">🎨 SAMPLE SHIRT COLOR</button>
+        <button class="btn ghost sm" id="supToolInk">💧 INK COLOR</button>
+        <button class="btn ghost sm" id="supToolG">🎨 GARMENT COLOR</button>
         <button class="btn ghost sm" id="supToolMark">▭ MARK A PRINT</button>
         <span class="val" id="supToolMsg" style="align-self:center;"></span>
       </div>
       <div class="btnrow" id="supPager" style="margin-top:6px;"></div>
       <canvas id="supCanvas" style="width:100%;margin-top:8px;border:1px solid var(--line2);border-radius:6px;cursor:crosshair;display:block;"></canvas>
+      <div id="supInkPop" hidden>
+        <div class="hd"><span class="sw" id="supInkSw"></span><span>sampled <b id="supInkHex">—</b> · adding to</span>
+          <select id="supInkTarget" style="width:auto;"></select></div>
+        <input id="supInkSearch" type="search" placeholder="🔍 closest matches shown — or search any ink / PMS code" style="margin-top:8px;">
+        <div id="supInkOpts"></div>
+        <div class="btnrow" style="margin-top:10px;">
+          <button class="btn sm" id="supInkAdd" disabled>PICK AN INK ABOVE</button>
+          <button class="btn ghost sm" id="supInkCancel">CANCEL</button>
+        </div>
+      </div>
       <div id="supMarkForm" hidden style="margin-top:8px;border:1px solid var(--line2);border-radius:6px;padding:10px;">
         <div class="row2">
           <div><label class="lbl" style="margin-top:0;">Location</label>
@@ -837,8 +873,8 @@
 
     <div class="panel below-card sup-panel" data-tabs="mock" id="pSupSheet">
       <h3><span class="pn">5</span> Shop print sheet</h3>
-      <p class="desc">The same sheet the crew always gets — print boxes to REAL inches on one shared scale, PMS chips per location, one tile per press setup.</p>
-      <div class="btnrow"><button class="btn" id="supDlSheet">⬇ DOWNLOAD SHOP PRINT SHEET</button></div>
+      <p class="desc">One tile per shirt color, its own art + PMS chips, boxes at REAL print inches. Shirt colors are visual only — the invoice is the callout.</p>
+      <div class="btnrow"><button class="btn" id="supDlSheet">⬇ DOWNLOAD SHOP PRINT SHEET</button><span class="val" id="supSheetPgNote" style="align-self:center;"></span></div>
       <canvas id="supSheetCanvas" style="width:100%;"></canvas>
     </div>
 
@@ -948,18 +984,11 @@
       <div class="checkline" id="lineUB"><input type="checkbox" id="autoUnderbase" checked><span>White underbase on dark shirts (+1 screen)</span></div>
     </div>
 
-    <div class="panel sup-panel" data-tabs="mock" id="pSupShirts">
-      <h3><span class="pn">3</span> Shirt colors</h3>
-      <p class="desc">Sampled off the mockup. Name them from the PO · tap the swatch to flip LIGHT / DARK.</p>
-      <div id="supShirtList"></div>
-    </div>
-
     <div class="panel sup-panel" data-tabs="mock" id="pSupInks">
-      <h3><span class="pn">4</span> Ink colors</h3>
-      <p class="desc">Detected inside each marked print, garment knocked out. CHANGE any ink · set a dark-shirt swap when it runs on darks · ✕ turns one off.</p>
+      <h3><span class="pn">4</span> Prints &amp; inks</h3>
+      <p class="desc">Every print in the active color group. 💧 eyedrop on the workbench to add an ink · DETECT ALL pre-fills busy art · ✕ turns an ink off.</p>
       <div id="supInkList"></div>
       <div class="screens-pill" id="supScreensPill">—</div>
-      <div class="checkline"><input type="checkbox" id="supUB" checked><span><b>White underbase on dark shirts</b> (+1 screen per location)</span></div>
     </div>
 
   </aside>
@@ -976,7 +1005,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.31 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.32 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -2096,9 +2125,8 @@ function openInkPicker(idx,side){
   $('inkPickWrap').hidden=false;
   setTimeout(function(){$('ipkSearch').focus();},30);
 }
-function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;__slvPick=null;__supPick=null;}
+function closeInkPicker(){$('inkPickWrap').hidden=true;__pickIdx=-1;__slvPick=null;}
 function applyPick(i){
-  if(__supPick){applySupPick(i);return;}   /* v8.31: supplied-mode inks share the overlay */
   if(__slvPick){applySleevePick(i);return;}   /* v8.20: sleeve inks share the overlay */
   const a=state.inkAssign[__pickIdx],ink=state.artInks[__pickIdx];
   if(!a||!ink){closeInkPicker();return;}
@@ -2154,12 +2182,8 @@ function renderPickGrid(query){
   const el=$('ipkGrid');el.innerHTML='';
   const q=(query||'').trim().toLowerCase();
   const a=state.inkAssign[__pickIdx]||{};
-  const pickDark=__supPick?!!__supPick.dark:(inkView==='dark');   /* v8.31 */
   let cur;
-  if(__supPick){   /* v8.31: supplied-mode assignments keep the same {idx,darkIdx} contract */
-    const sa=__supPick.m.assign[__supPick.idx]||{};
-    cur=pickDark?(sa.darkIdx==null?-1:sa.darkIdx):sa.idx;
-  }else if(__slvPick){   /* v8.20: sleeve assignments keep the same {idx,darkIdx} contract */
+  if(__slvPick){   /* v8.20: sleeve assignments keep the same {idx,darkIdx} contract */
     const sa=(sleeveObj(__slvPick.k).assign||[])[__slvPick.idx]||{};
     cur=inkView==='dark'?(sa.darkIdx==null?-1:sa.darkIdx):sa.idx;
   }else{
@@ -2173,7 +2197,7 @@ function renderPickGrid(query){
   };
   const hdr=function(t){const h=document.createElement('div');h.className='ipk-sec';h.textContent=t;el.appendChild(h);};
   const grid=function(){const g=document.createElement('div');g.className='ipk-grid';el.appendChild(g);return g;};
-  if(pickDark){
+  if(inkView==='dark'){
     const b=document.createElement('button');
     b.className='ipk-same'+(cur===-1?' on':'');
     b.textContent='SAME AS THE LIGHT-SHIRT INK';
@@ -5332,18 +5356,26 @@ document.querySelectorAll('.panel').forEach((p,i)=>{
 })();
 
 
-/* ================= v8.31 SUPPLIED MOCKUP MODE =================
-   Clients that send their own finished mockups (Brand Makers / Creation
-   Cartel-style contract work) shouldn't get remade in the Lab. This mode
-   takes THEIR file, samples the shirt colors, marquees each print, detects
-   + assigns inks with the garment knocked out, and ships the exact same
-   shop print sheet the crew already reads. Fully separate state (SUP) —
-   never touches the normal flow, its placement globals, or its autosave. */
-const SUP={on:false,pages:[],shirts:[],marks:[],seq:1,page:0,tool:'mark',pend:null,touchedInks:false};
-let __supPick=null;
+/* ================= v8.32 SUPPLIED MOCKUP MODE — GROUPS MODEL =================
+   Kolton's redesign (8/27): a supplied job is GROUPS — one per shirt color,
+   each with its OWN art and inks (Rayco: "Take It Easy" on white, the rooster
+   on tan). No light/dark buckets in here. Garment colors are premade GENERIC
+   swatches (or eyedropped) and explicitly VISUAL ONLY — the Printavo invoice
+   is the real callout, so the crew never chases "is this Flint Blue?".
+   Inks are added eyedropper-first: click a color on the workbench → nearest
+   pantones → confirm → chip lands on the sheet. DETECT ALL pre-fills.
+   Fully separate state (SUP) — never touches the normal flow or autosave. */
+const SUP={on:false,groups:[],act:0,pages:[],seq:1,viewKey:null,tool:'ink',
+  pend:null,pendArt:null,lastPrint:null,touchedG:false,touchedInks:false};
 let __stepperOrig=null;
-const SUP_STEPS=['1 · JOB','2 · DROP','3 · MARK','4 · INKS','5 · SHEET'];
+const SUP_STEPS=['1 · JOB','2 · GARMENT','3 · ART','4 · INKS','5 · SHEET'];
+const SUP_SWATCHES=[
+  ['WHITE',[255,255,255]],['NATURAL',[242,233,216]],['TAN',[217,185,140]],['YELLOW GOLD',[232,185,64]],['ORANGE',[231,124,34]],
+  ['RED',[192,39,45]],['MAROON',[107,34,49]],['PINK',[242,184,198]],['PURPLE',[78,42,112]],['LIGHT BLUE',[169,199,224]],
+  ['ROYAL',[31,77,160]],['NAVY',[27,36,48]],['KELLY',[31,138,68]],['FOREST',[31,77,51]],['MILITARY GREEN',[90,91,69]],
+  ['BROWN',[91,68,54]],['LIGHT GREY',[198,201,204]],['HEATHER GREY',[158,162,166]],['CHARCOAL',[59,62,66]],['BLACK',[17,17,17]]];
 
+/* ---------- mode toggle + stepper ---------- */
 function supSetMode(on){
   SUP.on=!!on;
   document.body.classList.toggle('sup-on',SUP.on);
@@ -5353,6 +5385,7 @@ function supSetMode(on){
   if(__stepperOrig==null)__stepperOrig=st.innerHTML;
   if(SUP.on){
     st.innerHTML=SUP_STEPS.map(function(t,i){return '<span data-step="'+(i+1)+'">'+t+'</span>';}).join('<i>→</i>');
+    if(!SUP.groups.length)supNewGroup('WHITE',[255,255,255]);
     supRefresh();
   }else{
     st.innerHTML=__stepperOrig;
@@ -5363,33 +5396,101 @@ function supSetMode(on){
 $('modeOurs').onclick=function(){supSetMode(false);};
 $('modeSup').onclick=function(){supSetMode(true);};
 /* setTab rewrites body.className wholesale — keep the mode class alive */
-const __v831st=setTab;
-setTab=function(t){__v831st(t);document.body.classList.toggle('sup-on',SUP.on);if(SUP.on)supRefresh();};
+const __v832st=setTab;
+setTab=function(t){__v832st(t);document.body.classList.toggle('sup-on',SUP.on);if(SUP.on)supRefresh();};
 
 function supStep(){
-  if(!SUP.pages.length)return 2;
-  if(!SUP.marks.length)return 3;
+  if(!SUP.touchedG)return 2;
+  if(!SUP.groups.some(function(g){return g.prints.length;}))return 3;
   if(!SUP.touchedInks)return 4;
   return 5;
 }
-const __v831us=updateStepper;
+const __v832us=updateStepper;
 updateStepper=function(){
-  if(!SUP.on){__v831us();return;}
+  if(!SUP.on){__v832us();return;}
   const cur=supStep();
   document.querySelectorAll('#stepper span').forEach(function(el){
     const n=+el.dataset.step;
     el.classList.toggle('now',n===cur);
     el.classList.toggle('done',n<cur);
   });
-  [['pSupDrop',2],['pSupMark',3],['pSupInks',4],['pSupSheet',5]].forEach(function(pr){
+  [['pSupGarment',2],['pSupArt',3],['pSupInks',4],['pSupSheet',5]].forEach(function(pr){
     const el=$(pr[0]);if(el)el.classList.toggle('glow',uiMode==='simple'&&pr[1]===cur);
   });
 };
 
-/* ---------- intake ---------- */
+/* ---------- groups ---------- */
+function supGroup(){return SUP.groups[SUP.act]||null;}
+function supNewGroup(name,rgb){
+  const g={id:SUP.seq++,name:name,rgb:rgb.slice(),ub:relLum(rgb[0],rgb[1],rgb[2])<0.45,prints:[]};
+  SUP.groups.push(g);
+  SUP.act=SUP.groups.length-1;
+  return g;
+}
+function supSetGarment(rgb,name){
+  const g=supGroup();if(!g)return;
+  g.rgb=rgb.slice();g.name=name;
+  g.ub=relLum(rgb[0],rgb[1],rgb[2])<0.45;
+  SUP.touchedG=true;
+  supRefresh();
+}
+function supNearestSwatchName(rgb){
+  let best=SUP_SWATCHES[0],bd=1e9;
+  SUP_SWATCHES.forEach(function(s){
+    const d=Math.hypot(rgb[0]-s[1][0],rgb[1]-s[1][1],rgb[2]-s[1][2]);
+    if(d<bd){bd=d;best=s;}
+  });
+  return best[0];
+}
+function supRenderGroups(){
+  const el=$('supGroupTabs');el.innerHTML='';
+  SUP.groups.forEach(function(g,i){
+    const b=document.createElement('button');b.type='button';
+    b.innerHTML='<span style="display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;border:1px solid rgba(127,127,127,.5);background:rgb('+g.rgb.map(Math.round).join(',')+')"></span>'+(g.name||'COLOR');
+    b.classList.toggle('active',i===SUP.act);
+    b.onclick=function(){SUP.act=i;SUP.viewKey=null;supRefresh();};
+    el.appendChild(b);
+  });
+  const g=supGroup();
+  if(g){
+    if(document.activeElement!==$('supGName'))$('supGName').value=g.name||'';
+    $('supGUB').checked=!!g.ub;
+    $('supArtGName').textContent=g.name||'this color';
+  }
+}
+function supRenderSwatches(){
+  const el=$('supSwatchGrid');
+  if(el.childElementCount)return;   /* build once */
+  SUP_SWATCHES.forEach(function(s){
+    const b=document.createElement('button');b.type='button';b.title=s[0];
+    b.innerHTML='<span class="sw" style="background:rgb('+s[1].join(',')+')"></span><span class="nm">'+s[0]+'</span>';
+    b.onclick=function(){supSetGarment(s[1],s[0]);};
+    el.appendChild(b);
+  });
+}
+$('supGName').addEventListener('input',function(){
+  const g=supGroup();if(!g)return;
+  g.name=$('supGName').value;
+  SUP.touchedG=true;
+  supRenderGroups();supSheetSoon();
+});
+$('supGUB').onchange=function(){const g=supGroup();if(g){g.ub=$('supGUB').checked;supRefresh();}};
+$('supGAdd').onclick=function(){supNewGroup('COLOR '+(SUP.groups.length+1),[158,162,166]);SUP.viewKey=null;supRefresh();};
+$('supGDel').onclick=function(){
+  if(SUP.groups.length<=1)return;
+  SUP.groups.splice(SUP.act,1);
+  SUP.act=Math.max(0,SUP.act-1);
+  SUP.viewKey=null;
+  supRefresh();
+};
+
+/* ---------- art / mockup intake ---------- */
+function supAllPrints(){const o=[];SUP.groups.forEach(function(g){g.prints.forEach(function(p){o.push(p);});});return o;}
+function supFindPrint(pid){let f=null;SUP.groups.forEach(function(g){g.prints.forEach(function(p){if(p.id===pid)f=p;});});return f;}
+function supGroupOf(p){return SUP.groups.find(function(g){return g.prints.indexOf(p)>=0;});}
 function supAddPage(name,canvas){
   SUP.pages.push({id:SUP.seq++,name:name,canvas:canvas});
-  SUP.page=SUP.pages.length-1;
+  SUP.viewKey='pg:'+SUP.pages[SUP.pages.length-1].id;
   supRefresh();
 }
 function supLoadPdfPages(file){
@@ -5404,74 +5505,117 @@ function supLoadPdfPages(file){
         const c=document.createElement('canvas');
         c.width=Math.max(1,Math.round(vp.width));c.height=Math.max(1,Math.round(vp.height));
         const cx=c.getContext('2d');
-        cx.fillStyle='#FFFFFF';cx.fillRect(0,0,c.width,c.height);   /* mockup pages are opaque */
+        cx.fillStyle='#FFFFFF';cx.fillRect(0,0,c.width,c.height);
         await page.render({canvasContext:cx,viewport:vp}).promise;
         supAddPage(file.name.replace(/\.pdf$/i,'')+(doc.numPages>1?' p'+pn:''),c);
       }
     })
-    .catch(function(err){
-      alert(err&&err.message==='offline'
-        ?'PDF support needs an internet connection. Get online, or export a PNG/JPG.'
-        :'Could not read that PDF — re-save it, or export a PNG/JPG.');
-    });
+    .catch(function(){alert('Could not read that PDF — re-save it, or export a PNG/JPG.');});
 }
-wireDrop('supDrop','supInput',function(files){
+let __supAsk=null;
+function supAskKind(payload,kind){
+  __supAsk={payload:payload,kind:kind};
+  const el=$('supArtNote');
+  el.innerHTML='<b>'+(kind==='pdf'?payload.name:payload.file.name)+'</b> — clean art, or a mockup photo?&nbsp;&nbsp;';
+  const a=document.createElement('button');a.className='btn ghost sm';a.type='button';a.textContent='CLEAN ART';
+  const b=document.createElement('button');b.className='btn ghost sm';b.type='button';b.textContent='MOCKUP PHOTO';b.style.marginLeft='6px';
+  a.onclick=function(){
+    const p=__supAsk;__supAsk=null;
+    if(p.kind==='pdf')loadArtFile(p.payload,function(c){supNewPrintFromArt(c);});
+    else supNewPrintFromArt(trimCanvas(deWhiteRaster(p.payload.canvas)));
+  };
+  b.onclick=function(){
+    const p=__supAsk;__supAsk=null;
+    if(p.kind==='pdf')supLoadPdfPages(p.payload);
+    else supAddPage(p.payload.file.name,p.payload.canvas);
+  };
+  el.appendChild(a);el.appendChild(b);
+}
+wireDrop('supArtDrop','supArtInput',function(files){
   files.forEach(function(f){
-    if(isPdfFile(f)){supLoadPdfPages(f);return;}
+    if(isPdfFile(f)){supAskKind(f,'pdf');return;}
+    if(/\.svg$/i.test(f.name||'')||/svg/i.test(f.type||'')){loadArtFile(f,function(c){supNewPrintFromArt(c);});return;}
     loadImgFile(f,function(img){
       const max=1600,sc=Math.min(1,max/Math.max(img.width,img.height));
       const c=document.createElement('canvas');
       c.width=Math.max(1,Math.round(img.width*sc));c.height=Math.max(1,Math.round(img.height*sc));
       c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      supAddPage(f.name,c);
+      if(hasTransparency(c)){supNewPrintFromArt(trimCanvas(c));return;}
+      supAskKind({file:f,canvas:c},'img');
     });
   });
 },true);
+function supNewPrintFromArt(c){
+  if(!c||!alphaBBox(c)){$('supToolMsg').textContent="couldn't read that art";return;}
+  SUP.pendArt=c;SUP.pend=null;
+  $('supMarkForm').hidden=false;
+  supSyncLocW();
+  supRefresh();
+}
 
-/* ---------- marking canvas ---------- */
+/* ---------- workbench: views + drawing ---------- */
 const supCv=$('supCanvas');
-function supPage(){return SUP.pages[SUP.page]||null;}
-function supDrawPage(){
-  const p=supPage();
-  if(!p){
+function supViews(){
+  const v=[];
+  SUP.pages.forEach(function(p,i){v.push({key:'pg:'+p.id,lab:'PG '+(i+1),t:'pg',obj:p});});
+  const g=supGroup();
+  if(g)g.prints.forEach(function(p){v.push({key:'pr:'+p.id,lab:p.label,t:'pr',obj:p});});
+  return v;
+}
+function supCurView(){
+  const v=supViews();
+  if(!v.length)return null;
+  return v.find(function(x){return x.key===SUP.viewKey;})||v[v.length-1];
+}
+function supDrawBench(){
+  const view=supCurView();
+  if(!view){
     supCv.width=600;supCv.height=120;
     const c=supCv.getContext('2d');
     c.fillStyle='#17181A';c.fillRect(0,0,600,120);
     c.fillStyle='#98A0A6';c.font='700 13px "JetBrains Mono", monospace';c.textAlign='center';
-    c.fillText('drop the customer mockup (left panel) to start',300,66);c.textAlign='left';
+    c.fillText('drop the customer art (left panel) to start',300,66);c.textAlign='left';
     return;
   }
+  if(view.t==='pr'){
+    const p=view.obj,g=supGroupOf(p)||supGroup();
+    const aw=p.art.width,ah=p.art.height;
+    const W=Math.max(420,Math.min(900,aw+120)),H=Math.round(W*0.72);
+    supCv.width=W;supCv.height=H;
+    const c=supCv.getContext('2d');c.imageSmoothingQuality='high';
+    c.fillStyle='rgb('+g.rgb.map(Math.round).join(',')+')';c.fillRect(0,0,W,H);
+    const s=Math.min((W*0.82)/aw,(H*0.78)/ah);
+    c.drawImage(p.art,(W-aw*s)/2,(H-ah*s)/2+8,aw*s,ah*s);
+    const lum=relLum(g.rgb[0],g.rgb[1],g.rgb[2]);
+    c.fillStyle=lum<0.45?'rgba(255,255,255,.85)':'rgba(0,0,0,.7)';
+    c.font='700 12px "JetBrains Mono", monospace';
+    c.fillText(p.label+' · '+(+p.widthIn.toFixed(2))+'" · 💧 click a color to add its ink',10,20);
+    return;
+  }
+  const p=view.obj;   /* mockup page */
   supCv.width=p.canvas.width;supCv.height=p.canvas.height;
   const c=supCv.getContext('2d');
   c.drawImage(p.canvas,0,0);
   const sf=Math.max(1,p.canvas.width/760);
-  SUP.marks.forEach(function(m){
-    if(m.pageId!==p.id)return;
+  supAllPrints().forEach(function(pr){
+    if(pr.srcPage!==p.id||!pr.srcRect)return;
     c.save();
     c.setLineDash([6*sf,5*sf]);c.lineWidth=2*sf;c.strokeStyle='#4B9CD3';
-    c.strokeRect(m.rect.x,m.rect.y,m.rect.w,m.rect.h);
+    c.strokeRect(pr.srcRect.x,pr.srcRect.y,pr.srcRect.w,pr.srcRect.h);
     c.setLineDash([]);
     c.font='700 '+Math.round(11*sf)+'px "JetBrains Mono", monospace';
-    const lab=m.label+' · '+(+m.widthIn.toFixed(2))+'"';
+    const lab=pr.label+' · '+(+pr.widthIn.toFixed(2))+'"';
     const tw=c.measureText(lab).width+10*sf;
     c.fillStyle='rgba(14,15,16,.82)';
-    c.fillRect(m.rect.x,Math.max(0,m.rect.y-16*sf),tw,16*sf);
+    c.fillRect(pr.srcRect.x,Math.max(0,pr.srcRect.y-16*sf),tw,16*sf);
     c.fillStyle='#7BAFD4';
-    c.fillText(lab,m.rect.x+5*sf,Math.max(11*sf,m.rect.y-4.5*sf));
+    c.fillText(lab,pr.srcRect.x+5*sf,Math.max(11*sf,pr.srcRect.y-4.5*sf));
     c.restore();
   });
   if(SUP.pend&&SUP.pend.pageId===p.id&&SUP.pend.rect){
     c.save();c.setLineDash([4*sf,4*sf]);c.lineWidth=2*sf;c.strokeStyle='#E8C447';
     c.strokeRect(SUP.pend.rect.x,SUP.pend.rect.y,SUP.pend.rect.w,SUP.pend.rect.h);c.restore();
   }
-  SUP.shirts.forEach(function(sh){
-    if(sh.pageId!==p.id||!sh.pt)return;
-    c.save();
-    c.beginPath();c.arc(sh.pt.x,sh.pt.y,9*sf,0,Math.PI*2);
-    c.fillStyle='rgb('+sh.rgb.map(Math.round).join(',')+')';c.fill();
-    c.lineWidth=2*sf;c.strokeStyle='#FFFFFF';c.stroke();
-    c.restore();
-  });
 }
 function supPos(e){
   const r=supCv.getBoundingClientRect();
@@ -5482,93 +5626,89 @@ function supNormRect(x0,y0,x1,y1){
   const x=Math.max(0,Math.min(x0,x1)),y=Math.max(0,Math.min(y0,y1));
   return {x:x,y:y,w:Math.min(supCv.width,Math.max(x0,x1))-x,h:Math.min(supCv.height,Math.max(y0,y1))-y};
 }
-function supSetTool(t){
-  SUP.tool=t;
-  $('supToolSample').classList.toggle('tool-on',t==='sample');
-  $('supToolMark').classList.toggle('tool-on',t==='mark');
-  $('supToolMsg').textContent=t==='sample'?'→ click the garment on the mockup':'→ drag a box around one print';
+function supViewCanvas(){
+  const v=supCurView();
+  if(!v)return null;
+  return v.t==='pg'?v.obj.canvas:null;   /* prints sample from the drawn bench */
 }
-$('supToolSample').onclick=function(){supSetTool('sample');};
-$('supToolMark').onclick=function(){supSetTool('mark');};
-
-let __supDrag=null;
-supCv.addEventListener('mousedown',function(e){
-  const p=supPage();if(!p||!SUP.on)return;
-  e.preventDefault();
-  const pos=supPos(e);
-  if(SUP.tool==='sample'){supSampleShirt(pos);return;}
-  __supDrag={x0:pos.x,y0:pos.y};
-});
-window.addEventListener('mousemove',function(e){
-  if(!__supDrag)return;
-  const pos=supPos(e);
-  SUP.pend={pageId:supPage().id,rect:supNormRect(__supDrag.x0,__supDrag.y0,pos.x,pos.y)};
-  supDrawPage();
-});
-window.addEventListener('mouseup',function(e){
-  if(!__supDrag)return;
-  const pos=supPos(e);
-  const r=supNormRect(__supDrag.x0,__supDrag.y0,pos.x,pos.y);
-  __supDrag=null;
-  if(r.w<12||r.h<12){SUP.pend=null;supDrawPage();return;}   /* stray click */
-  SUP.pend={pageId:supPage().id,rect:r};
-  supDrawPage();
-  $('supMarkForm').hidden=false;
-  supSyncLocW();
-});
-
-/* ---------- shirts ---------- */
 function supAvgAt(canvas,x,y,rad){
   const x0=Math.max(0,Math.round(x-rad)),y0=Math.max(0,Math.round(y-rad));
   const w=Math.max(1,Math.min(canvas.width-x0,rad*2+1)),h=Math.max(1,Math.min(canvas.height-y0,rad*2+1));
   const d=canvas.getContext('2d').getImageData(x0,y0,w,h).data;
   let r=0,g=0,b=0,n=0;
   for(let i=0;i<d.length;i+=4){if(d[i+3]<128)continue;r+=d[i];g+=d[i+1];b+=d[i+2];n++;}
-  return n?[r/n,g/n,b/n]:[128,128,128];
+  return n?[r/n,g/n,b/n]:null;
 }
-function supSampleShirt(pos){
-  const p=supPage();
-  const rgb=supAvgAt(p.canvas,pos.x,pos.y,3);
-  SUP.shirts.push({id:SUP.seq++,pageId:p.id,pt:{x:pos.x,y:pos.y},
-    name:'COLOR '+(SUP.shirts.length+1),rgb:rgb,
-    dark:relLum(rgb[0],rgb[1],rgb[2])<0.45});
-  supRefresh();
+function supSetTool(t){
+  SUP.tool=t;
+  $('supToolInk').classList.toggle('tool-on',t==='ink');
+  $('supToolG').classList.toggle('tool-on',t==='garment');
+  $('supToolMark').classList.toggle('tool-on',t==='mark');
+  $('supToolMsg').textContent=t==='ink'?'→ click a color in the art'
+    :t==='garment'?'→ click the shirt to set this group’s color'
+    :'→ drag a box around one print (mockup pages only)';
 }
-function supAnyDark(){return SUP.shirts.some(function(s){return s.dark;});}
+$('supToolInk').onclick=function(){supSetTool('ink');};
+$('supToolG').onclick=function(){supSetTool('garment');};
+$('supToolMark').onclick=function(){supSetTool('mark');};
 
-/* ---------- mark form ---------- */
+let __supDrag=null;
+supCv.addEventListener('mousedown',function(e){
+  if(!SUP.on)return;
+  const view=supCurView();if(!view)return;
+  e.preventDefault();
+  const pos=supPos(e);
+  if(SUP.tool==='mark'){
+    if(view.t!=='pg'){$('supToolMsg').textContent='marking works on mockup pages — clean art is already a print';return;}
+    __supDrag={x0:pos.x,y0:pos.y};
+    return;
+  }
+  /* sample from the page canvas when on a page; from the rendered bench when on a print */
+  const src=supViewCanvas()||supCv;
+  const rgb=supAvgAt(src,pos.x,pos.y,3);
+  if(!rgb){$('supToolMsg').textContent='nothing there — click on the art';return;}
+  if(SUP.tool==='garment'){
+    supSetGarment(rgb,supNearestSwatchName(rgb));
+    $('supToolMsg').textContent='garment set → '+supGroup().name;
+  }else{
+    supOpenInkPop(rgb,view.t==='pr'?view.obj.id:null);
+  }
+});
+window.addEventListener('mousemove',function(e){
+  if(!__supDrag)return;
+  const pos=supPos(e);
+  const v=supCurView();
+  SUP.pend={pageId:v.obj.id,rect:supNormRect(__supDrag.x0,__supDrag.y0,pos.x,pos.y)};
+  supDrawBench();
+});
+window.addEventListener('mouseup',function(e){
+  if(!__supDrag)return;
+  const pos=supPos(e);
+  const r=supNormRect(__supDrag.x0,__supDrag.y0,pos.x,pos.y);
+  __supDrag=null;
+  if(r.w<12||r.h<12){SUP.pend=null;supDrawBench();return;}
+  const v=supCurView();
+  SUP.pend={pageId:v.obj.id,rect:r};
+  SUP.pendArt=null;
+  supDrawBench();
+  $('supMarkForm').hidden=false;
+  supSyncLocW();
+});
+
+/* ---------- add a print (clean art OR marquee crop) ---------- */
 function supSyncLocW(){
   const o=$('supLocSel').selectedOptions[0];
   if(o)$('supLocW').value=o.dataset.w;
   $('supLocCustom').hidden=$('supLocSel').value!=='CUSTOM';
 }
 $('supLocSel').onchange=supSyncLocW;
-$('supMarkCancel').onclick=function(){SUP.pend=null;$('supMarkForm').hidden=true;supDrawPage();};
-$('supMarkAdd').onclick=function(){
-  if(!SUP.pend)return;
-  let lab=$('supLocSel').value;
-  if(lab==='CUSTOM')lab=(($('supLocCustom').value||'').trim()||'CUSTOM').toUpperCase();
-  const widthIn=Math.max(0.5,parseFloat($('supLocW').value)||4);
-  const m={id:SUP.seq++,pageId:SUP.pend.pageId,label:lab,widthIn:widthIn,rect:SUP.pend.rect,
-    crop:null,inks:[],assign:[]};
-  supDetect(m);
-  SUP.marks.push(m);
-  SUP.pend=null;$('supMarkForm').hidden=true;
-  supRefresh();
-};
-
-/* ---------- detection: garment knockout + the SAME detectInks the Lab uses.
-   Garment reference = the rect's border-ring average ONLY — the local shirt
-   color at that exact spot. Deliberately NOT the sampled job shirt colors:
-   black ink sits ~35 RGB from navy, so knocking out every colorway would
-   eat real inks (black-on-navy, white-on-white). Anything within RGB
-   distance 52 of the ring — or a pure luminance-shade of it (garment
-   shading behind the art) — goes transparent BEFORE detection, so the ink
-   list is the print, not the shirt. The crop keeps the knockout, which is
-   what lets the print box draw the art straight onto its shirt stripe. */
-function supDetect(m){
-  const p=SUP.pages.find(function(x){return x.id===m.pageId;});if(!p)return;
-  const r=m.rect;
+$('supMarkCancel').onclick=function(){SUP.pend=null;SUP.pendArt=null;$('supMarkForm').hidden=true;supDrawBench();};
+/* garment knockout for marquee crops — RING-ONLY reference (the local shirt
+   color at that spot + its luminance shades). NEVER the group colors: black
+   ink sits ~35 RGB from navy and would be eaten (proven in the v8.31 smoke). */
+function supCropFromPage(pend){
+  const p=SUP.pages.find(function(x){return x.id===pend.pageId;});if(!p)return null;
+  const r=pend.rect;
   const c=document.createElement('canvas');
   c.width=Math.max(1,Math.round(r.w));c.height=Math.max(1,Math.round(r.h));
   const cx=c.getContext('2d');
@@ -5588,220 +5728,235 @@ function supDetect(m){
     let out=false;
     if(ringC&&Math.hypot(R-ringC[0],G-ringC[1],B-ringC[2])<52)out=true;
     if(!out&&ringC&&ringL>0.001){
-      const l=relLum(R,G,B);
-      const t=l/ringL;
+      const l=relLum(R,G,B),t=l/ringL;
       if(t>0.45&&t<1.8&&Math.hypot(R-ringC[0]*t,G-ringC[1]*t,B-ringC[2]*t)<34)out=true;
     }
     if(out)d[i+3]=0;
   }
   cx.putImageData(id,0,0);
-  m.crop=c;
-  m.inks=detectInks(c);
-  m.assign=m.inks.map(function(ink){
-    const best=nearestPms(ink.r,ink.g,ink.b);
-    return {idx:best.idx,darkIdx:null,off:false,darkOff:null,match:matchPct(best.dist),auto:true};
+  return c;
+}
+$('supMarkAdd').onclick=function(){
+  const g=supGroup();if(!g)return;
+  let lab=$('supLocSel').value;
+  if(lab==='CUSTOM')lab=(($('supLocCustom').value||'').trim()||'CUSTOM').toUpperCase();
+  const widthIn=Math.max(0.5,parseFloat($('supLocW').value)||4);
+  let art=null,srcPage=null,srcRect=null;
+  if(SUP.pendArt){art=SUP.pendArt;}
+  else if(SUP.pend){art=supCropFromPage(SUP.pend);srcPage=SUP.pend.pageId;srcRect=SUP.pend.rect;}
+  if(!art)return;
+  const p={id:SUP.seq++,label:lab,widthIn:widthIn,art:art,inks:[],srcPage:srcPage,srcRect:srcRect};
+  g.prints.push(p);
+  SUP.lastPrint=p.id;
+  SUP.pendArt=null;SUP.pend=null;$('supMarkForm').hidden=true;
+  SUP.viewKey='pr:'+p.id;
+  supRefresh();
+};
+
+/* ---------- inks: eyedropper confirm loop + detect-all ---------- */
+function supInkName(i){const p=PMS[i],st=STD_INKS[p[0]];return st?st[0]:'PMS '+p[0];}
+function supEnabledIdx(p){
+  const seen={},out=[];
+  p.inks.forEach(function(a){if(a.off)return;if(seen[a.idx])return;seen[a.idx]=1;out.push(a.idx);});
+  return out;
+}
+let __supDropRGB=null,__supPickI=null;
+function supOpenInkPop(rgb,pid){
+  const g=supGroup();
+  if(!g||!g.prints.length){$('supToolMsg').textContent='add a print first — inks live on prints';return;}
+  __supDropRGB=rgb;__supPickI=null;
+  const sel=$('supInkTarget');sel.innerHTML='';
+  g.prints.forEach(function(p){
+    const o=document.createElement('option');o.value=String(p.id);
+    o.textContent=(g.name||'COLOR')+' · '+p.label;
+    sel.appendChild(o);
+  });
+  const want=pid!=null?pid:SUP.lastPrint;
+  if(want!=null&&g.prints.some(function(p){return p.id===want;}))sel.value=String(want);
+  const hex='#'+rgb.map(function(v){return Math.round(v).toString(16).padStart(2,'0');}).join('').toUpperCase();
+  $('supInkSw').style.background='rgb('+rgb.map(Math.round).join(',')+')';
+  $('supInkHex').textContent=hex;
+  $('supInkSearch').value='';
+  supRenderInkOpts('');
+  $('supInkAdd').disabled=true;$('supInkAdd').textContent='PICK AN INK ABOVE';
+  $('supInkPop').hidden=false;
+}
+function supRenderInkOpts(q){
+  const el=$('supInkOpts');el.innerHTML='';
+  q=(q||'').trim().toLowerCase();
+  let list=[];
+  if(q){
+    PMS.forEach(function(p,i){
+      const st=STD_INKS[p[0]];
+      if((st&&st[0].toLowerCase().includes(q))||('pms '+p[0]).toLowerCase().includes(q)
+        ||p[0].toLowerCase().includes(q)||p[3].toLowerCase().includes(q))list.push(i);
+    });
+    list=list.slice(0,24);
+  }else if(__supDropRGB){
+    list=PMS.map(function(_,i){return i;})
+      .sort(function(a,b){return pmsDist(__supDropRGB[0],__supDropRGB[1],__supDropRGB[2],a)
+                               -pmsDist(__supDropRGB[0],__supDropRGB[1],__supDropRGB[2],b);})
+      .slice(0,8);
+  }
+  list.forEach(function(i){
+    const p=PMS[i],st=STD_INKS[p[0]];
+    const b=document.createElement('button');b.type='button';
+    const pct=__supDropRGB?matchPct(pmsDist(__supDropRGB[0],__supDropRGB[1],__supDropRGB[2],i)):null;
+    b.innerHTML='<span class="sw" style="background:'+p[1]+'"></span>'
+      +'<span class="lb"><b>'+(st?'★ '+st[0]:'PMS '+p[0])+'</b>'
+      +'<span>PMS '+p[0]+(pct!=null?' · '+pct+'%':'')+'</span></span>';
+    b.onclick=function(){
+      __supPickI=i;
+      el.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});
+      $('supInkAdd').disabled=false;
+      $('supInkAdd').textContent='ADD '+supInkName(i).toUpperCase()+' · PMS '+p[0]+' TO THE PRINT SHEET →';
+    };
+    el.appendChild(b);
+  });
+  if(!list.length)el.innerHTML='<div class="val">nothing matches that search</div>';
+}
+$('supInkSearch').oninput=function(e){supRenderInkOpts(e.target.value);};
+$('supInkCancel').onclick=function(){$('supInkPop').hidden=true;};
+$('supInkAdd').onclick=function(){
+  const pid=+$('supInkTarget').value,p=supFindPrint(pid);
+  if(!p||__supPickI==null)return;
+  if(p.inks.some(function(a){return a.idx===__supPickI;})){
+    $('supToolMsg').textContent=supInkName(__supPickI)+' is already on '+p.label;
+  }else{
+    p.inks.push({idx:__supPickI,off:false});
+    $('supToolMsg').textContent='added '+supInkName(__supPickI)+' → '+p.label+' · keep clicking colors';
+  }
+  SUP.lastPrint=pid;SUP.touchedInks=true;
+  $('supInkPop').hidden=true;
+  supRefresh();
+};
+function supDetectAll(p){
+  detectInks(p.art).forEach(function(ink){
+    const i=nearestPms(ink.r,ink.g,ink.b).idx;
+    if(!p.inks.some(function(a){return a.idx===i;}))p.inks.push({idx:i,off:false});
+  });
+  SUP.touchedInks=true;
+  supRefresh();
+}
+
+/* ---------- right panel ---------- */
+function supRenderInks(){
+  const el=$('supInkList');el.innerHTML='';
+  const g=supGroup();
+  if(!g||!g.prints.length){
+    el.innerHTML='<div class="val">no prints in '+(g?(g.name||'this color'):'this color')+' yet — drop art on the left</div>';
+    return;
+  }
+  g.prints.forEach(function(p){
+    const h=document.createElement('div');h.className='sup-print-h';
+    const lab=document.createElement('span');lab.textContent=p.label;
+    const w=document.createElement('input');w.type='number';w.step='0.25';w.min='0.5';w.value=p.widthIn;
+    w.title='print width in inches';
+    w.onchange=function(){p.widthIn=Math.max(0.5,parseFloat(w.value)||p.widthIn);supRefresh();};
+    const inch=document.createElement('span');inch.textContent='"';
+    const view=document.createElement('button');view.className='del';view.type='button';view.textContent='👁';
+    view.title='show on the workbench';
+    view.onclick=function(){SUP.viewKey='pr:'+p.id;SUP.lastPrint=p.id;supRefresh();};
+    const del=document.createElement('button');del.className='del';del.type='button';del.textContent='✕';del.title='remove this print';
+    del.style.marginLeft='0';
+    del.onclick=function(){g.prints=g.prints.filter(function(x){return x!==p;});SUP.viewKey=null;supRefresh();};
+    view.style.marginLeft='auto';
+    h.appendChild(lab);h.appendChild(w);h.appendChild(inch);h.appendChild(view);h.appendChild(del);
+    el.appendChild(h);
+    p.inks.forEach(function(a){
+      const row=document.createElement('div');row.className='sup-ink-row'+(a.off?' offed':'');
+      const sw=document.createElement('span');sw.className='sw';sw.style.background=PMS[a.idx][1];
+      const nm=document.createElement('span');nm.className='nm';
+      nm.innerHTML='<b>'+supInkName(a.idx)+'</b> · PMS '+PMS[a.idx][0];
+      const off=document.createElement('button');off.type='button';
+      off.textContent=a.off?'ON':'✕';off.title='turn this ink off / back on';
+      off.onclick=function(){a.off=!a.off;SUP.touchedInks=true;supRefresh();};
+      const rm=document.createElement('button');rm.type='button';rm.textContent='🗑';rm.title='remove this ink';
+      rm.onclick=function(){p.inks=p.inks.filter(function(x){return x!==a;});supRefresh();};
+      row.appendChild(sw);row.appendChild(nm);row.appendChild(off);row.appendChild(rm);
+      el.appendChild(row);
+    });
+    const hint=document.createElement('div');hint.className='btnrow';hint.style.marginTop='6px';
+    const det=document.createElement('button');det.className='btn ghost sm';det.type='button';
+    det.textContent='DETECT ALL';det.title='auto-detect every color in this art, then prune';
+    det.onclick=function(){supDetectAll(p);};
+    hint.appendChild(det);
+    if(!p.inks.length){
+      const t=document.createElement('span');t.className='val';t.style.alignSelf='center';
+      t.textContent='💧 eyedrop on the workbench to add inks';
+      hint.appendChild(t);
+    }
+    el.appendChild(hint);
   });
 }
 
-/* ---------- ink helpers (dedupe on the RESOLVED index — merged-inks contract) ---------- */
-function supEnabled(m,dark){return m.assign.filter(function(a){return !inkIsOff(a,dark);});}
-function supInksForMark(m,dark){
-  const seen={},out=[];
-  supEnabled(m,dark).forEach(function(a){
-    const i=(dark&&a.darkIdx!=null)?a.darkIdx:a.idx;
-    if(seen[i])return;seen[i]=1;
-    const p=PMS[i],st=STD_INKS[p[0]];
-    out.push({hex:p[1],name:st?st[0]:'PMS '+p[0],code:'PMS '+p[0]});
-  });
-  if(out.length&&dark&&$('supUB').checked)out.unshift({hex:'#FFFFFF',name:'UNDERBASE',code:'UB',ub:true});
-  return out;
-}
-function supScreens(dark){
+/* ---------- the shop print sheet — one tile per GROUP, 2 tiles per page ---------- */
+function supScreensG(g){
   let t=0;
-  SUP.marks.forEach(function(m){
-    const en=supEnabled(m,dark);
+  g.prints.forEach(function(p){
+    const en=supEnabledIdx(p);
     if(!en.length)return;
-    const seen={};let cnt=0;
-    en.forEach(function(a){const i=(dark&&a.darkIdx!=null)?a.darkIdx:a.idx;if(!seen[i]){seen[i]=1;cnt++;}});
-    t+=cnt+((dark&&$('supUB').checked)?1:0);
+    t+=en.length+(g.ub?1:0);
   });
   return t;
 }
-function supInkName(i){const p=PMS[i],st=STD_INKS[p[0]];return st?st[0]:'PMS '+p[0];}
-
-/* ---------- right-column UI ---------- */
-function supRenderShirts(){
-  const el=$('supShirtList');el.innerHTML='';
-  if(!SUP.shirts.length){
-    el.innerHTML='<div class="val">no shirt colors yet — 🎨 SAMPLE, then click the garment on the mockup</div>';
-    return;
-  }
-  SUP.shirts.forEach(function(sh){
-    const row=document.createElement('div');row.className='sup-chip';
-    const sw=document.createElement('button');sw.className='sw';sw.type='button';
-    sw.style.background='rgb('+sh.rgb.map(Math.round).join(',')+')';
-    sw.title='tap to flip LIGHT / DARK';
-    const tag=document.createElement('span');
-    tag.textContent=sh.dark?'DRK':'LT';
-    tag.style.color=relLum(sh.rgb[0],sh.rgb[1],sh.rgb[2])<0.45?'#FFF':'#000';
-    sw.appendChild(tag);
-    sw.onclick=function(){sh.dark=!sh.dark;supRefresh();};
-    const inp=document.createElement('input');inp.type='text';inp.value=sh.name;
-    inp.placeholder='shirt color name (from the PO)';
-    inp.oninput=function(){sh.name=inp.value;supSheetSoon();};
-    const del=document.createElement('button');del.className='del';del.type='button';del.textContent='✕';
-    del.onclick=function(){SUP.shirts=SUP.shirts.filter(function(x){return x!==sh;});supRefresh();};
-    row.appendChild(sw);row.appendChild(inp);row.appendChild(del);
-    el.appendChild(row);
+function supInksForPrint(g,p){
+  const out=supEnabledIdx(p).map(function(i){
+    const pm=PMS[i],st=STD_INKS[pm[0]];
+    return {hex:pm[1],name:st?st[0]:'PMS '+pm[0],code:'PMS '+pm[0]};
   });
+  if(out.length&&g.ub)out.unshift({hex:'#FFFFFF',name:'UNDERBASE',code:'UB',ub:true});
+  return out;
 }
-function supRenderInks(){
-  const el=$('supInkList');el.innerHTML='';
-  if(!SUP.marks.length){
-    el.innerHTML='<div class="val">mark a print on the mockup first</div>';
-    return;
-  }
-  const dark=supAnyDark();
-  SUP.marks.forEach(function(m){
-    const h=document.createElement('div');h.className='sup-mark-h';
-    const lab=document.createElement('span');lab.textContent=m.label+' · '+(+m.widthIn.toFixed(2))+'"';
-    const re=document.createElement('button');re.className='del grow';re.type='button';re.textContent='↻';
-    re.title='re-detect the inks in this box (uses the shirt colors sampled so far)';
-    re.onclick=function(){supDetect(m);SUP.touchedInks=true;supRefresh();};
-    const del=document.createElement('button');del.className='del';del.type='button';del.textContent='✕';
-    del.title='remove this print';
-    del.onclick=function(){SUP.marks=SUP.marks.filter(function(x){return x!==m;});supRefresh();};
-    h.appendChild(lab);h.appendChild(re);h.appendChild(del);
-    el.appendChild(h);
-    m.inks.forEach(function(ink,i){
-      const a=m.assign[i];if(!a)return;
-      const row=document.createElement('div');
-      row.className='sup-ink-row'+((inkIsOff(a,false)&&inkIsOff(a,true))?' offed':'');
-      const sw=document.createElement('span');sw.className='sw';sw.style.background=PMS[a.idx][1];
-      const nm=document.createElement('span');nm.className='nm';
-      nm.innerHTML='<b>'+supInkName(a.idx)+'</b> · PMS '+PMS[a.idx][0]
-        +((a.auto&&a.match!=null)?' · '+a.match+'%':'');
-      const ch=document.createElement('button');ch.type='button';ch.textContent='CHANGE';
-      ch.onclick=function(){openSupPicker(m,i,false);};
-      row.appendChild(sw);row.appendChild(nm);row.appendChild(ch);
-      if(dark){
-        const dk=document.createElement('button');dk.type='button';
-        dk.textContent=a.darkIdx==null?'ON DARKS: SAME':'ON DARKS: '+supInkName(a.darkIdx);
-        dk.title='what this ink swaps to on the dark shirts';
-        dk.onclick=function(){openSupPicker(m,i,true);};
-        row.appendChild(dk);
-      }
-      const off=document.createElement('button');off.type='button';
-      off.textContent=inkIsOff(a,false)?'ON':'✕';
-      off.title='turn this ink off / back on';
-      off.onclick=function(){a.off=!a.off;a.darkOff=null;SUP.touchedInks=true;supRefresh();};
-      row.appendChild(off);
-      el.appendChild(row);
-    });
-    const add=document.createElement('button');
-    add.className='btn ghost sm';add.type='button';add.style.marginTop='6px';
-    add.textContent='+ ADD AN INK';
-    add.title="for inks the detector can't see — white art on a white mockup, tone-on-tone";
-    add.onclick=function(){
-      const w=nearestPms(255,255,255);
-      m.inks.push({hex:'#FFFFFF',pct:0,r:255,g:255,b:255});
-      m.assign.push({idx:w.idx,darkIdx:null,off:false,darkOff:null,match:null,auto:false});
-      SUP.touchedInks=true;
-      supRefresh();
-      openSupPicker(m,m.inks.length-1,false);
-    };
-    el.appendChild(add);
-  });
-}
-
-/* ---------- ink picker (shares the overlay, sleeve-picker pattern) ---------- */
-function openSupPicker(m,idx,dark){
-  const ink=m.inks[idx],a=m.assign[idx];
-  if(!ink||!a)return;
-  __supPick={m:m,idx:idx,dark:!!dark};
-  $('ipkTitle').textContent=m.label+' — '+(dark?'PICK THE DARK-SHIRT INK':'PICK THE INK');
-  $('ipkCtx').innerHTML='<span class="ipk-sw" style="background:'+ink.hex+'"></span>'
-    +'in the mockup: <b>'+ink.hex.toUpperCase()+'</b>'+(ink.pct?' · '+ink.pct+'% of the print':'')
-    +(a.match!=null?' · closest standard <b>'+a.match+'%</b> match':'');
-  $('ipkSearch').value='';
-  renderPickGrid('');
-  $('inkPickWrap').hidden=false;
-  setTimeout(function(){$('ipkSearch').focus();},30);
-}
-function applySupPick(i){
-  const a=__supPick.m.assign[__supPick.idx],ink=__supPick.m.inks[__supPick.idx];
-  if(!a){closeInkPicker();return;}
-  if(__supPick.dark){a.darkIdx=(i==null)?null:i;}
-  else if(i!=null){a.idx=i;a.auto=false;a.match=ink.pct?matchPct(pmsDist(ink.r,ink.g,ink.b,i)):null;}
-  SUP.touchedInks=true;
-  closeInkPicker();supRefresh();
-}
-
-/* ---------- the shop print sheet — same visual contract as renderSummaryTo:
-   one tile per press setup, shirt-color stripes, size-proportional print
-   boxes on ONE shared ppi, per-box chips with the tier lock. ---------- */
-function supShirtGroups(){
-  const light=SUP.shirts.filter(function(s){return !s.dark;});
-  const dark=SUP.shirts.filter(function(s){return s.dark;});
-  const g=[];
-  if(light.length||!dark.length)g.push({key:'light',label:SUP.shirts.length?'LIGHT-SHIRT INKS':'PRESS SETUP',shirts:light,dark:false});
-  if(dark.length)g.push({key:'dark',label:'DARK-SHIRT INKS',shirts:dark,dark:true});
-  return g;
-}
-function renderSupSheetTo(pg){
+function supSheetGroups(){return SUP.groups.filter(function(g){return g.prints.length;});}
+function supSheetPageCount(){return Math.max(1,Math.ceil(supSheetGroups().length/2));}
+function renderSupSheetTo(pg,pageIdx){
+  pageIdx=pageIdx||0;
   const W=1500,H=1080;pg.width=W*PGS;pg.height=H*PGS;
   const ctx=pg.getContext('2d');ctx.imageSmoothingQuality='high';
   ctx.scale(PGS,PGS);
-  drawPageHeader(ctx,W,'PRODUCTION PRINT SHEET — CUSTOMER-SUPPLIED MOCKUP');
-  const foot='Customer supplied the mockup — art shown as marked off their file · the background stripes are every shirt color in that run · box sizes are REAL print inches on one shared scale.';
-  const marks=SUP.marks.filter(function(m){return m.crop;});
-  if(!marks.length){
+  const nPages=supSheetPageCount();
+  drawPageHeader(ctx,W,'PRODUCTION PRINT SHEET — CUSTOMER-SUPPLIED ART'+(nPages>1?' · PAGE '+(pageIdx+1)+' OF '+nPages:''));
+  const foot='SHIRT COLORS ARE VISUAL ONLY — not a callout, order from the Printavo invoice · one tile per shirt color, its own art + inks · box sizes are REAL print inches.';
+  const groups=supSheetGroups().slice(pageIdx*2,pageIdx*2+2);
+  if(!groups.length){
     ctx.fillStyle='#98A0A6';ctx.font='700 20px "JetBrains Mono", monospace';ctx.textAlign='center';
-    ctx.fillText('Mark the prints on the mockup to build the sheet',W/2,H/2);
+    ctx.fillText('Add a print to a color group to build the sheet',W/2,H/2);
     ctx.textAlign='left';
     drawPageFooter(ctx,W,H,foot);
     return;
   }
-  const groups=supShirtGroups();
   const gx=50,gy=168,gw=1400,gh=842,gap=16;
   const tileW=groups.length===2?(gw-gap)/2:gw;
   const headH=34,swH=30,tileH=gh-headH-swH-14;
-  groups.forEach(function(gr,gi){
+  groups.forEach(function(g,gi){
     const tx=gx+gi*(tileW+gap);
-    const totScr=supScreens(gr.dark);
+    const totScr=supScreensG(g);
     ctx.fillStyle='#E8EAEC';ctx.font='900 19px "Archivo Black", Arial Black, sans-serif';
-    ctx.fillText(gr.label,tx,gy+22);
+    ctx.fillText((g.name||'COLOR').toUpperCase(),tx,gy+22);
     ctx.fillStyle='#98A0A6';ctx.font='700 12px "JetBrains Mono", monospace';
     ctx.textAlign='right';
-    ctx.fillText((gr.shirts.length?gr.shirts.length+' SHIRT'+(gr.shirts.length===1?'':'S')+' · ':'')
-      +totScr+' SCREEN'+(totScr===1?'':'S'),tx+tileW,gy+22);
+    ctx.fillText(g.prints.length+' PRINT'+(g.prints.length===1?'':'S')+' · '+totScr+' SCREEN'+(totScr===1?'':'S'),tx+tileW,gy+22);
     ctx.textAlign='left';
     const ty=gy+headH;
     ctx.save();
     ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.clip();
-    const shirts=gr.shirts.length?gr.shirts:[{name:'— SAMPLE THE SHIRT COLORS —',rgb:[46,49,53]}];
-    const n=shirts.length,stW=tileW/n;
-    shirts.forEach(function(sh,si){
-      const rgb=sh.rgb;
-      ctx.fillStyle='rgb('+Math.round(rgb[0])+','+Math.round(rgb[1])+','+Math.round(rgb[2])+')';
-      ctx.fillRect(tx+si*stW,ty,stW+1,tileH);
-      const lum=relLum(rgb[0],rgb[1],rgb[2]);
-      const inkCol=lum<0.45?'#F2F4F6':'#15181B';
-      const big=stW>150;
-      ctx.textAlign='center';
-      ctx.fillStyle=inkCol;ctx.font='900 '+(big?17:12)+'px "Archivo Black", Arial Black, sans-serif';
-      ctx.fillText((sh.name||'—').toUpperCase(),tx+si*stW+stW/2,ty+(big?28:22),stW-10);
-      ctx.textAlign='left';
-      if(si>0){
-        ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=1;
-        ctx.beginPath();ctx.moveTo(tx+si*stW,ty);ctx.lineTo(tx+si*stW,ty+tileH);ctx.stroke();
-      }
-    });
+    ctx.fillStyle='rgb('+g.rgb.map(Math.round).join(',')+')';
+    ctx.fillRect(tx,ty,tileW,tileH);
+    const lum=relLum(g.rgb[0],g.rgb[1],g.rgb[2]);
+    const inkCol=lum<0.45?'#F2F4F6':'#15181B';
+    const subCol=lum<0.45?'rgba(255,255,255,.72)':'rgba(0,0,0,.6)';
+    ctx.textAlign='center';
+    ctx.fillStyle=inkCol;ctx.font='900 17px "Archivo Black", Arial Black, sans-serif';
+    ctx.fillText((g.name||'COLOR').toUpperCase(),tx+tileW/2,ty+28,tileW-20);
+    ctx.fillStyle=subCol;ctx.font='500 9px "JetBrains Mono", monospace';
+    ctx.fillText('SHIRT COLOR VISUAL ONLY — ORDER FROM THE INVOICE',tx+tileW/2,ty+44,tileW-20);
+    ctx.textAlign='left';
     const azTop=ty+58,azBot=ty+tileH-14;
-    const prints=marks.map(function(m){
-      return {art:m.crop,wIn:m.widthIn,hIn:m.widthIn*m.crop.height/m.crop.width,
-        inks:supInksForMark(m,gr.dark),lab:m.label};
-    }).filter(function(p){return p.inks.length;});
+    const prints=g.prints.map(function(p){
+      return {art:p.art,wIn:p.widthIn,hIn:p.widthIn*p.art.height/p.art.width,
+        inks:supInksForPrint(g,p),lab:p.label};
+    }).filter(function(p){return p.art;});
     if(prints.length){
       let lockTier=null;
       const chipsH=function(p,bw){return layoutBoxChips(ctx,bw-12,p.inks,lockTier).h+6;};
@@ -5822,10 +5977,10 @@ function renderSupSheetTo(pg){
           ctx.beginPath();ctx.roundRect(px,bTop,bx.w,bx.h,5);ctx.fill();
           ctx.setLineDash([5,4]);ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1;
           ctx.stroke();ctx.restore();
-          ctx.fillStyle='#E8EAEC';ctx.font='700 9px "JetBrains Mono", monospace';
+          ctx.fillStyle=inkCol;ctx.font='700 9px "JetBrains Mono", monospace';
           ctx.fillText(p.lab+'  '+(+p.wIn.toFixed(2))+'"',px+6,bTop+11,bx.w-58);
-          ctx.textAlign='right';ctx.fillStyle='rgba(232,234,236,.7)';
-          ctx.fillText(p.inks.length+' SCR',px+bx.w-6,bTop+11);
+          ctx.textAlign='right';
+          ctx.fillText((p.inks.length?p.inks.length+' SCR':'NO INKS YET'),px+bx.w-6,bTop+11);
           ctx.textAlign='left';
           const aw=p.wIn*pk.ppi,ah=p.hIn*pk.ppi;
           const artZ=bx.h-16-clay.h-6;
@@ -5839,7 +5994,7 @@ function renderSupSheetTo(pg){
     ctx.restore();
     ctx.strokeStyle='rgba(127,127,127,.35)';ctx.lineWidth=1.5;
     ctx.beginPath();ctx.roundRect(tx,ty,tileW,tileH,10);ctx.stroke();
-    if(gr.dark&&$('supUB').checked){
+    if(g.ub){
       ctx.fillStyle='#7BAFD4';ctx.font='700 12px "JetBrains Mono", monospace';
       ctx.fillText('WHITE UNDERBASE PRINTS FIRST ON EVERY LOCATION',tx,ty+tileH+22);
     }
@@ -5847,59 +6002,74 @@ function renderSupSheetTo(pg){
   stampWatermark(ctx,gx,gy,gw,gh,'rgba(127,127,127,0.05)',26);
   drawPageFooter(ctx,W,H,foot);
 }
+$('supDlSheet').onclick=async function(){
+  const n=supSheetPageCount();
+  if(n===1){
+    const pg=document.createElement('canvas');
+    renderSupSheetTo(pg,0);
+    downloadCanvas(pg,slug(jobCustomerName())+'-shop-print-sheet.png');
+    return;
+  }
+  const pages=[];
+  for(let i=0;i<n;i++){
+    const pg=document.createElement('canvas');
+    renderSupSheetTo(pg,i);
+    pages.push({data:await canvasJpeg(pg),w:pg.width,h:pg.height,scale:PGS});
+  }
+  downloadBlobFile(pdfFromJpegs(pages),slug(jobCustomerName())+'-shop-print-sheet.pdf');
+};
 
-/* ---------- refresh + downloads ---------- */
+/* ---------- refresh ---------- */
 let __supSheetT=null;
 function supSheetSoon(){
   clearTimeout(__supSheetT);
-  __supSheetT=setTimeout(function(){renderSupSheetTo($('supSheetCanvas'));},150);
+  __supSheetT=setTimeout(function(){
+    renderSupSheetTo($('supSheetCanvas'),0);
+    const n=supSheetPageCount();
+    $('supSheetPgNote').textContent=n>1?n+' shirt colors → downloads as a '+n+'-page PDF':'';
+  },150);
 }
 function supRenderPager(){
   const el=$('supPager');el.innerHTML='';
-  SUP.pages.forEach(function(p,i){
+  const cur=supCurView();
+  supViews().forEach(function(v){
     const b=document.createElement('button');b.type='button';
-    b.textContent='PG '+(i+1);b.title=p.name;
-    b.classList.toggle('on',i===SUP.page);
-    b.onclick=function(){SUP.page=i;supRefresh();};
+    b.textContent=v.lab;b.title=v.t==='pg'?v.obj.name:'print';
+    b.classList.toggle('on',!!cur&&v.key===cur.key);
+    b.onclick=function(){SUP.viewKey=v.key;if(v.t==='pr')SUP.lastPrint=v.obj.id;supRefresh();};
     el.appendChild(b);
   });
   if(SUP.pages.length){
-    const del=document.createElement('button');del.type='button';del.textContent='✕ REMOVE PAGE';
+    const del=document.createElement('button');del.type='button';del.textContent='✕ PAGE';
+    del.title='remove the current mockup page';
     del.onclick=function(){
-      const p=supPage();if(!p)return;
-      SUP.marks=SUP.marks.filter(function(m){return m.pageId!==p.id;});
-      SUP.shirts.forEach(function(s){if(s.pageId===p.id){s.pageId=null;s.pt=null;}});
-      SUP.pages.splice(SUP.page,1);
-      SUP.page=Math.max(0,SUP.page-1);
+      const v=supCurView();
+      if(!v||v.t!=='pg')return;
+      SUP.pages=SUP.pages.filter(function(p){return p!==v.obj;});
+      SUP.viewKey=null;
       supRefresh();
     };
     el.appendChild(del);
   }
-  $('supPageInfo').textContent=SUP.pages.length
-    ?SUP.pages.length+' page'+(SUP.pages.length===1?'':'s')+' loaded'
-    :'no pages yet';
 }
 function supRefresh(){
   if(!SUP.on)return;
+  supRenderSwatches();
+  supRenderGroups();
   supRenderPager();
-  supDrawPage();
-  supRenderShirts();
+  supDrawBench();
   supRenderInks();
-  const dark=supAnyDark(),light=SUP.shirts.some(function(s){return !s.dark;})||!SUP.shirts.length;
-  const parts=[];
-  if(light)parts.push('LIGHT: '+supScreens(false)+' SCR');
-  if(dark)parts.push('DARK: '+supScreens(true)+' SCR');
-  $('supScreensPill').textContent=SUP.marks.length?parts.join(' · '):'—';
+  const parts=SUP.groups.filter(function(g){return g.prints.length;})
+    .map(function(g){return (g.name||'COLOR')+': '+supScreensG(g)+' SCR';});
+  $('supScreensPill').textContent=parts.length?parts.join(' · '):'—';
+  if(!__supAsk){
+    const np=supAllPrints().length;
+    $('supArtNote').textContent=np?np+' print'+(np===1?'':'s')+' in the job':'no prints yet';
+  }
   supSheetSoon();
   updateStepper();
 }
-$('supUB').onchange=function(){supRefresh();};
-$('supDlSheet').onclick=function(){
-  const pg=document.createElement('canvas');
-  renderSupSheetTo(pg);
-  downloadCanvas(pg,slug(jobCustomerName())+'-shop-print-sheet.png');
-};
-supSetTool('mark');
+supSetTool('ink');
 
 setTab('mock');
 buildManifest();
