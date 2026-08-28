@@ -409,6 +409,7 @@ function loadClock(day){
 }
 function saveClock(day){
   try{ localStorage.setItem("mayhem_clock_" + day, JSON.stringify(CLOCKS[day])); }catch(e){}
+  try{ SYNC.clockDirty[day] = 1; }catch(e){}
 }
 function findRow(id){
   for(var i = 0; i < ALLROWS.length; i++) if(ALLROWS[i].id === id) return ALLROWS[i];
@@ -416,7 +417,9 @@ function findRow(id){
 }
 function stateFor(row){ return STATES[row._day] || (STATES[row._day] = {}); }
 function save(){
-  if(currentRow) saveStateFor(currentRow._day);
+  if(!currentRow) return;
+  try{ syncTouch(currentRow.id); }catch(e){}   // never let sync break a tap
+  saveStateFor(currentRow._day);
 }
 function rec(id){
   var row = findRow(id);
@@ -547,6 +550,7 @@ function setDay(d){
   renderList();
 }
 function renderList(){
+  try{ renderPressStrip(); }catch(e){}
   renderDayTabs();
   renderNag();
   renderClock();
@@ -886,6 +890,7 @@ function renderDetail(){
     COUNTS.map(function(c){ return '<div class="seg ' + (r.screens===c?"on":"") + '" onclick="setScreens(' + c + ')">' + c + '</div>'; }).join("") +
     '</div></div>';
 
+  html += otherPressHtml();
   // steps
   html += '<div class="steps">';
   html += stepHtml(1, "Setup Start", "started lining up", r.setupStart, "setupStart");
@@ -1040,48 +1045,368 @@ function setPress(p){ rec(currentRow.id).press = p; save(); renderDetail(); }
 function setColors(c){ rec(currentRow.id).colors = c; save(); renderDetail(); }
 function setScreens(c){ rec(currentRow.id).screens = c; save(); renderDetail(); }
 function setNotes(v){ rec(currentRow.id).notes = v; save(); }
-// ---------- JOB DONE -> office email (added 2026-08-26) ----------
-// The office lost its "paper work order turned in" signal when the board went
-// digital. A printer taps EMAIL THE OFFICE on a finished card and a Google
-// Apps Script running under info@mayhemink.net sends the mail — no mail app
-// needed on the iPad. The send is stamped on the card so the office can see
-// which finished jobs actually went out.
+// ---------- SHARED STATE + OFFICE EMAIL (v2, 2026-08-26) ----------
+// The board stays LOCAL-FIRST. Every tap writes localStorage and re-renders
+// immediately; the network is best-effort sync that runs afterwards and can
+// fail all day without a printer ever noticing. Nothing here may block the UI.
+//
+// The worker (mayhem-press-state) merges both iPads onto one week state and
+// sends ONE "JOB COMPLETE" email when the last location of a job comes off the
+// press. The button on a card is now a manual override, not the normal path.
+
+var SYNC_URL   = "https://mayhem-press-state.autumn-mountain-14c6.workers.dev";
+var SYNC_KEY   = "wVUsmD1WhcoLlb_wDMuDDlXCZx2QsnT0";
+var SYNC_ON    = true;    // master switch for all networking
+var SHOW_STRIP = false;   // phase 2 — flip on once a clean day is confirmed
+
 var MAILER_URL = "https://script.google.com/macros/s/AKfycbxvp-HJ8o9wgaclA0o-ug_P7KhHefiPvdUfmkYbNCNQAJUEAQk-94bf43QssAnvElcQ/exec";
 var MAILER_KEY = "CXjqc070PNwyzPFP6dkd-9L5";
+
+var LWW_FIELDS = ["printer","press","setupBy","printBy","colors","screens","notes"];
+
+var SYNC = {
+  dirty: {},        // rowId -> 1, waiting to push
+  clockDirty: {},   // day   -> 1
+  snap: {},         // rowId -> last seen LWW values, for mtime stamping
+  jobs: {},         // job#  -> {emailedAt}
+  presence: {},     // deviceId -> {press, printer, rowId, phase, at}
+  lastOk: 0,
+  busy: false
+};
+
+function deviceId(){
+  try{
+    var d = localStorage.getItem("mayhem_device");
+    if(!d){
+      d = "ipad-" + Math.random().toString(36).slice(2,10);
+      localStorage.setItem("mayhem_device", d);
+    }
+    return d;
+  }catch(e){ return "ipad-anon"; }
+}
+
+function myPress(){
+  try{ return localStorage.getItem("mayhem_press") || null; }catch(e){ return null; }
+}
+
+// Read a record WITHOUT creating one — rec() has a side effect we don't want
+// when we're only inspecting sibling rows.
+function recRO(id){
+  var row = findRow(id);
+  if(!row) return null;
+  var st = STATES[row._day];
+  return (st && st[id]) || null;
+}
+
+// ---------- mtime stamping so last-write-wins can settle corrections ----------
+function syncTouch(id){
+  var r = recRO(id);
+  if(!r) return;
+  var snap = {}, i, f;
+  for(i = 0; i < LWW_FIELDS.length; i++){ f = LWW_FIELDS[i]; snap[f] = r[f]; }
+  var prev = SYNC.snap[id];
+  if(prev){
+    if(!r._mt) r._mt = {};
+    for(i = 0; i < LWW_FIELDS.length; i++){
+      f = LWW_FIELDS[i];
+      if(prev[f] !== snap[f]) r._mt[f] = now();
+    }
+  }
+  SYNC.snap[id] = snap;
+  SYNC.dirty[id] = 1;
+}
+
+// ---------- merge (identical rules to the worker) ----------
+function earliestTs(a, b){
+  if(!a) return b || null;
+  if(!b) return a;
+  return Math.min(a, b);
+}
+function unionLog(a, b){
+  var out = [], seen = {}, all = (a || []).concat(b || []);
+  for(var i = 0; i < all.length; i++){
+    var x = all[i];
+    if(!x) continue;
+    var k = String(x.at || x.start || i);
+    if(seen[k]) continue;
+    seen[k] = 1; out.push(x);
+  }
+  out.sort(function(p,q){ return (p.at||p.start||0) - (q.at||q.start||0); });
+  return out;
+}
+// Fold a server record into the local one. Returns true if anything changed.
+function mergeIntoLocal(id, remote){
+  var row = findRow(id);
+  if(!row || !remote) return false;
+  var st = STATES[row._day] || (STATES[row._day] = {});
+  var r = st[id];
+  if(!r){ st[id] = remote; return true; }
+
+  var before = JSON.stringify(r);
+  var i, f;
+  var stamps = ["setupStart","setupDone","jobDone"];
+  for(i = 0; i < stamps.length; i++){
+    f = stamps[i];
+    r[f] = earliestTs(r[f], remote[f]);
+  }
+  r.pauses   = unionLog(r.pauses,   remote.pauses);
+  r.handoffs = unionLog(r.handoffs, remote.handoffs);
+
+  if(!r._mt) r._mt = {};
+  for(i = 0; i < LWW_FIELDS.length; i++){
+    f = LWW_FIELDS[i];
+    var mine  = r._mt[f] || 0;
+    var yours = (remote._mt || {})[f] || 0;
+    if(remote[f] !== undefined && yours > mine){ r[f] = remote[f]; r._mt[f] = yours; }
+  }
+  r.emailedAt = r.emailedAt || remote.emailedAt || null;
+  r.emailConfirmed = !!(r.emailConfirmed || remote.emailConfirmed);
+
+  return JSON.stringify(r) !== before;
+}
+
+// ---------- the sync loop ----------
+function syncFetch(path, opts){
+  var o = opts || {};
+  o.headers = o.headers || {};
+  o.headers["Content-Type"] = "application/json";
+  o.headers["X-Press-Key"] = SYNC_KEY;
+  return fetch(SYNC_URL + path, o).then(function(res){ return res.json(); });
+}
+
+function syncTick(){
+  if(!SYNC_ON || !WEEKID || SYNC.busy) return;
+  SYNC.busy = true;
+  syncPull()["catch"](function(){})
+    .then(function(){ return syncPush(); })["catch"](function(){})
+    .then(function(){ SYNC.busy = false; })["catch"](function(){ SYNC.busy = false; });
+}
+
+function syncPull(){
+  return syncFetch("/state?week=" + encodeURIComponent(WEEKID) + "&k=" + SYNC_KEY, {method:"GET"})
+    .then(function(j){
+      if(!j || !j.ok || !j.state) return;
+      var s = j.state, changed = false, days = {};
+      for(var id in s.rows){
+        if(!s.rows.hasOwnProperty(id)) continue;
+        if(mergeIntoLocal(id, s.rows[id])){
+          changed = true;
+          var row = findRow(id);
+          if(row) days[row._day] = 1;
+        }
+      }
+      for(var d in days){ if(days.hasOwnProperty(d)) saveStateFor(d); }
+      SYNC.jobs = s.jobs || {};
+      SYNC.presence = s.presence || {};
+      SYNC.lastOk = now();
+      if(changed){
+        if(currentRow) renderDetail();
+        else if(typeof renderList === "function") renderList();
+      }
+      renderPressStrip();
+    });
+}
+
+function syncPush(){
+  var ids = Object.keys(SYNC.dirty);
+  var chain = Promise.resolve();
+  ids.forEach(function(id){
+    chain = chain.then(function(){
+      var r = recRO(id);
+      if(!r){ delete SYNC.dirty[id]; return; }
+      var payload = JSON.parse(JSON.stringify(r));
+      payload.id = id;
+      return syncFetch("/tap", {
+        method: "POST",
+        body: JSON.stringify({
+          week: WEEKID, deviceId: deviceId(), press: myPress(), row: payload
+        })
+      }).then(function(j){
+        if(j && j.ok){
+          delete SYNC.dirty[id];              // only clear on a real success
+          if(j.row) mergeIntoLocal(id, j.row);
+          var row = findRow(id);
+          if(row) saveStateFor(row._day);
+          if(j.emailedJob){
+            SYNC.jobs[j.emailedJob] = {emailedAt: now()};
+            if(currentRow) renderDetail();
+          }
+        }
+      })["catch"](function(){ /* stays dirty, retried next tick */ });
+    });
+  });
+
+  var cdays = Object.keys(SYNC.clockDirty);
+  cdays.forEach(function(day){
+    var pl = CLOCKS[day] || {};
+    Object.keys(pl).forEach(function(p){
+      chain = chain.then(function(){
+        return syncFetch("/clock", {
+          method: "POST",
+          body: JSON.stringify({week: WEEKID, deviceId: deviceId(), day: day, printer: p, clock: pl[p]})
+        }).then(function(){ delete SYNC.clockDirty[day]; })["catch"](function(){});
+      });
+    });
+  });
+
+  return chain;
+}
+
+function syncPresence(){
+  if(!SYNC_ON || !WEEKID) return;
+  var r = currentRow ? recRO(currentRow.id) : null;
+  var phase = "idle";
+  if(r) phase = r.jobDone ? "done" : (r.setupDone ? "print" : (r.setupStart ? "setup" : "idle"));
+  syncFetch("/presence", {
+    method: "POST",
+    body: JSON.stringify({
+      week: WEEKID, deviceId: deviceId(), press: myPress(),
+      printer: r ? r.printer : null, rowId: currentRow ? currentRow.id : null, phase: phase
+    })
+  })["catch"](function(){});
+}
+
+// ---------- the other press, for the strip and the same-card warning ----------
+function otherDevices(){
+  var me = deviceId(), out = [], cut = now() - 120000;
+  for(var k in SYNC.presence){
+    if(!SYNC.presence.hasOwnProperty(k) || k === me) continue;
+    var p = SYNC.presence[k];
+    if(p && p.at > cut) out.push(p);
+  }
+  return out;
+}
+
+function renderPressStrip(){
+  var el = document.getElementById("press");
+  if(!el) return;
+  if(!SHOW_STRIP){ el.style.display = "none"; return; }
+  var others = otherDevices();
+  if(!others.length){ el.style.display = "none"; return; }
+  var PHASE = {idle:"on deck", setup:"setting up", print:"printing", done:"finished"};
+  var bits = others.map(function(p){
+    var row = p.rowId ? findRow(p.rowId) : null;
+    var what = row ? (row.job + " " + (row.location || "")) : "no card open";
+    return '<div class="pressline"><b>' + esc(p.press || "Other press") + '</b> &middot; ' +
+      esc(p.printer || "?") + ' &middot; ' + esc(what) + ' &middot; ' +
+      esc(PHASE[p.phase] || p.phase) + '</div>';
+  });
+  el.innerHTML = bits.join("");
+  el.style.display = "block";
+}
+
+function otherPressHtml(){
+  if(!currentRow) return "";
+  var others = otherDevices().filter(function(p){ return p.rowId === currentRow.id; });
+  if(!others.length) return "";
+  var who = others.map(function(p){ return p.press || p.printer || "another iPad"; }).join(", ");
+  return '<div style="background:#fff6e5;border:2px solid var(--amber);border-radius:12px;' +
+    'padding:12px 14px;margin-bottom:12px;font-size:14px;font-weight:700;color:#8a5a00">' +
+    '&#9888; ' + esc(who) + ' also has this card open — check before you both log it.</div>';
+}
+
+// ---------- office email ----------
+// Rows are grouped by JOB across the whole week (front Monday, back Wednesday is
+// normal). The worker sends the real email; this button is the override for
+// jobs where a location will never run.
+function jobSiblings(row){
+  var out = [];
+  for(var i = 0; i < ALLROWS.length; i++){
+    if(String(ALLROWS[i].job) === String(row.job)) out.push(ALLROWS[i]);
+  }
+  return out;
+}
+
+function jobEmailedAt(row){
+  var j = SYNC.jobs[String(row.job)];
+  if(j && j.emailedAt) return j.emailedAt;
+  var r = recRO(row.id);
+  return (r && r.emailedAt) || null;
+}
+
 var emailing = false;
 
 function emailBtnHtml(r){
+  var row = currentRow;
+  if(!row) return "";
+
+  var sent = jobEmailedAt(row);
+  if(sent){
+    return '<div style="background:#eaf6ee;border:2px solid var(--green);border-radius:14px;' +
+      'padding:14px;text-align:center;margin-bottom:12px">' +
+      '<div style="font-size:16px;font-weight:800;color:var(--green)">&#10003; OFFICE EMAILED ' + fmt(sent) + '</div>' +
+      '<div onclick="emailOffice()" style="margin-top:8px;font-size:13px;font-weight:800;' +
+      'color:var(--gray);cursor:pointer;text-decoration:underline">send again</div></div>';
+  }
+
   if(emailing){
     return '<button class="bigbtn" disabled style="background:var(--gray);margin-bottom:12px">SENDING&#8230;</button>';
   }
-  if(r.emailedAt){
-    return '<div style="background:#eaf6ee;border:2px solid var(--green);border-radius:14px;padding:14px;text-align:center;margin-bottom:12px">' +
-      '<div style="font-size:16px;font-weight:800;color:var(--green)">&#10003; OFFICE EMAILED ' + fmt(r.emailedAt) +
-      (r.emailConfirmed ? '' : ' <span style="font-weight:700;color:var(--gray)">(unconfirmed)</span>') + '</div>' +
-      '<div onclick="emailOffice()" style="margin-top:8px;font-size:13px;font-weight:800;color:var(--gray);cursor:pointer;text-decoration:underline">send again</div>' +
-      '</div>';
+
+  var sibs = jobSiblings(row);
+  var waiting = sibs.filter(function(x){
+    var rr = recRO(x.id);
+    return !(rr && rr.jobDone);
+  });
+
+  if(waiting.length){
+    var names = waiting.map(function(x){ return x.location || ("job " + x.job); }).join(", ");
+    return '<div style="background:var(--card);border:2px dashed var(--line);border-radius:14px;' +
+      'padding:14px;text-align:center;margin-bottom:12px">' +
+      '<div style="font-size:15px;font-weight:800;color:var(--gray)">' +
+      (sibs.length - waiting.length) + ' of ' + sibs.length + ' locations done</div>' +
+      '<div style="font-size:13px;font-weight:700;color:var(--gray);margin-top:5px">' +
+      'The office is emailed automatically once ' + esc(names) + ' comes off.</div>' +
+      '<div onclick="emailOffice()" style="margin-top:10px;font-size:13px;font-weight:800;' +
+      'color:var(--blue);cursor:pointer;text-decoration:underline">email the office anyway</div></div>';
   }
-  return '<button class="bigbtn" onclick="emailOffice()" style="background:var(--blue);margin-bottom:12px">&#9993; EMAIL THE OFFICE</button>';
+
+  return '<button class="bigbtn" onclick="emailOffice()" style="background:var(--blue);margin-bottom:12px">' +
+    '&#9993; EMAIL THE OFFICE</button>';
 }
 
+// Manual override. Goes straight to the mailer rather than through the worker,
+// so it still works on a day the worker is unreachable.
 function emailOffice(){
   if(emailing || !currentRow) return;
   var row = currentRow, r = rec(row.id);
   emailing = true; renderDetail();
-  var payload = JSON.stringify({
-    key: MAILER_KEY,
-    job: row.job,
-    customer: row.customer || "",
-    nickname: row.nickname || "",
-    location: row.location || "",
-    qty: row.qty || "",
-    printer: r.printBy || r.printer || "",
-    url: row.url || ""
+
+  var sibs = jobSiblings(row);
+  var title = row.customer || row.nickname || ("job " + row.job);
+  if(row.nickname && row.customer && row.nickname !== row.customer){
+    title = row.customer + " (" + row.nickname + ")";
+  }
+  var lines = [], total = 0;
+  sibs.forEach(function(x){
+    var rr = recRO(x.id);
+    total += (x.qty || 0);
+    lines.push("  " + (x.location || "print") + " — " +
+      (rr && rr.jobDone ? ((rr.printBy || rr.printer || "?") + ", finished " + fmt(rr.jobDone))
+                        : "NOT LOGGED AS DONE"));
   });
+  var body = [
+    "Job " + row.job + " — " + title + " — was sent from the press board by " +
+      (r.printBy || r.printer || "the press") + ".",
+    "",
+    "Locations:", lines.join("\n"),
+    "", "Total: " + total + " pcs across " + sibs.length + " location" + (sibs.length===1?"":"s") + ".",
+    "", (row.url || ""),
+    "", "— sent manually from a card, not by the automatic rollup"
+  ].join("\n");
+
+  var payload = JSON.stringify({
+    key: MAILER_KEY, job: row.job,
+    subject: "JOB COMPLETE — " + row.job + "  " + title + " (sent manually)",
+    body: body
+  });
+
   function finish(confirmed){
     emailing = false;
     r.emailedAt = now();
     r.emailConfirmed = !!confirmed;
+    SYNC.jobs[String(row.job)] = {emailedAt: r.emailedAt};
+    syncTouch(row.id);
     save(); renderDetail();
     toast("Office emailed.");
   }
@@ -1091,16 +1416,41 @@ function emailOffice(){
   }
   var opts = {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:payload};
   try{
-    fetch(MAILER_URL, opts).then(function(res){
-      finish(!!(res && res.ok));
-    })["catch"](function(){
-      // Some iPad/Safari setups won't let us read the Apps Script redirect.
-      // Fire and forget rather than leave the printer stuck, but label it
-      // unconfirmed so nobody assumes it landed.
-      var o2 = {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:payload};
-      fetch(MAILER_URL, o2).then(function(){ finish(false); })["catch"](fail);
-    });
+    fetch(MAILER_URL, opts).then(function(res){ finish(!!(res && res.ok)); })
+      ["catch"](function(){
+        var o2 = {method:"POST", mode:"no-cors",
+                  headers:{"Content-Type":"text/plain;charset=utf-8"}, body:payload};
+        fetch(MAILER_URL, o2).then(function(){ finish(false); })["catch"](fail);
+      });
   }catch(e){ fail(); }
+}
+
+// ---------- wire up ----------
+// The strip lives in its own container so nothing existing is restyled.
+(function installPressStrip(){
+  try{
+    var list = document.getElementById("list");
+    var nag = document.getElementById("nag");
+    if(!list || !nag || document.getElementById("press")) return;
+    var el = document.createElement("div");
+    el.id = "press";
+    el.style.cssText = "display:none;background:var(--card);border:1px solid var(--line);" +
+      "border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:13px;" +
+      "font-weight:700;color:var(--gray);line-height:1.6";
+    list.insertBefore(el, nag);
+  }catch(e){}
+})();
+
+if(SYNC_ON && typeof fetch === "function"){
+  setTimeout(function(){ try{ syncTick(); syncPresence(); }catch(e){} }, 3000);
+  setInterval(function(){ try{ syncTick(); }catch(e){} }, 15000);
+  setInterval(function(){ try{ syncPresence(); }catch(e){} }, 45000);
+  try{
+    document.addEventListener("visibilitychange", function(){
+      if(!document.hidden){ try{ syncTick(); syncPresence(); }catch(e){} }
+    });
+    window.addEventListener("focus", function(){ try{ syncTick(); }catch(e){} });
+  }catch(e){}
 }
 
 function stamp(field){
