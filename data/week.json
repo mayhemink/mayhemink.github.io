@@ -1,106 +1,714 @@
 {
-"week":"2026-08-24",
-"printers":["Jalen","Corey","Spencer","Elijah"],
-"counts":[1,2,3,4,5,6],
-"stats":{"pph":{"1":140,"2":79,"3":60,"4":52,"5":47,"6":32},"setup":{"1":5.6,"2":6.8,"3":5.9,"4":8.3,"5":6.5,"6":5.7}},
-"days":[
-{"day":"2026-08-24","rows":[
-{"id":"6396-front-L","job":"6396","url":"https://www.printavo.com/invoices/23990254","customer":"Enviroguard Pest Control","location":"MAKE-UP: Full front — van scene, red + blue (60 LARGES, UPS-delayed box)","colors":2,"screens":2,"qty":60,"img":"6396a","note":"The 60 L missed last week's run (UPS delay) — box lands TODAY. Count in, then run all 3 locations on these make-up cards."},
-{"id":"6396-back-L","job":"6396","url":"https://www.printavo.com/invoices/23990254","customer":"Enviroguard Pest Control","location":"MAKE-UP: Full back — USA Tour 2026 city list, red + blue (60 LARGES)","colors":2,"screens":2,"qty":60,"img":"6396a"},
-{"id":"6396-slv-L","job":"6396","url":"https://www.printavo.com/invoices/23990254","customer":"Enviroguard Pest Control","location":"MAKE-UP: Right sleeve — dragonfly, red (60 LARGES)","colors":1,"screens":1,"qty":60,"img":"6396b"},
-{"id":"6414-front","job":"6414","url":"https://www.printavo.com/invoices/24088096","customer":"Flag Football LATE ADD-ON","location":"Front — team jersey design (same screens as 6361, still burned)","colors":1,"screens":1,"qty":63,"img":"6414a","noest":true,"note":"CUSTOMER DATE TODAY. Run the 9 WHITE-ink teams first (34 pcs), ONE ink change to Pantone 289, then the 5 blue teams (29 pcs). Ink-per-team list is on the order."},
-{"id":"6387-lc","job":"6387","url":"https://www.printavo.com/invoices/23971959","customer":"Palmer Litigation — Peach Days","location":"LC — Palmer Litigation logo, navy (Dusty Peach tris)","colors":1,"screens":1,"qty":116,"img":"6387a","note":"Moved from last Friday — screens should still be burned."},
-{"id":"6387-back","job":"6387","url":"https://www.printavo.com/invoices/23971959","customer":"Palmer Litigation — Peach Days","location":"Full back — In a WRECK? 435-INJURED (5 color)","colors":5,"screens":5,"qty":116,"img":"6387a","noest":true,"note":"Customer date Fri 8/28. 5 screens — start this one with real hours left."},
-{"id":"6420-front","job":"6420","url":"https://www.printavo.com/invoices/24103622","customer":"Progression Peptides (Brad Roper)","location":"Full front — P logo, blue/grey/white (black tees)","colors":3,"screens":3,"qty":35,"img":"6420a","note":"Pulled forward — blanks delivered last week, in shop."},
-{"id":"6420-back","job":"6420","url":"https://www.printavo.com/invoices/24103622","customer":"Progression Peptides (Brad Roper)","location":"Upper back — Progression Peptides, 3c","colors":3,"screens":3,"qty":35,"img":"6420a"},
-{"id":"6367-lc-mtn","job":"6367","url":"https://www.printavo.com/invoices/23900102","customer":"K2 (Lattitude — cust. supplied)","location":"LC — K2 Mountain 6in, TAN (Hthr Columbia Blue tees)","colors":1,"screens":1,"qty":100,"img":"6367a","note":"Customer-supplied blanks, already in shop — COUNT IN before starting. Customer date Fri 8/28."},
-{"id":"6367-back-beauty","job":"6367","url":"https://www.printavo.com/invoices/23900102","customer":"K2 (Lattitude — cust. supplied)","location":"Full back — Beauty & Wellness at its Peak 13in, TAN","colors":1,"screens":1,"qty":100,"img":"6367b"},
-{"id":"6367-k2-round","job":"6367","url":"https://www.printavo.com/invoices/23900102","customer":"K2 (Lattitude — cust. supplied)","location":"LC — K2 Round 4in, multi-color (women's tees)","colors":3,"screens":3,"qty":10,"img":"6367c","noest":true,"note":"Art shows 3 inks: navy / dusty rose / pale blue. 10 pcs — setup is the job. Correct count on card."},
-{"id":"6367-back-beauty-w","job":"6367","url":"https://www.printavo.com/invoices/23900102","customer":"K2 (Lattitude — cust. supplied)","location":"Across shoulders — Beauty at its Peak 12in, TAN (women's tees)","colors":1,"screens":1,"qty":10,"img":"6367d","note":"Different art from the customer back (one-line version) — separate screen. PO listed women's Black Heather S twice (8+2) — entered as S:10; flag if the count says otherwise."}
-],"flags":[
-["RUN ORDER","6414 jerseys FIRST (due to customer today), then 6387 LC → 5c back, then 6420 Peptides, then 6367 K2. 6396 make-up larges slot in when their box lands."],
-["MAKE-UP","6396 Enviroguard: 60 LARGES missed last week's run (UPS delay) — the box arrives TODAY. All 3 locations on the make-up cards; screens need re-burning if they were reclaimed. Last week's timecards get corrected in the weekly wrap-up if the cards were closed at the full 350."],
-["CREW","Jalen + Spencer on press, Corey catching."],
-["FREIGHT","Big receiving day — count in as they land: 6419 Revival City (runs first thing tomorrow), 6429 + 6428 boxes, 6424 Elevated Stone (NV box, the bulk), and the FIRST Sonuvabeast box (Reno). Sonuvabeast's second box lands Tuesday — 6242 is carded WEDNESDAY, don't start it early."],
-["SCREEN ROOM","Burn 6419's screens today (runs 8 AM Tuesday) and get ahead on Tue/Wed screens (6367, 6429, 6428, 6395, 6242)."]
-]},
-{"day":"2026-08-25","rows":[
-{"id":"6419-front","job":"6419","url":"https://www.printavo.com/invoices/24103375","customer":"Revival City","location":"Full front — Revival City logo, teal (black tees)","colors":2,"screens":2,"qty":26,"img":"6419a","note":"FIRST THING — shirts landed Monday, customer date Wed. Art is one teal — order billed 2c (likely base); correct on card."},
-{"id":"6419-back","job":"6419","url":"https://www.printavo.com/invoices/24103375","customer":"Revival City","location":"Full back — THIS IS LOVE, teal","colors":2,"screens":2,"qty":26,"img":"6419a","note":"DTF groups on this order are NOT press work."},
-{"id":"6429-lc","job":"6429","url":"https://www.printavo.com/invoices/24147963","customer":"Lone Tree Washing Wagon","location":"LC — Lone Tree badge, 3c (Graphite/Navy tees, LS, hoodies)","colors":3,"screens":3,"qty":28,"img":"6429a","note":"Blanks landed Monday — count in. Customer date Fri. Door magnets on this order are not press work."},
-{"id":"6429-back","job":"6429","url":"https://www.printavo.com/invoices/24147963","customer":"Lone Tree Washing Wagon","location":"Full back — Lone Tree mountain scene, 3c","colors":3,"screens":3,"qty":28,"img":"6429a"},
-{"id":"6428-std-f","job":"6428","url":"https://www.printavo.com/invoices/24144237","customer":"Ken Bouvier","location":"STANDARD logo front — black ink on Grey Frost (4), white on Black (4)","colors":1,"screens":1,"qty":8,"noest":true,"note":"Blanks landed Monday. One ink swap mid-run. Customer date Mon 8/31 AM."},
-{"id":"6428-std-b","job":"6428","url":"https://www.printavo.com/invoices/24144237","customer":"Ken Bouvier","location":"STANDARD logo back — same black/white swap","colors":1,"screens":1,"qty":8,"noest":true},
-{"id":"6428-vert-f","job":"6428","url":"https://www.printavo.com/invoices/24144237","customer":"Ken Bouvier","location":"VERTICAL logo front — black on Purple Hthr (4), white on Turquoise (4)","colors":1,"screens":1,"qty":8,"noest":true},
-{"id":"6428-vert-b","job":"6428","url":"https://www.printavo.com/invoices/24144237","customer":"Ken Bouvier","location":"VERTICAL logo back — same swap","colors":1,"screens":1,"qty":8,"noest":true,"note":"Polos on this order are embroidery."}
-],"flags":[
-["RUN ORDER","6419 Revival City FIRST THING, then 6429 Lone Tree, 6428 Bouvier last (tiny runs). Anything K2 left from Monday runs here too."],
-["CREW","Jalen + Spencer, NO catcher until Tukker 2–4 — self-catching, times will read slower than normal. That's expected, don't sweat the numbers."],
-["FREIGHT","Sonuvabeast box #2 (Dallas) lands today — count it in with Monday's Reno box; 6242 runs tomorrow."]
-]},
-{"day":"2026-08-26","rows":[
-{"id":"6242-son-grey","job":"6242","url":"https://www.printavo.com/invoices/23417167","customer":"Bret Dickey — Sonuvabeast","location":"Front — SONUVABEAST (Grey Frost tees, black + grey)","colors":2,"screens":2,"qty":24,"img":"6242b","note":"Both freight boxes in by Tuesday night — count 48 tees before starting. Customer date Thu 8/27."},
-{"id":"6242-blk-front","job":"6242","url":"https://www.printavo.com/invoices/23417167","customer":"Bret Dickey — Sonuvabeast","location":"Front — LC 17 + flag sleeve, 2 color (Black tees)","colors":2,"screens":2,"qty":24,"img":"6242a","note":"2c front per Kolton. If the sleeve runs as its own pass, correct on card."},
-{"id":"6242-blk-back","job":"6242","url":"https://www.printavo.com/invoices/23417167","customer":"Bret Dickey — Sonuvabeast","location":"Full back — SONUVABEAST rock crawler, 6 COLOR sim (Black tees)","colors":6,"screens":6,"qty":24,"img":"6242a","note":"6c press job per Kolton. 6 screens for 24 pcs — setup is the job. Hats on this order are not press work."},
-{"id":"6395-g1-lc","job":"6395","url":"https://www.printavo.com/invoices/23984206","customer":"Rapid Cycling","location":"LC — RC oval, gold + base (Moss tees)","colors":2,"screens":2,"qty":46,"img":"6395a","note":"Customer date Thu — ALL Rapid Cycling done by tonight."},
-{"id":"6395-g1-back","job":"6395","url":"https://www.printavo.com/invoices/23984206","customer":"Rapid Cycling","location":"Upper back — LOCAL BIKE SHOP, gold + base (Moss)","colors":2,"screens":2,"qty":46,"img":"6395a"},
-{"id":"6395-g2-front","job":"6395","url":"https://www.printavo.com/invoices/23984206","customer":"Rapid Cycling","location":"LC — Rabbit, gold + black (Pepper tees + Espresso sweatpants)","colors":2,"screens":2,"qty":60,"img":"6395b","note":"Same screens across tees and sweatpants."},
-{"id":"6395-g2-back","job":"6395","url":"https://www.printavo.com/invoices/23984206","customer":"Rapid Cycling","location":"Full back — Support Your Local Bike Shop script, gold + black","colors":2,"screens":2,"qty":60,"img":"6395c"},
-{"id":"6395-g3-front","job":"6395","url":"https://www.printavo.com/invoices/23984206","customer":"Rapid Cycling","location":"Front — RC letters, black 1c (Yam tees)","colors":1,"screens":1,"qty":46,"img":"6395d"},
-{"id":"6395-g3-back","job":"6395","url":"https://www.printavo.com/invoices/23984206","customer":"Rapid Cycling","location":"Full back — skeleton rider poster, 2c (Yam)","colors":2,"screens":2,"qty":46,"img":"6395d"},
-{"id":"6425-lc","job":"6425","url":"https://www.printavo.com/invoices/24116467","customer":"Sunshine Pet Spa","location":"LC — Sunshine Pet Spa text, black (Soft Yellow tees)","colors":1,"screens":1,"qty":24,"img":"6425a"},
-{"id":"6425-back","job":"6425","url":"https://www.printavo.com/invoices/24116467","customer":"Sunshine Pet Spa","location":"Full back — sunburst dogs seal, 5 color","colors":5,"screens":5,"qty":24,"img":"6425a","noest":true,"note":"Approval sheet says 6 screens total for the job (LC 1 + back 5). Customer date Fri 9/4."}
-],"flags":[
-["CREW","Jalen + Spencer; Elijah catches 12–4."],
-["VERIFY","6425 Sunshine blanks were NOT ORDERED as of Friday — do NOT start either 6425 card until the Soft Yellow tees are physically counted in. If they're not here, both cards float."],
-["SCREEN ROOM","Burn ALL FIVE 6388 STFU screens today + tape and stage. Thu/Fri is a 600-piece two-press push — nothing gets burned Thursday morning."],
-["RUN ORDER","All of Rapid Cycling FIRST (customer date tomorrow) → 6242 Sonuvabeast → 6425 only if blanks made it."],
-["","Anything that slipped Mon/Tue lands here first."]
-]},
-{"day":"2026-08-27","rows":[
-{"id":"6388-front","job":"6388","url":"https://www.printavo.com/invoices/23971964","customer":"Palmer Litigation — STFU","location":"Full front — Be a GOOD PERSON and STFU, white + red (black tees)","colors":3,"screens":3,"qty":600,"img":"6388a","note":"PRESS 1 — this card runs Thursday AND Friday, don't close it until all 600 are printed. Order billed 3c (base); correct on card."},
-{"id":"6388-back","job":"6388","url":"https://www.printavo.com/invoices/23971964","customer":"Palmer Litigation — STFU","location":"Full back — PL logo + IF YOU WANT TO BE FREE, white (upper back)","colors":2,"screens":2,"qty":600,"img":"6388a","note":"PRESS 2 — runs at the same time as the front. Mockup looks 1c white; order billed 2c — correct on card."}
-],"flags":[
-["STRETCH","~18 press-hours on this job — both presses on it simultaneously ALL DAY today and Friday. Front P1, back P2."],
-["CREW","Jalen + Spencer + Corey, Elijah 12–4, Tukker 2–4 — best catch coverage of the week, which is why the 600-piecer lives here. Keep the presses fed, catchers rotate."],
-["","Production date says Wed but customer date is Mon 9/7 — the real deadline pressure this week is everything else. Deposit-paid, blanks (600 black DM108) should be in — COUNT IN before starting."]
-]},
-{"day":"2026-08-28","rows":[
-{"id":"6424-front","job":"6424","url":"https://www.printavo.com/invoices/24110372","customer":"Elevated Stone / Spot Free","location":"Front — ELEVATED mountains (tees mixed colors + 13 hoodies)","colors":2,"screens":2,"qty":98,"img":"6424b","noest":true,"note":"WHITE ink on darks, BLACK on lights — plan the ink swaps by colorway, don't ping-pong. 5 cust-supplied pcs mixed in — count them."},
-{"id":"6424-slv","job":"6424","url":"https://www.printavo.com/invoices/24110372","customer":"Elevated Stone / Spot Free","location":"Sleeve — ELEVATED NATURAL STONE vertical","colors":2,"screens":2,"qty":98,"img":"6424a","noest":true,"note":"Same white/black ink swap pattern as the front."},
-{"id":"6424-spotfree","job":"6424","url":"https://www.printavo.com/invoices/24110372","customer":"Elevated Stone / Spot Free","location":"SPOT FREE logo (30 cust-supplied + 7 white hoodies)","colors":2,"screens":2,"qty":37,"note":"Customer-supplied — count in. Customer date Tue 9/1."},
-{"id":"6411-lc","job":"6411","url":"https://www.printavo.com/invoices/24078123","customer":"Over The Top Plumbing (Heath)","location":"LC — eagle, black (olive/red/white tees)","colors":1,"screens":1,"qty":26,"img":"6411a","note":"Hats on this order are embroidery, not press."},
-{"id":"6411-back","job":"6411","url":"https://www.printavo.com/invoices/24078123","customer":"Over The Top Plumbing (Heath)","location":"Full back — distressed flag + eagle, black","colors":1,"screens":1,"qty":26,"img":"6411b"}
-],"flags":[
-["RUN ORDER","CONTINUE 6388 STFU from the THURSDAY tab first — both presses, cards keep their progress. The rows below start only as a press frees up."],
-["CREW","Jalen + Spencer + Corey."],
-["","Whatever doesn't run floats to Mon 8/31: every job on this tab has a customer date of 8/31 or later."],
-["VERIFY","6424: mixed 'Mix COLOR' tees + 35 customer-supplied pieces across the two groups — count in before starting (main NV box landed Monday, a small second box Wednesday)."]
-]}
-],
-"img":{
-"6414a":"/data/mocks/2026-08-24/6414_1.jpg",
-"6396a":"/data/mocks/2026-08-17/6396_1.jpg",
-"6396b":"/data/mocks/2026-08-17/6396_2.jpg",
-"6367a":"/data/mocks/2026-08-24/6367_1.jpg",
-"6367b":"/data/mocks/2026-08-24/6367_2.jpg",
-"6367c":"/data/mocks/2026-08-24/6367_3.jpg",
-"6367d":"/data/mocks/2026-08-24/6367_4.jpg",
-"6242a":"/data/mocks/2026-08-24/6242_1.jpg",
-"6242b":"/data/mocks/2026-08-24/6242_2.jpg",
-"6387a":"/data/mocks/2026-08-24/6387_1.jpg",
-"6388a":"/data/mocks/2026-08-24/6388_1.jpg",
-"6395a":"/data/mocks/2026-08-24/6395_1.jpg",
-"6395b":"/data/mocks/2026-08-24/6395_2.jpg",
-"6395c":"/data/mocks/2026-08-24/6395_3.jpg",
-"6395d":"/data/mocks/2026-08-24/6395_4.jpg",
-"6419a":"/data/mocks/2026-08-24/6419_1.jpg",
-"6420a":"/data/mocks/2026-08-24/6420_1.jpg",
-"6424a":"/data/mocks/2026-08-24/6424_1.jpg",
-"6424b":"/data/mocks/2026-08-24/6424_2.jpg",
-"6425a":"/data/mocks/2026-08-24/6425_1.jpg",
-"6429a":"/data/mocks/2026-08-24/6429_1.jpg",
-"6411a":"/data/mocks/2026-08-24/6411_1.jpg",
-"6411b":"/data/mocks/2026-08-24/6411_2.jpg"
-}
+ "week": "2026-08-31",
+ "printers": [
+  "Jalen",
+  "Corey",
+  "Spencer",
+  "Elijah",
+  "Tukker"
+ ],
+ "counts": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "stats": {
+  "pph": {
+   "1": 141,
+   "2": 84,
+   "3": 58,
+   "4": 52,
+   "5": 50,
+   "6": 32
+  },
+  "setup": {
+   "1": 5.5,
+   "2": 6.5,
+   "3": 6.1,
+   "4": 8.3,
+   "5": 6.0,
+   "6": 5.6
+  }
+ },
+ "days": [
+  {
+   "day": "2026-08-31",
+   "rows": [
+    {
+     "id": "6355-back-6c",
+     "job": "6355",
+     "url": "https://www.printavo.com/invoices/23868926",
+     "customer": "Megyn Jones \u2014 Sept 1 order",
+     "location": "Full back \u2014 tiger + floral, 6 COLOR sim (HALF THE BACKS, ~22 pcs)",
+     "colors": 6,
+     "screens": 6,
+     "qty": 22,
+     "img": "6355a",
+     "note": "Back only \u2014 front + sleeves already run. Kolton: half the backs this week.",
+     "nickname": "Megyn Jones"
+    },
+    {
+     "id": "6445-2-necktag",
+     "job": "6445",
+     "url": "https://www.printavo.com/invoices/24212726",
+     "customer": "Take it Easy (Rachel Jung)",
+     "location": "NECK TAG print \u2014 BC1010 baby tee, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 95,
+     "note": "Neck tag ONLY on the 1010 baby tee. NOT on the Comfort Colors 1717 (sewn-in woven label).",
+     "nickname": "Take it Easy"
+    },
+    {
+     "id": "6445-5-rooster-lc",
+     "job": "6445",
+     "url": "https://www.printavo.com/invoices/24212726",
+     "customer": "Take it Easy (Rachel Jung)",
+     "location": "LC \u2014 Rooster pennant, 1c (1301GD Faded Bone)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 29,
+     "img": "6445a",
+     "nickname": "Take it Easy"
+    },
+    {
+     "id": "6445-6-rooster-back",
+     "job": "6445",
+     "url": "https://www.printavo.com/invoices/24212726",
+     "customer": "Take it Easy (Rachel Jung)",
+     "location": "Full back \u2014 Rooster, 1c (1301GD Faded Bone)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 29,
+     "img": "6445b",
+     "nickname": "Take it Easy"
+    },
+    {
+     "id": "6445-7-necktag",
+     "job": "6445",
+     "url": "https://www.printavo.com/invoices/24212726",
+     "customer": "Take it Easy (Rachel Jung)",
+     "location": "NECK TAG print \u2014 1301GD rooster tee, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 29,
+     "note": "Neck tag on the 1301GD only.",
+     "nickname": "Take it Easy"
+    },
+    {
+     "id": "6385-33-hose-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-33 \u2014 ALL HOSE full front, 1c (PC43 Olive Drab Grn Hthr)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "Blanks ALL RECEIVED \u2014 safe to run.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-34-hose-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-34 \u2014 ALL HOSE full back, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "Blanks ALL RECEIVED.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-40-fri-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-40 \u2014 FRIDAY full front, 1c (3600M Red)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "Blanks ALL RECEIVED \u2014 safe to run.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-41-fri-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-41 \u2014 FRIDAY full back, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "Blanks ALL RECEIVED.",
+     "nickname": "Trail Hero"
+    }
+   ],
+   "flags": [
+    [
+     "RUN ORDER",
+     "6355 back and the four 6445 cards clear FIRST \u2014 both were due today. Then straight into 6385."
+    ],
+    [
+     "CREW",
+     "Jalen, Spencer, Corey. ~10.5 press-hrs against ~11.1 available."
+    ],
+    [
+     "WHY THESE 6385 ROWS",
+     "ALL HOSE (PC43) and FRIDAY (3600M Red) are the only two 6385 groups with 100% of blanks received. Everything else has holes."
+    ],
+    [
+     "",
+     "6385 Trail Hero is 95% of this week \u2014 36 press runs, ~56 press-hrs. Hard customer date is 9/15; some groups are wanted this weekend."
+    ]
+   ]
+  },
+  {
+   "day": "2026-09-01",
+   "rows": [
+    {
+     "id": "6385-42-fri-sleeve",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-42 \u2014 FRIDAY LEFT sleeve, 1c (3600M Red)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "Shared setup w/ Mon FRIDAY runs if screens still up.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-30-staff-lc",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-30 \u2014 Staff/Volunteer FRONT LEFT CHEST, 1c (PC340 Mtn Blue Hthr)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 150,
+     "img": "6385d",
+     "note": "Blanks ALL RECEIVED. Front = flag LC + sponsor block, one screen.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-31-staff-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-31 \u2014 Staff/Volunteer BACK, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 150,
+     "img": "6385d",
+     "note": "OFFICIAL TRAIL GUIDE + flag. Blanks ALL RECEIVED.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-32-staff-sleeve",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-32 \u2014 Staff/Volunteer RIGHT SLEEVE",
+     "colors": 1,
+     "screens": 1,
+     "qty": 150,
+     "img": "6385d",
+     "note": "Printavo lists no color count on this imprint \u2014 assumed 1c. Correct on the card.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-18-thu-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-18 \u2014 THURSDAY front, 1 color only (3600M Classic Orange)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "39 pcs short at last count (L/XL/2XL/3XL/4XL) \u2014 COUNT IN before you start.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-19-thu-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-19 \u2014 THURSDAY back, 1 color only",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "See PFP note on the order: pricing assumes SINGLE-HIT white. Ask Kolton before print-flash-print.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-39-thu-sleeve",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-39 \u2014 THURSDAY Left Sleeve, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6451-1-lc",
+     "job": "6451",
+     "url": "https://www.printavo.com/invoices/24218101",
+     "customer": "Benitez Masonry (Marisol)",
+     "location": "LC \u2014 Benitez Masonry logo, 2c (PC54H Ath Hthr + Carolina Blue)",
+     "colors": 2,
+     "screens": 2,
+     "qty": 28,
+     "img": "6451a",
+     "note": "MAY NOT PRINT TODAY \u2014 staged, floats if 6385 runs long.",
+     "nickname": "Benitez Masonry"
+    },
+    {
+     "id": "6451-2-back",
+     "job": "6451",
+     "url": "https://www.printavo.com/invoices/24218101",
+     "customer": "Benitez Masonry (Marisol)",
+     "location": "Full back \u2014 BENITEZ MASONRY + 702-237-6694, 2c",
+     "colors": 2,
+     "screens": 2,
+     "qty": 28,
+     "img": "6451b",
+     "note": "MAY NOT PRINT TODAY \u2014 staged, floats if 6385 runs long.",
+     "nickname": "Benitez Masonry"
+    }
+   ],
+   "flags": [
+    [
+     "CREW",
+     "Jalen, Spencer, Corey all day + TUKKER 1:30\u20134 (flex). Tukker's slot: the Staff/Vol sleeve or the 6451 cards \u2014 simple work, screens already up."
+    ],
+    [
+     "RUN ORDER",
+     "FRIDAY sleeve first while those screens are still on press, then Staff/Volunteer (all blanks in), then THURSDAY."
+    ],
+    [
+     "VERIFY",
+     "THURSDAY orange was 39 pcs short \u2014 count in before you start. 6451 is staged but MAY NOT PRINT today."
+    ],
+    [
+     "",
+     "~12.1 press-hrs loaded against ~12.5 available."
+    ]
+   ]
+  },
+  {
+   "day": "2026-09-02",
+   "rows": [
+    {
+     "id": "6385-2-hoodie-lc",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-2 \u2014 Hoodie front left chest, 1c (SS4500Z Army Hthr zip)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "img": "6385a",
+     "note": "HOODIES print slow \u2014 pallet spray per load (see 6380 benchmark). 19 pcs short (3XL/4XL).",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-3-hoodie-flag",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-3 \u2014 Hoodie USA FLAG sleeve, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "img": "6385a",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-4-hoodie-th",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-4 \u2014 Hoodie TRAIL HERO sleeve, 1c (opposite sleeve)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "img": "6385a",
+     "note": "Two DIFFERENT sleeve prints on this hoodie \u2014 flag on one, TRAIL HERO vertical on the other.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-5-hoodie-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-5 \u2014 Hoodie full back logo, 2 COLOR",
+     "colors": 1,
+     "screens": 2,
+     "qty": 250,
+     "img": "6385a",
+     "note": "Only 2-color run in the hoodie group.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-25-1533-neck",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-25 \u2014 1533 tank, BUILT DIFFERENT as close to neck as possible, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 144,
+     "img": "6385g",
+     "note": "INK CHANGE PER COLORWAY \u2014 Black 48 / Red 48 / Military Green 48. Run all three on THIS card, swap ink between. Do not open a second card. Black tanks 24 pcs short.",
+     "noest": true,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-26-1533-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-26 \u2014 1533 tank, TRAIL HERO as high on back as possible, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 144,
+     "img": "6385g",
+     "note": "INK CHANGE PER COLORWAY \u2014 all three colors on this one card.",
+     "noest": true,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-22-busch",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-22 \u2014 BACKS ONLY, TRAIL HERO MUSIC FEST CREW, 1c (CUSTOMER-SUPPLIED)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 180,
+     "img": "6385e",
+     "note": "CUSTOMER-SUPPLIED garments \u2014 count in before printing. Fronts are PRE-PRINTED Busch/Bud Light, we print the BACK ONLY. Same art all 180 (tees + racerbacks). Same art as 2025.",
+     "nickname": "Trail Hero"
+    }
+   ],
+   "flags": [
+    [
+     "CREW",
+     "Jalen, Spencer, TUKKER all day + ELIJAH 12\u20134. ~12.4 press-hrs against ~13.3."
+    ],
+    [
+     "RUN ORDER",
+     "Hoodie block (4 runs, 250 zip hoodies) is the day. Hoodies print slow \u2014 pallet spray per load, budget more than the estimate says."
+    ],
+    [
+     "INK CHANGES",
+     "Both 1533 tank cards run all THREE colorways on ONE card \u2014 swap ink mid-run, do NOT open a second card. Same for anything else with a colorway swap."
+    ],
+    [
+     "VERIFY",
+     "Busch backs are CUSTOMER-SUPPLIED \u2014 count them in. Fronts already printed; we do the back only."
+    ]
+   ]
+  },
+  {
+   "day": "2026-09-03",
+   "rows": [
+    {
+     "id": "6385-9-6210-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-9 \u2014 BUILT DIFFERENT full front, 2 COLOR (6210M Cream + Military Green)",
+     "colors": 2,
+     "screens": 2,
+     "qty": 288,
+     "img": "6385c",
+     "note": "17 pcs short (Cream XL + 4XL).",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-10-6210-sleeve",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-10 \u2014 6210 flag sleeve, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 288,
+     "img": "6385c",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-11-6210-spine",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-11 \u2014 6210 TRAIL HERO spine (vertical back), 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 288,
+     "img": "6385c",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-20-sec-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-20 \u2014 SECURITY front, 1c (PC340 Red)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 90,
+     "note": "30 pcs short \u2014 XL 0/30 at last count. COUNT IN.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-21-sec-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-21 \u2014 SECURITY back, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 90,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-38-sec-sleeve",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-38 \u2014 SECURITY RIGHT SLEEVE",
+     "colors": 1,
+     "screens": 1,
+     "qty": 90,
+     "note": "Printavo lists no color count \u2014 assumed 1c. Correct on the card.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-29-wolfbox-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-29 \u2014 WOLFBOX front, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 48,
+     "img": "6385f",
+     "note": "INK CHANGES: order says ORANGE tees get BLACK INK and the BLACK BC6008 tanks get WHITE INK \u2014 but the mockup shows white on orange. VERIFY WITH KOLTON before you run. Run all colorways on this card. 30 of 48 blanks still out.",
+     "noest": true,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-44-wolfbox-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-44 \u2014 WOLFBOX back, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 48,
+     "img": "6385f",
+     "note": "Same ink-change sequence as the front card. VERIFY ink colors first.",
+     "noest": true,
+     "nickname": "Trail Hero"
+    }
+   ],
+   "flags": [
+    [
+     "CREW",
+     "Jalen, Spencer + TUKKER 1:30\u20134 + ELIJAH 12\u20134. ~11.0 press-hrs against ~11.0 \u2014 no slack."
+    ],
+    [
+     "VERIFY",
+     "WOLFBOX ink colors are contradictory \u2014 order says BLACK ink on orange, mockup shows WHITE. Get Kolton before you run those 48."
+    ],
+    [
+     "SCREEN ROOM",
+     "Burn everything for Friday today \u2014 Friday is 2 printers against 14.5 hrs of work and cannot lose time to screens."
+    ],
+    [
+     "",
+     "Security PC340 Red was 30 pcs short (XL). Count in."
+    ]
+   ]
+  },
+  {
+   "day": "2026-09-04",
+   "rows": [
+    {
+     "id": "6385-6-camo-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-6 \u2014 TRAIL HERO badge front, 1c (ST460LS Digi Camo LS)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 366,
+     "img": "6385b",
+     "note": "ST460LS BLACK (122 pcs) had NOTHING received as of Sunday \u2014 count in all 3 colorways before you start. Grey Concrete / Black / Olive Drab.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-7-camo-sleeve",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-7 \u2014 camo TRAIL HERO sleeve, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 366,
+     "img": "6385b",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-8-camo-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-8 \u2014 camo BUILT DIFFERENT back, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 366,
+     "img": "6385b",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-35-sat-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-35 \u2014 SATURDAY left chest front, 1c (3600M Royal)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "122 pcs SHORT at last count (L 6/61, XL 15/82). If freight hasn't landed this floats to Monday 9/7.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-36-sat-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-36 \u2014 SATURDAY back, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "122 pcs short \u2014 see front card.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-37-sat-sleeve",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-37 \u2014 SATURDAY sleeve, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-27-red-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-27 \u2014 RED Remember Everyone Deployed front, '1 hit'",
+     "colors": 1,
+     "screens": 1,
+     "qty": 17,
+     "img": "6385h",
+     "note": "COLOR COUNT DOUBTFUL \u2014 Printavo says 1 color but the mockup is clearly multi-color. VERIFY before burning screens.",
+     "noest": true,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-46-red-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-46 \u2014 AMPLIFIED / BFGoodrich back, 1c",
+     "colors": 1,
+     "screens": 1,
+     "qty": 17,
+     "img": "6385h",
+     "note": "COLOR COUNT DOUBTFUL \u2014 mockup looks multi-color. VERIFY.",
+     "noest": true,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-28-blue-front",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-28 \u2014 BACK THE BLUE front, '1 hit'",
+     "colors": 1,
+     "screens": 1,
+     "qty": 17,
+     "img": "6385i",
+     "note": "COLOR COUNT DOUBTFUL \u2014 mockup looks 2 color (white + blue). VERIFY.",
+     "noest": true,
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-43-blue-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-43 \u2014 AMPLIFIED / BFGoodrich back",
+     "colors": 1,
+     "screens": 1,
+     "qty": 17,
+     "img": "6385i",
+     "note": "Printavo lists no color count. COLOR COUNT DOUBTFUL \u2014 VERIFY.",
+     "noest": true,
+     "nickname": "Trail Hero"
+    }
+   ],
+   "flags": [
+    [
+     "STRETCH \u2014 READ THIS",
+     "Friday is loaded WAY over: ~14.5 press-hrs of work against 2 printers (~7.4 hrs). This is deliberate. Work top to bottom, get what you get, and whatever doesn't run carries to Monday 9/7. Nothing here is late as long as it clears by 9/15."
+    ],
+    [
+     "RUN ORDER",
+     "Digi camo (366 pcs x 3 locations) is the priority \u2014 biggest piece count and the last big block. SATURDAY royal next. The four little District cards (17 pcs each) are last and are the natural bump."
+    ],
+    [
+     "CREW",
+     "Jalen and Spencer only. If anyone else is available Friday it goes straight into this day."
+    ],
+    [
+     "VERIFY",
+     "ST460LS BLACK (122 pcs) had NOTHING received Sunday. SATURDAY royal was 122 short. Count in both before you set up \u2014 if the freight isn't here, skip to what is."
+    ],
+    [
+     "COLOR COUNTS DOUBTFUL",
+     "The four District cards (#27/#46/#28/#43) are priced 1-color but the mockups are clearly multi-color. Do NOT burn screens off the order \u2014 check with Kolton first."
+    ]
+   ]
+  }
+ ],
+ "img": {
+  "6385a": "/data/mocks/2026-08-31/6385_1.jpg",
+  "6385b": "/data/mocks/2026-08-31/6385_2.jpg",
+  "6385c": "/data/mocks/2026-08-31/6385_3.jpg",
+  "6385d": "/data/mocks/2026-08-31/6385_4.jpg",
+  "6385e": "/data/mocks/2026-08-31/6385_5.jpg",
+  "6385f": "/data/mocks/2026-08-31/6385_6.jpg",
+  "6385g": "/data/mocks/2026-08-31/6385_7.jpg",
+  "6385h": "/data/mocks/2026-08-31/6385_8.jpg",
+  "6385i": "/data/mocks/2026-08-31/6385_9.jpg",
+  "6445a": "/data/mocks/2026-08-31/6445_1.jpg",
+  "6445b": "/data/mocks/2026-08-31/6445_2.jpg",
+  "6355a": "/data/mocks/2026-08-31/6355_1.jpg",
+  "6451a": "/data/mocks/2026-08-31/6451_1.jpg",
+  "6451b": "/data/mocks/2026-08-31/6451_2.jpg"
+ }
 }
