@@ -232,6 +232,8 @@
   .jobhead .jcust{font-size:14px; color:var(--gray); font-weight:700; flex:1;}
   .jobhead .jscreens{font-size:13px; font-weight:800; color:var(--red); white-space:nowrap;}
   .jobnote{background:#2ee84e; color:#093313; font-weight:800; font-size:14px; letter-spacing:.3px; padding:8px 12px; border-radius:8px; margin-top:8px; text-transform:uppercase;}
+  /* Red band under the green note — the things that stop a run if missed. */
+  .jobalert{background:#c0392b; color:#fff; font-weight:800; font-size:14px; letter-spacing:.3px; padding:8px 12px; border-radius:8px; margin-top:6px; text-transform:uppercase; line-height:1.5;}
   .mockstrip{display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding:10px 0 4px;}
   .mockstrip img{height:92px; border-radius:8px; background:#fff; border:1px solid var(--line); flex-shrink:0;}
   .dmock{text-align:center; margin-bottom:12px;}
@@ -622,6 +624,7 @@ function renderGroups(){
       '<div class="jcust">' + esc(g0.customer) + '</div>' +
       '<div class="jscreens">' + gScreens + ' SCREENS</div></div>' +
       (function(){ var gNote = null; for(var x = 0; x < g.length; x++){ if(g[x].note){ gNote = g[x].note; break; } } return gNote ? '<div class="jobnote">' + esc(gNote) + '</div>' : ''; })() +
+      (function(){ var gA = null; for(var x = 0; x < g.length; x++){ if(g[x].alert){ gA = g[x].alert; break; } } return gA ? '<div class="jobalert">' + esc(gA).replace(/\n/g, '<br>') + '</div>' : ''; })() +
       (gImgs.length ? '<div class="mockstrip">' + gImgs.map(function(x){ return '<img src="' + IMG[x] + '" onclick="event.stopPropagation();showLightbox(this.src)">'; }).join('') : '');
     if(gImgs.length) html += '</div>';
     html += '</div>';
