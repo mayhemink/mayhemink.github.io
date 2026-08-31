@@ -99,66 +99,69 @@
      "nickname": "Take it Easy"
     },
     {
-     "id": "6385-33-hose-front",
+     "id": "6385-2-hoodie-lc",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-33 \u2014 ALL HOSE full front, 1c (PC43 Olive Drab Grn Hthr)",
+     "location": "IMPRINT #6385-2 \u2014 Hoodie front left chest, 1c (SS4500Z Army Hthr zip)",
      "colors": 1,
      "screens": 1,
      "qty": 250,
-     "note": "Blanks ALL RECEIVED \u2014 safe to run.",
+     "img": "6385a",
+     "note": "APPROVAL SET \u2014 this is the FIRST thing we run this week. Kolton/customer sign off on this block before the rest of 6385 moves. HOODIES print slow (pallet spray per load, see 6380 benchmark). 19 pcs short (3XL/4XL).",
      "nickname": "Trail Hero"
     },
     {
-     "id": "6385-34-hose-back",
+     "id": "6385-3-hoodie-flag",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-34 \u2014 ALL HOSE full back, 1c",
+     "location": "IMPRINT #6385-3 \u2014 Hoodie USA FLAG sleeve, 1c",
      "colors": 1,
      "screens": 1,
      "qty": 250,
-     "note": "Blanks ALL RECEIVED.",
+     "img": "6385a",
      "nickname": "Trail Hero"
     },
     {
-     "id": "6385-40-fri-front",
+     "id": "6385-4-hoodie-th",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-40 \u2014 FRIDAY full front, 1c (3600M Red)",
+     "location": "IMPRINT #6385-4 \u2014 Hoodie TRAIL HERO sleeve, 1c (opposite sleeve)",
      "colors": 1,
      "screens": 1,
      "qty": 250,
-     "note": "Blanks ALL RECEIVED \u2014 safe to run.",
+     "img": "6385a",
+     "note": "Two DIFFERENT sleeve prints on this hoodie \u2014 flag on one, TRAIL HERO vertical on the other.",
      "nickname": "Trail Hero"
     },
     {
-     "id": "6385-41-fri-back",
+     "id": "6385-5-hoodie-back",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-41 \u2014 FRIDAY full back, 1c",
+     "location": "IMPRINT #6385-5 \u2014 Hoodie full back logo, 2 COLOR",
      "colors": 1,
-     "screens": 1,
+     "screens": 2,
      "qty": 250,
-     "note": "Blanks ALL RECEIVED.",
+     "img": "6385a",
+     "note": "Only 2-color run in the hoodie group.",
      "nickname": "Trail Hero"
     }
    ],
    "flags": [
     [
      "RUN ORDER",
-     "6355 back and the four 6445 cards clear FIRST \u2014 both were due today. Then straight into 6385."
+     "HOODIE BLOCK (#6385-2/3/4/5) IS THE APPROVAL SET \u2014 it runs FIRST, before anything else on 6385. Get it signed off. Then 6355 back and the four 6445 cards, both of which were due today."
     ],
     [
      "CREW",
-     "Jalen, Spencer, Corey. ~10.5 press-hrs against ~11.1 available."
+     "Jalen, Spencer, Corey. ~10.5 press-hrs against ~11.1 available \u2014 it fits, but the approval block is first-run work so expect sign-off waits. Tuesday is deliberately light (~10.2 vs 12.5) so any hoodie overrun lands there."
     ],
     [
-     "WHY THESE 6385 ROWS",
-     "ALL HOSE (PC43) and FRIDAY (3600M Red) are the only two 6385 groups with 100% of blanks received. Everything else has holes."
+     "HOODIES",
+     "250 zip hoodies, 4 runs, two DIFFERENT sleeve prints (USA flag one side, TRAIL HERO vertical the other) plus a 2-color back. Budget past the estimate \u2014 hoodies need pallet spray per load."
     ],
     [
      "",
@@ -169,18 +172,6 @@
   {
    "day": "2026-09-01",
    "rows": [
-    {
-     "id": "6385-42-fri-sleeve",
-     "job": "6385",
-     "url": "https://www.printavo.com/invoices/23955982",
-     "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-42 \u2014 FRIDAY LEFT sleeve, 1c (3600M Red)",
-     "colors": 1,
-     "screens": 1,
-     "qty": 250,
-     "note": "Shared setup w/ Mon FRIDAY runs if screens still up.",
-     "nickname": "Trail Hero"
-    },
     {
      "id": "6385-30-staff-lc",
      "job": "6385",
@@ -285,11 +276,11 @@
    "flags": [
     [
      "CREW",
-     "Jalen, Spencer, Corey all day + TUKKER 1:30\u20134 (flex). Tukker's slot: the Staff/Vol sleeve or the 6451 cards \u2014 simple work, screens already up."
+     "Jalen, Spencer, Corey all day + TUKKER 1:30\u20134 (flex). ~10.2 press-hrs against ~12.5 \u2014 slack is intentional."
     ],
     [
      "RUN ORDER",
-     "FRIDAY sleeve first while those screens are still on press, then Staff/Volunteer (all blanks in), then THURSDAY."
+     "If the hoodie approval block ran long Monday, finish it here first. Then Staff/Volunteer (all blanks in), then THURSDAY."
     ],
     [
      "VERIFY",
@@ -297,7 +288,7 @@
     ],
     [
      "",
-     "~12.1 press-hrs loaded against ~12.5 available."
+     "Tukker's slot: the Staff/Vol sleeve or the 6451 cards \u2014 simple work, screens already up."
     ]
    ]
   },
@@ -305,54 +296,63 @@
    "day": "2026-09-02",
    "rows": [
     {
-     "id": "6385-2-hoodie-lc",
+     "id": "6385-33-hose-front",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-2 \u2014 Hoodie front left chest, 1c (SS4500Z Army Hthr zip)",
+     "location": "IMPRINT #6385-33 \u2014 ALL HOSE full front, 1c (PC43 Olive Drab Grn Hthr)",
      "colors": 1,
      "screens": 1,
      "qty": 250,
-     "img": "6385a",
-     "note": "HOODIES print slow \u2014 pallet spray per load (see 6380 benchmark). 19 pcs short (3XL/4XL).",
+     "note": "Blanks ALL RECEIVED \u2014 safe to run.",
      "nickname": "Trail Hero"
     },
     {
-     "id": "6385-3-hoodie-flag",
+     "id": "6385-34-hose-back",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-3 \u2014 Hoodie USA FLAG sleeve, 1c",
+     "location": "IMPRINT #6385-34 \u2014 ALL HOSE full back, 1c",
      "colors": 1,
      "screens": 1,
      "qty": 250,
-     "img": "6385a",
+     "note": "Blanks ALL RECEIVED.",
      "nickname": "Trail Hero"
     },
     {
-     "id": "6385-4-hoodie-th",
+     "id": "6385-40-fri-front",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-4 \u2014 Hoodie TRAIL HERO sleeve, 1c (opposite sleeve)",
+     "location": "IMPRINT #6385-40 \u2014 FRIDAY full front, 1c (3600M Red)",
      "colors": 1,
      "screens": 1,
      "qty": 250,
-     "img": "6385a",
-     "note": "Two DIFFERENT sleeve prints on this hoodie \u2014 flag on one, TRAIL HERO vertical on the other.",
+     "note": "Blanks ALL RECEIVED \u2014 safe to run. Whole FRIDAY group (front/back/sleeve) runs together today.",
      "nickname": "Trail Hero"
     },
     {
-     "id": "6385-5-hoodie-back",
+     "id": "6385-41-fri-back",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero \u2014 Brandi Marketing",
-     "location": "IMPRINT #6385-5 \u2014 Hoodie full back logo, 2 COLOR",
+     "location": "IMPRINT #6385-41 \u2014 FRIDAY full back, 1c",
      "colors": 1,
-     "screens": 2,
+     "screens": 1,
      "qty": 250,
-     "img": "6385a",
-     "note": "Only 2-color run in the hoodie group.",
+     "note": "Blanks ALL RECEIVED.",
+     "nickname": "Trail Hero"
+    },
+    {
+     "id": "6385-42-fri-sleeve",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero \u2014 Brandi Marketing",
+     "location": "IMPRINT #6385-42 \u2014 FRIDAY LEFT sleeve, 1c (3600M Red)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 250,
+     "note": "Shared setup w/ Mon FRIDAY runs if screens still up.",
      "nickname": "Trail Hero"
     },
     {
@@ -400,15 +400,15 @@
    "flags": [
     [
      "CREW",
-     "Jalen, Spencer, TUKKER all day + ELIJAH 12\u20134. ~12.4 press-hrs against ~13.3."
+     "Jalen, Spencer, TUKKER all day + ELIJAH 12\u20134. ~12.9 press-hrs against ~13.3."
     ],
     [
      "RUN ORDER",
-     "Hoodie block (4 runs, 250 zip hoodies) is the day. Hoodies print slow \u2014 pallet spray per load, budget more than the estimate says."
+     "ALL HOSE and the full FRIDAY group (front/back/sleeve) \u2014 both have 100% of blanks received, so they run clean. Then the 1533 tanks and the Busch backs."
     ],
     [
      "INK CHANGES",
-     "Both 1533 tank cards run all THREE colorways on ONE card \u2014 swap ink mid-run, do NOT open a second card. Same for anything else with a colorway swap."
+     "Both 1533 tank cards run all THREE colorways on ONE card \u2014 swap ink mid-run, do NOT open a second card."
     ],
     [
      "VERIFY",
