@@ -60,9 +60,10 @@ h2{margin:0 0 4px;font-size:19px;letter-spacing:-.2px}
 .tag{color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.6px;padding:2px 6px;border-radius:4px;
   margin-left:6px;vertical-align:2px;font-weight:700}
 .tag.trade{background:#6b7280}.tag.new{background:#C8102E}.tag.parked{background:#a1a1aa}
-table.gjobs{width:100%;border-collapse:collapse;font-size:13.5px}
-table.gjobs td{padding:6px 15px;border-bottom:1px solid #f4f4f5}
+table.gjobs{width:100%;border-collapse:collapse;font-size:13.5px;table-layout:fixed}
+table.gjobs td{padding:6px 15px;border-bottom:1px solid #f4f4f5;overflow-wrap:anywhere}
 table.gjobs tr:last-child td{border-bottom:0}
+.c-v{width:64px}.c-d{width:52px}.c-a{width:96px}
 .gact{padding:11px 15px;background:#fbfbfb;border-top:1px solid #e4e4e7;display:grid;grid-template-columns:190px 1fr;gap:10px;align-items:start}
 .gact .full{grid-column:1/-1}
 .nlog{border-left:3px solid #e4e4e7;padding-left:10px;margin-bottom:8px}
@@ -114,13 +115,19 @@ footer{color:#71717a;font-size:12.5px;text-align:center;padding:8px 0 0}
 .gate{max-width:560px;margin:70px auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;padding:28px 30px}
 .gate h2{margin-bottom:10px}
 .hide{display:none!important}
+.scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
 @media(max-width:760px){
   .kpis{grid-template-columns:repeat(2,1fr)}
   .gact{grid-template-columns:1fr}
-  section{padding:18px 15px}
+  section{padding:18px 14px}
   .wrap{padding:0 12px 60px}
   .ghead{flex-wrap:wrap}
-  table.gjobs td{padding:6px 8px}
+  table.gjobs{font-size:12.5px}
+  table.gjobs td{padding:6px 7px}
+  .c-v{width:50px}.c-d{width:40px}.c-a{width:80px}
+  .scrollx table{min-width:520px}
+  h1{font-size:21px}
+  .bartools input[type=search]{min-width:100%}
 }
 </style>
 </head>
@@ -320,10 +327,10 @@ function groupCard(g){
           (c.removed?' parked':'')+(c.step==='Collected'?' done':'');
   var jobs=(g.jobs||[]).map(function(j){
     var link=j.id?'<a href="https://www.printavo.com/invoices/'+esc(j.id)+'" target="_blank" rel="noopener">#'+esc(j.v)+'</a>':'#'+esc(j.v);
-    return '<tr><td style="width:62px">'+link+'</td><td>'+esc(j.nick||'')+
+    return '<tr><td class="c-v">'+link+'</td><td>'+esc(j.nick||'')+
       '<div class="st">'+esc(j.status||'')+'</div></td>'+
-      '<td class="dy" style="width:52px">'+(j.days!=null?esc(j.days)+'d':'')+'</td>'+
-      '<td class="am" style="width:96px">'+money(j.amt)+'</td></tr>'}).join('');
+      '<td class="dy c-d">'+(j.days!=null?esc(j.days)+'d':'')+'</td>'+
+      '<td class="am c-a">'+money(j.amt)+'</td></tr>'}).join('');
   var card=el('<div class="'+cls+'" data-who="'+esc(g.who)+'">'+
     '<div class="ghead"><div><div class="gwho">'+esc(g.who)+
       (g.trade?'<span class="tag trade">Trade</span>':'')+
@@ -436,11 +443,11 @@ function subSection(s){
   var h='<section class="sub-sec"><h3 style="margin:0 0 4px;font-size:17px">'+esc(s.title||'')+'</h3>'+
         (s.lead?'<p class="lead">'+esc(s.lead)+'</p>':'');
   if(s.cols&&s.rows){
-    h+='<table><thead><tr>'+s.cols.map(function(c){return '<th>'+esc(c)+'</th>'}).join('')+'</tr></thead><tbody>'+
+    h+='<div class="scrollx"><table><thead><tr>'+s.cols.map(function(c){return '<th>'+esc(c)+'</th>'}).join('')+'</tr></thead><tbody>'+
       (s.rows||[]).map(function(r){return '<tr>'+r.map(function(v,i){
         var right=/^\$/.test(String(v));
         return '<td'+(right?' class="am"':'')+'>'+esc(v)+'</td>'}).join('')+'</tr>'}).join('')+
-      '</tbody></table>';
+      '</tbody></table></div>';
   }
   if(s.text)h+='<p class="lead" style="margin:8px 0 0">'+esc(s.text)+'</p>';
   return el(h+'</section>');
