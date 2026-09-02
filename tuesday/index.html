@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Mayhem Ink — Tuesday Run</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f4f5;color:#111;
+  font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
+header{background:#111;color:#fff;padding:18px 0 14px;position:sticky;top:0;z-index:30;box-shadow:0 1px 0 #27272a}
+header .wrap{padding-bottom:0}
+h1{margin:0;font-size:24px;letter-spacing:-.3px}h1 span{color:#C8102E}
+.hsub{color:#a1a1aa;font-size:13.5px;margin-top:4px}
+.htop{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.pill{border-radius:20px;padding:6px 14px;font-size:12.5px;font-weight:700;white-space:nowrap;
+  background:#27272a;color:#a1a1aa;border:1px solid #3f3f46}
+.pill.ok{background:#052e16;color:#4ade80;border-color:#166534}
+.pill.busy{background:#27272a;color:#fcd34d;border-color:#57534e}
+.pill.bad{background:#450a0a;color:#fca5a5;border-color:#7f1d1d;cursor:pointer}
+.prog{margin-top:12px;background:#27272a;border-radius:20px;height:8px;overflow:hidden}
+.bar{height:100%;width:0;background:#C8102E;transition:width .25s}
+.pnum{font-size:12.5px;color:#d4d4d8;margin-top:6px}
+.tabs{display:flex;gap:6px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;border-bottom:3px solid transparent;color:#a1a1aa;font:inherit;font-size:14px;
+  font-weight:700;padding:9px 12px 8px;cursor:pointer;white-space:nowrap}
+.tab .c{background:#3f3f46;color:#e4e4e7;border-radius:20px;font-size:11.5px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+.tab[aria-selected=true]{color:#fff;border-bottom-color:#C8102E}
+.tab[aria-selected=true] .c{background:#C8102E;color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0 20px}
+.kpi{background:#fff;border:1px solid #e4e4e7;border-radius:10px;padding:14px 16px}
+.kpi .n{font-size:23px;font-weight:700;letter-spacing:-.5px}
+.kpi .l{font-size:12px;color:#71717a;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.kpi.red .n{color:#C8102E}
+section{background:#fff;border:1px solid #e4e4e7;border-radius:12px;padding:22px 24px;margin-bottom:22px}
+h2{margin:0 0 4px;font-size:19px;letter-spacing:-.2px}
+.lead{color:#52525b;font-size:14px;margin:0 0 16px}
+.bartools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 16px}
+.bartools input[type=search]{flex:1;min-width:180px}
+.chip{background:#f4f4f5;border:1px solid #e4e4e7;border-radius:20px;padding:6px 13px;font-size:13px;
+  font-weight:600;color:#52525b;cursor:pointer}
+.chip[aria-pressed=true]{background:#111;border-color:#111;color:#fff}
+.grp{border:1px solid #e4e4e7;border-radius:10px;margin-bottom:12px;overflow:hidden}
+.grp.hot{border-color:#C8102E;border-width:2px}
+.grp.warm{border-color:#eab308}
+.grp.parked{opacity:.55}
+.grp.done{opacity:.62}
+.ghead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:12px 15px;background:#fafafa;border-bottom:1px solid #e4e4e7}
+.grp.hot .ghead{background:#fef2f3}.grp.warm .ghead{background:#fffbeb}
+.gwho{font-weight:700;font-size:15.5px}
+.gmeta{font-size:12.5px;color:#71717a;margin-top:2px}
+.gright{text-align:right}
+.gtot{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.grp.hot .gtot{color:#C8102E}
+.tag{color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.6px;padding:2px 6px;border-radius:4px;
+  margin-left:6px;vertical-align:2px;font-weight:700}
+.tag.trade{background:#6b7280}.tag.new{background:#C8102E}.tag.parked{background:#a1a1aa}
+table.gjobs{width:100%;border-collapse:collapse;font-size:13.5px}
+table.gjobs td{padding:6px 15px;border-bottom:1px solid #f4f4f5}
+table.gjobs tr:last-child td{border-bottom:0}
+.gact{padding:11px 15px;background:#fbfbfb;border-top:1px solid #e4e4e7;display:grid;grid-template-columns:190px 1fr;gap:10px;align-items:start}
+.gact .full{grid-column:1/-1}
+.nlog{border-left:3px solid #e4e4e7;padding-left:10px;margin-bottom:8px}
+.nrow{font-size:13px;padding:3px 0;display:flex;gap:9px;align-items:baseline}
+.ndate{color:#a1a1aa;font-size:11.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ntext{color:#3f3f46;flex:1}
+.nwho{color:#a1a1aa;font-size:11px}
+.nx{background:none;border:0;color:#d4d4d8;cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+.nrow:hover .nx{color:#C8102E}
+.addrow{display:flex;gap:8px;align-items:flex-start}
+.addrow textarea{flex:1;min-height:38px;resize:vertical}
+.btn{background:#111;color:#fff;border:0;border-radius:7px;padding:8px 14px;font:inherit;font-size:13px;
+  font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#27272a}
+.btn.red{background:#C8102E}.btn.red:hover{background:#e0142f}
+.btn.ghost{background:none;color:#71717a;border:1px solid #d4d4d8;font-weight:600}
+.btn.ghost:hover{background:#f4f4f5;color:#111}
+.btn:disabled{opacity:.45;cursor:default}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#71717a;padding:0 10px 7px;border-bottom:1px solid #e4e4e7}
+td{padding:7px 10px;border-bottom:1px solid #f4f4f5;vertical-align:top}
+.am{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.dy{color:#71717a;font-variant-numeric:tabular-nums;white-space:nowrap}
+.st{color:#71717a;font-size:12.5px}
+a{color:#C8102E;text-decoration:none;font-weight:600}a:hover{text-decoration:underline}
+select,input,textarea{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid #d4d4d8;border-radius:7px;background:#fff;width:100%;color:#111}
+.cand{border:1px solid #e4e4e7;border-radius:10px;padding:15px 17px;margin-bottom:14px}
+.chead{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.cwho{font-weight:700;font-size:15.5px}
+.cmeta{font-size:12.5px;color:#71717a;margin-top:2px}
+.tier{color:#fff;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:3px 9px;border-radius:20px;white-space:nowrap}
+ul.why{margin:11px 0 0;padding-left:19px;font-size:13.5px;color:#3f3f46}
+ul.why li{margin-bottom:3px}
+.why1{margin:10px 0 0;font-size:13.5px;color:#3f3f46}
+.mail{margin-top:13px;border:1px solid #e4e4e7;border-radius:9px;overflow:hidden}
+.mailhead{display:flex;justify-content:space-between;align-items:center;background:#111;color:#fff;padding:7px 12px;gap:8px}
+.mlabel{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:#d4d4d8}
+.mbtns{display:flex;gap:6px}
+.copy{background:#C8102E;color:#fff;border:0;border-radius:5px;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.copy.g{background:#3f3f46}
+.mto{background:#fafafa;padding:7px 12px;font-size:12.5px;color:#52525b;border-bottom:1px solid #e4e4e7}
+.mbody{margin:0;padding:13px;font:13.5px/1.6 inherit;white-space:pre-wrap;background:#fff}
+.note-b{background:#fafafa;border-left:3px solid #C8102E;padding:11px 14px;font-size:13.5px;color:#3f3f46;border-radius:0 7px 7px 0;margin-top:14px}
+.sub{margin-top:26px;padding-top:18px;border-top:1px solid #e4e4e7}
+.sub h3{margin:0 0 4px;font-size:15px}
+.sub .lead{font-size:13px;margin-bottom:12px}
+.empty{color:#71717a;font-size:14px;padding:20px 0;text-align:center}
+footer{color:#71717a;font-size:12.5px;text-align:center;padding:8px 0 0}
+.gate{max-width:560px;margin:70px auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;padding:28px 30px}
+.gate h2{margin-bottom:10px}
+.hide{display:none!important}
+@media(max-width:760px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .gact{grid-template-columns:1fr}
+  section{padding:18px 15px}
+  .wrap{padding:0 12px 60px}
+  .ghead{flex-wrap:wrap}
+  table.gjobs td{padding:6px 8px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="htop">
+      <div>
+        <h1>Mayhem <span>Ink</span> — Tuesday Run</h1>
+        <div class="hsub" id="sub">Loading…</div>
+      </div>
+      <button class="pill" id="pill" title="Save status">Loading…</button>
+    </div>
+    <div class="prog"><div class="bar" id="bar"></div></div>
+    <div class="pnum" id="pnum">&nbsp;</div>
+    <div class="tabs" role="tablist" id="tabs">
+      <button class="tab" role="tab" data-tab="paid" aria-selected="true">Get paid <span class="c" id="c-paid">0</span></button>
+      <button class="tab" role="tab" data-tab="rev" aria-selected="false">Reviews <span class="c" id="c-rev">0</span></button>
+      <button class="tab" role="tab" data-tab="wb" aria-selected="false">Win them back <span class="c" id="c-wb">0</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="gate" class="gate hide">
+    <h2>Locked</h2>
+    <p class="lead" id="gatemsg">This board needs the keyed bookmark. Ask Kolton for the link — it ends in <code>#k=…</code>.</p>
+  </div>
+
+  <div id="app" class="hide">
+    <div class="kpis" id="kpis"></div>
+    <div id="panel-paid"></div>
+    <div id="panel-rev" class="hide"></div>
+    <div id="panel-wb" class="hide"></div>
+    <footer id="foot"></footer>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var API='https://mayhem-tuesday-state.autumn-mountain-14c6.workers.dev';
+var STEPS=['Not started','Email 1 sent','Email 2 sent','Called','Promised to pay','Collected'];
+var hash=new URLSearchParams(location.hash.replace(/^#/,''));
+var KEY=hash.get('k')||'';
+var WHO=(hash.get('who')||'').slice(0,20);
+var DATA=null, STATE={customers:{}}, TAB='paid', Q='', FILTER='open', SHOWPARKED=false;
+var QUEUE=[]; try{QUEUE=JSON.parse(localStorage.getItem('tue.queue')||'[]')}catch(e){QUEUE=[]}
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function today(){return new Date().toLocaleDateString('en-CA',{timeZone:'America/Denver'})}
+function el(h){var d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild}
+function cust(n){var c=STATE.customers[n];if(!c){c={step:'Not started',notes:[]};STATE.customers[n]=c}
+  if(!c.notes)c.notes=[];return c}
+
+/* ---------- save pill + write queue ---------- */
+var inflight=0;
+function pill(){
+  var p=document.getElementById('pill');
+  if(!KEY){p.className='pill';p.textContent='Read-only';return}
+  if(QUEUE.length){p.className='pill bad';p.textContent=QUEUE.length+' not saved — tap to retry';return}
+  if(inflight){p.className='pill busy';p.textContent='Saving…';return}
+  p.className='pill ok';p.textContent='All changes saved';
+}
+function saveQueue(){try{localStorage.setItem('tue.queue',JSON.stringify(QUEUE))}catch(e){}}
+function post(path,body){
+  if(!KEY)return Promise.reject(new Error('read-only'));
+  inflight++;pill();
+  return fetch(API+path,{method:'POST',headers:{'content-type':'application/json','x-tue-key':KEY},
+    body:JSON.stringify(body)}).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);return r.json();
+    }).then(function(j){inflight--;pill();return j})
+    .catch(function(e){inflight--;QUEUE.push({path:path,body:body});saveQueue();pill();throw e});
+}
+function flush(){
+  if(!QUEUE.length||!KEY)return;
+  var q=QUEUE.slice();QUEUE=[];saveQueue();pill();
+  (function next(){
+    if(!q.length){pill();return load(true)}
+    var it=q.shift();
+    post(it.path,it.body).then(next,function(){next()});
+  })();
+}
+setInterval(flush,10000);
+window.addEventListener('online',flush);
+document.getElementById('pill').addEventListener('click',flush);
+
+/* ---------- load ---------- */
+function load(quiet){
+  return fetch(API+'/all?k='+encodeURIComponent(KEY)+'&_='+Date.now())
+    .then(function(r){if(r.status===401)throw new Error('nokey');if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+    .then(function(j){
+      DATA=j.data;STATE=j.state&&j.state.customers?j.state:{customers:{}};
+      if(!DATA){document.getElementById('gate').classList.remove('hide');
+        document.getElementById('gatemsg').textContent='No data has been pushed yet. The Tuesday run fills this in.';
+        document.getElementById('app').classList.add('hide');return}
+      document.getElementById('gate').classList.add('hide');
+      document.getElementById('app').classList.remove('hide');
+      render();pill();
+    })
+    .catch(function(e){
+      if(quiet)return;
+      document.getElementById('app').classList.add('hide');
+      document.getElementById('gate').classList.remove('hide');
+      if(String(e.message)!=='nokey')
+        document.getElementById('gatemsg').textContent='Could not reach the board ('+e.message+'). Check the connection and reload.';
+      document.getElementById('pill').className='pill';
+      document.getElementById('pill').textContent=String(e.message)==='nokey'?'Read-only':'Offline';
+      document.getElementById('sub').textContent='';
+    });
+}
+setInterval(function(){
+  if(document.hidden)return;
+  var a=document.activeElement;
+  if(a&&(a.tagName==='TEXTAREA'||a.tagName==='INPUT')&&a.value)return;
+  load(true);
+},60000);
+
+/* ---------- render ---------- */
+function render(){
+  document.getElementById('sub').textContent=
+    DATA.run_date+(DATA.week_label?' · '+DATA.week_label:'')+(WHO?' · '+WHO:'');
+  var k=DATA.kpis||{};
+  document.getElementById('kpis').innerHTML=
+    kpi(money(k.collectible),'Collectible now',true)+
+    kpi(k.customers||0,'Customers to chase')+
+    kpi(k.reviews||0,'Review asks')+
+    kpi(money(k.winback),'Win-back pipeline');
+  var cols=(DATA.collections||[]);
+  document.getElementById('c-paid').textContent=cols.filter(function(g){return !cust(g.who).removed}).length;
+  document.getElementById('c-rev').textContent=(DATA.reviews||[]).length;
+  document.getElementById('c-wb').textContent=(DATA.winbacks||[]).length;
+  paintPaid();paintCands('rev','reviews');paintCands('wb','winbacks');
+  document.getElementById('foot').textContent=
+    'Data pulled from Printavo '+DATA.run_date+'. Notes and chase steps save the moment you type them.'+
+    (DATA.built?' Last push '+new Date(DATA.built).toLocaleString():'');
+  progress();
+}
+function kpi(n,l,red){return '<div class="kpi'+(red?' red':'')+'"><div class="n">'+esc(n)+'</div><div class="l">'+esc(l)+'</div></div>'}
+
+function progress(){
+  var g=(DATA.collections||[]).filter(function(x){return !cust(x.who).removed});
+  var n=g.filter(function(x){return cust(x.who).step&&cust(x.who).step!=='Not started'}).length;
+  document.getElementById('bar').style.width=(g.length?100*n/g.length:0)+'%';
+  document.getElementById('pnum').textContent=n+' of '+g.length+' customers worked';
+}
+
+function paintPaid(){
+  var host=document.getElementById('panel-paid');
+  var groups=(DATA.collections||[]);
+  host.innerHTML='<section><h2>Get paid</h2>'+
+    '<p class="lead">'+esc(DATA.paid_lead||'Every finished-but-unpaid job due on or after 2025-01-01, grouped by customer and sorted by what they owe. Chase the person, not the invoice. Notes carry forward on their own.')+'</p>'+
+    '<div class="bartools">'+
+      '<input type="search" id="q" placeholder="Find a customer or job…" value="'+esc(Q)+'">'+
+      '<button class="chip" data-f="open" aria-pressed="'+(FILTER==='open')+'">Still open</button>'+
+      '<button class="chip" data-f="untouched" aria-pressed="'+(FILTER==='untouched')+'">Not started</button>'+
+      '<button class="chip" data-f="all" aria-pressed="'+(FILTER==='all')+'">All</button>'+
+      '<button class="chip" id="pk" aria-pressed="'+SHOWPARKED+'">Parked</button>'+
+    '</div><div id="glist"></div></section>';
+  host.querySelector('#q').addEventListener('input',function(e){Q=e.target.value;paintList()});
+  host.querySelectorAll('.chip[data-f]').forEach(function(b){
+    b.addEventListener('click',function(){FILTER=b.getAttribute('data-f');paintPaid()})});
+  host.querySelector('#pk').addEventListener('click',function(){SHOWPARKED=!SHOWPARKED;paintPaid()});
+  (DATA.sections||[]).filter(function(s){return (s.tab||'paid')==='paid'}).forEach(function(s){
+    host.appendChild(subSection(s))});
+  paintList();
+  var q=host.querySelector('#q');
+  if(Q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}
+}
+function paintList(){
+  var list=document.getElementById('glist');list.innerHTML='';
+  var q=Q.trim().toLowerCase();
+  var rows=(DATA.collections||[]).filter(function(g){
+    var c=cust(g.who);
+    if(c.removed&&!SHOWPARKED)return false;
+    if(!c.removed&&SHOWPARKED)return false;
+    if(!SHOWPARKED){
+      if(FILTER==='open'&&c.step==='Collected')return false;
+      if(FILTER==='untouched'&&c.step!=='Not started')return false;
+    }
+    if(q){
+      var hay=(g.who+' '+(g.jobs||[]).map(function(j){return j.v+' '+j.nick}).join(' ')).toLowerCase();
+      if(hay.indexOf(q)<0)return false;
+    }
+    return true;
+  });
+  if(!rows.length){list.innerHTML='<div class="empty">Nothing here'+(q?' for “'+esc(Q)+'”':'')+'.</div>';return}
+  rows.forEach(function(g){list.appendChild(groupCard(g))});
+}
+
+function groupCard(g){
+  var c=cust(g.who);
+  var cls='grp'+(g.tier==='hot'?' hot':g.tier==='warm'?' warm':'')+
+          (c.removed?' parked':'')+(c.step==='Collected'?' done':'');
+  var jobs=(g.jobs||[]).map(function(j){
+    var link=j.id?'<a href="https://www.printavo.com/invoices/'+esc(j.id)+'" target="_blank" rel="noopener">#'+esc(j.v)+'</a>':'#'+esc(j.v);
+    return '<tr><td style="width:62px">'+link+'</td><td>'+esc(j.nick||'')+
+      '<div class="st">'+esc(j.status||'')+'</div></td>'+
+      '<td class="dy" style="width:52px">'+(j.days!=null?esc(j.days)+'d':'')+'</td>'+
+      '<td class="am" style="width:96px">'+money(j.amt)+'</td></tr>'}).join('');
+  var card=el('<div class="'+cls+'" data-who="'+esc(g.who)+'">'+
+    '<div class="ghead"><div><div class="gwho">'+esc(g.who)+
+      (g.trade?'<span class="tag trade">Trade</span>':'')+
+      (g.isnew?'<span class="tag new">New</span>':'')+
+      (c.removed?'<span class="tag parked">Parked</span>':'')+
+      '</div><div class="gmeta">'+esc(g.meta||((g.jobs||[]).length+' job'+((g.jobs||[]).length===1?'':'s')+(g.oldest?' · oldest '+g.oldest+' days':'')))+'</div></div>'+
+      '<div class="gright"><div class="gtot">'+money(g.total)+'</div></div></div>'+
+    '<table class="gjobs">'+jobs+'</table>'+
+    '<div class="gact">'+
+      '<select class="step">'+STEPS.map(function(s){
+        return '<option'+(s===c.step?' selected':'')+'>'+s+'</option>'}).join('')+'</select>'+
+      '<div class="addrow"><textarea class="note" rows="1" placeholder="Add a note…"></textarea>'+
+        '<button class="btn add">Add</button></div>'+
+      '<div class="full"><div class="nlog"></div>'+
+        '<button class="btn ghost park">'+(c.removed?'Put back on the list':'Remove from Tuesday list')+'</button></div>'+
+    '</div></div>');
+  paintNotes(card,g.who);
+  var sel=card.querySelector('.step'),ta=card.querySelector('.note');
+  if(!KEY){sel.disabled=true;ta.disabled=true;card.querySelector('.add').disabled=true;card.querySelector('.park').disabled=true}
+  sel.addEventListener('change',function(){
+    cust(g.who).step=sel.value;progress();
+    post('/step',{customer:g.who,step:sel.value,who:WHO}).catch(function(){});
+  });
+  function add(){
+    var t=ta.value.trim();if(!t)return;
+    ta.value='';
+    var c2=cust(g.who);c2.notes.push({date:today(),text:t,who:WHO});
+    if(/remove from tuesday list/i.test(t))c2.removed=true;
+    paintNotes(card,g.who);
+    post('/note',{customer:g.who,text:t,who:WHO,date:today()}).catch(function(){});
+  }
+  card.querySelector('.add').addEventListener('click',add);
+  ta.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();add()}});
+  card.querySelector('.park').addEventListener('click',function(){
+    var c2=cust(g.who);
+    if(!c2.removed){
+      var why=prompt('Take '+g.who+' off the Tuesday list. Why? (trade swap, written off, etc.)');
+      if(why===null)return;
+      c2.removed=true;c2.notes.push({date:today(),text:'Remove from Tuesday list'+(why?' — '+why:''),who:WHO});
+      post('/remove',{customer:g.who,removed:true,reason:why,who:WHO,date:today()}).catch(function(){});
+    }else{
+      c2.removed=false;c2.notes.push({date:today(),text:'Put back on the Tuesday list',who:WHO});
+      post('/remove',{customer:g.who,removed:false,who:WHO,date:today()}).catch(function(){});
+    }
+    render();
+  });
+  return card;
+}
+function paintNotes(card,who){
+  var c=cust(who),log=card.querySelector('.nlog');
+  if(!c.notes.length){log.innerHTML='<div class="nrow"><span class="ntext" style="color:#a1a1aa">No notes yet.</span></div>';return}
+  log.innerHTML=c.notes.map(function(n,i){
+    return '<div class="nrow"><span class="ndate">'+esc(n.date)+'</span>'+
+      '<span class="ntext">'+esc(n.text)+(n.who?' <span class="nwho">— '+esc(n.who)+'</span>':'')+'</span>'+
+      (KEY?'<button class="nx" data-i="'+i+'" title="Delete this note">×</button>':'')+'</div>'}).join('');
+  log.querySelectorAll('.nx').forEach(function(b){
+    b.addEventListener('click',function(){
+      var i=Number(b.getAttribute('data-i'));
+      if(!confirm('Delete this note?\n\n'+c.notes[i].text))return;
+      c.notes.splice(i,1);
+      c.removed=c.notes.some(function(n){return /remove from tuesday list/i.test(n.text)});
+      paintNotes(card,who);
+      post('/note/delete',{customer:who,idx:i}).catch(function(){});
+    })});
+}
+
+/* ---------- review / win-back tabs ---------- */
+function paintCands(tab,field){
+  var host=document.getElementById('panel-'+tab);
+  var meta=(DATA.meta&&DATA.meta[field])||{};
+  host.innerHTML='<section><h2>'+esc(meta.title||(tab==='rev'?'Ask for a review':'Win them back'))+'</h2>'+
+    '<p class="lead">'+esc(meta.lead||'')+'</p><div id="cl-'+tab+'"></div></section>';
+  var list=host.querySelector('#cl-'+tab),items=DATA[field]||[];
+  if(!items.length)list.innerHTML='<div class="empty">Nothing this week.</div>';
+  items.forEach(function(c){list.appendChild(candCard(c))});
+  (DATA.sections||[]).filter(function(s){return s.tab===tab}).forEach(function(s){
+    host.appendChild(subSection(s))});
+}
+function candCard(c){
+  var t=c.tier||{},color=t.color||'#71717a';
+  var why=Array.isArray(c.why)?'<ul class="why">'+c.why.map(function(w){return '<li>'+esc(w)+'</li>'}).join('')+'</ul>'
+        :(c.why?'<p class="why1">'+esc(c.why)+'</p>':'');
+  var m=c.email||null;
+  var card=el('<div class="cand">'+
+    '<div class="chead"><div><div class="cwho">'+esc(c.who)+'</div>'+
+      '<div class="cmeta">'+esc(c.meta||'')+'</div></div>'+
+      (t.label?'<span class="tier" style="background:'+esc(color)+'">'+esc(t.label)+'</span>':'')+
+    '</div>'+why+
+    (m?'<div class="mail"><div class="mailhead"><span class="mlabel">Draft — from Joe</span>'+
+      '<span class="mbtns"><button class="copy cp">Copy</button>'+
+      '<button class="copy g mailto">Open in email</button></span></div>'+
+      '<div class="mto"><b>To:</b> '+esc(m.to)+' &nbsp;·&nbsp; <b>Subject:</b> '+esc(m.subj)+'</div>'+
+      '<pre class="mbody">'+esc(m.body)+'</pre></div>':'')+
+    (c.note?'<div class="note-b">'+esc(c.note)+'</div>':'')+
+  '</div>');
+  if(m){
+    card.querySelector('.cp').addEventListener('click',function(e){
+      navigator.clipboard.writeText(m.body);var b=e.target,o=b.textContent;
+      b.textContent='Copied';setTimeout(function(){b.textContent=o},1200)});
+    card.querySelector('.mailto').addEventListener('click',function(){
+      location.href='mailto:'+encodeURIComponent(m.to)+'?subject='+encodeURIComponent(m.subj)+
+        '&body='+encodeURIComponent(m.body)});
+  }
+  return card;
+}
+
+/* ---------- generic extra sections ---------- */
+function subSection(s){
+  var h='<section class="sub-sec"><h3 style="margin:0 0 4px;font-size:17px">'+esc(s.title||'')+'</h3>'+
+        (s.lead?'<p class="lead">'+esc(s.lead)+'</p>':'');
+  if(s.cols&&s.rows){
+    h+='<table><thead><tr>'+s.cols.map(function(c){return '<th>'+esc(c)+'</th>'}).join('')+'</tr></thead><tbody>'+
+      (s.rows||[]).map(function(r){return '<tr>'+r.map(function(v,i){
+        var right=/^\$/.test(String(v));
+        return '<td'+(right?' class="am"':'')+'>'+esc(v)+'</td>'}).join('')+'</tr>'}).join('')+
+      '</tbody></table>';
+  }
+  if(s.text)h+='<p class="lead" style="margin:8px 0 0">'+esc(s.text)+'</p>';
+  return el(h+'</section>');
+}
+
+/* ---------- tabs ---------- */
+document.getElementById('tabs').addEventListener('click',function(e){
+  var b=e.target.closest('.tab');if(!b)return;
+  TAB=b.getAttribute('data-tab');
+  [].forEach.call(document.querySelectorAll('.tab'),function(t){
+    t.setAttribute('aria-selected',String(t===b))});
+  ['paid','rev','wb'].forEach(function(t){
+    document.getElementById('panel-'+t).classList.toggle('hide',t!==TAB)});
+  window.scrollTo(0,0);
+});
+
+/* ---------- go ---------- */
+if(!KEY){
+  document.getElementById('gate').classList.remove('hide');
+  document.getElementById('pill').className='pill';
+  document.getElementById('pill').textContent='Read-only';
+  document.getElementById('sub').textContent='No key in the link';
+}else{ load(); flush(); }
+})();
+</script>
+</body>
+</html>
