@@ -59,6 +59,7 @@ button.primary:hover { background: #333; }
 .cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 @media (max-width:720px){ .cols { grid-template-columns:1fr; gap:6px; } }
 .col-h { font-size:11px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px; }
+.badge-fl { font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#8a6d00; background:#fdf3cd; border-radius:20px; padding:2px 7px; vertical-align:2px; }
 .badge-in { font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#1d6b0f; background:#d8f5d0; border-radius:20px; padding:2px 7px; vertical-align:2px; }
 .addbtn { font-size:11px; font-weight:600; padding:4px 9px; margin-top:6px; border:1px solid #ccc; border-radius:6px; background:#fff; cursor:pointer; color:#555; }
 .addbtn:hover { background:#f0f0f0; }
@@ -296,6 +297,8 @@ function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
 function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 let MODE=lsGet("mi_mode")||"ink";
 /* ---------- THREAD MODE (Madeira Polyneon #40) ---------- */
+const FLUO=new Set(["1595","1596","1597","1598","1599","1823","1824","1837","1850","1867","1883","1901","1907","1908","1925","1935","1937","1946","1947","1950","1954","1972","1978","1995"]);
+
 const thrAll = THREADS.filter(t=>!t[3]).map(t=>({n:t[0],hex:t[1],name:t[2],lab:rgb2lab(...hex2rgb(t[1])),stock:STOCK.has(t[0])}));
 const thrStock = thrAll.filter(t=>t.stock);
 function rankThread(lab,pool,k){ return pool.map(t=>({...t,de:de2000(lab,t.lab)})).sort((a,b)=>a.de-b.de).slice(0,k); }
@@ -305,7 +308,7 @@ function thrRow(t,target,first,showAdd){
   const q=quality(t.de);
   return '<div class="match'+(first?' best':'')+'" data-copy="'+thrLabel(t)+'" title="Click to copy">'
     +'<div class="match-sw" style="background:'+t.hex+'"></div>'
-    +'<div style="min-width:0"><div class="match-name">'+t.n+(t.stock?' <span class="badge-in">on the shelf</span>':'')+'</div>'
+    +'<div style="min-width:0"><div class="match-name">'+t.n+(t.stock?' <span class="badge-in">on the shelf</span>':'')+(FLUO.has(t.n)?' <span class="badge-fl">fluorescent</span>':'')+'</div>'
     +'<div class="match-meta">'+(t.name||'&mdash;')+' &bull; '+t.hex.toUpperCase()+'</div>'
     +(first?'<div class="compare" style="width:180px"><div style="background:'+target+'"></div><div style="background:'+t.hex+'"></div></div>':'')
     +(showAdd&&!t.stock?'<button class="addbtn" data-add="'+t.n+'">+ order list</button>':'')
@@ -328,7 +331,7 @@ function matchThread(hex){
     +'</div>'
     +(same?'<div class="verdict good">You already have the closest Polyneon there is &mdash; '+thrLabel(have[0])+'.</div>'
           :'<div class="verdict">Your best cone is '+thrLabel(have[0])+' at '+acc(have[0].de)+'%. '+thrLabel(all[0])+' would get you to '+acc(all[0].de)+'%.</div>')
-    +'<div class="xref">Closest screen-print ink we stock: <b>'+dispName(ink.code)+'</b> ('+ink.block+', '+acc(ink.de)+'%) &mdash; use it to keep print and embroidery on the same job matched.</div>';
+    +(FLUO.has(all[0].n)?'<div class="xref" style="color:#8a6d00">Heads up: the closest shade is a <b>fluorescent</b>. Neons read differently under light and fade faster &mdash; check that&rsquo;s really what the job wants.</div>':'')+'<div class="xref">Closest screen-print ink we stock: <b>'+dispName(ink.code)+'</b> ('+ink.block+', '+acc(ink.de)+'%) &mdash; use it to keep print and embroidery on the same job matched.</div>';
   saveHist(hex);
   document.getElementById("results").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
