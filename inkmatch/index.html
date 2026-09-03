@@ -52,12 +52,38 @@ button.primary:hover { background: #333; }
 .match.copied { border-color: #1d6b0f !important; }
 .copy-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(240,251,236,.97); color: #1d6b0f; font-size: 21px; font-weight: 800; border-radius: 10px; z-index: 2; letter-spacing: .3px; }
 .footer { font-size: 11px; color: #aaa; font-style: italic; margin-top: 4px; }
+
+.tabs { display:flex; gap:6px; margin:0 0 14px; }
+.tab { font-size:13px; font-weight:700; letter-spacing:.6px; padding:9px 18px; border:1px solid #ddd; border-radius:8px; background:#fff; color:#888; cursor:pointer; }
+.tab.on { background:#111; border-color:#111; color:#fff; }
+.cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media (max-width:720px){ .cols { grid-template-columns:1fr; gap:6px; } }
+.col-h { font-size:11px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px; }
+.badge-in { font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#1d6b0f; background:#d8f5d0; border-radius:20px; padding:2px 7px; vertical-align:2px; }
+.addbtn { font-size:11px; font-weight:600; padding:4px 9px; margin-top:6px; border:1px solid #ccc; border-radius:6px; background:#fff; cursor:pointer; color:#555; }
+.addbtn:hover { background:#f0f0f0; }
+.verdict { font-size:13px; color:#444; background:#f7f7f7; border-radius:8px; padding:10px 12px; margin-top:12px; }
+.verdict.good { background:#f0fbec; color:#1d6b0f; }
+.xref { font-size:12px; color:#777; margin-top:8px; }
+.xref b { color:#333; }
+#orderpanel { display:none; }
+.ord { display:flex; align-items:center; gap:8px; font-size:13px; padding:5px 0; border-bottom:1px solid #f0f0f0; }
+.ord-sw { width:18px; height:18px; border-radius:4px; border:1px solid rgba(0,0,0,.12); flex-shrink:0; }
+.ord .rm { margin-left:auto; border:none; background:none; font-size:17px; color:#bbb; padding:0 4px; cursor:pointer; font-weight:400; }
+.ord .rm:hover { color:#a02222; background:none; }
+.bd { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12px; color:#666; padding:7px 0; border-bottom:1px solid #f2f2f2; }
+.bd-sw { width:26px; height:26px; border-radius:6px; border:1px solid rgba(0,0,0,.12); flex-shrink:0; }
+.bd-hex { font-family:ui-monospace,Menlo,monospace; font-size:11px; color:#999; width:66px; }
+.bd-t { min-width:210px; }
+.bd-t b { color:#111; font-weight:700; }
+.bd-t i { font-style:normal; color:#999; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 <h1>MAYHEM INK — INK MATCHER</h1>
-<div class="sub">Finds the closest match from the 238 Pantones we stock &bull; CIEDE2000 color distance &bull; B# = storage block</div>
+<div class="sub" id="sub">Finds the closest match from the 238 Pantones we stock &bull; CIEDE2000 color distance &bull; B# = storage block</div>
+<div class="tabs"><button class="tab on" id="tab-ink">INK</button><button class="tab" id="tab-thread">THREAD</button></div>
 
 <div class="panel">
   <div class="section-label">Customer color</div>
@@ -76,6 +102,7 @@ button.primary:hover { background: #333; }
   <label id="droparea" for="filein">Drop artwork here, paste a screenshot, or click to browse (PNG / JPG / PDF)</label>
   <input type="file" id="filein" accept="image/*,application/pdf" style="display:none">
   <canvas id="artcanvas"></canvas>
+  <div id="bdwrap" style="display:none;margin-top:12px"><button id="breakdown">Break out every colour &rarr; thread list</button><div id="bdout"></div></div>
   <div id="pdfnav" style="display:none; margin-top:10px; text-align:center;">
     <button id="pgprev">&#9664; Prev</button>
     <span id="pginfo" style="font-size:13px; color:#555; margin:0 10px;"></span>
@@ -84,14 +111,21 @@ button.primary:hover { background: #333; }
 </div>
 
 <div class="panel results" id="results">
-  <div class="section-label">Closest inks we stock</div>
-  <div class="hint" style="margin:-2px 0 10px">Click a match to copy its label (e.g. &ldquo;7421 Maroon&rdquo;) for the film.</div>
+  <div class="section-label" id="reslabel">Closest inks we stock</div>
+  <div class="hint" id="reshint" style="margin:-2px 0 10px">Click a match to copy its label (e.g. &ldquo;7421 Maroon&rdquo;) for the film.</div>
   <div class="target-bar">
     <div class="target-sw" id="tsw"></div>
     <div class="target-info">Customer color<br><b id="thex"></b></div>
   </div>
   <div id="matchlist"></div>
-  <div class="footer">Accuracy = 100 &minus; &Delta;E (perceptual color distance, where 100 is black vs. white). 99%+ &asymp; identical, 97%+ very close, 94%+ noticeably similar, below 90% = nearest we have. Screen colors are approximations &mdash; confirm on the physical book for critical jobs.</div>
+  <div class="footer" id="footer-ink">Accuracy = 100 &minus; &Delta;E (perceptual color distance, where 100 is black vs. white). 99%+ &asymp; identical, 97%+ very close, 94%+ noticeably similar, below 90% = nearest we have. Screen colors are approximations &mdash; confirm on the physical book for critical jobs.</div>
+  <div class="footer" id="footer-thread" style="display:none">Thread colours come from Madeira&rsquo;s own Polyneon shade card. Thread is shiny filament &mdash; sheen, stitch direction and density shift how a colour reads, more than ink does. Treat this as &ldquo;pull these two or three cones&rdquo; and let the physical card decide. Variegated shades (1510&ndash;1519, 1600&ndash;1609) can&rsquo;t be scored and are left out, 1516 included.</div>
+</div>
+
+<div class="panel" id="orderpanel">
+  <div class="section-label">Need to order</div>
+  <div id="orderlist"></div>
+  <div class="inputrow" style="margin-top:12px"><button id="ordcopy">Copy order list</button><button id="ordclear">Clear</button></div>
 </div>
 
 <script>
@@ -154,7 +188,7 @@ function copyName(m){
   return c+" "+w;
 }
 function quality(de){ if(de<1)return["Spot on","q0"]; if(de<3)return["Very close","q1"]; if(de<6)return["Close","q2"]; if(de<10)return["In the ballpark","q3"]; return["Nearest we have","q4"]; }
-function match(hex){
+function matchInk(hex){
   hex=hex.trim(); if(!hex.startsWith("#"))hex="#"+hex;
   if(!/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) { alert("That doesn't look like a hex code (e.g. #1a6b3c)"); return; }
   const lab=rgb2lab(...hex2rgb(hex));
@@ -256,6 +290,132 @@ cv.addEventListener("click",e=>{
   const hex="#"+[rr,gg,bb].map(v=>Math.round(v/n).toString(16).padStart(2,"0")).join("");
   hexin.value=hex; pickin.value=hex; match(hex);
 });
+const THREADS=[["1500","#1C1C1C","Black"],["1502","#5A5B63","Zipper"],["1505","#8F8F96","Polished Silver"],["1506","#303036","Deep Steel Blue"],["1507","#2A2A2C","Pea Coat Lining"],["1508","#E84A66","Cherry Pie"],["1509","#E84E70","Rhubarb"],["1510","#715127","Multicolor",1],["1511","#C9BE83","Multicolor",1],["1512","#878171","Multicolor",1],["1513","#494034","Multicolor",1],["1514","#3A322F","Multicolor",1],["1515","#2F2C2B","Multicolor",1],["1516","#555759","Multicolor",1],["1517","#333131","Multicolor",1],["1518","#2E2D30","Multicolor",1],["1519","#505B74","Multicolor",1],["1521","#F08973","Autumn Orange"],["1522","#AC8EBF","Lavender Blue"],["1526","#C7BD8A","French Vanilla"],["1527","#F9D0B1","Teddy Bear"],["1528","#4476AF","Serene Sky"],["1529","#E7DDED","Orchid Mist"],["1531","#495A90","Delphinium"],["1532","#ACC0E3","Little Boy Blue"],["1535","#786D58","Tarnished Taupe"],["1538","#8F6E49","Tiramisu"],["1539","#4A4644","Stone"],["1540","#2E2D2C","Cobblestone"],["1541","#F9F2A4","Chartreuse"],["1542","#576E9B","Blue Heather"],["1544","#444551","Chimney Smoke"],["1545","#F9FBFB","Winter Mint"],["1548","#F0CFE3","Pink Plush"],["1549","#FAE8F2","Pink Sorbet"],["1550","#ACBACB","Light Periwinkle"],["1552","#D4D291","Golden Green"],["1553","#71658D","Galaxy Blue"],["1554","#FCEFF0","Dogwood"],["1555","#655168","Carbon Paper"],["1556","#FAD5BD","Taste of Honey"],["1557","#7C6264","Mud Facial"],["1558","#68565A","French Roast"],["1559","#6C5A61","Mud Pie"],["1560","#78565D","Espresso"],["1561","#CCC58C","Cornmeal"],["1562","#7393B6","Blue Hydrangea"],["1563","#F2F5F8","Icy Blue"],["1564","#47454A","Dark Pewter"],["1565","#B26B5F","Irish Coffee"],["1566","#4E569F","Brilliant Blue"],["1567","#A15767","Pickled Beet"],["1568","#BCAB94","Granite Green"],["1569","#A78C7D","Hemlock"],["1572","#7D7B83","Winter Gray"],["1573","#E3CFC8","Vintage Lace"],["1574","#595565","Dark Slate Blue"],["1575","#64666B","Iron Gray"],["1577","#5991CB","Dark Blue Turquoise"],["1578","#BFC8C7","Faded Jade"],["1580","#4C9993","Jungle Green"],["1582","#BAB4AD","White Linen"],["1584","#ED78A4","Deep Pink"],["1588","#E95461","Salsa"],["1589","#323131","Ebony"],["1592","#F8FCFF","Misty Mint"],["1593","#52A7DC","Blue Macaw"],["1594","#90D3EF","Cool Aqua"],["1595","#E73F70","Fluorescent Pink"],["1596","#D02750","Fluorescent Pink"],["1597","#E4447E","Fluorescent Pink"],["1598","#E63F28","Fluorescent Orange"],["1599","#81BC52","Fluorescent Green"],["1600","#734128","Multicolor",1],["1601","#556A80","Multicolor",1],["1602","#769E78","Multicolor",1],["1603","#778F7E","Multicolor",1],["1604","#825D43","Multicolor",1],["1605","#7E5351","Multicolor",1],["1606","#828EB0","Multicolor",1],["1607","#4C778E","Multicolor",1],["1608","#47655A","Multicolor",1],["1609","#9C533A","Multicolor",1],["1610","#BEC0C4","Silver"],["1611","#929BA8","Smoke"],["1612","#8090A6","Steel"],["1613","#9EA6A9","Gull Gray"],["1614","#4B494C","Twister"],["1615","#535255","Battleship"],["1616","#EE838F","Conch Shell"],["1617","#39343A","Slate Purple"],["1618","#55525D","Gun Powder"],["1619","#413E43","Granite"],["1620","#F4B1C1","Light Salmon"],["1621","#ED705B","Rust"],["1622","#CDCBB5","Parchment"],["1623","#D0C646","Daffodil"],["1624","#D57B2B","Egg Yolk"],["1625","#CA9236","Butterscotch"],["1626","#C25A2C","Peaches \u2018n\u2019 Cream"],["1627","#A292B6","Dusty Lilac"],["1628","#7296B7","Worn Denim"],["1629","#F4F4F5","Ice"],["1630","#C2B8DA","Lavendula"],["1631","#B97EB3","Velvet Violet"],["1632","#77506B","Blackberry Purple"],["1633","#974D82","Purple Passion"],["1634","#65527B","Grape Jelly"],["1635","#B05872","Burgundy"],["1637","#E84859","Cinnamon Candy"],["1638","#C85361","Barn Red"],["1639","#E95D69","Cinnabar"],["1640","#474547","Lead"],["1641","#292829","Obsidian"],["1642","#706CAD","Lapis"],["1643","#6A526A","Navy"],["1645","#BCE1E4","Light Mint"],["1647","#C0E1D7","Mantis"],["1648","#B4CE92","Celery"],["1649","#8FC04A","Granny Smith"],["1650","#5B9E5B","Fresh Pine"],["1651","#519D7C","Celtic Green"],["1652","#8099B0","Mermaid"],["1653","#FCE7DE","Light Coral"],["1654","#896469","Cocoa"],["1656","#EEC1B4","Fawn"],["1657","#B6706B","Golden Oak"],["1658","#9A5E59","Mocha"],["1659","#8C565A","Coffee Bean"],["1660","#DAC5C9","Sand Castle"],["1661","#D3D4CC","Moonbeam"],["1662","#665E57","Slate"],["1663","#443E38","Clove"],["1664","#363331","Graphite"],["1665","#2E2D2A","Coal"],["1666","#CFCDAC","Cornsilk"],["1668","#87938C","Silver Sage"],["1669","#655E61","Rosemary"],["1670","#B88C44","Vegas Gold"],["1671","#4E648D","Country Kitchen Blue"],["1672","#82592A","Toasted Almond"],["1673","#927445","Khaki"],["1674","#89AECB","Light Denim"],["1675","#74A0C9","Nordic Blue"],["1676","#6C60A4","Hanukkah Blue"],["1677","#53667E","Mallard Teal"],["1678","#EC685A","Pumpkin"],["1680","#905A7E","Purple Heart"],["1681","#EA577B","Azalea"],["1682","#B4A99C","Tusk"],["1683","#D7B538","Lemon Drop"],["1684","#F1D2A7","Wheat"],["1685","#559FC4","Tree Frog"],["1686","#BDBEC3","Mist"],["1687","#A3A7AD","Sterling Silver"],["1689","#4E4C4C","Shark"],["1690","#70677C","Deep Sea"],["1692","#D8EEF4","Limestone"],["1694","#54BAE6","Caribbean Blue"],["1695","#349DD4","Cyan"],["1701","#7CBC61","Spring Green"],["1702","#B1D7BC","Spearmint"],["1703","#6B7277","Fir"],["1704","#6C616E","Evergreen"],["1705","#575855","Fresh Oregano"],["1706","#A3AA64","Guacamole"],["1707","#EA5F71","Honeysuckle"],["1709","#DC5D9C","Shocking Pink"],["1710","#D75792","Magenta"],["1711","#D4ABCF","Lavender"],["1712","#CE93C0","Lilac"],["1713","#FEF6F9","Peach Blush"],["1718","#8C939C","Overcast Gray"],["1719","#9F5984","Chokecherry"],["1720","#925877","Plum"],["1721","#EE85B0","Flamingo Pink"],["1722","#7C559B","Royal Purple"],["1723","#FEFCE6","Flan"],["1724","#C49B29","Gold Nugget"],["1725","#B26D2E","Liquid Gold"],["1726","#EDAB92","Light Brown Sugar"],["1727","#CABE57","Baby Chick"],["1728","#D0B2A3","Bark"],["1729","#C29091","Buckskin"],["1730","#573E29","Cumin"],["1731","#C99DBE","Purple Pearl"],["1733","#3F5C95","Blue Jay"],["1734","#E95265","Electric Red"],["1735","#D0BC4C","Lemonade"],["1736","#CBB5B2","Dark Taupe"],["1738","#AA9F7E","Champagne"],["1739","#2D2B2A","Charcoal"],["1740","#555255","Weimaraner"],["1741","#535051","Gun Metal"],["1742","#2A2C3D","Blue Ink"],["1743","#6A527A","Oxford Blue"],["1744","#A47678","Siamese Cat"],["1745","#BA8E84","Toasted Marshmellow"],["1746","#6AC4D3","Teal Green"],["1747","#E25366","Candy Apple Red"],["1748","#DEE7B0","Margarita Lime"],["1749","#73BB73","Green Thumb"],["1750","#488C87","Christmas Green"],["1751","#469886","Emerald Isle"],["1752","#FCD5B4","Cantalope"],["1753","#EE906F","Penny"],["1754","#E95566","Raspberry Punch"],["1755","#F8B86C","Marmalade"],["1756","#6C7E52","Pea Green"],["1757","#9B6D61","Dark Olive"],["1758","#9B6C61","Grizzly Bear"],["1759","#BF9E64","Medium Camo Green"],["1760","#7F7FA2","Antique Blue"],["1761","#B4C6E4","Dolphin"],["1762","#61618A","Deep Ocean"],["1763","#C3752E","Copper"],["1764","#2D3041","Denim"],["1765","#F08257","Tiger"],["1766","#605097","Sailor Blue"],["1767","#5C5196","Ultramarine"],["1768","#DEE5B2","Bamboo Green"],["1769","#7E9D63","Clover"],["1770","#929575","Light Emerald Green"],["1771","#B9782B","Whipped Butterscotch"],["1772","#D59829","Military Gold"],["1773","#E29161","Autumn Gold"],["1775","#47628A","Dark Federal Blue"],["1776","#303650","Independence Blue"],["1777","#F3A3A4","Bright Peach"],["1778","#ED7162","Carrot"],["1779","#EB696C","Sweet Potato"],["1780","#47858A","Rainforest"],["1781","#D04C61","Radish"],["1782","#CB5B76","Mulberry"],["1783","#C95685","Dark Raspberry"],["1784","#B65364","Merlot"],["1785","#B25672","Bordeaux"],["1786","#E9537B","Hibiscus"],["1787","#EA578D","Fuchsia"],["1788","#BA568E","Dark Magenta"],["1789","#8A5D78","Plum Drop"],["1790","#A38C56","Dill Pickle"],["1791","#8C612B","Brass"],["1792","#DCA95B","Old Gold"],["1793","#AA7C5F","Bullfrog"],["1794","#886458","Field Gear"],["1795","#636055","Dark Camo Green"],["1796","#94715D","Aged Moss"],["1797","#3E73B6","Calypso Blue"],["1798","#775757","Bass Green"],["1799","#8CD0DE","Green Turquoise"],["1800","#1A1A1A","Emerald Black"],["1801","#FAFAFA","Super White"],["1802","#F2F3F2","Snow White"],["1803","#EDE6D6","Cream White"],["1804","#EFEDE6","Natural White"],["1805","#F8FAFF","Fluorescent White"],["1809","#E5CE7E","Brushed Bronze"],["1810","#94979A","Gray Haze"],["1811","#B1B4B8","Chrome"],["1812","#8B8E8D","Cement"],["1815","#FCF3F8","Baby Pink"],["1816","#FAE4EF","Rustic Pink"],["1817","#F9D6CC","Pleasant Peach"],["1818","#FCEAEF","Powder Pink"],["1819","#F6C2C6","Blush Pink"],["1820","#F7BAAE","Peach Tea"],["1821","#E65C62","Terra Cotta"],["1822","#C1C1B8","Coconut Cream"],["1823","#CAD42E","Fluorescent Yellow Green"],["1824","#E3B71F","Fluorescent Yellow Orange"],["1825","#E8A625","Summer Sun"],["1826","#FEF390","Peach Pie"],["1827","#84CFF3","Swimming Pool"],["1828","#4776A1","Work Shirt"],["1829","#384882","Blue Bird"],["1830","#A1A4D0","China Blue"],["1831","#CF8EBC","Purple Pansy"],["1832","#986AA8","Majestic Purple"],["1833","#B44F91","Heliotrope"],["1834","#BA97C4","Amethyst"],["1835","#D05979","Cranberry"],["1836","#774F58","Cappuccino"],["1837","#E5372A","Fluorescent Red Orange"],["1838","#E74E61","Brick Red"],["1839","#E64F62","Christmas Red"],["1840","#5F6371","Cadet Gray"],["1841","#393A3F","Pewter"],["1842","#5D64A9","True Blue"],["1843","#685A9D","Persian Blue"],["1844","#5D4F60","Indigo"],["1845","#B2DBD5","Mint"],["1846","#42A2C4","Dark Teal"],["1847","#7DC8C4","Sea Foam Green"],["1848","#A2C98E","Lime Green"],["1849","#7C95A1","Tropical Teal"],["1850","#4DA546","Fluorescent Green"],["1851","#517468","Cadmium Green"],["1852","#7988B9","Cobalt"],["1853","#FEE9CE","Light Apricot"],["1854","#CB9BA3","Rain Barrel"],["1855","#EBC8AA","Coffee with Cream"],["1856","#CB6C5E","Burnt Orange"],["1857","#AE695A","Chocolate Lab"],["1858","#8A5556","Chestnut"],["1859","#72525C","Dark Chocolate"],["1860","#89837A","Pussy Willow"],["1861","#CFBF6C","Palomino"],["1862","#6F6A62","Rhino"],["1863","#BBB9A0","Chamois"],["1866","#CFCB82","Buff"],["1867","#BED469","Fluorescent Green"],["1868","#56B7B0","Bottle Green"],["1869","#BA752F","Pumpkin Spice"],["1870","#FDDEAD","Orange Sorbet"],["1871","#6D99BD","Porcelain Blue"],["1872","#97736C","Brunette"],["1874","#819CC1","Baby Blue"],["1878","#E84B55","Tomato Red"],["1879","#48919E","Oregon Green"],["1880","#AB569A","Deep Lilac"],["1882","#FDEFDB","Peach Bloosom"],["1883","#D9CD22","Fluorescent Yellow"],["1884","#F8E2CC","Burly Wood"],["1885","#E0B29A","Camel"],["1886","#AFABB0","Light Steel"],["1887","#8B5768","Mince Pie"],["1888","#53BADB","Deep Sky Blue"],["1890","#4086AC","Midnight Green"],["1891","#5B6A90","Teal Velvet"],["1892","#AADBEA","Robin\u2019s Egg"],["1893","#7ECCEF","Sky Blue"],["1895","#46AADC","Teal Blue"],["1896","#3782BA","Liberty"],["1898","#C6645B","Auburn"],["1899","#CE6063","Henna"],["1900","#CBE0CD","Celadon"],["1901","#41853C","Fluorescent Green"],["1902","#6D6664","Hunter Green"],["1903","#7A6E72","Spruce Green"],["1904","#617E6C","Dark Sage"],["1905","#6C6B62","Moss Green"],["1906","#937367","Antique Bronze"],["1907","#DE2C35","Fluorescent Pink"],["1908","#E73D48","Fluorescent Pink"],["1909","#EF8DB5","Electric Pink"],["1910","#E84D7D","Electric Magenta"],["1911","#EFD4E7","Evening Mist"],["1915","#F9D7E3","Bermuda Sand"],["1917","#EF8DA7","Dusty Rose"],["1918","#787B81","Polished Pewter"],["1919","#D46B88","English Rose"],["1920","#F4E8B5","Light Khaki"],["1921","#F4C3DB","Bubble Gum Pink"],["1922","#7F5096","Regal Purple"],["1923","#FEE36A","Apricot"],["1924","#D4BE1F","Lemon Tart"],["1925","#E9AA22","Fluorescent Yellow Orange"],["1926","#D6A091","Dark Champagne"],["1927","#FDE5C5","Shiny Penny"],["1928","#BEA59C","Natural Suede"],["1929","#A48688","Brown Hare"],["1930","#7A61A5","Bahamas Blue"],["1931","#73505B","Bittersweet Chocolate"],["1932","#B0DEF3","Summer Sky"],["1933","#9C9BCB","Lavender Lilac"],["1934","#343D76","Royal Blue"],["1935","#C5D33E","Fluorescent Yellow Green"],["1936","#B49794","Mink"],["1937","#F0852A","Fluorescent Orange"],["1938","#F0E0D6","Doe Skin"],["1939","#CEA88A","Peanut Brittle"],["1940","#E7E56B","Key Lime"],["1941","#E7A7B6","Mauve"],["1942","#B86872","Rose Gold"],["1943","#8983BB","Dark Periwinkle"],["1944","#61536C","Blueberry Smash"],["1945","#896963","Sienna"],["1946","#E84A2E","Fluorescent Orange"],["1947","#E23030","Fluorescent Orange Pink"],["1948","#F4BBD4","Pink Carnation"],["1949","#FFFFFF","Ivory"],["1950","#58AD3E","Fluorescent Green"],["1951","#D8C474","Pumpkin Chiffon"],["1952","#F2947E","Melon Burst"],["1953","#A2B9CC","Powder Blue"],["1954","#E63B38","Fluorescent Orange Pink"],["1955","#D88F2A","Citrus Burst"],["1956","#C4A780","Olive Green"],["1957","#302B26","Burnt Taupe"],["1958","#A1616A","Cedar Bark"],["1959","#C2AE4D","Burnished Gold"],["1960","#677C96","Dusty Blue"],["1961","#475069","Blue Spruce"],["1962","#53536E","Admiral Blue"],["1963","#373748","Dusty Plum"],["1964","#41445B","Stormy Sky Blue"],["1965","#EF8154","Orange Peel"],["1966","#624F79","Pea Coat"],["1967","#5B5275","Dark Denim"],["1968","#91C087","Green Tea"],["1969","#9A7B73","Army Green"],["1970","#7C786E","Emerald Ink"],["1971","#D9AA2C","Saffron"],["1972","#E18A21","Fluorescent Yellow Orange"],["1973","#D98C6D","Bronze"],["1974","#BD5F68","Cinnamon Stick"],["1975","#313652","Colonial Blue"],["1976","#6A516A","Night Sky"],["1977","#448ECA","Peacock Blue"],["1978","#EC6037","Fluorescent Orange"],["1979","#517279","Dark Amazon"],["1980","#D6B62A","Sunflower"],["1981","#C55264","Carmine"],["1982","#C74D5D","Sangria"],["1983","#915A70","Eggplant"],["1984","#E95381","Orchid"],["1985","#546E80","Deep Rain Forest"],["1986","#E84D71","Ripe Raspberry"],["1987","#E95454","Paprika"],["1988","#5CAF82","Kelly Green"],["1989","#66BDA6","Leaf"],["1990","#ED7EAE","Pink Rose"],["1991","#417FA9","Malachite"],["1992","#436797","Rough Caribbean Sea"],["1993","#E9547D","Watermelon"],["1994","#EC6E93","Lipstick Rose"],["1995","#D3D527","Fluorescent Yellow"],["1996","#645E6A","Deep Emerald"],["1997","#6D4C5D","Plum Pudding"],["1998","#B77E92","Dark Mauve"],["1999","#9F505D","Raisin"]];
+const STOCK=new Set(["1516","1526","1538","1545","1550","1557","1560","1597","1610","1613","1623","1624","1637","1648","1649","1651","1652","1653","1657","1661","1668","1670","1671","1678","1687","1694","1729","1745","1747","1754","1761","1765","1772","1785","1792","1798","1800","1801","1802","1803","1805","1811","1812","1815","1824","1839","1841","1842","1843","1850","1880","1902","1911","1918","1922","1923","1934","1938","1943","1946","1960","1961","1967","1977","1983","1984","1988","1990","1995"]);
+function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+let MODE=lsGet("mi_mode")||"ink";
+/* ---------- THREAD MODE (Madeira Polyneon #40) ---------- */
+const thrAll = THREADS.filter(t=>!t[3]).map(t=>({n:t[0],hex:t[1],name:t[2],lab:rgb2lab(...hex2rgb(t[1])),stock:STOCK.has(t[0])}));
+const thrStock = thrAll.filter(t=>t.stock);
+function rankThread(lab,pool,k){ return pool.map(t=>({...t,de:de2000(lab,t.lab)})).sort((a,b)=>a.de-b.de).slice(0,k); }
+function nearestInk(lab){ let best=null; for(const i of inkLabs){ const d=de2000(lab,i.lab); if(!best||d<best.de) best={...i,de:d}; } return best; }
+function thrLabel(t){ return t.n+(t.name?" "+t.name:""); }
+function thrRow(t,target,first,showAdd){
+  const q=quality(t.de);
+  return '<div class="match'+(first?' best':'')+'" data-copy="'+thrLabel(t)+'" title="Click to copy">'
+    +'<div class="match-sw" style="background:'+t.hex+'"></div>'
+    +'<div style="min-width:0"><div class="match-name">'+t.n+(t.stock?' <span class="badge-in">on the shelf</span>':'')+'</div>'
+    +'<div class="match-meta">'+(t.name||'&mdash;')+' &bull; '+t.hex.toUpperCase()+'</div>'
+    +(first?'<div class="compare" style="width:180px"><div style="background:'+target+'"></div><div style="background:'+t.hex+'"></div></div>':'')
+    +(showAdd&&!t.stock?'<button class="addbtn" data-add="'+t.n+'">+ order list</button>':'')
+    +'</div><div class="match-de"><div class="acc-num">'+acc(t.de)+'%</div><div class="de-num">&Delta;E '+t.de.toFixed(1)+'</div><div class="de-label '+q[1]+'">'+q[0]+'</div></div></div>';
+}
+function matchThread(hex){
+  hex=hex.trim(); if(!hex.startsWith("#"))hex="#"+hex;
+  if(!/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)){ alert("That doesn't look like a hex code (e.g. #1a6b3c)"); return; }
+  const lab=rgb2lab(...hex2rgb(hex));
+  const have=rankThread(lab,thrStock,3), all=rankThread(lab,thrAll,3);
+  const ink=nearestInk(lab);
+  document.getElementById("results").style.display="block";
+  document.getElementById("tsw").style.background=hex;
+  document.getElementById("thex").textContent=hex.toUpperCase();
+  const same = have.length && all.length && have[0].n===all[0].n;
+  document.getElementById("matchlist").innerHTML =
+     '<div class="cols">'
+    +'<div class="col"><div class="col-h">Best you have</div>'+ (have.length?have.map((t,i)=>thrRow(t,hex,i===0,false)).join(""):'<div class="match-meta">No stocked cones loaded.</div>') +'</div>'
+    +'<div class="col"><div class="col-h">Closest Madeira makes</div>'+ all.map((t,i)=>thrRow(t,hex,i===0,true)).join("") +'</div>'
+    +'</div>'
+    +(same?'<div class="verdict good">You already have the closest Polyneon there is &mdash; '+thrLabel(have[0])+'.</div>'
+          :'<div class="verdict">Your best cone is '+thrLabel(have[0])+' at '+acc(have[0].de)+'%. '+thrLabel(all[0])+' would get you to '+acc(all[0].de)+'%.</div>')
+    +'<div class="xref">Closest screen-print ink we stock: <b>'+dispName(ink.code)+'</b> ('+ink.block+', '+acc(ink.de)+'%) &mdash; use it to keep print and embroidery on the same job matched.</div>';
+  saveHist(hex);
+  document.getElementById("results").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+/* ---------- order list ---------- */
+function getOrder(){ try{return JSON.parse(lsGet("mi_order")||"[]");}catch(e){return[];} }
+function setOrder(a){ lsSet("mi_order",JSON.stringify(a)); renderOrder(); }
+function addOrder(n){ const a=getOrder(); if(!a.includes(n)){ a.push(n); setOrder(a);} else renderOrder(); }
+function renderOrder(){
+  const a=getOrder(), p=document.getElementById("orderpanel");
+  p.style.display=(MODE==="thread"&&a.length)?"block":"none";
+  if(!a.length) return;
+  document.getElementById("orderlist").innerHTML=a.map(n=>{
+    const t=thrAll.find(x=>x.n===n)||{n:n,hex:"#ccc",name:""};
+    return '<div class="ord"><span class="ord-sw" style="background:'+t.hex+'"></span><b>'+t.n+'</b> '+(t.name||'')+'<button class="rm" data-rm="'+n+'" title="Remove">&times;</button></div>';
+  }).join("");
+}
+document.getElementById("orderlist").addEventListener("click",e=>{
+  const n=e.target.dataset.rm; if(n) setOrder(getOrder().filter(x=>x!==n));
+});
+document.getElementById("ordcopy").onclick=()=>{
+  const txt=getOrder().map(n=>{ const t=thrAll.find(x=>x.n===n); return "Polyneon 40 #"+n+(t&&t.name?" "+t.name:""); }).join("\n");
+  const b=document.getElementById("ordcopy");
+  const done=()=>{ b.textContent="✓ Copied"; setTimeout(()=>b.textContent="Copy order list",1800); };
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done));
+  else fallbackCopy(txt,done);
+};
+document.getElementById("ordclear").onclick=()=>{ if(confirm("Clear the order list?")) setOrder([]); };
+/* ---------- multi-colour artwork breakdown ---------- */
+function artColors(max){
+  if(!cv.width) return [];
+  const d=ctx.getImageData(0,0,cv.width,cv.height).data, buckets=new Map();
+  const step=Math.max(1,Math.floor(Math.sqrt(cv.width*cv.height/40000)));
+  let tot=0;
+  for(let y=0;y<cv.height;y+=step) for(let x=0;x<cv.width;x+=step){
+    const i=(y*cv.width+x)*4; if(d[i+3]<128) continue;
+    const k=((d[i]>>3)<<10)|((d[i+1]>>3)<<5)|(d[i+2]>>3);
+    const b=buckets.get(k)||[0,0,0,0]; b[0]+=d[i]; b[1]+=d[i+1]; b[2]+=d[i+2]; b[3]++; buckets.set(k,b); tot++;
+  }
+  let list=[...buckets.values()].filter(b=>b[3]/tot>0.004)
+    .map(b=>({rgb:[b[0]/b[3],b[1]/b[3],b[2]/b[3]],share:b[3]/tot}))
+    .sort((a,b)=>b.share-a.share);
+  const out=[];
+  for(const c of list){
+    const lab=rgb2lab(...c.rgb);
+    if(out.some(o=>de2000(lab,o.lab)<9)){ continue; }
+    out.push({...c,lab,hex:"#"+c.rgb.map(v=>Math.round(v).toString(16).padStart(2,"0")).join("")});
+    if(out.length>=max) break;
+  }
+  return out;
+}
+document.getElementById("breakdown").onclick=()=>{
+  const cols=artColors(8);
+  const box=document.getElementById("bdout");
+  if(!cols.length){ box.innerHTML='<div class="match-meta">Load some artwork first.</div>'; return; }
+  box.innerHTML='<div class="col-h" style="margin-top:14px">Thread call-out, colour by colour</div>'+cols.map(c=>{
+    const have=rankThread(c.lab,thrStock,1)[0], all=rankThread(c.lab,thrAll,1)[0];
+    return '<div class="bd"><span class="bd-sw" style="background:'+c.hex+'"></span>'
+      +'<span class="bd-hex">'+c.hex.toUpperCase()+'</span>'
+      +'<span class="bd-t">have: <b>'+(have?thrLabel(have):'&mdash;')+'</b> <i>'+(have?acc(have.de)+'%':'')+'</i></span>'
+      +'<span class="bd-t">closest: <b>'+thrLabel(all)+'</b> <i>'+acc(all.de)+'%</i>'+(all.stock?'':' <button class="addbtn" data-add="'+all.n+'">+ order list</button>')+'</span>'
+      +'</div>';
+  }).join("");
+};
+/* ---------- mode switch ---------- */
+function setMode(m){
+  MODE=m; lsSet("mi_mode",m);
+  document.getElementById("tab-ink").classList.toggle("on",m==="ink");
+  document.getElementById("tab-thread").classList.toggle("on",m==="thread");
+  document.getElementById("sub").innerHTML = m==="ink"
+    ? 'Finds the closest match from the 238 Pantones we stock &bull; CIEDE2000 colour distance &bull; B# = storage block'
+    : 'Madeira Polyneon #40 &bull; '+STOCK.size+' cones on the shelf, all 432 shades Madeira makes &bull; CIEDE2000 colour distance';
+  document.getElementById("reslabel").textContent = m==="ink" ? "Closest inks we stock" : "Closest thread";
+  document.getElementById("reshint").innerHTML = m==="ink"
+    ? 'Click a match to copy its label (e.g. &ldquo;7421 Maroon&rdquo;) for the film.'
+    : 'Click a match to copy its label (e.g. &ldquo;1747 Candy Apple Red&rdquo;).';
+  document.getElementById("footer-ink").style.display = m==="ink"?"block":"none";
+  document.getElementById("footer-thread").style.display = m==="thread"?"block":"none";
+  document.getElementById("bdwrap").style.display = m==="thread"?"block":"none";
+  document.getElementById("bdout").innerHTML="";
+  document.getElementById("results").style.display="none";
+  renderOrder();
+}
+document.getElementById("tab-ink").onclick=()=>setMode("ink");
+document.getElementById("tab-thread").onclick=()=>setMode("thread");
+document.addEventListener("click",e=>{ const n=e.target.dataset&&e.target.dataset.add; if(n){ e.stopPropagation(); addOrder(n); e.target.textContent="✓ added"; } },true);
+function match(hex){ return MODE==="thread" ? matchThread(hex) : matchInk(hex); }
+setMode(MODE);
 </script>
 </body>
 </html>
