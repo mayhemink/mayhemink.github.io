@@ -5,21 +5,38 @@
 @media(min-width:900px){.sizes{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(min-width:700px) and (max-height:900px){header{padding:10px 24px}.pilot{padding-top:5px;padding-bottom:5px}main{padding-top:12px;padding-bottom:14px}.board-title h1{font-size:24px}.board-title p{font-size:13px}.lane{max-height:calc(100dvh - 222px);overflow-y:auto;scrollbar-width:thin}.lane-top{position:sticky;top:-20px;background:var(--panel);padding:5px 0;z-index:1}.empty{min-height:350px}.lane-top button{min-height:44px;font-size:13px}.stats strong{font-size:30px}.stats span{font-size:12px}.intro .art{width:90px;flex-basis:90px}.intro .art img{width:70px;height:60px}}
 .compare{width:100%;border-collapse:collapse;font-size:14px}.compare th,.compare td{padding:9px;text-align:left;border-bottom:1px solid var(--line)}
+
+.board-tools{display:flex;align-items:center;gap:12px}.board-tools .muted{font-size:12px}#load-test{color:var(--blue);background:var(--blue-bg)}#scope{margin-bottom:10px}@media(max-width:800px){.board-tools{align-items:flex-end;flex-direction:column;gap:5px}}
 </style></head>
 <body><header><div class="brand">MAYHEM <span>INK</span><small>CATCHER</small></div><div class="header-actions"><label class="name-label">Catching today<input id="catcher-name" placeholder="Your name" maxlength="60" autocomplete="given-name"></label><button id="export">Save a backup</button><button id="help" aria-label="How to use Catcher">?</button></div></header>
 <div class="pilot"><span><strong>SHOP TRIAL</strong> <span id="save-status" role="status">Counts save on this device only</span></span><div><button id="reset-practice" hidden>Reset examples</button> <button id="practice">Try example jobs</button></div></div>
 <div id="notice" role="status" class="notice" hidden></div>
-<main><div class="board-title"><div><h1>On the belt.</h1><p>Two locations. Every size accounted for.</p></div><span id="week-label" class="muted"></span></div><div id="lanes" class="lanes" aria-label="Active catcher cards"></div></main>
+<main><div class="board-title"><div><h1>On the belt.</h1><p>Two locations. Every size accounted for.</p></div><div class="board-tools"><button id="load-test" hidden>Load #6385 test</button><span id="week-label" class="muted"></span></div></div><div id="lanes" class="lanes" aria-label="Active catcher cards"></div></main>
 <footer>Expected = this run’s order quantity. Enter the total caught for each size.<span id="source-date"></span></footer>
-<dialog id="picker"><div class="dialog-head"><h2 id="picker-title">Choose a location</h2><button data-close aria-label="Close job picker">✕</button></div><label class="sr" for="search">Search jobs and locations</label><input id="search" type="search" placeholder="Search job, customer, or location"><label class="sr" for="day">Scheduled day</label><select id="day"></select><div id="job-list"></div></dialog>
+<dialog id="picker"><div class="dialog-head"><h2 id="picker-title">Choose a location</h2><button data-close aria-label="Close job picker">✕</button></div><label class="sr" for="search">Search jobs and locations</label><input id="search" type="search" placeholder="Search job, customer, or location"><label class="sr" for="scope">Job list</label><select id="scope"><option value="test">Invoice 6385 test · Orange WOLFBOX + ST460LS</option><option value="all">All scheduled jobs</option></select><label class="sr" for="day">Scheduled day</label><select id="day"></select><div id="job-list"></div></dialog>
 <dialog id="count-dialog"><form id="count-form"><div class="dialog-head"><div><p id="count-context" class="eyebrow"></p><h2 id="count-title"></h2></div><button type="button" data-close aria-label="Close count entry">✕</button></div><p id="count-expected"></p><label for="actual">Total good pieces caught</label><input id="actual" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="6" placeholder="Enter count"><div class="keypad" aria-label="Count keypad"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><button type="button" data-digit="clear">Clear</button><button type="button" data-digit="0">0</button><button type="button" data-digit="back" aria-label="Backspace">⌫</button></div><div id="correction"><label for="reason">Reason for changing this count</label><input id="reason" maxlength="180" placeholder="Recount, found another bundle…"></div><p id="count-error" class="warning" role="alert"></p><div class="actions"><button id="uncount" type="button">Mark uncounted</button><button class="primary" type="submit">Save count</button></div></form></dialog>
 <dialog id="detail-dialog"><div class="dialog-head"><h2 id="detail-title"></h2><button data-close aria-label="Close details">✕</button></div><div id="detail-body"></div></dialog>
 <dialog id="issue-dialog"><form id="issue-form"><div class="dialog-head"><h2>Flag a problem</h2><button type="button" data-close aria-label="Close problem form">✕</button></div><p id="issue-context"></p><label for="issue-size">Garment / size</label><select id="issue-size"></select><label for="issue-type">What happened?</label><select id="issue-type"><option>Damaged blank</option><option>Print needs checking / reprint</option><option>Missing pieces</option><option>Other</option></select><label for="issue-qty">Pieces affected</label><input id="issue-qty" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" value="1"><label for="issue-note">Note</label><textarea id="issue-note" rows="2" maxlength="300" placeholder="What should the printer or office know?"></textarea><p>Flagging a problem does not change the good-piece count.</p><p id="issue-error" role="alert" class="warning"></p><button type="submit" class="primary wide">Save problem</button></form></dialog>
 <script id="catcher-data" type="application/json">{
   "schema": 1,
   "week": "2026-08-31",
-  "generatedAt": "2026-09-07T05:11:31.166Z",
+  "generatedAt": "2026-09-07T14:10:42.156Z",
   "source": "Printavo order quantities",
+  "testPreset": {
+    "id": "6385-2026-09-07",
+    "label": "Invoice 6385 test",
+    "runIds": [
+      "23955982:26413656:6385-29-wolfbox-front:orange",
+      "23955982:26464286:6385-44-wolfbox-back:orange",
+      "23955982:26010633:6385-6-camo-front",
+      "23955982:26010634:6385-7-camo-sleeve",
+      "23955982:26010635:6385-8-camo-back"
+    ],
+    "lanes": [
+      "23955982:26413656:6385-29-wolfbox-front:orange",
+      "23955982:26010633:6385-6-camo-front"
+    ]
+  },
   "cards": [
     {
       "id": "6355-back-6c",
@@ -4638,7 +4655,7 @@
     {
       "id": "6385-6-camo-front",
       "job": "6385",
-      "customer": "Trail Hero",
+      "customer": "TRAIL HERO · ST460LS long sleeves",
       "day": "2026-09-04",
       "location": "IMPRINT #6385-6 — TRAIL HERO badge front, 1c (ST460LS Digi Camo LS)",
       "expected": 366,
@@ -4979,7 +4996,7 @@
     {
       "id": "6385-7-camo-sleeve",
       "job": "6385",
-      "customer": "Trail Hero",
+      "customer": "TRAIL HERO · ST460LS long sleeves",
       "day": "2026-09-04",
       "location": "IMPRINT #6385-7 — camo TRAIL HERO sleeve, 1c",
       "expected": 366,
@@ -5320,7 +5337,7 @@
     {
       "id": "6385-8-camo-back",
       "job": "6385",
-      "customer": "Trail Hero",
+      "customer": "TRAIL HERO · ST460LS long sleeves",
       "day": "2026-09-04",
       "location": "IMPRINT #6385-8 — camo BUILT DIFFERENT back, 1c",
       "expected": 366,
@@ -6480,6 +6497,134 @@
       "batchId": "51706027",
       "runId": "23955982:26464285:6385-43-blue-back",
       "artworkLabel": "Shared job mockup — match the location above"
+    },
+    {
+      "id": "6385-29-wolfbox-front-orange",
+      "job": "6385",
+      "customer": "WOLFBOX · Orange shirts",
+      "day": "2026-09-03",
+      "location": "IMPRINT #6385-29 — WOLFBOX front, 1c · Orange only",
+      "expected": 8,
+      "scheduleSignature": "[\"6385\",\"IMPRINT #6385-29 — WOLFBOX front, 1c\",48]",
+      "groups": [
+        {
+          "id": "51706028:106022767",
+          "style": "3600",
+          "color": "Orange",
+          "sizes": [
+            {
+              "id": "51706028:106022767:M",
+              "label": "M",
+              "expected": 2,
+              "sources": [
+                {
+                  "lineItemId": "106022767",
+                  "size": "size_m",
+                  "expected": 2
+                }
+              ]
+            },
+            {
+              "id": "51706028:106022767:L",
+              "label": "L",
+              "expected": 4,
+              "sources": [
+                {
+                  "lineItemId": "106022767",
+                  "size": "size_l",
+                  "expected": 4
+                }
+              ]
+            },
+            {
+              "id": "51706028:106022767:XL",
+              "label": "XL",
+              "expected": 2,
+              "sources": [
+                {
+                  "lineItemId": "106022767",
+                  "size": "size_xl",
+                  "expected": 2
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "106022767"
+          ]
+        }
+      ],
+      "image": "https://cdn.filepicker.io/NzBBSK9YQ1ujK77KMPzF?cache=true+.png",
+      "orderId": "23955982",
+      "imprintId": "26413656",
+      "batchId": "51706028",
+      "runId": "23955982:26413656:6385-29-wolfbox-front:orange",
+      "artworkLabel": "Print location artwork",
+      "scheduleRowId": "6385-29-wolfbox-front"
+    },
+    {
+      "id": "6385-44-wolfbox-back-orange",
+      "job": "6385",
+      "customer": "WOLFBOX · Orange shirts",
+      "day": "2026-09-03",
+      "location": "IMPRINT #6385-44 — WOLFBOX back, 1c · Orange only",
+      "expected": 8,
+      "scheduleSignature": "[\"6385\",\"IMPRINT #6385-44 — WOLFBOX back, 1c\",48]",
+      "groups": [
+        {
+          "id": "51706028:106022767",
+          "style": "3600",
+          "color": "Orange",
+          "sizes": [
+            {
+              "id": "51706028:106022767:M",
+              "label": "M",
+              "expected": 2,
+              "sources": [
+                {
+                  "lineItemId": "106022767",
+                  "size": "size_m",
+                  "expected": 2
+                }
+              ]
+            },
+            {
+              "id": "51706028:106022767:L",
+              "label": "L",
+              "expected": 4,
+              "sources": [
+                {
+                  "lineItemId": "106022767",
+                  "size": "size_l",
+                  "expected": 4
+                }
+              ]
+            },
+            {
+              "id": "51706028:106022767:XL",
+              "label": "XL",
+              "expected": 2,
+              "sources": [
+                {
+                  "lineItemId": "106022767",
+                  "size": "size_xl",
+                  "expected": 2
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "106022767"
+          ]
+        }
+      ],
+      "image": "/data/mocks/2026-08-31/6385_6.jpg",
+      "orderId": "23955982",
+      "imprintId": "26464286",
+      "batchId": "51706028",
+      "runId": "23955982:26464286:6385-44-wolfbox-back:orange",
+      "artworkLabel": "Shared job mockup — match the location above",
+      "scheduleRowId": "6385-44-wolfbox-back"
     }
   ]
 }</script><script>(function(root,factory){const api=factory();if(typeof module==='object')module.exports=api;else root.CatcherCore=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
@@ -6510,7 +6655,7 @@ const STORE='mayhem-catcher-v1',DEMO='mayhem-catcher-practice-v1';
 let practice=false,key=STORE,db={schema:1,records:{},lanes:[null,null],actor:'',version:0},manifest,cards=[],selection,issueLane,pickerLane,storageBlocked=false,renderedIds=[],sharedHooks=null;
 const examples=[{id:'example-front',runId:'example-front',job:'EXAMPLE A',customer:'Trail Hero',location:'Front left chest · example print run',expected:56,groups:[{id:'example-a',style:'SS4500Z',color:'Army Heather',sizes:[{id:'a-s',label:'S',expected:14},{id:'a-m',label:'M',expected:18},{id:'a-l',label:'L',expected:24}]}]},{id:'example-back',runId:'example-back',job:'EXAMPLE B',customer:'Take it Easy',location:'Full back · example print run',expected:29,groups:[{id:'example-b',style:'1301GD',color:'Faded Bone',sizes:[{id:'b-s',label:'S',expected:4},{id:'b-m',label:'M',expected:10},{id:'b-l',label:'L',expected:15}]}]}];
 function tell(message){$('notice').textContent=message;$('notice').hidden=!message;}
-function load(){storageBlocked=false;try{const saved=localStorage.getItem(key);db=saved?JSON.parse(saved):{schema:1,records:{},lanes:practice?examples.map(c=>c.runId):[null,null],actor:'',version:0};if(db.schema!==1||!db.records||!Array.isArray(db.lanes))throw Error('Invalid save');}catch(e){storageBlocked=true;tell('Saved counts could not be opened. Nothing has been overwritten. Save a backup before continuing.');} $('catcher-name').value=db.actor||'';$('save-status').textContent=practice?'Example counts · saved on this device':'Counts save on this device only';}
+function load(){storageBlocked=false;try{const saved=localStorage.getItem(key);db=saved?JSON.parse(saved):{schema:1,records:{},lanes:practice?examples.map(c=>c.runId):(manifest.testPreset?.lanes||[null,null]),testFocus:!practice&&!!manifest.testPreset,actor:'',version:0};if(db.schema!==1||!db.records||!Array.isArray(db.lanes))throw Error('Invalid save');}catch(e){storageBlocked=true;tell('Saved counts could not be opened. Nothing has been overwritten. Save a backup before continuing.');} $('catcher-name').value=db.actor||'';$('save-status').textContent=practice?'Example counts · saved on this device':'Counts save on this device only';}
 function persist(next){
  if(storageBlocked)throw Error('Storage is unavailable. Save a backup before continuing.');
  const stored=localStorage.getItem(key);if(stored&&JSON.parse(stored).version!==db.version)throw Error('Another tab changed these counts. Reload to pick up its latest save.');
@@ -6523,8 +6668,8 @@ function record(card){return db.records[card.runId]||C.blank(card);}
 function blocked(card){if(card.blocked)return card.blocked;if(db.conflicts?.[card.runId])return 'Another device saved a different count. Use Connect / review to compare before continuing.';const r=db.records[card.runId];if(r&&r.fingerprint!==C.fingerprint(card))return 'Order sizes changed after counting began. Keep the saved count and ask the office to review this run.';return '';}
 function render(){
  const scroll=[...$('lanes').children].map(el=>el.scrollTop);
- $('reset-practice').hidden=!practice;
- $('practice').textContent=practice?'Back to scheduled jobs':'Try example jobs';$('week-label').textContent=practice?'Practice · made-up counts':('Week of '+manifest.week);$('source-date').textContent=practice?'Practice counts are kept separate.':'Order sizes loaded '+new Date(manifest.generatedAt).toLocaleDateString();
+ $('reset-practice').hidden=!practice;$('load-test').hidden=practice||!manifest.testPreset;
+ $('practice').textContent=practice?'Back to scheduled jobs':'Try example jobs';$('week-label').textContent=practice?'Practice · made-up counts':(db.testFocus&&manifest.testPreset?'#6385 · Orange + ST460LS':'Week of '+manifest.week);$('source-date').textContent=practice?'Practice counts are kept separate.':'Order sizes loaded '+new Date(manifest.generatedAt).toLocaleDateString();
  $('lanes').innerHTML=[0,1].map(lane=>{
  const card=cardAt(lane),letter='AB'[lane];if(!card)return `<section class="lane empty" aria-label="Card ${letter}"><span class="eyebrow">CARD ${letter}</span><div class="empty-symbol">＋</div><h2>Ready for a run.</h2><p>Choose a job and the exact location coming down the belt.</p><button class="primary" data-action="choose" data-lane="${lane}">Choose location ${letter}</button></section>`;
  const r=record(card),s=C.summary(card,r),lock=blocked(card);const state=r.finishedAt?(s.exact?'Location matched':'Finished · differences'):s.checked?'Counting':'Ready to count';
@@ -6538,8 +6683,8 @@ function render(){
  [...$('lanes').children].forEach((el,i)=>{if(renderedIds[i]===db.lanes[i])el.scrollTop=scroll[i]||0;});renderedIds=[...db.lanes];
  $('lanes').querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>{img.hidden=true;img.nextElementSibling.lastChild.textContent=' Image unavailable — tap to retry.';},{once:true}));
 }
-function openPicker(lane){pickerLane=lane;$('picker-title').textContent='Choose location for card '+'AB'[lane];$('search').value='';const days=[...new Set(cards.map(c=>c.day).filter(Boolean))];$('day').innerHTML='<option value="">All scheduled days</option>'+days.map(d=>`<option>${esc(d)}</option>`).join('');listJobs();$('picker').showModal();}
-function listJobs(){const q=$('search').value.toLowerCase(),day=$('day').value;const matches=cards.filter(c=>(!day||c.day===day)&&[c.job,c.customer,c.location].join(' ').toLowerCase().includes(q));$('job-list').innerHTML=matches.length?matches.map(c=>{const assigned=db.lanes[1-pickerLane]===c.runId;return `<button class="job" data-run="${esc(c.runId)}" ${assigned?'disabled':''}><strong>#${esc(c.job)} · ${esc(c.customer)}</strong><span>${esc(c.location)}</span><span>${c.expected} pieces · ${esc(c.day||'Example')} ${record(c).finishedAt?'· Location finished':''}</span>${assigned?'<em>Already on the other card</em>':blocked(c)?`<em>${esc(blocked(c))}</em>`:''}</button>`;}).join(''):'<p>No matching locations.</p>';}
+function openPicker(lane){pickerLane=lane;$('picker-title').textContent='Choose location for card '+'AB'[lane];$('search').value='';$('scope').hidden=practice||!manifest.testPreset;$('scope').value=!practice&&db.testFocus?'test':'all';const days=[...new Set(cards.map(c=>c.day).filter(Boolean))];$('day').innerHTML='<option value="">All scheduled days</option>'+days.map(d=>`<option>${esc(d)}</option>`).join('');listJobs();$('picker').showModal();}
+function listJobs(){const q=$('search').value.toLowerCase(),day=$('day').value;const testOnly=!practice&&$('scope').value==='test';$('day').hidden=testOnly;const matches=cards.filter(c=>(!testOnly||manifest.testPreset?.runIds.includes(c.runId))&&(testOnly||!day||c.day===day)&&[c.job,c.customer,c.location,...c.groups.map(g=>g.style+' '+g.color)].join(' ').toLowerCase().includes(q));$('job-list').innerHTML=matches.length?matches.map(c=>{const assigned=db.lanes[1-pickerLane]===c.runId;return `<button class="job" data-run="${esc(c.runId)}" ${assigned?'disabled':''}><strong>#${esc(c.job)} · ${esc(c.customer)}</strong><span>${esc(c.location)}</span><span>${c.expected} pieces · ${esc(testOnly?'Invoice 6385 test':c.day||'Example')} ${record(c).finishedAt?'· Location finished':''}</span>${assigned?'<em>Already on the other card</em>':blocked(c)?`<em>${esc(blocked(c))}</em>`:''}</button>`;}).join(''):'<p>No matching locations.</p>';}
 function openCount(lane,cellId,fill){const card=cardAt(lane),cell=C.cells(card).find(c=>c.id===cellId),group=card.groups.find(g=>g.sizes.includes(cell)),r=record(card);selection={lane,cellId};$('count-context').textContent='#'+card.job+' · '+card.location;$('count-title').textContent=cell.label+' · '+group.style;$('count-expected').textContent=group.color+' · Expected '+cell.expected;$('actual').value=fill??r.counts[cellId]??'';$('reason').value='';$('correction').hidden=r.counts[cellId]===null||r.counts[cellId]===undefined;$('uncount').hidden=$('correction').hidden;$('count-error').textContent='';$('count-dialog').showModal();}
 function saveCount(value,method='actual'){try{const card=cardAt(selection.lane),name=actor(),nextRecord=C.edit(card,record(card),{cellId:selection.cellId,value,actor:name,reason:$('reason').value,method});if(change(next=>{next.actor=name;next.records[card.runId]=nextRecord;}))$('count-dialog').close();}catch(e){$('count-error').textContent=e.message;}}
 function exact(lane,cellId){try{const card=cardAt(lane),r=record(card),cell=C.cells(card).find(s=>s.id===cellId);if(r.counts[cellId]===cell.expected){openCount(lane,cellId);return;}if(r.counts[cellId]!==undefined&&r.counts[cellId]!==null){openCount(lane,cellId,cell.expected);return;}const name=actor(),updated=C.edit(card,r,{cellId,value:cell.expected,actor:name,method:'size-check'});change(next=>{next.actor=name;next.records[card.runId]=updated;});}catch(e){tell(e.message);}}
@@ -6549,7 +6694,8 @@ function openIssue(lane){issueLane=lane;const card=cardAt(lane);$('issue-context
 function download(name,body,type){const url=URL.createObjectURL(new Blob([body],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
 $('lanes').addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(!b)return;const lane=Number(b.dataset.lane),card=cardAt(lane);switch(b.dataset.action){case'choose':openPicker(lane);break;case'count':openCount(lane,b.dataset.cell);break;case'exact':exact(lane,b.dataset.cell);break;case'issue':openIssue(lane);break;case'history':history(lane);break;case'art':detail('#'+card.job+' · Artwork',`<p>${esc(card.location)}</p><p class="muted">${esc(card.artworkLabel)}</p><img class="big-art" src="${esc(card.image)}" alt="${esc(card.location)}">`);break;case'finish':try{const name=actor(),finished=C.finish(card,record(card),name);change(next=>{next.actor=name;next.records[card.runId]=finished;});}catch(e){tell(e.message);}break;}});
 $('job-list').addEventListener('click',e=>{const b=e.target.closest('button[data-run]');if(!b)return;if(change(next=>next.lanes[pickerLane]=b.dataset.run))$('picker').close();});
-$('search').addEventListener('input',listJobs);$('day').addEventListener('change',listJobs);
+$('search').addEventListener('input',listJobs);$('day').addEventListener('change',listJobs);$('scope').addEventListener('change',listJobs);
+$('load-test').addEventListener('click',()=>{if(practice||!manifest.testPreset)return;if(change(next=>{next.lanes=[...manifest.testPreset.lanes];next.testFocus=true;}))tell('Invoice 6385 loaded: orange WOLFBOX and ST460LS fronts. Use Change job to choose the back or sleeve. Any earlier counts stay saved.');});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 $('count-form').addEventListener('submit',e=>{e.preventDefault();saveCount($('actual').value);});$('uncount').addEventListener('click',()=>saveCount(null,'clear'));
 document.querySelectorAll('[data-digit]').forEach(b=>b.addEventListener('click',()=>{const i=$('actual'),v=b.dataset.digit;i.value=v==='clear'?'':v==='back'?i.value.slice(0,-1):(i.value+b.dataset.digit).slice(0,6);$('count-error').textContent='';}));
@@ -6562,7 +6708,7 @@ $('practice').addEventListener('click',()=>{practice=!practice;key=practice?DEMO
 $('reset-practice').addEventListener('click',()=>{if(!practice)return;if(change(next=>{next.archivedPractice??=[];next.archivedPractice.push({at:new Date().toISOString(),records:next.records});next.records={};next.lanes=examples.map(c=>c.runId);next.actor='';})){$('catcher-name').value='';tell('Fresh example jobs. Scheduled-job counts are unchanged.');}});
 $('help').addEventListener('click',()=>detail('Catch. Count. Confirm.',`<ol class="help-list"><li>Enter your name and choose up to two print locations.</li><li>Count the bundle by size. Tap <strong>✓ All caught</strong> when it matches, or tap the size to enter the actual total.</li><li>Enter <strong>0</strong> when you counted none. An empty size means it has not been counted yet.</li><li>Flag damaged blanks or print problems separately. Good-piece counts do not include those pieces.</li><li>Finish each location when every size is counted. Short or extra counts stay flagged.</li><li>Changing jobs keeps your counts. Changing the catcher’s name records a handoff.</li></ol><p><strong>This trial saves on this device only.</strong> Use one tab and keep a backup. Shared saves and office comparison with Printavo receiving are not connected yet.</p><p>The order sizes are a dated snapshot. Printer completion and receiving status are not changed by this app.</p>`));
 addEventListener('storage',e=>{if(e.key!==key)return;storageBlocked=true;tell('Another tab changed these counts. Reload this tab before entering more; your edits have not been overwritten.');});
-async function init(){try{const r={ok:true,json:async()=>JSON.parse($('catcher-data').textContent)};if(!r.ok)throw Error('Could not load catcher cards.');manifest=await r.json();cards=manifest.cards;load();render();try{const w=await fetch('../data/week.json',{cache:'no-store'});if(w.ok){const latest=await w.json(),rows=C.scheduleRows(latest),map=new Map(rows.map(r=>[r.id,r]));for(const card of cards){const live=map.get(card.id);if(!live)card.blocked='This location is no longer on the current schedule. Review it before continuing.';else if(live.scheduleSignature!==card.scheduleSignature)card.blocked='This run changed on the schedule. Its size breakdown needs a refresh.';else card.day=live.day;}if(latest.week!==manifest.week){for(const card of cards)card.blocked='A new schedule week is available. Refresh the order-size data before counting.';tell('The schedule has changed weeks. Saved counts are preserved; order sizes need refreshing.');}render();}}catch(e){tell('Schedule could not be checked. Showing the saved order-size snapshot.');}}catch(e){tell(e.message+' Reload when connected.');}}
+async function init(){try{const r={ok:true,json:async()=>JSON.parse($('catcher-data').textContent)};if(!r.ok)throw Error('Could not load catcher cards.');manifest=await r.json();cards=manifest.cards;load();render();try{const w=await fetch('../data/week.json',{cache:'no-store'});if(w.ok){const latest=await w.json(),rows=C.scheduleRows(latest),map=new Map(rows.map(r=>[r.id,r]));for(const card of cards){const live=map.get(card.scheduleRowId||card.id);if(!live)card.blocked='This location is no longer on the current schedule. Review it before continuing.';else if(live.scheduleSignature!==card.scheduleSignature)card.blocked='This run changed on the schedule. Its size breakdown needs a refresh.';else card.day=live.day;}if(latest.week!==manifest.week){for(const card of cards)card.blocked='A new schedule week is available. Refresh the order-size data before counting.';tell('The schedule has changed weeks. Saved counts are preserved; order sizes need refreshing.');}render();}}catch(e){tell('Schedule could not be checked. Showing the saved order-size snapshot.');}}catch(e){tell(e.message+' Reload when connected.');}}
 init();
 </script></body></html>
 
