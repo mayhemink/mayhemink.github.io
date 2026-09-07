@@ -13,29 +13,34 @@
 <div id="notice" role="status" class="notice" hidden></div>
 <main><div class="board-title"><div><h1>On the belt.</h1><p>Two locations. Every size accounted for.</p></div><div class="board-tools"><button id="load-test" hidden>Load #6385 test</button><span id="week-label" class="muted"></span></div></div><div id="lanes" class="lanes" aria-label="Active catcher cards"></div></main>
 <footer>Expected = this run’s order quantity. Enter the total caught for each size.<span id="source-date"></span></footer>
-<dialog id="picker"><div class="dialog-head"><h2 id="picker-title">Choose a location</h2><button data-close aria-label="Close job picker">✕</button></div><label class="sr" for="search">Search jobs and locations</label><input id="search" type="search" placeholder="Search job, customer, or location"><label class="sr" for="scope">Job list</label><select id="scope"><option value="test">Invoice 6385 test · Orange WOLFBOX + ST460LS</option><option value="all">All scheduled jobs</option></select><label class="sr" for="day">Scheduled day</label><select id="day"></select><div id="job-list"></div></dialog>
+<dialog id="picker"><div class="dialog-head"><h2 id="picker-title">Choose a location</h2><button data-close aria-label="Close job picker">✕</button></div><label class="sr" for="search">Search jobs and locations</label><input id="search" type="search" placeholder="Search job, customer, or location"><label class="sr" for="scope">Job list</label><select id="scope"><option value="test">Invoice 6385 test · 3600M Classic Orange + ST460LS</option><option value="all">All scheduled jobs</option></select><label class="sr" for="day">Scheduled day</label><select id="day"></select><div id="job-list"></div></dialog>
 <dialog id="count-dialog"><form id="count-form"><div class="dialog-head"><div><p id="count-context" class="eyebrow"></p><h2 id="count-title"></h2></div><button type="button" data-close aria-label="Close count entry">✕</button></div><p id="count-expected"></p><label for="actual">Total good pieces caught</label><input id="actual" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="6" placeholder="Enter count"><div class="keypad" aria-label="Count keypad"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><button type="button" data-digit="clear">Clear</button><button type="button" data-digit="0">0</button><button type="button" data-digit="back" aria-label="Backspace">⌫</button></div><div id="correction"><label for="reason">Reason for changing this count</label><input id="reason" maxlength="180" placeholder="Recount, found another bundle…"></div><p id="count-error" class="warning" role="alert"></p><div class="actions"><button id="uncount" type="button">Mark uncounted</button><button class="primary" type="submit">Save count</button></div></form></dialog>
 <dialog id="detail-dialog"><div class="dialog-head"><h2 id="detail-title"></h2><button data-close aria-label="Close details">✕</button></div><div id="detail-body"></div></dialog>
 <dialog id="issue-dialog"><form id="issue-form"><div class="dialog-head"><h2>Flag a problem</h2><button type="button" data-close aria-label="Close problem form">✕</button></div><p id="issue-context"></p><label for="issue-size">Garment / size</label><select id="issue-size"></select><label for="issue-type">What happened?</label><select id="issue-type"><option>Damaged blank</option><option>Print needs checking / reprint</option><option>Missing pieces</option><option>Other</option></select><label for="issue-qty">Pieces affected</label><input id="issue-qty" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" value="1"><label for="issue-note">Note</label><textarea id="issue-note" rows="2" maxlength="300" placeholder="What should the printer or office know?"></textarea><p>Flagging a problem does not change the good-piece count.</p><p id="issue-error" role="alert" class="warning"></p><button type="submit" class="primary wide">Save problem</button></form></dialog>
 <script id="catcher-data" type="application/json">{
   "schema": 1,
   "week": "2026-08-31",
-  "generatedAt": "2026-09-07T14:10:42.156Z",
+  "generatedAt": "2026-09-07T14:16:23.618Z",
   "source": "Printavo order quantities",
   "testPreset": {
-    "id": "6385-2026-09-07",
+    "id": "6385-2026-09-07-classic-orange",
     "label": "Invoice 6385 test",
     "runIds": [
-      "23955982:26413656:6385-29-wolfbox-front:orange",
-      "23955982:26464286:6385-44-wolfbox-back:orange",
+      "23955982:26013023:6385-18-thu-front",
+      "23955982:26013024:6385-19-thu-back",
+      "23955982:26464250:6385-39-thu-sleeve",
       "23955982:26010633:6385-6-camo-front",
       "23955982:26010634:6385-7-camo-sleeve",
       "23955982:26010635:6385-8-camo-back"
     ],
     "lanes": [
-      "23955982:26413656:6385-29-wolfbox-front:orange",
+      "23955982:26013023:6385-18-thu-front",
       "23955982:26010633:6385-6-camo-front"
-    ]
+    ],
+    "correctedLanes": {
+      "23955982:26413656:6385-29-wolfbox-front:orange": "23955982:26013023:6385-18-thu-front",
+      "23955982:26464286:6385-44-wolfbox-back:orange": "23955982:26013024:6385-19-thu-back"
+    }
   },
   "cards": [
     {
@@ -1330,7 +1335,7 @@
     {
       "id": "6385-18-thu-front",
       "job": "6385",
-      "customer": "Trail Hero",
+      "customer": "WOLFBOX · 3600M Classic Orange",
       "day": "2026-09-01",
       "location": "IMPRINT #6385-18 — THURSDAY front, 1 color only (3600M Classic Orange)",
       "expected": 250,
@@ -1443,7 +1448,7 @@
     {
       "id": "6385-19-thu-back",
       "job": "6385",
-      "customer": "Trail Hero",
+      "customer": "WOLFBOX · 3600M Classic Orange",
       "day": "2026-09-01",
       "location": "IMPRINT #6385-19 — THURSDAY back, 1 color only",
       "expected": 250,
@@ -1556,7 +1561,7 @@
     {
       "id": "6385-39-thu-sleeve",
       "job": "6385",
-      "customer": "Trail Hero",
+      "customer": "WOLFBOX · 3600M Classic Orange",
       "day": "2026-09-01",
       "location": "IMPRINT #6385-39 — THURSDAY Left Sleeve, 1c",
       "expected": 250,
@@ -6501,7 +6506,7 @@
     {
       "id": "6385-29-wolfbox-front-orange",
       "job": "6385",
-      "customer": "WOLFBOX · Orange shirts",
+      "customer": "WOLFBOX · 3600 Orange",
       "day": "2026-09-03",
       "location": "IMPRINT #6385-29 — WOLFBOX front, 1c · Orange only",
       "expected": 8,
@@ -6565,7 +6570,7 @@
     {
       "id": "6385-44-wolfbox-back-orange",
       "job": "6385",
-      "customer": "WOLFBOX · Orange shirts",
+      "customer": "WOLFBOX · 3600 Orange",
       "day": "2026-09-03",
       "location": "IMPRINT #6385-44 — WOLFBOX back, 1c · Orange only",
       "expected": 8,
@@ -6655,7 +6660,7 @@ const STORE='mayhem-catcher-v1',DEMO='mayhem-catcher-practice-v1';
 let practice=false,key=STORE,db={schema:1,records:{},lanes:[null,null],actor:'',version:0},manifest,cards=[],selection,issueLane,pickerLane,storageBlocked=false,renderedIds=[],sharedHooks=null;
 const examples=[{id:'example-front',runId:'example-front',job:'EXAMPLE A',customer:'Trail Hero',location:'Front left chest · example print run',expected:56,groups:[{id:'example-a',style:'SS4500Z',color:'Army Heather',sizes:[{id:'a-s',label:'S',expected:14},{id:'a-m',label:'M',expected:18},{id:'a-l',label:'L',expected:24}]}]},{id:'example-back',runId:'example-back',job:'EXAMPLE B',customer:'Take it Easy',location:'Full back · example print run',expected:29,groups:[{id:'example-b',style:'1301GD',color:'Faded Bone',sizes:[{id:'b-s',label:'S',expected:4},{id:'b-m',label:'M',expected:10},{id:'b-l',label:'L',expected:15}]}]}];
 function tell(message){$('notice').textContent=message;$('notice').hidden=!message;}
-function load(){storageBlocked=false;try{const saved=localStorage.getItem(key);db=saved?JSON.parse(saved):{schema:1,records:{},lanes:practice?examples.map(c=>c.runId):(manifest.testPreset?.lanes||[null,null]),testFocus:!practice&&!!manifest.testPreset,actor:'',version:0};if(db.schema!==1||!db.records||!Array.isArray(db.lanes))throw Error('Invalid save');}catch(e){storageBlocked=true;tell('Saved counts could not be opened. Nothing has been overwritten. Save a backup before continuing.');} $('catcher-name').value=db.actor||'';$('save-status').textContent=practice?'Example counts · saved on this device':'Counts save on this device only';}
+function load(){storageBlocked=false;try{const saved=localStorage.getItem(key);db=saved?JSON.parse(saved):{schema:1,records:{},lanes:practice?examples.map(c=>c.runId):(manifest.testPreset?.lanes||[null,null]),testFocus:!practice&&!!manifest.testPreset,actor:'',version:0};if(db.schema!==1||!db.records||!Array.isArray(db.lanes))throw Error('Invalid save');}catch(e){storageBlocked=true;tell('Saved counts could not be opened. Nothing has been overwritten. Save a backup before continuing.');} if(!practice&&!storageBlocked&&db.testFocus&&manifest.testPreset?.correctedLanes){const mapping=manifest.testPreset.correctedLanes;if(db.lanes.some(id=>mapping[id])){if(change(next=>{next.lanes=next.lanes.map(id=>mapping[id]||id);}))tell('Trial corrected to 3600M Classic Orange. Earlier counts remain with their original garments.');}} $('catcher-name').value=db.actor||'';$('save-status').textContent=practice?'Example counts · saved on this device':'Counts save on this device only';}
 function persist(next){
  if(storageBlocked)throw Error('Storage is unavailable. Save a backup before continuing.');
  const stored=localStorage.getItem(key);if(stored&&JSON.parse(stored).version!==db.version)throw Error('Another tab changed these counts. Reload to pick up its latest save.');
@@ -6669,7 +6674,7 @@ function blocked(card){if(card.blocked)return card.blocked;if(db.conflicts?.[car
 function render(){
  const scroll=[...$('lanes').children].map(el=>el.scrollTop);
  $('reset-practice').hidden=!practice;$('load-test').hidden=practice||!manifest.testPreset;
- $('practice').textContent=practice?'Back to scheduled jobs':'Try example jobs';$('week-label').textContent=practice?'Practice · made-up counts':(db.testFocus&&manifest.testPreset?'#6385 · Orange + ST460LS':'Week of '+manifest.week);$('source-date').textContent=practice?'Practice counts are kept separate.':'Order sizes loaded '+new Date(manifest.generatedAt).toLocaleDateString();
+ $('practice').textContent=practice?'Back to scheduled jobs':'Try example jobs';$('week-label').textContent=practice?'Practice · made-up counts':(db.testFocus&&manifest.testPreset?'#6385 · Classic Orange + ST460LS':'Week of '+manifest.week);$('source-date').textContent=practice?'Practice counts are kept separate.':'Order sizes loaded '+new Date(manifest.generatedAt).toLocaleDateString();
  $('lanes').innerHTML=[0,1].map(lane=>{
  const card=cardAt(lane),letter='AB'[lane];if(!card)return `<section class="lane empty" aria-label="Card ${letter}"><span class="eyebrow">CARD ${letter}</span><div class="empty-symbol">＋</div><h2>Ready for a run.</h2><p>Choose a job and the exact location coming down the belt.</p><button class="primary" data-action="choose" data-lane="${lane}">Choose location ${letter}</button></section>`;
  const r=record(card),s=C.summary(card,r),lock=blocked(card);const state=r.finishedAt?(s.exact?'Location matched':'Finished · differences'):s.checked?'Counting':'Ready to count';
@@ -6695,7 +6700,7 @@ function download(name,body,type){const url=URL.createObjectURL(new Blob([body],
 $('lanes').addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(!b)return;const lane=Number(b.dataset.lane),card=cardAt(lane);switch(b.dataset.action){case'choose':openPicker(lane);break;case'count':openCount(lane,b.dataset.cell);break;case'exact':exact(lane,b.dataset.cell);break;case'issue':openIssue(lane);break;case'history':history(lane);break;case'art':detail('#'+card.job+' · Artwork',`<p>${esc(card.location)}</p><p class="muted">${esc(card.artworkLabel)}</p><img class="big-art" src="${esc(card.image)}" alt="${esc(card.location)}">`);break;case'finish':try{const name=actor(),finished=C.finish(card,record(card),name);change(next=>{next.actor=name;next.records[card.runId]=finished;});}catch(e){tell(e.message);}break;}});
 $('job-list').addEventListener('click',e=>{const b=e.target.closest('button[data-run]');if(!b)return;if(change(next=>next.lanes[pickerLane]=b.dataset.run))$('picker').close();});
 $('search').addEventListener('input',listJobs);$('day').addEventListener('change',listJobs);$('scope').addEventListener('change',listJobs);
-$('load-test').addEventListener('click',()=>{if(practice||!manifest.testPreset)return;if(change(next=>{next.lanes=[...manifest.testPreset.lanes];next.testFocus=true;}))tell('Invoice 6385 loaded: orange WOLFBOX and ST460LS fronts. Use Change job to choose the back or sleeve. Any earlier counts stay saved.');});
+$('load-test').addEventListener('click',()=>{if(practice||!manifest.testPreset)return;if(change(next=>{next.lanes=[...manifest.testPreset.lanes];next.testFocus=true;}))tell('Invoice 6385 loaded: 3600M Classic Orange and ST460LS fronts. Use Change job to choose the back or sleeve. Any earlier counts stay saved.');});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 $('count-form').addEventListener('submit',e=>{e.preventDefault();saveCount($('actual').value);});$('uncount').addEventListener('click',()=>saveCount(null,'clear'));
 document.querySelectorAll('[data-digit]').forEach(b=>b.addEventListener('click',()=>{const i=$('actual'),v=b.dataset.digit;i.value=v==='clear'?'':v==='back'?i.value.slice(0,-1):(i.value+b.dataset.digit).slice(0,6);$('count-error').textContent='';}));
