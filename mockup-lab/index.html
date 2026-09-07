@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.39 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.40 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -604,7 +604,9 @@
   #supInkOpts .lb b{display:block;font-size:10px;}
   #supInkOpts .lb span{color:var(--muted);font-size:8.5px;font-family:'JetBrains Mono',monospace;}
 </style>
-<style>#productionDialog{background:#17181A;color:#E8EAEC;border:1px solid #4B9CD3;border-radius:12px;width:min(900px,94vw);max-height:88vh;overflow:auto;padding:28px;font:14px Inter,sans-serif;box-shadow:0 24px 90px #000a}#productionDialog::backdrop{background:#000b}#productionDialog h2{margin:8px 0 12px;font:25px 'Archivo Black',sans-serif}#productionDialog p{line-height:1.6}#productionDialog .production-kicker{color:#7BAFD4;font:11px 'JetBrains Mono',monospace;letter-spacing:2px}.production-close{float:right;background:none;color:#fff;border:1px solid #555;border-radius:5px;padding:8px;cursor:pointer}.production-note{background:#222c33;border-left:3px solid #7BAFD4;padding:12px 15px}.production-row{display:grid;grid-template-columns:240px 1fr;gap:22px;padding:22px 0;border-bottom:1px solid #363c41}.production-row canvas{width:240px;height:150px;border-radius:6px;background:repeating-conic-gradient(#353a3f 0% 25%,#454b50 0% 50%) 50%/20px 20px}.production-row strong{font-size:17px}.production-row small{display:block;color:#a9b3bc;margin-bottom:12px}.production-warning{color:#e6d2b2}.production-footer{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}#productionMessage{min-height:24px;color:#9cc8e8}#productionInclude{width:auto}#productionDialog button:disabled{opacity:.4;cursor:not-allowed}@media(max-width:620px){.production-row{grid-template-columns:1fr}}</style></head>
+<style>#productionDialog{background:#17181A;color:#E8EAEC;border:1px solid #4B9CD3;border-radius:12px;width:min(900px,94vw);max-height:88vh;overflow:auto;padding:28px;font:14px Inter,sans-serif;box-shadow:0 24px 90px #000a}#productionDialog::backdrop{background:#000b}#productionDialog h2{margin:8px 0 12px;font:25px 'Archivo Black',sans-serif}#productionDialog p{line-height:1.6}#productionDialog .production-kicker{color:#7BAFD4;font:11px 'JetBrains Mono',monospace;letter-spacing:2px}.production-close{float:right;background:none;color:#fff;border:1px solid #555;border-radius:5px;padding:8px;cursor:pointer}.production-note{background:#222c33;border-left:3px solid #7BAFD4;padding:12px 15px}.production-row{display:grid;grid-template-columns:240px 1fr;gap:22px;padding:22px 0;border-bottom:1px solid #363c41}.production-row canvas{width:240px;height:150px;border-radius:6px;background:repeating-conic-gradient(#353a3f 0% 25%,#454b50 0% 50%) 50%/20px 20px}.production-row strong{font-size:17px}.production-row small{display:block;color:#a9b3bc;margin-bottom:12px}.production-warning{color:#e6d2b2}.production-footer{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}#productionMessage{min-height:24px;color:#9cc8e8}#productionInclude{width:auto}#productionDialog button:disabled{opacity:.4;cursor:not-allowed}@media(max-width:620px){.production-row{grid-template-columns:1fr}}</style><style>
+.svg-review{background:#17181a;color:#e8eaec;border:1px solid #7BAFD4;border-radius:12px;width:min(1000px,94vw);max-height:90vh;overflow:auto;padding:24px;font:14px Inter,sans-serif}.svg-review::backdrop{background:#000b}.svg-review p{line-height:1.5}.svg-review select{margin:0 0 20px 10px;padding:8px;background:#272c30;color:#e8eaec;border:1px solid #7b858d;border-radius:5px}.svg-review-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.svg-review-grid img{width:100%;height:320px;object-fit:contain;display:block;margin-top:12px;background:repeating-conic-gradient(#555 0% 25%,#777 0% 50%) 50%/20px 20px}.svg-review button:disabled{opacity:.4}@media(max-width:650px){.svg-review-grid{grid-template-columns:1fr}.svg-review-grid img{height:220px}}
+</style></head>
 <body class="tab-mock">
 
 <header class="topbar">
@@ -668,10 +670,10 @@
 
     <div class="panel" data-tabs="mock" id="pArt">
       <h3><span class="pn">2</span> Logos</h3>
-      <p class="desc">Drop the art in. Use an outlined PDF for sized production artwork, or SVG / PNG for mockups.</p>
+      <p class="desc">Upload a vector SVG or outlined PDF for sized production artwork. SVG uploads include a background-color preview.</p>
       <div class="row2">
-        <div class="drop" id="artDropF"><b>Front art</b>PDF for production · SVG / PNG / JPG for mockups · PDF white ink is preserved<input type="file" id="artInputF" accept="image/*,.svg,.pdf,application/pdf"></div>
-        <div class="drop" id="artDropB"><b>Back art</b>PDF for production · SVG / PNG / JPG for mockups · PDF white ink is preserved<input type="file" id="artInputB" accept="image/*,.svg,.pdf,application/pdf"></div>
+        <div class="drop" id="artDropF"><b>Front art</b>SVG / PDF for production · PNG / JPG for mockups<input type="file" id="artInputF" accept="image/*,.svg,.pdf,application/pdf"></div>
+        <div class="drop" id="artDropB"><b>Back art</b>SVG / PDF for production · PNG / JPG for mockups<input type="file" id="artInputB" accept="image/*,.svg,.pdf,application/pdf"></div>
       </div>
       <div class="row2" style="margin-top:8px;">
         <div class="drop slvdrop" id="slvDropL"><b>Left sleeve</b><span id="slvDropLabL">optional — prints as a color tile</span><input type="file" id="slvInputL" accept="image/*,.svg,.pdf,application/pdf"></div>
@@ -908,7 +910,7 @@
       <div class="bigdl">
         <div id="exportChecks" class="pr-note" role="status" tabindex="-1"></div>
         <button class="btn" id="dlJobZip">⬇ SAVE THIS GROUP — APPROVALS + SHOP + PDF ART</button>
-<label class="checkline"><input type="checkbox" id="productionInclude" checked><span>Include production artwork for uploaded PDFs</span></label>
+<label class="checkline"><input type="checkbox" id="productionInclude" checked><span>Include production artwork for uploaded SVGs and PDFs</span></label>
 <p class="desc" id="productionStatus" role="status"></p>
 <button class="btn ghost" id="productionPanelOpen">⬇ PRODUCTION PDFs — SIZE + INKS</button>
         <button class="btn ghost" id="dlAllApprovals">⬇ THIS GROUP — CUSTOMER APPROVAL PDF</button>
@@ -1034,7 +1036,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.39 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.40 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1520,14 +1522,14 @@ function reDetect(){
   if(state.artF)srcs.push(['F',state.artF]);
   if(!activeSet().dupBack&&state.artB)srcs.push(['B',state.artB]);
   let all=[];
-  srcs.forEach(([tag,s])=>{detectInks(s).forEach(c=>{all.push({...c,sides:tag});});});
+  srcs.forEach(([tag,s])=>{detectInks(s).forEach(c=>{all.push({...c,sides:tag,vector:!!s.__production?.vectorColors});});});
   const merged=[];
   all.forEach(c=>{
-    const hit=merged.find(m=>Math.hypot(m.r-c.r,m.g-c.g,m.b-c.b)<58);
+    const hit=merged.find(m=>Math.hypot(m.r-c.r,m.g-c.g,m.b-c.b)<(m.vector&&c.vector?1:58));
     if(hit){hit.pct=Math.max(hit.pct,c.pct);if(hit.sides!==c.sides)hit.sides='FB';}
     else merged.push({...c});
   });
-  state.artInks=merged.slice(0,8);
+  state.artInks=merged.slice(0,srcs.some(([,c])=>c.__production?.vectorColors)?32:8);
   state.inkAssign=state.artInks.map(ink=>{
     const m=nearestPms(ink.r,ink.g,ink.b);
     return {idx:m.idx,match:matchPct(m.dist),auto:true,backIdx:null,backDarkIdx:null};
@@ -6409,13 +6411,13 @@ updateExportChecks();
 <div class="production-kicker">MOCKUP LAB / PRODUCTION ARTWORK</div>
 <h2 id="productionTitle">Sized artwork for Separation Studio NXT</h2>
 <p>One PDF per print location, at its selected width. <b id="productionGroup"></b></p>
-<div class="production-note">Upload a PDF to match its colors to the closest Pantone in Mockup Lab. Your selected inks and ink-off choices carry into the exported vectors. With Live Ink off, original colors are kept. NXT handles separations and film preparation.</div>
+<div class="production-note">Upload an SVG or PDF to match its colors to the closest Pantone in Mockup Lab. Your selected inks and ink-off choices carry into the exported vectors. With Live Ink off, original colors are kept. NXT handles separations and film preparation.</div>
 <label style="display:block;margin-top:15px">Preview and individual PDF ink setup <select id="productionSetup"><option value="light">Light shirts</option><option value="dark">Dark shirts</option></select></label>
 <div id="productionRows"></div>
 <p id="productionBatchNote"></p>
 <div class="production-footer"><button class="btn" id="productionAll" data-export="true">DOWNLOAD GROUP PRODUCTION PDFs · ZIP</button></div>
 <p id="productionMessage" role="status"></p>
-<p style="color:#98A0A6;font-size:12px">Flat, outlined PDF artwork only. Source PDFs stay in this browser; saved jobs on another computer need the originals uploaded again. Page fits the original artwork footprint; turning off inks preserves alignment. No underbase, registration marks, or garment image is added. Pantone screen colors are approximations; use your physical swatch book for ink matching.</p>
+<p style="color:#98A0A6;font-size:12px">Flat, filled SVG or outlined PDF artwork. Source artwork stays in this browser; saved jobs on another computer need the originals uploaded again. Page fits the original artwork footprint; turning off inks preserves alignment. No underbase, registration marks, or garment image is added. Pantone screen colors are approximations; use your physical swatch book for ink matching.</p>
 </dialog>
 <script>!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"function"==typeof define&&define.amd?define(["exports"],e):e((t=t||self).PDFLib={})}(this,(function(t){"use strict";
 /*! *****************************************************************************
@@ -6537,7 +6539,7 @@ async function vectorApplyInks(src,meta,spec,dark){
   return mappedColors;
 }
 
-const PRODUCTION_VERSION='1.0.0';
+const PRODUCTION_VERSION='1.1.0';
 const productionMemory=new Map();
 let productionDbPromise;
 function productionDb(){
@@ -6601,7 +6603,7 @@ async function productionReadPdf(file,pageNumber){
       const source=await PDFLib.PDFDocument.load(bytes),ins=vectorInspect(source.getPage(pn-1),source);
       const colors=await vectorSourceRGB(source,pn,ins.colors);
       const unique=[];for(const color of colors)if(!unique.some(c=>c.rgb.every((v,i)=>v===color.rgb[i])))unique.push(color);
-      if(unique.length>8)throw new Error('More than eight source inks; use a flat PDF with eight or fewer inks.');
+      if(unique.length>32)throw new Error('More than 32 source inks; simplify the artwork before production export.');
       const counts=unique.map(()=>0),pixels=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
       for(let p=0;p<pixels.length;p+=16){if(pixels[p+3]<128)continue;let best=0,dist=Infinity;unique.forEach((c,i)=>{const d=c.rgb.reduce((n,v,k)=>n+(v-pixels[p+k])**2,0);if(d<dist){dist=d;best=i;}});counts[best]++;}
       const total=counts.reduce((a,b)=>a+b,0)||1;
@@ -6631,7 +6633,7 @@ restoreJob=async function(j){
   SETS.forEach((st,i)=>{const m=j.sets[i]?.production||{};
     if(st.artF)st.artF.__production=m.front;if(st.artB)st.artB.__production=m.back;
     for(const k of ['L','R'])if(st.sleeves?.[k]?.art)st.sleeves[k].art.__production=m[k];
-  });productionRender();
+  });productionRender();productionUpdateStatus();
 };
 for(const k of ['L','R']){
   const button=$('slvRot'+k),original=button.onclick;
@@ -6659,9 +6661,9 @@ async function productionBuildPdf(spec,setupName=$('productionSetup').value){
   if(SUP.on)throw new Error('Use OUR MOCKUP mode to export measured production artwork.');
   const meta=spec.art.__production;
   if(meta?.vectorColorError)throw new Error(meta.vectorColorError);
-  if(!meta)throw new Error(spec.label+': re-upload the original PDF to enable source-preserving export.');
+  if(!meta)throw new Error(spec.label+': re-upload the original SVG or PDF to enable vector export.');
   if(spec.rotation)throw new Error(spec.label+': reset the placement rotation to 0° before exporting. Sleeve quarter turns are supported.');
-  const bytes=await productionGet(meta.id);if(!bytes)throw new Error(spec.label+': original PDF is no longer stored. Re-upload it.');
+  const bytes=await productionGet(meta.id);if(!bytes)throw new Error(spec.label+': original vector source is no longer stored. Re-upload it.');
   const d=productionDimensions(spec),W=d.width*72,H=d.height*72;
   const {PDFDocument,degrees}=PDFLib,src=await PDFDocument.load(bytes),pdf=await PDFDocument.create();
   const dark=setupName==='dark';
@@ -6689,26 +6691,26 @@ async function productionEntries(setups=null){
   await ensureSetPhotos();
   setups=setups||productionGroupSetups();
   const all=productionSpecs(),specs=all.filter(s=>s.art.__production);
-  if(!specs.length)throw new Error('Upload the original PDF artwork to enable production export.');
+  if(!specs.length)throw new Error('Upload the original SVG or PDF artwork to enable production export.');
   const entries=[],manifest={version:PRODUCTION_VERSION,group:activeSet().name,
     colorMode:activeSet().liveInk===false?'Original source colors (Live Ink off)':'Mockup Lab selected inks',
-    setups,locations:[],excluded:all.filter(s=>!s.art.__production).map(s=>({location:s.label,reason:'No original PDF; prepare this artwork separately.'})),
+    setups,locations:[],excluded:all.filter(s=>!s.art.__production).map(s=>({location:s.label,reason:'No original vector source; prepare this artwork separately.'})),
     notes:'Artwork only. NXT handles separations and film preparation. Page fits the original artwork footprint; turning off inks preserves registration.'};
   for(const setup of setups)for(const spec of specs){
     let p;try{p=await productionBuildPdf(spec,setup);}catch(e){throw new Error(spec.label+' / '+setup+' shirts: '+e.message);}
     const filename=productionFilename(spec,p.dimensions,setup);
     entries.push({name:'production-pdfs/'+filename,data:p.bytes});
     manifest.locations.push({file:filename,location:spec.label,setup,widthIn:p.dimensions.width,heightIn:p.dimensions.height,
-      source:p.meta.name,page:p.meta.page,fullPage:p.meta.fullPage,inks:p.mappedColors});
+      source:p.meta.name,page:p.meta.page,fullPage:p.meta.fullPage,sourceType:p.meta.sourceType||'pdf',backgroundColor:p.meta.backgroundColor||null,gapFillerRemoved:p.meta.gapFillerRemoved||0,inks:p.mappedColors});
   }
   entries.push({name:'production-pdfs/export-details.json',data:new TextEncoder().encode(JSON.stringify(manifest,null,2))});
   return entries;
 }
 function productionMessage(text){$('productionMessage').textContent=text;}
-async function productionRun(fn){
+async function productionRun(fn,successMessage='Saved. Open the PDF in NXT and check size, colors, and edges before films.'){
   $('productionSetup').disabled=true;$('productionClose').disabled=true;
   for(const b of $('productionDialog').querySelectorAll('button[data-export]'))b.disabled=true;
-  try{productionMessage('Preparing original PDF artwork…');await fn();productionMessage('Saved. Open the PDF in NXT and check size, colors, and edges before films.');}
+  try{productionMessage('Preparing original PDF artwork…');await fn();productionMessage(successMessage);}
   catch(e){productionMessage(e.message);}
   finally{$('productionSetup').disabled=false;$('productionClose').disabled=false;productionRender();}
 }
@@ -6718,22 +6720,27 @@ function productionRender(){
   const wrap=$('productionRows');wrap.replaceChildren();const specs=productionSpecs();
   $('productionAll').disabled=!specs.some(s=>s.art.__production);
   $('productionBatchNote').textContent='Group ZIP: '+productionGroupSetups().map(s=>s+' shirts').join(' + ')+'. '+(specs.some(s=>!s.art.__production)?'Some locations have no original PDF and must be prepared separately.':'');
-  if(!specs.length)wrap.textContent='Upload a PDF in the artwork step, then set its print width.';
+  if(!specs.length)wrap.textContent='Upload an SVG or PDF in the artwork step, then set its print width.';
   for(const spec of specs){
     const row=document.createElement('div');row.className='production-row';
     const cv=document.createElement('canvas');cv.width=240;cv.height=150;const ctx=cv.getContext('2d');
     const dark=$('productionSetup').value==='dark';const a=(spec.key==='L'||spec.key==='R'?sleeveRecolored(spec.key,dark):recoloredArtFor(spec.key,dark))||spec.art,scale=Math.min(220/a.width,130/a.height);ctx.drawImage(a,(240-a.width*scale)/2,(150-a.height*scale)/2,a.width*scale,a.height*scale);row.append(cv);
     const detail=document.createElement('div'),title=document.createElement('strong');title.textContent=spec.label;detail.append(title);
     const meta=spec.art.__production;let d=null,issue=meta?.vectorColorError||'';try{d=meta?productionDimensions(spec):null;}catch(e){issue=e.message;}
-    const line=document.createElement('p');line.textContent=d?d.width.toFixed(3)+'″ × '+d.height.toFixed(3)+'″ · fitted PDF page':'Original PDF needed — upload it again for this location.';detail.append(line);
-    const source=document.createElement('small');source.textContent=meta?meta.name+' · page '+meta.page:'Upload the original PDF. Production export supports flat, outlined vector artwork.';detail.append(source);if(meta){const inks=document.createElement('p');try{inks.textContent=activeSet().liveInk===false?'Original PDF colors (Live Ink off)':'Inks: '+vectorInkSetup(spec,dark).filter(i=>!i.off).map(i=>'PMS '+i.name).filter((v,i,a)=>a.indexOf(v)===i).join(' · ');}catch(e){inks.textContent=e.message;}detail.append(inks);}
+    const line=document.createElement('p');line.textContent=d?d.width.toFixed(3)+'″ × '+d.height.toFixed(3)+'″ · fitted PDF page':'Original vector source needed — upload it again for this location.';detail.append(line);
+    const source=document.createElement('small');source.textContent=meta?meta.name+' · page '+meta.page:'Upload an original SVG or PDF with flat vector artwork.';detail.append(source);if(meta){const inks=document.createElement('p');try{inks.textContent=activeSet().liveInk===false?'Original PDF colors (Live Ink off)':'Inks: '+vectorInkSetup(spec,dark).filter(i=>!i.off).map(i=>'PMS '+i.name).filter((v,i,a)=>a.indexOf(v)===i).join(' · ');}catch(e){inks.textContent=e.message;}detail.append(inks);}
     if(issue){const note=document.createElement('p');note.className='production-warning';note.textContent=issue;detail.append(note);}
     if(meta?.fullPage){const warning=document.createElement('p');warning.textContent='Artwork reaches the page edges. A painted background may print; check the PDF.';warning.className='production-warning';detail.append(warning);}
     if(meta&&!meta.persisted){const warning=document.createElement('p');warning.textContent='Source storage unavailable: re-upload after closing this page.';detail.append(warning);}
     if(spec.rotation){const note=document.createElement('p');note.textContent='Reset placement rotation to 0° to export.';detail.append(note);}
     const button=document.createElement('button');button.className='btn sm';button.dataset.export='true';button.textContent='DOWNLOAD PDF';button.disabled=!meta||!!spec.rotation||!!issue;
     button.onclick=()=>productionRun(async()=>{const p=await productionBuildPdf(spec);productionDownload(p.bytes,productionFilename(spec,p.dimensions,p.setup),'application/pdf');});
-    detail.append(button);row.append(detail);wrap.append(row);
+    detail.append(button);
+    if(meta?.sourceType==='svg'){
+      const info=document.createElement('p');info.textContent=meta.backgroundColor?'Removed '+meta.backgroundColor.toUpperCase()+' throughout artwork.':'All source SVG colors kept.';detail.append(info);
+      const clean=document.createElement('button');clean.className='btn ghost sm';clean.dataset.export='true';clean.textContent='CLEANED SVG · SOURCE COLORS';clean.onclick=()=>productionRun(()=>svgDownloadClean(spec),'Cleaned SVG saved with original source colors.');detail.append(clean);
+    }
+    row.append(detail);wrap.append(row);
   }
 }
 $('productionPanelOpen').onclick=()=>{if(SUP.on){alert('Use OUR MOCKUP mode for production PDFs. Supplied mockups do not have measured print widths.');return;}productionMessage('');productionRender();$('productionDialog').showModal();};
@@ -6745,11 +6752,228 @@ const productionRefreshBase=refresh;
 refresh=function(){productionRefreshBase();productionUpdateStatus();};
 function productionUpdateStatus(){
   const specs=productionSpecs(),pdfs=specs.filter(s=>s.art.__production),missing=specs.length-pdfs.length;
-  $('productionStatus').textContent=!pdfs.length?'Upload original PDF artwork to include sized production files. PNG and SVG mockups keep their existing downloads.':
-    pdfs.length+' PDF location'+(pdfs.length===1?'':'s')+' · '+productionGroupSetups().map(s=>s+' shirts').join(' + ')+
+  $('productionStatus').textContent=!pdfs.length?'Upload an original SVG or PDF for sized production files. PNG/JPG artwork needs separate preparation.':
+    pdfs.length+' vector location'+(pdfs.length===1?'':'s')+' · '+productionGroupSetups().map(s=>s+' shirts').join(' + ')+
     (missing?' · '+missing+' other location(s) need separate artwork preparation.':'.');
 }
 productionUpdateStatus();
 </script>
-</body>
+<script>/* SVG production import: retain flat paths and remove selected background shapes. */
+const svgAllowedTags=new Set(['svg','g','path','rect','circle','ellipse','polygon','polyline','title','desc']);
+const svgAllowedAttrs=new Set(['xmlns','version','viewBox','width','height','x','y','cx','cy','r','rx','ry','d','points','transform','fill','fill-rule','stroke','stroke-width','stroke-linecap','stroke-linejoin','stroke-miterlimit','id','vector-effect']);
+function svgParseProduction(text){
+  if(text.length>10000000)throw new Error('SVG is too large for production import.');
+  if(/<!ENTITY|<!DOCTYPE[^>]*\[/i.test(text))throw new Error('SVG declarations with external entities are not supported.');
+  text=text.replace(/<!DOCTYPE[^>]*>/gi,'');
+  const doc=new DOMParser().parseFromString(text,'image/svg+xml'),root=doc.documentElement;
+  if(doc.querySelector('parsererror')||root.localName!=='svg')throw new Error('Invalid SVG file.');
+  for(const e of root.querySelectorAll('*'))if(e.localName==='svg'||!svgAllowedTags.has(e.localName))throw new Error('SVG '+e.localName+' is not yet supported for production export. Use a flat vector SVG.');
+  for(const e of [root,...root.querySelectorAll('*')])for(const a of e.attributes)if(!svgAllowedAttrs.has(a.name))throw new Error('SVG attribute '+a.name+' is not yet supported.');
+  const vb=(root.getAttribute('viewBox')||'').trim().split(/[\s,]+/).map(Number);
+  if(vb.length!==4||vb.some(n=>!Number.isFinite(n))||vb[2]<=0||vb[3]<=0)throw new Error('SVG needs a valid viewBox.');
+  root.setAttribute('xmlns','http://www.w3.org/2000/svg');
+  return {root,vb};
+}
+function svgColor(value){
+  if(value==='none')return null;
+  if(value==='white')value='#ffffff';if(value==='black')value='#000000';
+  if(/^#[0-9a-f]{3}$/i.test(value))value='#'+value.slice(1).split('').map(c=>c+c).join('');
+  if(!/^#[0-9a-f]{6}$/i.test(value))throw new Error('SVG production import needs solid RGB colors; unsupported color: '+value);
+  return [1,3,5].map(i=>parseInt(value.slice(i,i+2),16));
+}
+function svgTransform(value){
+  if(!value)return '';
+  let result='',last=0,m;
+  const re=/([A-Za-z]+)\s*\(([^)]*)\)/g;
+  while((m=re.exec(value))){
+    if(value.slice(last,m.index).replace(/[\s,]/g,''))throw new Error('Invalid SVG transform');last=re.lastIndex;
+    const n=m[2].trim().split(/[\s,]+/).map(Number);if(n.some(x=>!Number.isFinite(x)))throw new Error('Invalid SVG transform');
+    let a;switch(m[1]){
+      case 'matrix':if(n.length!==6)throw new Error('Invalid matrix');a=n;break;
+      case 'translate':if(n.length<1||n.length>2)throw new Error('Invalid translate');a=[1,0,0,1,n[0],n[1]||0];break;
+      case 'scale':if(n.length<1||n.length>2)throw new Error('Invalid scale');a=[n[0],0,0,n[1]??n[0],0,0];break;
+      case 'rotate':{if(n.length!==1&&n.length!==3)throw new Error('Invalid rotate');const t=n[0]*Math.PI/180,c=Math.cos(t),s=Math.sin(t),x=n[1]||0,y=n[2]||0;a=[c,s,-s,c,x-c*x+s*y,y-s*x-c*y];break;}
+      case 'skewX':if(n.length!==1)throw new Error('Invalid skew');a=[1,0,Math.tan(n[0]*Math.PI/180),1,0,0];break;
+      case 'skewY':if(n.length!==1)throw new Error('Invalid skew');a=[1,Math.tan(n[0]*Math.PI/180),0,1,0,0];break;
+      default:throw new Error('Unsupported SVG transform '+m[1]);
+    }
+    result+=a.map(x=>Number(x.toFixed(10))).join(' ')+' cm\n';
+  }
+  if(value.slice(last).trim())throw new Error('Invalid SVG transform');return result;
+}
+function svgShapePath(e){
+  const num=(key,def=0)=>{const v=e.getAttribute(key);const n=v===null?def:Number(v);if(!Number.isFinite(n))throw new Error('Invalid SVG '+key);return n;};
+  const ellipse=(x,y,rx,ry)=>{const k=.5522847498307936;return `M ${x+rx} ${y} C ${x+rx} ${y+k*ry} ${x+k*rx} ${y+ry} ${x} ${y+ry} C ${x-k*rx} ${y+ry} ${x-rx} ${y+k*ry} ${x-rx} ${y} C ${x-rx} ${y-k*ry} ${x-k*rx} ${y-ry} ${x} ${y-ry} C ${x+k*rx} ${y-ry} ${x+rx} ${y-k*ry} ${x+rx} ${y} Z`;};
+  switch(e.localName){
+    case 'path':return e.getAttribute('d')||'';
+    case 'circle':return ellipse(num('cx'),num('cy'),num('r'),num('r'));
+    case 'ellipse':return ellipse(num('cx'),num('cy'),num('rx'),num('ry'));
+    case 'rect':{const x=num('x'),y=num('y'),w=num('width'),h=num('height');if(w<0||h<0)throw new Error('Negative rectangle size');
+      const rx=Math.min(w/2,num('rx',num('ry'))),ry=Math.min(h/2,num('ry',num('rx'))),k=.5522847498307936;
+      if(!rx||!ry)return `M ${x} ${y} h ${w} v ${h} h ${-w} Z`;
+      return `M ${x+rx} ${y} L ${x+w-rx} ${y} C ${x+w-rx+k*rx} ${y} ${x+w} ${y+ry-k*ry} ${x+w} ${y+ry} L ${x+w} ${y+h-ry} C ${x+w} ${y+h-ry+k*ry} ${x+w-rx+k*rx} ${y+h} ${x+w-rx} ${y+h} L ${x+rx} ${y+h} C ${x+rx-k*rx} ${y+h} ${x} ${y+h-ry+k*ry} ${x} ${y+h-ry} L ${x} ${y+ry} C ${x} ${y+ry-k*ry} ${x+rx-k*rx} ${y} ${x+rx} ${y} Z`;}
+    case 'polygon':case 'polyline':{const pts=(e.getAttribute('points')||'').trim().split(/[\s,]+/).map(Number);if(pts.length<4||pts.length%2||pts.some(x=>!Number.isFinite(x)))throw new Error('Invalid SVG points');return 'M '+pts.slice(0,2).join(' ')+' L '+pts.slice(2).join(' ')+(e.localName==='polygon'?' Z':'');}
+    default:return '';
+  }
+}
+function svgInherited(e,name,def){for(let p=e;p;p=p.parentElement)if(p.hasAttribute(name))return p.getAttribute(name);return def;}
+async function svgBackgroundCandidates(parsed){
+  const {root,vb}=parsed,host=document.createElement('div');host.style='position:fixed;left:-10000px;top:0;width:1536px;height:1024px;visibility:hidden';
+  const mounted=document.importNode(root,true);mounted.setAttribute('width',String(vb[2]));mounted.setAttribute('height',String(vb[3]));host.append(mounted);document.body.append(host);
+  try{
+    const shapes=[...mounted.querySelectorAll('path,rect,ellipse,circle,polygon')],all=[...root.querySelectorAll('path,rect,ellipse,circle,polygon')],candidates=[];
+    for(let i=0;i<shapes.length;i++){
+      const e=shapes[i],rgb=svgColor(svgInherited(e,'fill','#000000'));if(!rgb)continue;
+      const transform=mounted.getCTM().inverse().multiply(e.getCTM()).inverse();
+      const eps=Math.min(vb[2],vb[3])*.001;
+      const corners=[[vb[0]+eps,vb[1]+eps],[vb[0]+vb[2]-eps,vb[1]+eps],[vb[0]+eps,vb[1]+vb[3]-eps],[vb[0]+vb[2]-eps,vb[1]+vb[3]-eps]];
+      if(corners.every(([x,y])=>e.isPointInFill(new DOMPoint(x,y).matrixTransform(transform))))candidates.push(all[i]);
+    }
+    return candidates.reverse();
+  }finally{host.remove();}
+}
+async function svgToVectorPdf(root,vb){
+  const {PDFDocument,PDFName}=PDFLib,doc=await PDFDocument.create(),page=doc.addPage([vb[2],vb[3]]);
+  let stream=`q 1 0 0 -1 ${-vb[0]} ${vb[1]+vb[3]} cm\n`,shapeCount=0;
+  function walk(e){
+    stream+='q\n'+svgTransform(e.getAttribute('transform'));
+    if(['svg','g'].includes(e.localName)){for(const child of e.children)walk(child);}
+    else if(!['title','desc'].includes(e.localName)){
+      const path=svgShapePath(e);if(path){
+        const fill=svgColor(svgInherited(e,'fill','#000000')),stroke=svgColor(svgInherited(e,'stroke','none'));
+        if(stroke)throw new Error('This SVG contains artwork strokes that cannot yet be exported as production vectors. Export filled shapes, or use it for mockups only.');
+        if(fill){
+          svgValidatePath(path);
+          stream+=fill.map(x=>x/255).join(' ')+' rg\n';
+          const ops=PDFLib.drawSvgPath(path,{x:0,y:0,color:PDFLib.rgb(0,0,0)});
+          stream+=ops.filter(op=>['m','l','c','v','y','h'].includes(op.name)).map(op=>op.toString()).join('\n')+'\n';
+          const rule=svgInherited(e,'fill-rule','nonzero');if(!['nonzero','evenodd'].includes(rule))throw new Error('Unsupported fill rule');
+          stream+=(rule==='evenodd'?'f*':'f')+'\n';shapeCount++;
+        }
+      }
+    }
+    stream+='Q\n';
+  }
+  walk(root);stream+='Q';if(!shapeCount)throw new Error('SVG contains no filled vector shapes.');
+  page.node.set(PDFName.of('Contents'),doc.context.register(doc.context.flateStream(stream)));
+  return {bytes:await doc.save(),shapeCount};
+}
+async function svgProductionRead(file,removeColor=''){
+  const prepared=svgPrepare(await file.text()),{root,vb}=prepared.parsed;
+  const removed=svgKnockout(root,removeColor),pdf=await svgToVectorPdf(root,vb);
+  const result=await productionReadPdf(new File([pdf.bytes],file.name.replace(/\.svg$/i,'.pdf'),{type:'application/pdf'}),1);
+  if(result.meta.vectorColorError)throw new Error(result.meta.vectorColorError);
+  result.meta.name=file.name;result.meta.sourceType='svg';result.meta.backgroundColor=removeColor||null;
+  result.meta.backgroundRemoved=removed;result.meta.gapFillerRemoved=prepared.gapFillerRemoved;
+  result.meta.sourceShapeCount=pdf.shapeCount;
+  const [vx,vy,vw,vh]=vb,b=result.meta.box;
+  root.setAttribute('viewBox',[vx+b.left,vy+vh-b.top,b.right-b.left,b.top-b.bottom].join(' '));
+  root.removeAttribute('width');root.removeAttribute('height');
+  const cleanedSvg=new XMLSerializer().serializeToString(root);
+  const svgBytes=new TextEncoder().encode(cleanedSvg),id=result.meta.id+'-svg';
+  const stored=await productionPut(id,svgBytes);result.meta.cleanedSvgId=id;result.meta.persisted=result.meta.persisted&&stored;
+  return {...result,cleanedSvg,pdfBytes:pdf.bytes};
+}
+function svgValidatePath(path){
+ const re=/[AaCcHhLlMmQqSsTtVvZz]|[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?/g;
+ const arity={M:2,L:2,H:1,V:1,C:6,S:4,Q:4,T:2,A:7,Z:0};
+ let last=0,m,cmd=null,nums=[],first=true;
+ const finish=()=>{if(!cmd)return;const n=arity[cmd.toUpperCase()];if(n?(nums.length<n||nums.length%n):nums.length)throw new Error('Incomplete SVG path.');if(cmd.toUpperCase()==='A')for(let i=0;i<nums.length;i+=7)if(nums[i]<0||nums[i+1]<0||![0,1].includes(nums[i+3])||![0,1].includes(nums[i+4]))throw new Error('Invalid SVG arc.');};
+ while((m=re.exec(path))){if(path.slice(last,m.index).replace(/[\s,]/g,''))throw new Error('Unsupported SVG path syntax.');last=re.lastIndex;
+  if(/^[a-z]$/i.test(m[0])){finish();cmd=m[0];nums=[];if(first&&cmd.toUpperCase()!=='M')throw new Error('SVG path must start with a move.');first=false;}
+  else{const n=Number(m[0]);if(!cmd||!Number.isFinite(n))throw new Error('Invalid SVG path coordinates.');nums.push(n);}
+ }
+ finish();if(path.slice(last).trim())throw new Error('Invalid SVG path.');
+}
+const svgShapeSelector='path,rect,ellipse,circle,polygon,polyline';
+function svgHex(rgb){return '#'+rgb.map(n=>n.toString(16).padStart(2,'0')).join('');}
+function svgPalette(root){
+ const colors=new Map();for(const e of root.querySelectorAll(svgShapeSelector)){const c=svgColor(svgInherited(e,'fill','#000000'));if(c)colors.set(svgHex(c),c);}
+ return [...colors.keys()];
+}
+function svgPrepare(text){
+ const parsed=svgParseProduction(text),root=parsed.root;
+ const originalSvg=new XMLSerializer().serializeToString(root);
+ let gapFillerRemoved=0;
+ // Recognize Vectorizer's leading, non-scaling seam strokes by structure AND
+ // by their colors: they must be midpoints of the actual filled palette.
+ const first=[...root.children].find(e=>!['title','desc'].includes(e.localName));
+ if(first?.localName==='g'&&first.getAttribute('fill')==='none'&&!first.hasAttribute('transform')&&first.getAttribute('stroke-width')==='2.00'){
+  const children=[...first.children],palette=svgPalette(root).map(svgColor),midpoints=[];
+  for(let i=0;i<palette.length;i++)for(let j=i+1;j<palette.length;j++)midpoints.push(palette[i].map((n,k)=>(n+palette[j][k])/2));
+  const matches=children.length>0&&children.every(e=>{
+   if(e.localName!=='path'||e.getAttribute('vector-effect')!=='non-scaling-stroke'||e.hasAttribute('transform')||svgInherited(e,'fill','#000000')!=='none')return false;
+   const c=svgColor(e.getAttribute('stroke')||'none');return c&&midpoints.some(m=>m.every((v,i)=>Math.abs(v-c[i])<=.51));
+  });
+  if(matches){gapFillerRemoved=children.length;first.remove();}
+ }
+ // Remaining non-scaling strokes/effects must not silently disappear.
+ if(root.hasAttribute('vector-effect')||root.querySelector('[vector-effect]'))throw new Error('This SVG has unsupported non-scaling artwork strokes. Export filled shapes with gap filler off, or use it for mockups only.');
+ return {parsed,originalSvg,gapFillerRemoved};
+}
+function svgKnockout(root,color){
+ if(!color)return 0;const target=svgHex(svgColor(color));let removed=0;
+ for(const e of [...root.querySelectorAll(svgShapeSelector)]){
+  const c=svgColor(svgInherited(e,'fill','#000000'));
+  if(c&&svgHex(c)===target){e.remove();removed++;}
+ }
+ return removed;
+}
+
+async function svgReview(file){
+ const prepared=svgPrepare(await file.text()),{root}=prepared.parsed;
+ if(svgPalette(root).length>32)throw new Error('More than 32 SVG colors. Simplify the artwork before production export.');
+ await svgToVectorPdf(root,prepared.parsed.vb);
+ const backgrounds=await svgBackgroundCandidates(prepared.parsed),colors=svgPalette(root);
+ const detected=backgrounds.length?svgHex(svgColor(svgInherited(backgrounds[0],'fill','#000000'))):'';
+ return new Promise(resolve=>{
+  const urls=[],dialog=document.createElement('dialog');dialog.className='svg-review';dialog.setAttribute('aria-labelledby','svgReviewTitle');
+  const heading=document.createElement('h2');heading.id='svgReviewTitle';heading.textContent=detected?'Remove the background color':'Review SVG artwork';dialog.append(heading);
+  const note=document.createElement('p');note.textContent='The selected color becomes transparent everywhere, including inside letters and artwork. The checkerboard shows where the shirt will show through. Choose Keep all colors when that color should print.';dialog.append(note);
+  const label=document.createElement('label');label.textContent='Color to remove ';const select=document.createElement('select');select.id='svgRemoveColor';
+  const keep=document.createElement('option');keep.value='';keep.textContent='Keep all colors';select.append(keep);
+  for(const color of colors){const o=document.createElement('option');o.value=color;o.textContent=color.toUpperCase()+(color===detected?' — detected background':'');select.append(o);}
+  select.value=detected;label.append(select);dialog.append(label);
+  const grid=document.createElement('div');grid.className='svg-review-grid';let afterImage;
+  for(const title of ['Original','Print artwork']){
+   const card=document.createElement('div'),strong=document.createElement('strong'),img=new Image();strong.textContent=title;img.alt=title;card.append(strong,img);grid.append(card);
+   if(title==='Original'){const url=URL.createObjectURL(new Blob([prepared.originalSvg],{type:'image/svg+xml'}));urls.push(url);img.src=url;}else afterImage=img;
+  }
+  dialog.append(grid);const status=document.createElement('p');status.setAttribute('role','status');dialog.append(status);
+  if(prepared.gapFillerRemoved){const info=document.createElement('p');info.className='desc';info.textContent='Vectorizer display seam strokes are excluded from production so they do not add extra ink colors.';dialog.append(info);}
+  const actions=document.createElement('div');actions.className='production-footer';
+  const apply=document.createElement('button');apply.className='btn';apply.textContent='USE THIS ARTWORK';
+  const cancel=document.createElement('button');cancel.className='btn ghost';cancel.textContent='CANCEL UPLOAD';
+  const done=value=>{dialog.close();dialog.remove();urls.forEach(URL.revokeObjectURL);resolve(value);};
+  apply.onclick=()=>done(select.value);cancel.onclick=()=>done(null);dialog.oncancel=e=>{e.preventDefault();done(null);};
+  actions.append(apply,cancel);dialog.append(actions);
+  let previewUrl;
+  function update(){
+   const clone=root.cloneNode(true),removed=svgKnockout(clone,select.value),remaining=svgPalette(clone);
+   if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)],{type:'image/svg+xml'}));urls.push(previewUrl);afterImage.src=previewUrl;
+   apply.disabled=!remaining.length;status.textContent=!remaining.length?'That removes all artwork. Choose another color or Keep all colors.':(removed?removed+' shapes removed. ':'All artwork colors kept. ')+remaining.length+' source colors remain before Pantone matching.';
+  }
+  select.onchange=update;update();document.body.append(dialog);dialog.showModal();
+ });
+}
+const svgLoadBase=loadArtFile;
+let svgImportBusy=false;
+loadArtFile=async function(file,cb){
+ if(!/\.svg$/i.test(file.name)&&!/svg/i.test(file.type||''))return svgLoadBase(file,cb);
+ if(svgImportBusy){alert('Finish the current SVG import before uploading another.');return;}
+ svgImportBusy=true;const targetGroup=activeSet();let accepted=false;
+ try{
+  const choice=await svgReview(file);if(choice===null)return;accepted=true;
+  const result=await svgProductionRead(file,choice);if(activeSet()!==targetGroup)throw new Error('The active group changed during import. Upload the SVG again in the intended group.');cb(result.canvas);productionRender();productionUpdateStatus();
+ }catch(e){
+  if(accepted){alert('SVG was not imported: '+e.message);return;}
+  if(confirm('Production SVG import: '+e.message+'\n\nUse this file for mockups only? Production artwork would need to be prepared separately.'))svgLoadBase(file,cb);
+ }finally{svgImportBusy=false;}
+};
+async function svgDownloadClean(spec){
+ const meta=spec.art.__production,data=await productionGet(meta.cleanedSvgId);
+ if(!data)throw new Error('The cleaned SVG is no longer stored. Upload the original SVG again.');
+ productionDownload(data,meta.name.replace(/\.svg$/i,'')+' - cleaned source.svg','image/svg+xml');
+}
+</script></body>
 </html>
