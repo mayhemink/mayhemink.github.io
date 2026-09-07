@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.37 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.38 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -433,7 +433,6 @@
   body.mode-simple #lineLive,
   body.mode-simple #lineFabric,
   body.mode-simple #lineUB,
-  body.mode-simple #artSetNote,
   body.mode-simple .rulebox,
   body.mode-simple #advFit,
   body.mode-simple #resetFit,
@@ -907,18 +906,19 @@
       <h3><span class="pn">6</span> Downloads</h3>
       <p class="desc" id="boardDesc">Add shirts to build the job.</p>
       <div class="bigdl">
-        <button class="btn" id="dlJobZip">⬇ SAVE THE WHOLE JOB — ONE FILE</button>
-        <button class="btn ghost" id="dlAllApprovals">⬇ CUSTOMER APPROVAL PDF — ONE FILE, A PAGE PER SHIRT</button>
-        <button class="btn ghost" id="dlShopSheet">⬇ SHOP PRINT SHEET ONLY</button>
+        <div id="exportChecks" class="pr-note" role="status" tabindex="-1"></div>
+        <button class="btn" id="dlJobZip">⬇ SAVE THIS GROUP — APPROVALS + SHOP SHEET</button>
+        <button class="btn ghost" id="dlAllApprovals">⬇ THIS GROUP — CUSTOMER APPROVAL PDF</button>
+        <button class="btn ghost" id="dlShopSheet">⬇ THIS GROUP — SHOP PRINT SHEET</button>
       </div>
       <label class="checkline" id="lineExSize" title="For jobs re-running old films — the mockup just has to look right, so the approval page skips the measured width. The shop print sheet keeps it."><input type="checkbox" id="exSize"><span><b>EXCLUDE PRINT SIZE IN EXPORTS</b> — approval pages skip the measured width (reusing old films)</span></label>
       <div class="btnrow" style="margin-top:8px;">
-        <button class="btn ghost sm" id="dlCleanZip">⬇ CLEAN MOCKUPS ZIP — JUST LOGOS ON SHIRTS, NO BRANDING</button>
+        <button class="btn ghost sm" id="dlCleanZip">⬇ THIS GROUP — CLEAN MOCKUPS ZIP</button>
       </div>
       <!-- v8.27 PRINTAVO HANDOFF — one crop per imprint location per colorway,
            downloaded together with the shop sheet, then Claude files them. -->
       <div class="btnrow" id="pvRow" style="margin-top:12px;">
-        <button class="btn ghost sm" id="dlPrintavo">📎 PRINTAVO HANDOFF — SAVE THE FILES + COPY THE PROMPT</button>
+        <button class="btn ghost sm" id="dlPrintavo">📎 ALL GROUPS — PRINTAVO HANDOFF</button>
       </div>
       <div class="pv-note" id="pvNote" hidden></div>
       <div class="mrow" id="manifestRow"></div>
@@ -1031,7 +1031,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.37 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.38 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1604,6 +1604,7 @@ function garmentPhotos(){
     const p=photosFor(state.styleKey,state.side)[0]||null;
     return state.side==='front'?{front:p,back:null}:{front:null,back:p};
   }
+  if(state.hosted&&typeof curTab!=='undefined'&&curTab!=='cal'&&!activeSet().items.length)return {front:null,back:null};
   let g=null;
   if(state.previewGarment)
     g=garmentIndex().find(x=>x.styleKey===state.previewGarment.styleKey&&slug(x.colorName)===state.previewGarment.colorSlug);
@@ -2677,8 +2678,22 @@ function renderSetTabs(){
   };
   el.appendChild(add);
 }
+function stashGroupState(){
+  const s=activeSet();
+  s.artF=state.artF;s.artB=state.artB;s.artInks=state.artInks;s.inkAssign=state.inkAssign;
+  s.loc=Object.assign({},state.loc);s.fit=JSON.parse(JSON.stringify(state.fit));
+  s.previewGarment=state.previewGarment;
+}
+function selectGroupPreview(){
+  const s=activeSet(),saved=s.previewGarment;
+  const it=s.items.find(it=>saved&&it.styleKey===saved.styleKey&&slug(it.colorName)===saved.colorSlug)||s.items[0];
+  state.previewGarment=it?{styleKey:it.styleKey,colorSlug:slug(it.colorName)}:null;
+  if(it)state.styleKey=it.styleKey;
+  if(!artFor(state.side))state.side=artFor('front')?'front':artFor('back')?'back':'front';
+}
 function switchSet(i){
-  // stash current art/ink state into the outgoing set
+  stashGroupState();
+  // Keep artwork and placement scoped to the selected group.
   const cur=activeSet();
   cur.artF=state.artF;cur.artB=state.artB;cur.artInks=state.artInks;cur.inkAssign=state.inkAssign;
   activeSetIdx=i;
@@ -2687,11 +2702,16 @@ function switchSet(i){
   state.artInks=nxt.artInks||[];state.inkAssign=nxt.inkAssign||[];
   $('dupBack').checked=!!nxt.dupBack;
   $('liveInk').checked=nxt.liveInk!==false;
+  state.loc=Object.assign({},nxt.loc||{front:'fullFront',back:'fullBack'});
+  state.fit=JSON.parse(JSON.stringify(nxt.fit||{}));
+  selectGroupPreview();recolorCache.clear();
+  buildStyleTabs();refreshCalibStatus();syncRuleInputs();syncFitInputs();
   renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();refresh();buildBoard();
 }
 function renderSetItems(){
   const el=$('setItems');el.innerHTML='';
   const set=activeSet();
+  if(!state.previewGarment||!set.items.some(it=>it.styleKey===state.previewGarment.styleKey&&slug(it.colorName)===state.previewGarment.colorSlug))selectGroupPreview();
   $('setEmpty').style.display=set.items.length?'none':'block';
   set.items.forEach((it,idx)=>{
     const g=garmentIndex().find(x=>x.styleKey===it.styleKey&&slug(x.colorName)===slug(it.colorName));
@@ -2784,7 +2804,7 @@ function buildBoard(){
   }
   const styleCount=new Set(items.map(i=>(i.front||i.back).styleKey)).size;
   const src=`${set.name} · ${styleCount} style${styleCount>1?'s':''}`;
-  $('boardDesc').textContent=`${src} · ${items.length} garment${items.length>1?'s':''} · ${state.boardMode==='pair'?'front + back':state.boardMode}`;
+  $('boardDesc').textContent=`${src} · ${items.length} colorway${items.length>1?'s':''} · ${state.boardMode==='pair'?'front + back':state.boardMode}`;
   items.forEach(item=>{
     const main=item.front||item.back;
     const s=STYLES[main.styleKey]||{name:main.styleKey,sub:''};
@@ -2799,7 +2819,7 @@ function buildBoard(){
     const body=document.createElement('div');body.className='cbody';
     body.innerHTML=`<div class="cname">${main.colorName}</div>
       <div class="csub">${s.name} · ${s.sub}<br>${pmsCalloutText(sc)}<br>${sc.dtf?`${sc.inks} ink${sc.inks>1?'s':''} in the art · <span class="ub">no screens</span>`:`${sc.inks} ink${sc.inks>1?'s':''}${sc.ub?' + <span class="ub">white UB</span>':''} = ${sc.total} screens`}</div>`;
-    const dl=document.createElement('button');dl.className='btn ghost sm cdl';dl.textContent='PNG';
+    const dl=document.createElement('button');dl.className='btn ghost sm cdl';dl.dataset.groupDownload='true';dl.textContent='PNG';
     dl.onclick=()=>downloadCanvas(cvs[0],`${slug(s.name)}-${slug(main.colorName)}.png`);
     body.appendChild(dl);
     /* v8.0: move this shirt to the other ink setup, straight from the card */
@@ -3454,6 +3474,8 @@ $('removeSet').onclick=()=>{
   state.artInks=nxt.artInks||[];state.inkAssign=nxt.inkAssign||[];
   $('dupBack').checked=!!nxt.dupBack;
   $('liveInk').checked=nxt.liveInk!==false;
+  state.loc=Object.assign({},nxt.loc||{front:'fullFront',back:'fullBack'});state.fit=JSON.parse(JSON.stringify(nxt.fit||{}));
+  selectGroupPreview();buildStyleTabs();refreshCalibStatus();syncRuleInputs();syncFitInputs();
   renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();refresh();buildBoard();
 };
 activeSet().artF=state.artF; // default demo art belongs to SET A
@@ -4065,7 +4087,7 @@ function renderSummaryTo(pg){
     ctx.fillText(gr.label,tx,gy+22);
     ctx.fillStyle='#98A0A6';ctx.font='700 12px "JetBrains Mono", monospace';
     ctx.textAlign='right';
-    ctx.fillText(gr.items.length+' SHIRT'+(gr.items.length===1?'':'S')+' · '
+    ctx.fillText(gr.items.length+' COLORWAY'+(gr.items.length===1?'':'S')+' · '+gr.items.reduce((n,x)=>n+itemQuantity(x.it),0)+' PCS · '
       +(sc.dtf?'NO SCREENS':totScr+' SCREEN'+(totScr===1?'':'S')),tx+tileW,gy+22);
     ctx.textAlign='left';
     /* striped tile */
@@ -4560,12 +4582,15 @@ function renderImprintCrop(item,spec,maxPx){
    back. Same stash/restore switchSet does, minus all the DOM repainting — the
    handoff walks every group without the UI flickering through them. */
 async function withSetAsync(i,fn){
+  stashGroupState();
   const prevIdx=activeSetIdx;
+  const savedLoc=state.loc,savedFit=state.fit;
   const outgoing=SETS[prevIdx];
   outgoing.artF=state.artF;outgoing.artB=state.artB;
   outgoing.artInks=state.artInks;outgoing.inkAssign=state.inkAssign;
   activeSetIdx=i;
   const s=SETS[i];
+  state.loc=Object.assign({},s.loc||savedLoc);state.fit=JSON.parse(JSON.stringify(s.fit||savedFit));
   state.artF=s.artF;state.artB=s.artB;
   state.artInks=s.artInks||[];state.inkAssign=s.inkAssign||[];
   recolorCache.clear();
@@ -4574,7 +4599,7 @@ async function withSetAsync(i,fn){
     const done=SETS[activeSetIdx];
     done.artF=state.artF;done.artB=state.artB;
     done.artInks=state.artInks;done.inkAssign=state.inkAssign;
-    activeSetIdx=prevIdx;
+    activeSetIdx=prevIdx;state.loc=savedLoc;state.fit=savedFit;
     const back=SETS[prevIdx];
     state.artF=back.artF;state.artB=back.artB;
     state.artInks=back.artInks||[];state.inkAssign=back.inkAssign||[];
@@ -4730,7 +4755,7 @@ $('dlPrintavo').onclick=async()=>{
         +' flagged for the production note.</b>':'<br>Nothing unusual — the production note stays untouched.')
       +(r.skipped&&r.skipped.length?'<br><span class="pv-bad">Skipped '+r.skipped.join(', ')
         +' — no art loaded.</span>':'')
-      +'<br>Prompt copied — paste it to Claude:'
+      +'<br>Prompt copied — paste it to your connected assistant:'
       +'<span class="pv-prompt">'+prompt+'</span>';
     b.textContent='✓ SAVED — PROMPT COPIED';
     setTimeout(()=>{b.textContent=orig;b.disabled=false;},2600);
@@ -4783,9 +4808,9 @@ const MAYHEM_TIERS=[ /* [minQty,[1..6 color print $/pc],garment markup ×] */
 window.PRICEBOOK=null;
 fetch('prices.json').then(r=>r.ok?r.json():null).then(j=>{
   if(j&&j.styles){window.PRICEBOOK=j;
-    const f=$('prFoot');if(f)f.textContent='shirt costs from SanMar · updated '+(j.updated||'—')+' · refreshes weekly';
+    const f=$('prFoot');if(f){f.textContent=pricebookStatus(j.updated);f.classList.toggle('pr-note',/STALE|unavailable/.test(f.textContent));}
     if($('srBody')&&!$('srBody').hidden)renderSizeRun();}
-}).catch(()=>{});
+}).catch(()=>{const f=$('prFoot');if(f)f.textContent='Supplier costs unavailable — pricing cannot be completed.';});
 function sizesForStyle(sk){
   const pb=window.PRICEBOOK&&PRICEBOOK.styles&&PRICEBOOK.styles[sk];
   return (pb&&pb.sizes&&pb.sizes.length)?pb.sizes:['S','M','L','XL','2XL','3XL','4XL'];
@@ -4849,32 +4874,64 @@ function renderSizeRun(){
   });
   renderPricing();
 }
+function groupPrintSpecs(st){
+  const current=st===activeSet(),front=current?state.artF:st.artF,back=st.dupBack?front:(current?state.artB:st.artB);
+  const inks=current?state.artInks:(st.artInks||[]),assign=current?state.inkAssign:(st.inkAssign||[]);
+  const two=!!(front&&back&&!st.dupBack),specs=[];
+  ['front','back'].forEach(side=>{
+    if(!(side==='front'?front:back))return;
+    const count=dark=>dedupeInks(assign.filter((a,i)=>!inkIsOff(a,dark)&&(!two||!inks[i]?.sides||inks[i].sides==='FB'||inks[i].sides===(side==='front'?'F':'B'))),a=>inkIdxFor(a,dark,side)).length;
+    specs.push({label:side,colors:Math.max(1,count(false),count(true))});
+  });
+  ['L','R'].forEach(k=>{const s=st.sleeves&&st.sleeves[k];if(!s||!s.art)return;
+    const count=dark=>dedupeInks((s.assign||[]).filter(a=>!inkIsOff(a,dark)),a=>(dark&&a.darkIdx!=null)?a.darkIdx:a.idx).length;
+    specs.push({label:(k==='L'?'left':'right')+' sleeve',colors:Math.max(1,count(false),count(true))});
+  });
+  return specs;
+}
+function groupItemDark(it,st){
+  if(it.inkMode&&it.inkMode!=='auto')return it.inkMode==='dark';
+  if(st===activeSet())return itemUsesDark(it);
+  // Detection samples the print area, so it also needs this group's placement.
+  const prior=activeSetIdx,saved={artF:state.artF,artB:state.artB,artInks:state.artInks,inkAssign:state.inkAssign,loc:state.loc,fit:state.fit};
+  try{
+    activeSetIdx=SETS.indexOf(st);
+    Object.assign(state,{artF:st.artF,artB:st.artB,artInks:st.artInks||[],inkAssign:st.inkAssign||[],loc:st.loc||saved.loc,fit:st.fit||{}});
+    return itemUsesDark(it);
+  }finally{activeSetIdx=prior;Object.assign(state,saved);}
+}
+function pricebookStatus(updated,today=Date.now()){
+  const date=typeof updated==='string'&&/^\d{4}-\d{2}-\d{2}/.test(updated)?Date.parse(updated.slice(0,10)+'T00:00:00Z'):NaN;
+  if(!Number.isFinite(date))return 'Cost refresh date unavailable — verify supplier costs before quoting.';
+  const age=Math.max(0,Math.floor((today-date)/86400000));
+  return 'SanMar costs · updated '+updated+' · '+(age>7?'STALE ('+age+' days) — verify costs before quoting':'verify current supplier costs before quoting');
+}
 function renderPricing(){
   const out=$('prOut');if(!out)return;
+  updateExportChecks();
   const qty=srTotalQty();
   if(!qty){out.innerHTML='<div class="bk-hint">enter quantities in the SIZE RUN above — pricing goes live from there</div>';return;}
+  if(isDTF()){out.innerHTML='<div class="pr-note">DTF — manual quote required. Screen-print totals are hidden.</div>';return;}
   const ubCount=state.autoUnderbase&&!isDTF();   /* v8.17: underbase is always a color + screen unless NO UNDERBASE */
-  const locs=jobPrintLocs();
   const mt=tierFor(MAYHEM_TIERS,qty);
-  let html='',grand=0,pcs=0,capped=false;const missing={};
-  SETS.forEach(st=>st.items.forEach(it=>{
+  let html='',grand=0,pcs=0,capped=false,incomplete=false;const missing={};
+  SETS.forEach(st=>{const specs=groupPrintSpecs(st);let printedGroup=false;
+  st.items.forEach(it=>{
     if(!it.sizeRun)return;
     const ord=sizesForStyle(it.styleKey);
     const rows=Object.entries(it.sizeRun).filter(([k,q])=>+q>0)
       .sort((a,b)=>ord.indexOf(a[0])-ord.indexOf(b[0]));
     if(!rows.length)return;
+    if(!printedGroup){
+      const heading=document.createElement('div');heading.textContent=st.name;
+      html+='<h4>'+heading.innerHTML+'</h4><div class="pr-sub">'+(specs.length?specs.map(s=>s.label+' '+s.colors+'-color').join(' + '):'Artwork missing — quote incomplete')+'</div>';
+      printedGroup=true;
+    }
+    const noArt=!specs.length;if(noArt)incomplete=true;
     let printPc=0;
-    locs.forEach(sd=>{
-      let n=locColorCount(sd)+((ubCount&&itemUsesDark(it))?1:0);
-      if(n>6){n=6;capped=true;}
-      printPc+=mt[1][n-1];
-    });
-    /* v8.20: each sleeve is one more print location, same matrix */
-    sleevesWithArt().forEach(k=>{
-      let n=sleeveColorCountMax(k)+((ubCount&&itemUsesDark(it))?1:0);
-      if(n>6){n=6;capped=true;}
-      printPc+=mt[1][n-1];
-    });
+    const dark=groupItemDark(it,st);
+    specs.forEach(spec=>{let n=spec.colors+((ubCount&&dark)?1:0);
+      if(n>6){n=6;capped=true;}printPc+=mt[1][n-1];});
     const sName=(STYLES[it.styleKey]||{name:it.styleKey}).name;
     /* v8.18: base sizes grouped on one line, upcharge sizes on their own, AVG/shirt under each color */
     const UPSZ=['2XL','3XL','4XL','5XL','6XL'];
@@ -4887,25 +4944,23 @@ function renderPricing(){
       lines.push([lbl,bq,shirtCostFor(it,baseRows[0][0])]);
     }
     upRows.forEach(([sz,q])=>lines.push([sz,+q,shirtCostFor(it,sz)]));
-    let inner='',sub=0,subq=0;
+    let inner='',sub=0,subq=0,complete=!noArt;
     lines.forEach(([lbl,q,cost])=>{
       let pc=null;
-      if(cost!=null){pc=Math.round((cost*mt[2]+printPc)*100)/100;sub+=pc*q;}
-      else missing[it.styleKey]=1;
+      if(cost!=null&&!noArt){pc=Math.round((cost*mt[2]+printPc)*100)/100;sub+=pc*q;}
+      else {complete=false;incomplete=true;if(cost==null)missing[it.styleKey]=1;}
       subq+=q;
       inner+='<tr><td>'+lbl+'</td><td>× '+q+'</td><td>'+(pc==null?'—':'$'+pc.toFixed(2)+'/pc')+'</td><td>'+(pc==null?'—':'$'+(pc*q).toFixed(2))+'</td></tr>';
     });
-    if(subq){
+    if(subq&&complete){
       const avg=sub/subq;
       inner+='<tr><td colspan="2" style="color:var(--accent2);font-weight:700;">AVG / SHIRT</td><td style="text-align:right;color:var(--accent2);font-weight:700;">$'+avg.toFixed(2)+'</td><td style="font-weight:700;">$'+sub.toFixed(2)+'</td></tr>';
     }
     grand+=sub;pcs+=subq;
     html+='<div class="pr-block"><div class="pr-title"><b>'+it.colorName+'</b><span>'+sName+'</span></div><table>'+inner+'</table></div>';
-  }));
-  html+='<div class="pr-total"><span>'+pcs+' PCS</span><span>$'+grand.toFixed(2)+'</span></div>';
-  html+='<div class="pr-sub">'+mt[0]+'+ piece pricing · '+locs.map(sd=>sd+' '+locColorCount(sd)+'-color')
-    .concat(sleevesWithArt().map(k=>(k==='L'?'left':'right')+' sleeve '+sleeveColorCountMax(k)+'-color'))
-    .join(' + ')+(ubCount?' · +UB on darks':'')+'</div>';
+  });});
+  html+='<div class="pr-total"><span>'+pcs+' PCS · ALL GROUPS</span><span>'+(incomplete?'QUOTE INCOMPLETE':'$'+grand.toFixed(2))+'</span></div>';
+  html+='<div class="pr-sub">'+mt[0]+'+ piece pricing across the job'+(ubCount?' · underbase added on darks':'')+'</div>';
   const miss=Object.keys(missing);
   if(miss.length)html+='<div class="pr-note">no SanMar cost yet for '+miss.join(', ')+' — those rows show — until the weekly price refresh picks them up</div>';
   if(capped)html+='<div class="pr-note">7+ screens — priced at the 6-color row, quote by hand</div>';
@@ -4992,7 +5047,7 @@ function serializeJob(){
     fabricBlend:state.fabricBlend,autoUnderbase:state.autoUnderbase,printMethod:state.printMethod,
     exportNoSize:!!state.exportNoSize,priceSheet:(typeof PRICE_SHEET!=='undefined')?PRICE_SHEET:'mayhem',prUB:!!($('prUB')&&$('prUB').checked),
     userArt:!!window.__userArt,
-    sets:SETS.map(st=>({name:st.name,items:st.items,dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
+    sets:SETS.map(st=>({name:st.name,items:st.items,loc:st===activeSet()?state.loc:st.loc,fit:st===activeSet()?state.fit:st.fit,previewGarment:st===activeSet()?state.previewGarment:st.previewGarment,dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
       artInks:st.artInks||[],
       inkAssign:(st.inkAssign||[]).map(a=>({idx:a.idx,darkIdx:a.darkIdx==null?null:a.darkIdx,backIdx:a.backIdx==null?null:a.backIdx,backDarkIdx:a.backDarkIdx==null?null:a.backDarkIdx,off:!!a.off,darkOff:(a.darkOff==null?null:!!a.darkOff),match:a.match,auto:!!a.auto})),
       artF:(window.__userArt&&st.artF)?st.artF.toDataURL('image/png'):null,
@@ -5038,7 +5093,7 @@ async function restoreJob(j){
   SETS.length=0;
   for(const st of (j.sets||[])){
     const artF=await loadCanvasFrom(st.artF),artB=await loadCanvasFrom(st.artB);
-    const ns={name:st.name,items:st.items||[],dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
+    const ns={name:st.name,items:st.items||[],loc:Object.assign({},st.loc||j.loc||state.loc),fit:JSON.parse(JSON.stringify(st.fit||j.fit||{})),previewGarment:st.previewGarment||null,dupBack:!!st.dupBack,liveInk:st.liveInk!==false,
       artInks:st.artInks||[],inkAssign:st.inkAssign||[],artF,artB};
     if(st.sleeves){   /* v8.20 */
       ns.sleeves={};
@@ -5055,7 +5110,8 @@ async function restoreJob(j){
   const cur=activeSet();
   state.artF=cur.artF;state.artB=cur.artB;state.artInks=cur.artInks||[];state.inkAssign=cur.inkAssign||[];
   $('dupBack').checked=!!cur.dupBack;$('liveInk').checked=cur.liveInk!==false;
-  if(cur.items.length)state.previewGarment={styleKey:cur.items[0].styleKey,colorSlug:slug(cur.items[0].colorName)};
+  state.loc=Object.assign({},cur.loc||state.loc);state.fit=JSON.parse(JSON.stringify(cur.fit||{}));
+  selectGroupPreview();
   recolorCache.clear();
   if(!window.__userArt)adoptLogoAsDemo();
   renderSetTabs();renderSetItems();refreshInkList();refreshArtNote();syncRuleInputs();syncFitInputs();refresh();buildBoard();
@@ -5068,7 +5124,7 @@ async function restoreJob(j){
     const n=saved.sets.reduce((a,st)=>a+(st.items||[]).length,0);
     const mins=Math.max(1,Math.round((Date.now()-(saved.when||Date.now()))/60000));
     const agoTxt=mins<60?mins+' min ago':mins<1440?Math.round(mins/60)+' hr ago':Math.round(mins/1440)+' day'+(Math.round(mins/1440)>1?'s':'')+' ago';
-    $('resumeTxt').innerHTML=`<b>Pick up where you left off?</b> ${saved.customer||'Untitled job'} · ${n} shirt${n===1?'':'s'} · saved ${agoTxt}`;
+    $('resumeTxt').innerHTML=`<b>Pick up where you left off?</b> ${saved.customer||'Untitled job'} · ${n} colorway${n===1?'':'s'} · saved ${agoTxt}`;
     window.__resumeOffer=true;
     bar.hidden=false;
     $('resumeYes').onclick=async()=>{window.__resumeOffer=false;bar.hidden=true;await restoreJob(saved);__bootRestored=true;};
@@ -6192,7 +6248,7 @@ $('supDlPv').onclick=async function(){
     note.hidden=false;
     note.innerHTML='<b>Saved '+r.name+'</b> — '+r.pages+' sheet page'+(r.pages===1?'':'s')
       +' headed for the job\'s PRODUCTION FILES.'
-      +'<br>Prompt copied — paste it to Claude:'
+      +'<br>Prompt copied — paste it to your connected assistant:'
       +'<span class="pv-prompt">'+prompt+'</span>';
     b.textContent='✓ SAVED — PROMPT COPIED';
     setTimeout(function(){b.textContent=orig;b.disabled=false;},2600);
@@ -6303,6 +6359,44 @@ refreshInkList();
     }catch(e){msg.textContent="couldn't send — try again";msg.className='bad';}
     send.disabled=false;};
 })();
+
+/* v8.38: group identity, counts, and export checks shared by every download. */
+function itemQuantity(it){return Object.values(it.sizeRun||{}).reduce((n,q)=>n+Math.max(0,+q||0),0);}
+function groupExportIssues(st){
+  const issues=[],current=st===activeSet();
+  const front=current?state.artF:st.artF,back=st.dupBack?front:(current?state.artB:st.artB);
+  const loc=current?state.loc:(st.loc||state.loc),fit=current?state.fit:(st.fit||{});
+  if(!st.items.length)return [st.name+': add garments before exporting.'];
+  if(!front&&!back&&!['L','R'].some(k=>st.sleeves?.[k]?.art))issues.push(st.name+': add artwork before exporting.');
+  ['front','back'].forEach(side=>{
+    const art=side==='front'?front:back;if(!art)return;
+    const w=fit[side+':'+loc[side]]?.widthIn??RULES[side][loc[side]].defaultWidth,h=w*art.height/art.width;
+    if(!Number.isFinite(w)||!Number.isFinite(h)||w<=0||h<=0||w>12.51||h>17.01)issues.push(st.name+' '+side+': '+Number(w).toFixed(2)+' × '+Number(h).toFixed(2)+' in exceeds the 12.5 × 17 in print area. Adjust placement before exporting.');
+  });
+  ['L','R'].forEach(k=>{const s=st.sleeves?.[k];if(!s?.art)return;const a=sleeveArea(s),w=s.widthIn||3,h=w*s.art.height/s.art.width;
+    if(w<=0||!Number.isFinite(h)||w>a.w+.01||h>a.h+.01)issues.push(st.name+' '+(k==='L'?'left':'right')+' sleeve: resize to fit '+a.w+' × '+a.h+' in.');});
+  return issues;
+}
+function updateExportChecks(){
+  const box=$('exportChecks');if(!box)return;
+  const s=activeSet(),issues=groupExportIssues(s),pieces=s.items.reduce((n,it)=>n+itemQuantity(it),0);
+  box.textContent=s.name+' · '+s.items.length+' colorways · '+pieces+' pieces entered. '+(issues.length?issues.join(' '):'Ready to export this group.');
+  box.style.color=issues.length?'#E8C447':'#98A0A6';
+}
+const groupDownloadIds=new Set(['dlJobZip','dlAllApprovals','dlShopSheet','dlSummary','dlCleanZip','dlApproval','dlBoard','dlActive']);
+document.addEventListener('click',function(e){
+  const b=e.target.closest('button');if(!b||(!groupDownloadIds.has(b.id)&&b.id!=='dlPrintavo'&&!b.classList.contains('mfile')&&!b.dataset.groupDownload))return;
+  const groups=b.id==='dlPrintavo'?SETS.filter(s=>s.items.length):[activeSet()];
+  const issues=groups.flatMap(groupExportIssues);
+  if(issues.length){
+    e.preventDefault();e.stopImmediatePropagation();
+    const box=$('exportChecks');box.textContent='Download paused. '+issues.join(' ');box.style.color='#E8C447';
+    box.tabIndex=-1;box.focus({preventScroll:true});box.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+},true);
+const groupCheckedRefresh=refresh;refresh=function(){groupCheckedRefresh();updateExportChecks();};
+updateExportChecks();
+
 </script>
 </body>
 </html>
