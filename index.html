@@ -300,6 +300,7 @@
 var DATA_URL = "data/week.json"; // ROOT app (cutover 2026-08-16). Old test page /v3/ now redirects here.
 
 var WEEKID = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], DAYSARR = [], IMG = {};
+var LABELS = {};             // non-date tabs (e.g. "extra" -> "EXTRA CARDS"), from day.label in week.json
 var ALLROWS = [];            // every row across the week, each with ._day attached
 var FLAGSBY = {};            // day -> flags
 var ROWSBY = {};             // day -> rows
@@ -345,11 +346,12 @@ function boot(data){
   COUNTS = data.counts || COUNTS;
   IMG = data.img || {};
   if(data.stats && data.stats.pph && data.stats.setup) STATS = data.stats;
-  DAYSARR = []; ALLROWS = []; ROWSBY = {}; FLAGSBY = {}; STATES = {}; CLOCKS = {};
+  DAYSARR = []; ALLROWS = []; ROWSBY = {}; FLAGSBY = {}; STATES = {}; CLOCKS = {}; LABELS = {};
   var days = data.days || [];
   for(var i = 0; i < days.length; i++){
     var d = days[i];
     DAYSARR.push(d.day);
+    if(d.label) LABELS[d.day] = String(d.label);
     ROWSBY[d.day] = d.rows || [];
     FLAGSBY[d.day] = d.flags || [];
     for(var j = 0; j < ROWSBY[d.day].length; j++){
@@ -370,7 +372,8 @@ function boot(data){
 }
 function updateHdr(){
   var el = document.getElementById("hdrdate");
-  if(curDay) el.textContent = new Date(curDay + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+  if(curDay && LABELS[curDay]) el.textContent = LABELS[curDay];
+  else if(curDay) el.textContent = new Date(curDay + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
   else el.textContent = "";
 }
 function loadWeek(){
@@ -561,9 +564,11 @@ function renderList(){
   renderStrip();
 }
 function dayLabel(d){
+  if(LABELS[d]) return LABELS[d].toUpperCase();
   return new Date(d + "T12:00:00").toLocaleDateString("en-US", {weekday:"short"}).toUpperCase();
 }
 function dayNum(d){
+  if(LABELS[d]) return "";
   var x = new Date(d + "T12:00:00");
   return (x.getMonth()+1) + "/" + x.getDate();
 }
@@ -863,7 +868,9 @@ function renderDetail(){
   var st = status(r);
 
   var html = '<button class="back" onclick="showList()">&#8592; All jobs</button>';
-  if(row._day !== todayStr()){
+  if(LABELS[row._day]){
+    html += '<div class="flagbar"><div class="tag">' + dayLabel(row._day) + '</div><div class="txt">This is an EXTRA card — not scheduled for a specific day. Run it whenever the day&#39;s cards are done or a press opens up; it may also move onto next week&#39;s board.</div></div>';
+  } else if(row._day !== todayStr()){
     html += '<div class="flagbar"><div class="tag">' + dayLabel(row._day) + ' ' + dayNum(row._day) + '</div><div class="txt">Heads up — this card is scheduled for ' + dayLabel(row._day) + '. Running it today is fine, just double-check it&#39;s the right job.</div></div>';
   }
   if(row.img && IMG[row.img]) html += '<div class="dmock"><img src="' + IMG[row.img] + '" onclick="showLightbox(this.src)"></div>';
