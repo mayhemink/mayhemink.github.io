@@ -234,6 +234,18 @@
   .jobnote{background:#2ee84e; color:#093313; font-weight:800; font-size:14px; letter-spacing:.3px; padding:8px 12px; border-radius:8px; margin-top:8px; text-transform:uppercase;}
   /* Red band under the green note — the things that stop a run if missed. */
   .jobalert{background:#c0392b; color:#fff; font-weight:800; font-size:14px; letter-spacing:.3px; padding:8px 12px; border-radius:8px; margin-top:6px; text-transform:uppercase; line-height:1.5;}
+  /* Editor-only (?editor=1): tweak the green note / red alert from the board itself. */
+  .noteedit{margin-top:6px; font-size:12px; font-weight:700;}
+  .noteedit a{color:var(--gray); text-decoration:none; border:1px dashed var(--line); border-radius:6px; padding:2px 8px;}
+  #noteeditor{display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9998; overflow:auto; padding:24px 12px;}
+  #noteeditor .box{background:var(--card); border-radius:14px; max-width:640px; margin:0 auto; padding:16px;}
+  #noteeditor h3{margin:0 0 10px; font-size:16px;}
+  #noteeditor label{display:block; font-size:12px; font-weight:800; color:var(--gray); margin:10px 0 4px; text-transform:uppercase;}
+  #noteeditor textarea{width:100%; box-sizing:border-box; min-height:90px; font:inherit; font-size:14px; padding:8px; border:1px solid var(--line); border-radius:8px;}
+  #noteeditor textarea.green{background:#e6fbe9;} #noteeditor textarea.red{background:#fdeaea;}
+  #noteeditor .btns{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+  #noteeditor .btns button{font:inherit; font-weight:800; padding:10px 14px; border-radius:8px; border:1px solid var(--line); background:#fff;}
+  #noteeditor .btns button.save{background:var(--ink); color:#fff; border-color:var(--ink);}
   .mockstrip{display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding:10px 0 4px;}
   .mockstrip img{height:92px; border-radius:8px; background:#fff; border:1px solid var(--line); flex-shrink:0;}
   .dmock{text-align:center; margin-bottom:12px;}
@@ -300,6 +312,13 @@
 var DATA_URL = "data/week.json"; // ROOT app (cutover 2026-08-16). Old test page /v3/ now redirects here.
 
 var WEEKID = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], DAYSARR = [], IMG = {};
+var EDITOR = false;          // ?editor=1 once on a device -> ✎ edit notes on job headers (Kolton's browser, not the iPads)
+try{
+  var _q = String(location.search || "") + String(location.hash || "");
+  if(/editor=1/.test(_q)) localStorage.setItem("mayhem_editor", "1");
+  if(/editor=0/.test(_q)) localStorage.removeItem("mayhem_editor");
+  EDITOR = localStorage.getItem("mayhem_editor") === "1";
+}catch(e){}
 var LABELS = {};             // non-date tabs (e.g. "extra" -> "EXTRA CARDS"), from day.label in week.json
 var ALLROWS = [];            // every row across the week, each with ._day attached
 var FLAGSBY = {};            // day -> flags
@@ -418,8 +437,56 @@ function saveClock(day){
 }
 function findRow(id){
   for(var i = 0; i < ALLROWS.length; i++) if(ALLROWS[i].id === id) return ALLROWS[i];
+  // Virtual "jobnote_<job>_<day>" records carry editor overrides for the green/red bands.
+  // They ride the same per-row sync (LWW on `notes`) so both iPads converge on them.
+  if(String(id).indexOf("jobnote_") === 0){
+    var p = String(id).split("_");
+    if(p.length >= 3 && DAYSARR.indexOf(p.slice(2).join("_")) > -1){
+      return {id:id, job:p[1], _day:p.slice(2).join("_"), customer:"", location:"", _virtual:true};
+    }
+  }
   return null;
 }
+function jobNoteId(day, job){ return "jobnote_" + job + "_" + day; }
+function jobNoteOverride(day, job){
+  var st = STATES[day]; var r = st && st[jobNoteId(day, job)];
+  if(!r || !r.notes) return null;
+  try{ var o = JSON.parse(r.notes); return (o && typeof o === "object") ? o : null; }catch(e){ return null; }
+}
+var NE = {day:null, job:null};
+function editJobNotes(day, job){
+  var rows = (ROWSBY[day] || []).filter(function(r){ return r.job === job; });
+  var bn = "", ba = "";
+  for(var i = 0; i < rows.length; i++){ if(rows[i].note){ bn = rows[i].note; break; } }
+  for(var j = 0; j < rows.length; j++){ if(rows[j].alert){ ba = rows[j].alert; break; } }
+  var ov = jobNoteOverride(day, job);
+  NE.day = day; NE.job = job;
+  document.getElementById("ne_title").textContent = "Edit notes — #" + job + " (" + dayLabel(day) + (dayNum(day) ? " " + dayNum(day) : "") + ")";
+  document.getElementById("ne_note").value  = (ov && ov.n !== undefined) ? ov.n : bn;
+  document.getElementById("ne_alert").value = (ov && ov.a !== undefined) ? ov.a : ba;
+  document.getElementById("noteeditor").style.display = "block";
+}
+function closeJobNotes(){ document.getElementById("noteeditor").style.display = "none"; }
+function writeJobNotes(day, job, val){
+  var id = jobNoteId(day, job);
+  var st = STATES[day] || (STATES[day] = {});
+  var r = st[id] || (st[id] = {id:id, printer:null, pauses:[], handoffs:[], _mt:{}});
+  r.notes = val;
+  if(!r._mt) r._mt = {};
+  r._mt.notes = now();
+  try{ SYNC.snap[id] = {notes:val}; SYNC.dirty[id] = 1; }catch(e){}
+  saveStateFor(day);
+  closeJobNotes();
+  if(!currentRow) renderList();
+  try{ syncPush(); }catch(e){}
+}
+function submitJobNotes(){
+  if(!NE.day) return;
+  var n = document.getElementById("ne_note").value.replace(/\s+$/,"");
+  var a = document.getElementById("ne_alert").value.replace(/\s+$/,"");
+  writeJobNotes(NE.day, NE.job, JSON.stringify({n:n, a:a, at:now()}));
+}
+function resetJobNotes(){ if(NE.day) writeJobNotes(NE.day, NE.job, ""); }
 function stateFor(row){ return STATES[row._day] || (STATES[row._day] = {}); }
 function save(){
   if(!currentRow) return;
@@ -628,8 +695,18 @@ function renderGroups(){
       '<div class="jnum"><span>' + (g0.url ? '<a class="jlink" href="' + g0.url + '" target="_blank" onclick="event.stopPropagation()">#' + esc(g0.job) + '</a>' : '#' + esc(g0.job)) + '</span></div>' +
       '<div class="jcust">' + esc(g0.customer) + '</div>' +
       '<div class="jscreens">' + gScreens + ' SCREENS</div></div>' +
-      (function(){ var gNote = null; for(var x = 0; x < g.length; x++){ if(g[x].note){ gNote = g[x].note; break; } } return gNote ? '<div class="jobnote">' + esc(gNote) + '</div>' : ''; })() +
-      (function(){ var gA = null; for(var x = 0; x < g.length; x++){ if(g[x].alert){ gA = g[x].alert; break; } } return gA ? '<div class="jobalert">' + esc(gA).replace(/\n/g, '<br>') + '</div>' : ''; })() +
+      (function(){
+        var gNote = null, gA = null, x;
+        for(x = 0; x < g.length; x++){ if(g[x].note){ gNote = g[x].note; break; } }
+        for(x = 0; x < g.length; x++){ if(g[x].alert){ gA = g[x].alert; break; } }
+        var ov = jobNoteOverride(g0._day, g0.job);
+        if(ov){ if(ov.n !== undefined) gNote = ov.n; if(ov.a !== undefined) gA = ov.a; }
+        var h = "";
+        if(gNote) h += '<div class="jobnote">' + esc(gNote) + '</div>';
+        if(gA) h += '<div class="jobalert">' + esc(gA).replace(/\n/g, '<br>') + '</div>';
+        if(EDITOR) h += '<div class="noteedit"><a href="#" onclick="event.preventDefault();event.stopPropagation();editJobNotes(\'' + g0._day + '\',\'' + esc(g0.job) + '\')">&#9998; edit notes' + (ov ? ' (edited)' : '') + '</a></div>';
+        return h;
+      })() +
       (gImgs.length ? '<div class="mockstrip">' + gImgs.map(function(x){ return '<img src="' + IMG[x] + '" onclick="event.stopPropagation();showLightbox(this.src)">'; }).join('') : '');
     if(gImgs.length) html += '</div>';
     html += '</div>';
@@ -1788,6 +1865,21 @@ setInterval(function(){
 loadWeek();
 </script>
 
+<div id="noteeditor" onclick="if(event.target===this)closeJobNotes()">
+  <div class="box">
+    <h3 id="ne_title">Edit notes</h3>
+    <label>Green note (job note)</label>
+    <textarea id="ne_note" class="green"></textarea>
+    <label>Red alert (must-read)</label>
+    <textarea id="ne_alert" class="red"></textarea>
+    <div class="btns">
+      <button class="save" onclick="submitJobNotes()">Save</button>
+      <button onclick="resetJobNotes()">Reset to board</button>
+      <button onclick="closeJobNotes()">Cancel</button>
+    </div>
+    <div style="font-size:12px;color:var(--gray);margin-top:8px;">Saves to the shared board state (both iPads see it within a minute). Empty = hide that band.</div>
+  </div>
+</div>
 <div id="lightbox" onclick="if(event.target===this)hideLightbox()">
   <button id="lbclose" onclick="hideLightbox()">&times;</button>
   <img id="lbimg" alt="">

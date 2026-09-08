@@ -48,6 +48,110 @@
    "day": "2026-09-08",
    "rows": [
     {
+     "id": "6385-8-camo-back",
+     "job": "6385",
+     "url": "https://www.printavo.com/invoices/23955982",
+     "customer": "Trail Hero — Brandi Marketing",
+     "location": "ST460LS OLIVE + GREY camo — BUILT DIFFERENT back, 1c — ink swap per colorway (Olive 122 / Grey 122)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 244,
+     "img": "6385camo_olv",
+     "note": "OLIVE + GREY CAMO BACKS ONLY today — fronts and sleeves on these already ran. One screen, ink swap olive → grey on this card. Everything else left on Trail Hero (black camo x3, Busch backs, District tees, Wolfbox) is on WEDNESDAY. Hard customer date 9/15.",
+     "nickname": "Apparel 2026",
+     "alert": "BACKS ONLY on olive + grey — one card, swap ink olive → grey. Black camo is Wednesday."
+    },
+    {
+     "id": "6447-front",
+     "job": "6447",
+     "url": "https://www.printavo.com/invoices/24213611",
+     "customer": "Muley Crazy — American Tee (Creation Cartel)",
+     "location": "Front center 11\" — MULEY CRAZY flag, 2c — INK BY SHIRT COLOR: Stone Grey (78) 90/10 + Light Grey · Military Green (78) Black + Dark Green · Slate Blue (54) 90/10 + 7545",
+     "colors": 2,
+     "screens": 2,
+     "qty": 210,
+     "img": "6447b",
+     "note": "Creation Cartel. THREE shirt colorways, ink changes on every screen between them — all on ONE card per location. Stone Grey = 90/10 + Light Grey · Military Green = Black + Dark Green · Slate Blue = 90/10 + 7545 (the 7545 was marked '?' on the PO — confirm with Kolton before mixing). Old art, produced before.",
+     "nickname": "Muley Crazy - American Tee",
+     "alert": "Ink change per colorway on ONE card per location — do NOT open a second card."
+    },
+    {
+     "id": "6447-sleeve",
+     "job": "6447",
+     "url": "https://www.printavo.com/invoices/24213611",
+     "customer": "Muley Crazy — American Tee (Creation Cartel)",
+     "location": "Left sleeve 3.75\" — MULEY CRAZY buck, 1c — same ink-by-colorway swaps (Stone Grey → Mil Green → Slate Blue)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 210,
+     "img": "6447s",
+     "note": "One screen, swap ink per colorway on this one card. Old art, produced before.",
+     "nickname": "Muley Crazy - American Tee"
+    },
+    {
+     "id": "6446-front",
+     "job": "6446",
+     "url": "https://www.printavo.com/invoices/24213604",
+     "customer": "Muley Crazy — Muley Ross (Creation Cartel)",
+     "location": "Front center 11\" — MULEY CRAZY buck, 5 COLOR (underbase + 4) — NL 6210 Hthr Charcoal 105 + Espresso 105",
+     "colors": 5,
+     "screens": 5,
+     "qty": 210,
+     "img": "6446a",
+     "note": "Creation Cartel. 5 screens = underbase + 4, no ink changes between the two shirt colors. 11\" wide front center. Production note says the charcoal blanks may have shipped as 'Black Mist' — count in what arrived.",
+     "nickname": "Muley Crazy - Muley Ross (Ross Ray Design)",
+     "noest": true
+    },
+    {
+     "id": "6474-enough-front",
+     "job": "6474",
+     "url": "https://www.printavo.com/invoices/24335540",
+     "customer": "Renaissance Ranch (Creation Cartel)",
+     "location": "YOU ARE ENOUGH 9.5\" center chest — 1c BLACK, no underbase, matte additive — DM108 Light Hthr Grey, 118 pcs",
+     "colors": 1,
+     "screens": 1,
+     "qty": 118,
+     "img": "6474en2",
+     "note": "Creation Cartel rolling job — customer picks up each design as it finishes. YOU ARE ENOUGH front + BAND OF BROTHERS sleeve share the same 118 grey DM108s — no teardown between. Puff additive = MATTE finish only, NOT a puff print. 4XL are Gildan subs.",
+     "nickname": "Renaissance Ranch - 4 Designs"
+    },
+    {
+     "id": "6474-enough-sleeve",
+     "job": "6474",
+     "url": "https://www.printavo.com/invoices/24335540",
+     "customer": "Renaissance Ranch (Creation Cartel)",
+     "location": "BAND OF BROTHERS RR left sleeve 3.75\" — 1c BLACK — DM108 Light Hthr Grey, 118 pcs",
+     "colors": 1,
+     "screens": 1,
+     "qty": 118,
+     "img": "6474ens",
+     "note": "Same shirts as the YOU ARE ENOUGH front.",
+     "nickname": "Renaissance Ranch - 4 Designs"
+    }
+   ],
+   "flags": [
+    [
+     "RUN ORDER",
+     "Trail Hero olive + grey camo BACKS first (one card, ink swap) → Muley Crazy American Tee (6447: front, then sleeve — three ink colorways each) → Muley Crazy Muley Ross 5-color (6446, 210 pcs) → Renaissance Ranch YOU ARE ENOUGH front + sleeve (same shirts, no teardown)."
+    ],
+    [
+     "CREW",
+     "Jalen, Spencer, Corey/Elijah — CONFIRM. ~12.7 press-hrs against ~11.1 with three on press. The 5-color Muley (~4.7 hrs on one press) is the long pole; the Renaissance cards are the natural bump to Wednesday."
+    ],
+    [
+     "INK SWAPS",
+     "Camo backs (olive → grey) and both 6447 cards (Stone Grey → Military Green → Slate Blue) run every colorway on ONE card — swap ink mid-run, do NOT open a second card."
+    ],
+    [
+     "VERIFY",
+     "6447 Slate Blue ink (7545?) was marked '?' on the PO — confirm with Kolton before mixing. 6446 charcoal blanks may have shipped as Black Mist — count in."
+    ]
+   ]
+  },
+  {
+   "day": "2026-09-09",
+   "rows": [
+    {
      "id": "6385-6-camo-front-blk",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
@@ -57,9 +161,9 @@
      "screens": 1,
      "qty": 122,
      "img": "6385camo_blk",
-     "note": "TRAIL HERO LEFTOVERS — everything else on this order already ran. Black digi camo = 3 runs (front badge, sleeve, back) — olive + grey need BACKS ONLY, so the back card is all 366. Busch shirts are CUSTOMER-SUPPLIED, backs only. Red/Blue District tees and Wolfbox share the AMPLIFIED back screen. Spencer started the Wolfbox front card Friday — resume it, don't open a new one. Hard customer date 9/15.",
+     "note": "TRAIL HERO LEFTOVERS — everything else on this order already ran. Black digi camo = 3 runs (front badge, sleeve, back — same screens as the olive/grey). Busch shirts are CUSTOMER-SUPPLIED, backs only. Red/Blue District tees and Wolfbox share the AMPLIFIED back screen. Spencer started the Wolfbox front card Friday — resume it, don't open a new one. Hard customer date 9/15.",
      "nickname": "Apparel 2026",
-     "alert": "COUNT IN the ST460LS BLACK (122) and the customer-supplied Busch shirts before setup.\nINK SWAPS on one card: camo backs (3 colorways), Wolfbox front + back (black ink on white/orange tees, white on black tees + tanks)."
+     "alert": "COUNT IN the ST460LS BLACK (122) and the customer-supplied Busch shirts before setup.\nINK SWAPS on one card: Wolfbox front + back (black ink on white/orange tees, white on black tees + tanks)."
     },
     {
      "id": "6385-7-camo-sleeve-blk",
@@ -75,16 +179,16 @@
      "nickname": "Apparel 2026"
     },
     {
-     "id": "6385-8-camo-back",
+     "id": "6385-8-camo-back-blk",
      "job": "6385",
      "url": "https://www.printavo.com/invoices/23955982",
      "customer": "Trail Hero — Brandi Marketing",
-     "location": "ST460LS camo — BUILT DIFFERENT back, 1c — ALL 3 COLORS (Black 122 / Olive 122 / Grey 122)",
+     "location": "ST460LS BLACK camo — BUILT DIFFERENT back, 1c (122 pcs)",
      "colors": 1,
      "screens": 1,
-     "qty": 366,
+     "qty": 122,
      "img": "6385camo_blk",
-     "note": "Backs were NOT run on any colorway. One screen, ink swap per colorway — run all three on THIS card, do not open a second card. Match the ink recipe the fronts/sleeves got (see PRESS LOG on the order).",
+     "note": "Black camo backs — same screen as Tuesday's olive/grey backs.",
      "nickname": "Apparel 2026"
     },
     {
@@ -270,70 +374,6 @@
      "note": "Same art as the white-tee back — reuse that screen. Bag pallet. Caps + leather-patch hats on this order are heat press / not press work.",
      "nickname": "Rush Order due Sept 10th",
      "noest": true
-    }
-   ],
-   "flags": [
-    [
-     "RUN ORDER",
-     "Finish Trail Hero (6385) FIRST — the black digi camo (3 runs), the camo backs on all three colors, the Busch backs, the four little District cards and the Wolfbox pair. Then the Elevate Church RUSH (6458, due Thu 9/10) — seven small cards, one LC screen carries all four shirt groups."
-    ],
-    [
-     "CREW",
-     "Jalen, Spencer, Corey/Elijah — CONFIRM. ~11.0 press-hrs of work against ~11.1 available with three on press."
-    ],
-    [
-     "VERIFY",
-     "Count in the ST460LS BLACK (122) and the customer-supplied Busch shirts (180) before setting up. Wolfbox front card was started Friday — resume it."
-    ],
-    [
-     "INK SWAPS",
-     "Camo backs, Wolfbox front + back, and both Elevate LC cards each run several ink colors on ONE card — swap ink mid-run, do NOT open a second card."
-    ]
-   ]
-  },
-  {
-   "day": "2026-09-09",
-   "rows": [
-    {
-     "id": "6447-front",
-     "job": "6447",
-     "url": "https://www.printavo.com/invoices/24213611",
-     "customer": "Muley Crazy — American Tee (Creation Cartel)",
-     "location": "Front center 11\" — MULEY CRAZY flag, 2c — INK BY SHIRT COLOR: Stone Grey (78) 90/10 + Light Grey · Military Green (78) Black + Dark Green · Slate Blue (54) 90/10 + 7545",
-     "colors": 2,
-     "screens": 2,
-     "qty": 210,
-     "img": "6447b",
-     "note": "Creation Cartel. THREE shirt colorways, ink changes on every screen between them — all on ONE card per location. Stone Grey = 90/10 + Light Grey · Military Green = Black + Dark Green · Slate Blue = 90/10 + 7545 (the 7545 was marked '?' on the PO — confirm with Kolton before mixing). Old art, produced before.",
-     "nickname": "Muley Crazy - American Tee",
-     "alert": "Ink change per colorway on ONE card per location — do NOT open a second card."
-    },
-    {
-     "id": "6447-sleeve",
-     "job": "6447",
-     "url": "https://www.printavo.com/invoices/24213611",
-     "customer": "Muley Crazy — American Tee (Creation Cartel)",
-     "location": "Left sleeve 3.75\" — MULEY CRAZY buck, 1c — same ink-by-colorway swaps (Stone Grey → Mil Green → Slate Blue)",
-     "colors": 1,
-     "screens": 1,
-     "qty": 210,
-     "img": "6447s",
-     "note": "One screen, swap ink per colorway on this one card. Old art, produced before.",
-     "nickname": "Muley Crazy - American Tee"
-    },
-    {
-     "id": "6446-front",
-     "job": "6446",
-     "url": "https://www.printavo.com/invoices/24213604",
-     "customer": "Muley Crazy — Muley Ross (Creation Cartel)",
-     "location": "Front center 11\" — MULEY CRAZY buck, 5 COLOR (underbase + 4) — NL 6210 Hthr Charcoal 105 + Espresso 105",
-     "colors": 5,
-     "screens": 5,
-     "qty": 210,
-     "img": "6446a",
-     "note": "Creation Cartel. 5 screens = underbase + 4, no ink changes between the two shirt colors. 11\" wide front center. Production note says the charcoal blanks may have shipped as 'Black Mist' — count in what arrived.",
-     "nickname": "Muley Crazy - Muley Ross (Ross Ray Design)",
-     "noest": true
     },
     {
      "id": "6460-cowboy-lc",
@@ -392,19 +432,23 @@
    "flags": [
     [
      "RUN ORDER",
-     "Muley Crazy American Tee (6447 — front then sleeve, three ink colorways each) → Muley Crazy Muley Ross 5-color (6446, 210 pcs) → Ruthless Co Labor Day (6460, due Thu)."
+     "Rest of Trail Hero (6385) FIRST — black digi camo (front, sleeve, back), the Busch backs, the four little District cards and the Wolfbox pair. Then the Elevate Church RUSH (6458, due Thu) — seven small cards, one LC screen carries all four shirt groups. Then Ruthless Co Labor Day (6460, due Thu)."
     ],
     [
      "CREW",
-     "Three printers — CONFIRM. ~11.9 press-hrs against ~11.1: the 5-color Muley is the long pole (~4.7 hrs on one press). Anything that slips is Thursday morning."
+     "Three printers — CONFIRM. ~12.3 press-hrs against ~11.1. Anything that slips lands Thursday morning ahead of the Prime Powersports adults."
+    ],
+    [
+     "VERIFY",
+     "Count in the ST460LS BLACK (122) and the customer-supplied Busch shirts (180) before setting up. Wolfbox front card was started Friday — resume it. 6460 ivory tees: order says one 'full front' imprint, mockup shows LC + full back — get Kolton before burning."
+    ],
+    [
+     "INK SWAPS",
+     "Wolfbox front + back and both Elevate LC cards each run several ink colors on ONE card — swap mid-run, do NOT open a second card."
     ],
     [
      "SCREEN ROOM",
      "Burn ALL SIX Prime Powersports screens (6466) today — 2 front (shared adult/youth), 2 adult back, 2 youth back. Thursday cannot lose time to screens."
-    ],
-    [
-     "VERIFY",
-     "6460 ivory tees: order says one 'full front' imprint, mockup shows LC + full back — get Kolton before burning. 6447 Slate Blue ink (7545?) unconfirmed on the PO."
     ]
    ]
   },
@@ -559,32 +603,6 @@
    "label": "Extra cards",
    "rows": [
     {
-     "id": "6474-enough-front",
-     "job": "6474",
-     "url": "https://www.printavo.com/invoices/24335540",
-     "customer": "Renaissance Ranch (Creation Cartel)",
-     "location": "YOU ARE ENOUGH 9.5\" center chest — 1c BLACK, no underbase, matte additive — DM108 Light Hthr Grey, 118 pcs",
-     "colors": 1,
-     "screens": 1,
-     "qty": 118,
-     "img": "6474en2",
-     "note": "Creation Cartel rolling job — run whenever a press opens. Puff additive = MATTE finish, NOT a puff print. The Redrock 6-color is the big setup; Are Enough front + sleeve share garments.",
-     "nickname": "Renaissance Ranch - 4 Designs"
-    },
-    {
-     "id": "6474-enough-sleeve",
-     "job": "6474",
-     "url": "https://www.printavo.com/invoices/24335540",
-     "customer": "Renaissance Ranch (Creation Cartel)",
-     "location": "BAND OF BROTHERS RR left sleeve 3.75\" — 1c BLACK — DM108 Light Hthr Grey, 118 pcs",
-     "colors": 1,
-     "screens": 1,
-     "qty": 118,
-     "img": "6474ens",
-     "note": "Same shirts as the YOU ARE ENOUGH front.",
-     "nickname": "Renaissance Ranch - 4 Designs"
-    },
-    {
      "id": "6474-redrock",
      "job": "6474",
      "url": "https://www.printavo.com/invoices/24335540",
@@ -594,7 +612,7 @@
      "screens": 6,
      "qty": 118,
      "img": "6474red2",
-     "note": "Biggest setup on this order — rolling job, run it when there's a clean block. 4XL are Gildan 6400 Graphite Hthr subs.",
+     "note": "Creation Cartel rolling job — the Redrock 6-color is the big setup (~4 hrs incl. setup); run it when a press has a clean block. Puff additive = MATTE finish, NOT a puff print.",
      "nickname": "Renaissance Ranch - 4 Designs"
     },
     {
@@ -814,7 +832,7 @@
    "flags": [
     [
      "EXTRA CARDS",
-     "Not scheduled on a day. Run these only when the day's cards are done or a press opens up — otherwise they roll to next week's board. Renaissance Ranch (rolling job, due 9/9 on paper) is first in line."
+     "Not scheduled on a day. Run these only when the day's cards are done or a press opens up — otherwise they roll to next week's board. Renaissance Ranch Redrock (rolling job, due 9/9 on paper) is first in line."
     ],
     [
      "",
@@ -825,6 +843,7 @@
  ],
  "img": {
   "6385camo_blk": "/data/mocks/2026-09-07/6385_camo_black.jpg",
+  "6385camo_olv": "/data/mocks/2026-09-07/6385_camo_olive.jpg",
   "6385busch": "/data/mocks/2026-09-07/6385_busch.jpg",
   "6385red": "/data/mocks/2026-09-07/6385_red.jpg",
   "6385blue": "/data/mocks/2026-09-07/6385_blue.jpg",
