@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-20",
+ "updated": "2026-09-07",
  "note": "dealer costs = SanMar myPrice; base covers through XL; weekly task refreshes the 15 stalest styles",
  "styles": {
   "NL6210": {
@@ -160,7 +160,14 @@
     "3XL",
     "4XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 6.34,
+     "2XL": 7.89
+    }
+   }
   },
   "5400": {
    "sizes": [
@@ -171,7 +178,16 @@
     "2XL",
     "3XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "white": {
+     "base": 4.07
+    },
+    "color": {
+     "base": 5.28
+    }
+   }
   },
   "18000": {
    "sizes": [
@@ -181,9 +197,27 @@
     "XL",
     "2XL",
     "3XL",
-    "4XL"
+    "4XL",
+    "5XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "white": {
+     "base": 6.59,
+     "2XL": 8.34,
+     "3XL": 9.0,
+     "4XL": 9.0,
+     "5XL": 9.0
+    },
+    "color": {
+     "base": 7.35,
+     "2XL": 10.18,
+     "3XL": 11.3,
+     "4XL": 11.3,
+     "5XL": 11.3
+    }
+   }
   },
   "18600": {
    "sizes": [
@@ -192,9 +226,24 @@
     "L",
     "XL",
     "2XL",
-    "3XL"
+    "3XL",
+    "4XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "white": {
+     "base": 14.49,
+     "2XL": 18.38,
+     "3XL": 22.01,
+     "4XL": 17.36
+    },
+    "color": {
+     "base": 15.35,
+     "2XL": 20.4,
+     "3XL": 23.66
+    }
+   }
   },
   "64000": {
    "sizes": [
@@ -205,7 +254,16 @@
     "2XL",
     "3XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "white": {
+     "base": 2.95
+    },
+    "color": {
+     "base": 3.05
+    }
+   }
   },
   "64000CVC": {
    "sizes": [
@@ -214,9 +272,19 @@
     "L",
     "XL",
     "2XL",
-    "3XL"
+    "3XL",
+    "4XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 2.95,
+     "2XL": 4.7,
+     "3XL": 6.07,
+     "4XL": 6.07
+    }
+   }
   },
   "DM108": {
    "sizes": [
@@ -229,7 +297,13 @@
     "3XL",
     "4XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 3.04
+    }
+   }
   },
   "DM130": {
    "sizes": [
@@ -242,7 +316,13 @@
     "3XL",
     "4XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 3.99
+    }
+   }
   },
   "DM108L": {
    "sizes": [
@@ -255,7 +335,13 @@
     "3XL",
     "4XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 3.39
+    }
+   }
   },
   "DM1190L": {
    "sizes": [
@@ -268,7 +354,13 @@
     "3XL",
     "4XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 3.49
+    }
+   }
   },
   "NL3600": {
    "sizes": [
@@ -279,9 +371,20 @@
     "XL",
     "2XL",
     "3XL",
-    "4XL"
+    "4XL",
+    "5XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 3.89,
+     "2XL": 5.52,
+     "3XL": 6.82,
+     "4XL": 8.1,
+     "5XL": 8.75
+    }
+   }
   },
   "NL6600": {
    "sizes": [
@@ -293,7 +396,15 @@
     "2XL",
     "3XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 3.47,
+     "2XL": 4.5,
+     "3XL": 5.53
+    }
+   }
   },
   "PC340": {
    "sizes": [
@@ -305,7 +416,13 @@
     "3XL",
     "4XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "color": {
+     "base": 2.82
+    }
+   }
   },
   "PC61": {
    "sizes": [
@@ -315,9 +432,27 @@
     "XL",
     "2XL",
     "3XL",
-    "4XL"
+    "4XL",
+    "5XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "white": {
+     "base": 2.67,
+     "2XL": 3.74,
+     "3XL": 4.05,
+     "4XL": 4.05,
+     "5XL": 4.05
+    },
+    "color": {
+     "base": 3.02,
+     "2XL": 4.69,
+     "3XL": 5.13,
+     "4XL": 5.13,
+     "5XL": 5.13
+    }
+   }
   },
   "PC43": {
    "sizes": [
@@ -327,9 +462,20 @@
     "XL",
     "2XL",
     "3XL",
-    "4XL"
+    "4XL",
+    "5XL"
    ],
-   "verified": false
+   "verified": true,
+   "checked": "2026-09-07",
+   "costs": {
+    "white": {
+     "base": 1.86,
+     "2XL": 2.66,
+     "3XL": 3.67,
+     "4XL": 3.67,
+     "5XL": 3.67
+    }
+   }
   },
   "PC55LS": {
    "sizes": [
