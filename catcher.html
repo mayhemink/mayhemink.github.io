@@ -7,42 +7,1168 @@
 .compare{width:100%;border-collapse:collapse;font-size:14px}.compare th,.compare td{padding:9px;text-align:left;border-bottom:1px solid var(--line)}
 
 .board-tools{display:flex;align-items:center;gap:12px}.board-tools .muted{font-size:12px}#load-test{color:var(--blue);background:var(--blue-bg)}#scope{margin-bottom:10px}@media(max-width:800px){.board-tools{align-items:flex-end;flex-direction:column;gap:5px}}
+
+.count-box,#actual{background:#fff;color:#17191c;color-scheme:light;border:1px solid #c6cbd1;border-radius:6px}
+.count-box{display:block;width:88%;max-width:125px;min-height:44px;margin:6px auto 2px;padding:8px;font-size:20px;font-weight:750;text-align:center}
+.count-box .placeholder{font-size:13px;font-weight:500;color:#59616b}.count-caption{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:8px}
+.checks{margin:12px 0;padding:12px;background:var(--bg);border-radius:8px}.checks h3{font-size:14px}.checks label{display:flex;align-items:center;gap:9px;min-height:44px;margin:0;color:var(--ink);font-size:14px;cursor:pointer}.checks input{width:22px;height:22px;min-height:22px;flex:0 0 22px;accent-color:var(--blue)}.checks p{font-size:12px;color:var(--muted);margin:4px 0}.locations{display:flex;flex-wrap:wrap;gap:4px 16px}.checks .prior{color:var(--muted);font-size:12px}.job-note{font-size:12px;color:var(--warn);margin:10px 0}.reset-counts{font-size:12px;min-height:44px}.size-main{cursor:default}
 </style></head>
 <body><header><div class="brand">MAYHEM <span>INK</span><small>CATCHER</small></div><div class="header-actions"><label class="name-label">Catching today<input id="catcher-name" placeholder="Your name" maxlength="60" autocomplete="given-name"></label><button id="export">Save a backup</button><button id="help" aria-label="How to use Catcher">?</button></div></header>
 <div class="pilot"><span><strong>SHOP TRIAL</strong> <span id="save-status" role="status">Counts save on this device only</span></span><div><button id="reset-practice" hidden>Reset examples</button> <button id="practice">Try example jobs</button></div></div>
 <div id="notice" role="status" class="notice" hidden></div>
-<main><div class="board-title"><div><h1>On the belt.</h1><p>Two locations. Every size accounted for.</p></div><div class="board-tools"><button id="load-test" hidden>Load #6385 test</button><span id="week-label" class="muted"></span></div></div><div id="lanes" class="lanes" aria-label="Active catcher cards"></div></main>
+<main><div class="board-title"><div><h1>On the belt.</h1><p>Every location checked. Every size accounted for.</p></div><div class="board-tools"><button id="load-today">Load Tuesday cards</button><button id="load-test" hidden>Load #6385 test</button><span id="week-label" class="muted"></span></div></div><div id="lanes" class="lanes" aria-label="Active catcher cards"></div></main>
 <footer>Expected = this run’s order quantity. Enter the total caught for each size.<span id="source-date"></span></footer>
 <dialog id="picker"><div class="dialog-head"><h2 id="picker-title">Choose a location</h2><button data-close aria-label="Close job picker">✕</button></div><label class="sr" for="search">Search jobs and locations</label><input id="search" type="search" placeholder="Search job, customer, or location"><label class="sr" for="scope">Job list</label><select id="scope"><option value="test">Invoice 6385 test · 3600M Classic Orange + ST460LS</option><option value="all">All scheduled jobs</option></select><label class="sr" for="day">Scheduled day</label><select id="day"></select><div id="job-list"></div></dialog>
-<dialog id="count-dialog"><form id="count-form"><div class="dialog-head"><div><p id="count-context" class="eyebrow"></p><h2 id="count-title"></h2></div><button type="button" data-close aria-label="Close count entry">✕</button></div><p id="count-expected"></p><label for="actual">Total good pieces caught</label><input id="actual" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="6" placeholder="Enter count"><div class="keypad" aria-label="Count keypad"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><button type="button" data-digit="clear">Clear</button><button type="button" data-digit="0">0</button><button type="button" data-digit="back" aria-label="Backspace">⌫</button></div><div id="correction"><label for="reason">Reason for changing this count</label><input id="reason" maxlength="180" placeholder="Recount, found another bundle…"></div><p id="count-error" class="warning" role="alert"></p><div class="actions"><button id="uncount" type="button">Mark uncounted</button><button class="primary" type="submit">Save count</button></div></form></dialog>
+<dialog id="count-dialog"><form id="count-form"><div class="dialog-head"><div><p id="count-context" class="eyebrow"></p><h2 id="count-title"></h2></div><button type="button" data-close aria-label="Close count entry">✕</button></div><p id="count-expected"></p><label for="actual">Total good pieces caught</label><input id="actual" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="6" placeholder="Enter count"><div class="keypad" aria-label="Count keypad"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><button type="button" data-digit="clear">Clear entry</button><button type="button" data-digit="0">0</button><button type="button" data-digit="back" aria-label="Backspace">⌫</button></div><div id="correction"><label for="reason">Reason for changing this count</label><input id="reason" maxlength="180" placeholder="Recount, found another bundle…"></div><p id="count-error" class="warning" role="alert"></p><div class="actions"><button id="uncount" type="button">Reset count</button><button class="primary" type="submit">Save count</button></div></form></dialog>
 <dialog id="detail-dialog"><div class="dialog-head"><h2 id="detail-title"></h2><button data-close aria-label="Close details">✕</button></div><div id="detail-body"></div></dialog>
 <dialog id="issue-dialog"><form id="issue-form"><div class="dialog-head"><h2>Flag a problem</h2><button type="button" data-close aria-label="Close problem form">✕</button></div><p id="issue-context"></p><label for="issue-size">Garment / size</label><select id="issue-size"></select><label for="issue-type">What happened?</label><select id="issue-type"><option>Damaged blank</option><option>Print needs checking / reprint</option><option>Missing pieces</option><option>Other</option></select><label for="issue-qty">Pieces affected</label><input id="issue-qty" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" value="1"><label for="issue-note">Note</label><textarea id="issue-note" rows="2" maxlength="300" placeholder="What should the printer or office know?"></textarea><p>Flagging a problem does not change the good-piece count.</p><p id="issue-error" role="alert" class="warning"></p><button type="submit" class="primary wide">Save problem</button></form></dialog>
 <script id="catcher-data" type="application/json">{
   "schema": 1,
-  "week": "2026-08-31",
-  "generatedAt": "2026-09-07T14:16:23.618Z",
-  "source": "Printavo order quantities",
-  "testPreset": {
-    "id": "6385-2026-09-07-classic-orange",
-    "label": "Invoice 6385 test",
-    "runIds": [
-      "23955982:26013023:6385-18-thu-front",
-      "23955982:26013024:6385-19-thu-back",
-      "23955982:26464250:6385-39-thu-sleeve",
-      "23955982:26010633:6385-6-camo-front",
-      "23955982:26010634:6385-7-camo-sleeve",
-      "23955982:26010635:6385-8-camo-back"
-    ],
-    "lanes": [
-      "23955982:26013023:6385-18-thu-front",
-      "23955982:26010633:6385-6-camo-front"
-    ],
-    "correctedLanes": {
-      "23955982:26413656:6385-29-wolfbox-front:orange": "23955982:26013023:6385-18-thu-front",
-      "23955982:26464286:6385-44-wolfbox-back:orange": "23955982:26013024:6385-19-thu-back"
-    }
-  },
+  "week": "2026-09-07",
+  "day": "2026-09-08",
+  "generatedAt": "2026-09-08T15:01:25.328220+00:00",
+  "source": "Tuesday press board and verified Printavo order sizes",
   "cards": [
+    {
+      "id": "6385-8-camo-back",
+      "job": "6385",
+      "customer": "Trail Hero — Brandi Marketing",
+      "location": "ST460LS OLIVE + GREY camo — BUILT DIFFERENT back, 1c — ink swap per colorway (Olive 122 / Grey 122)",
+      "day": "2026-09-08",
+      "expected": 244,
+      "scheduleSignature": "[\"6385\",\"ST460LS OLIVE + GREY camo — BUILT DIFFERENT back, 1c — ink swap per colorway (Olive 122 / Grey 122)\",244]",
+      "groups": [
+        {
+          "id": "51706014:106022712",
+          "style": "ST460LS",
+          "color": "Olive Drab Green",
+          "sizes": [
+            {
+              "id": "51706014:106022712:XS",
+              "label": "XS",
+              "expected": 2,
+              "sources": [
+                {
+                  "lineItemId": "106022712",
+                  "size": "size_xs",
+                  "expected": 2
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022712:S",
+              "label": "S",
+              "expected": 5,
+              "sources": [
+                {
+                  "lineItemId": "106022712",
+                  "size": "size_s",
+                  "expected": 5
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022712:M",
+              "label": "M",
+              "expected": 10,
+              "sources": [
+                {
+                  "lineItemId": "106022712",
+                  "size": "size_m",
+                  "expected": 10
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022712:L",
+              "label": "L",
+              "expected": 30,
+              "sources": [
+                {
+                  "lineItemId": "106022712",
+                  "size": "size_l",
+                  "expected": 30
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022712:XL",
+              "label": "XL",
+              "expected": 44,
+              "sources": [
+                {
+                  "lineItemId": "106022712",
+                  "size": "size_xl",
+                  "expected": 44
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022712:2XL",
+              "label": "2XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "106022713",
+                  "size": "size_2xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022712:3XL",
+              "label": "3XL",
+              "expected": 5,
+              "sources": [
+                {
+                  "lineItemId": "106022714",
+                  "size": "size_3xl",
+                  "expected": 5
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022712:4XL",
+              "label": "4XL",
+              "expected": 2,
+              "sources": [
+                {
+                  "lineItemId": "106022714",
+                  "size": "size_4xl",
+                  "expected": 2
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "106022712",
+            "106022713",
+            "106022714"
+          ]
+        },
+        {
+          "id": "51706014:106022706",
+          "style": "ST460LS",
+          "color": "Grey Concrete",
+          "sizes": [
+            {
+              "id": "51706014:106022706:XS",
+              "label": "XS",
+              "expected": 2,
+              "sources": [
+                {
+                  "lineItemId": "106022706",
+                  "size": "size_xs",
+                  "expected": 2
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022706:S",
+              "label": "S",
+              "expected": 5,
+              "sources": [
+                {
+                  "lineItemId": "106022706",
+                  "size": "size_s",
+                  "expected": 5
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022706:M",
+              "label": "M",
+              "expected": 10,
+              "sources": [
+                {
+                  "lineItemId": "106022706",
+                  "size": "size_m",
+                  "expected": 10
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022706:L",
+              "label": "L",
+              "expected": 30,
+              "sources": [
+                {
+                  "lineItemId": "106022706",
+                  "size": "size_l",
+                  "expected": 30
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022706:XL",
+              "label": "XL",
+              "expected": 44,
+              "sources": [
+                {
+                  "lineItemId": "106022706",
+                  "size": "size_xl",
+                  "expected": 44
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022706:2XL",
+              "label": "2XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "106022707",
+                  "size": "size_2xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022706:3XL",
+              "label": "3XL",
+              "expected": 5,
+              "sources": [
+                {
+                  "lineItemId": "106022708",
+                  "size": "size_3xl",
+                  "expected": 5
+                }
+              ]
+            },
+            {
+              "id": "51706014:106022706:4XL",
+              "label": "4XL",
+              "expected": 2,
+              "sources": [
+                {
+                  "lineItemId": "106022708",
+                  "size": "size_4xl",
+                  "expected": 2
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "106022706",
+            "106022707",
+            "106022708"
+          ]
+        }
+      ],
+      "image": "/data/mocks/2026-09-07/6385_camo_olive.jpg",
+      "artworkLabel": "Reference from Tuesday’s press board",
+      "note": "OLIVE + GREY CAMO BACKS ONLY today — fronts and sleeves on these already ran. One screen, ink swap olive → grey on this card. Everything else left on Trail Hero (black camo x3, Busch backs, District tees, Wolfbox) is on WEDNESDAY. Hard customer date 9/15.",
+      "batchId": "6385-olive-grey",
+      "locationLabel": "Back",
+      "runId": "23955982:26010635:6385-8-camo-back:olive-grey",
+      "priorLocations": [
+        "Front",
+        "Sleeve"
+      ]
+    },
+    {
+      "id": "6447-front",
+      "job": "6447",
+      "customer": "Muley Crazy — American Tee (Creation Cartel)",
+      "location": "Front center 11\" — MULEY CRAZY flag, 2c — INK BY SHIRT COLOR: Stone Grey (78) 90/10 + Light Grey · Military Green (78) Black + Dark Green · Slate Blue (54) 90/10 + 7545",
+      "day": "2026-09-08",
+      "expected": 210,
+      "scheduleSignature": "[\"6447\",\"Front center 11\\\" — MULEY CRAZY flag, 2c — INK BY SHIRT COLOR: Stone Grey (78) 90/10 + Light Grey · Military Green (78) Black + Dark Green · Slate Blue (54) 90/10 + 7545\",210]",
+      "groups": [
+        {
+          "id": "52167695:107266193",
+          "style": "NL6210",
+          "color": "Stone Grey",
+          "sizes": [
+            {
+              "id": "52167695:107266193:S",
+              "label": "S",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_s",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:M",
+              "label": "M",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_m",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:L",
+              "label": "L",
+              "expected": 18,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_l",
+                  "expected": 18
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:XL",
+              "label": "XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:2XL",
+              "label": "2XL",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_2xl",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:3XL",
+              "label": "3XL",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_3xl",
+                  "expected": 6
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107266193"
+          ]
+        },
+        {
+          "id": "52167695:107266194",
+          "style": "NL6210",
+          "color": "Military Green",
+          "sizes": [
+            {
+              "id": "52167695:107266194:S",
+              "label": "S",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_s",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:M",
+              "label": "M",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_m",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:L",
+              "label": "L",
+              "expected": 18,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_l",
+                  "expected": 18
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:XL",
+              "label": "XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:2XL",
+              "label": "2XL",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_2xl",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:3XL",
+              "label": "3XL",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_3xl",
+                  "expected": 6
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107266194"
+          ]
+        },
+        {
+          "id": "52167695:107266195",
+          "style": "NL6210",
+          "color": "Slate Blue",
+          "sizes": [
+            {
+              "id": "52167695:107266195:S",
+              "label": "S",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_s",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266195:M",
+              "label": "M",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_m",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266195:L",
+              "label": "L",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_l",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266195:XL",
+              "label": "XL",
+              "expected": 18,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_xl",
+                  "expected": 18
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266195:2XL",
+              "label": "2XL",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_2xl",
+                  "expected": 12
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107266195"
+          ]
+        }
+      ],
+      "image": "/data/mocks/2026-09-07/6447_2.jpg",
+      "artworkLabel": "Reference from Tuesday’s press board",
+      "note": "Creation Cartel. THREE shirt colorways, ink changes on every screen between them — all on ONE card per location. Stone Grey = 90/10 + Light Grey · Military Green = Black + Dark Green · Slate Blue = 90/10 + 7545 (the 7545 was marked '?' on the PO — confirm with Kolton before mixing). Old art, produced before.",
+      "batchId": "6447-american",
+      "locationLabel": "Front",
+      "runId": "24213611:26375338:6447-front"
+    },
+    {
+      "id": "6447-sleeve",
+      "job": "6447",
+      "customer": "Muley Crazy — American Tee (Creation Cartel)",
+      "location": "Left sleeve 3.75\" — MULEY CRAZY buck, 1c — same ink-by-colorway swaps (Stone Grey → Mil Green → Slate Blue)",
+      "day": "2026-09-08",
+      "expected": 210,
+      "scheduleSignature": "[\"6447\",\"Left sleeve 3.75\\\" — MULEY CRAZY buck, 1c — same ink-by-colorway swaps (Stone Grey → Mil Green → Slate Blue)\",210]",
+      "groups": [
+        {
+          "id": "52167695:107266193",
+          "style": "NL6210",
+          "color": "Stone Grey",
+          "sizes": [
+            {
+              "id": "52167695:107266193:S",
+              "label": "S",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_s",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:M",
+              "label": "M",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_m",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:L",
+              "label": "L",
+              "expected": 18,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_l",
+                  "expected": 18
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:XL",
+              "label": "XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:2XL",
+              "label": "2XL",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_2xl",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266193:3XL",
+              "label": "3XL",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266193",
+                  "size": "size_3xl",
+                  "expected": 6
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107266193"
+          ]
+        },
+        {
+          "id": "52167695:107266194",
+          "style": "NL6210",
+          "color": "Military Green",
+          "sizes": [
+            {
+              "id": "52167695:107266194:S",
+              "label": "S",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_s",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:M",
+              "label": "M",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_m",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:L",
+              "label": "L",
+              "expected": 18,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_l",
+                  "expected": 18
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:XL",
+              "label": "XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:2XL",
+              "label": "2XL",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_2xl",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266194:3XL",
+              "label": "3XL",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266194",
+                  "size": "size_3xl",
+                  "expected": 6
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107266194"
+          ]
+        },
+        {
+          "id": "52167695:107266195",
+          "style": "NL6210",
+          "color": "Slate Blue",
+          "sizes": [
+            {
+              "id": "52167695:107266195:S",
+              "label": "S",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_s",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266195:M",
+              "label": "M",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_m",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266195:L",
+              "label": "L",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_l",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266195:XL",
+              "label": "XL",
+              "expected": 18,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_xl",
+                  "expected": 18
+                }
+              ]
+            },
+            {
+              "id": "52167695:107266195:2XL",
+              "label": "2XL",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266195",
+                  "size": "size_2xl",
+                  "expected": 12
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107266195"
+          ]
+        }
+      ],
+      "image": "/data/mocks/2026-09-07/6447_slv.jpg",
+      "artworkLabel": "Reference from Tuesday’s press board",
+      "note": "One screen, swap ink per colorway on this one card. Old art, produced before.",
+      "batchId": "6447-american",
+      "locationLabel": "Left sleeve",
+      "runId": "24213611:26375339:6447-sleeve"
+    },
+    {
+      "id": "6446-front",
+      "job": "6446",
+      "customer": "Muley Crazy — Muley Ross (Creation Cartel)",
+      "location": "Front center 11\" — MULEY CRAZY buck, 5 COLOR (underbase + 4) — NL 6210 Hthr Charcoal 105 + Espresso 105",
+      "day": "2026-09-08",
+      "expected": 210,
+      "scheduleSignature": "[\"6446\",\"Front center 11\\\" — MULEY CRAZY buck, 5 COLOR (underbase + 4) — NL 6210 Hthr Charcoal 105 + Espresso 105\",210]",
+      "groups": [
+        {
+          "id": "52167680:107266168",
+          "style": "NL6210",
+          "color": "Heather Charcoal",
+          "sizes": [
+            {
+              "id": "52167680:107266168:S",
+              "label": "S",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266168",
+                  "size": "size_s",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266168:M",
+              "label": "M",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266168",
+                  "size": "size_m",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266168:L",
+              "label": "L",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107266168",
+                  "size": "size_l",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266168:XL",
+              "label": "XL",
+              "expected": 36,
+              "sources": [
+                {
+                  "lineItemId": "107266168",
+                  "size": "size_xl",
+                  "expected": 36
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266168:2XL",
+              "label": "2XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107266168",
+                  "size": "size_2xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266168:3XL",
+              "label": "3XL",
+              "expected": 3,
+              "sources": [
+                {
+                  "lineItemId": "107266168",
+                  "size": "size_3xl",
+                  "expected": 3
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107266168"
+          ]
+        },
+        {
+          "id": "52167680:107266169",
+          "style": "NL6210",
+          "color": "Espresso",
+          "sizes": [
+            {
+              "id": "52167680:107266169:S",
+              "label": "S",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107266169",
+                  "size": "size_s",
+                  "expected": 6
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266169:M",
+              "label": "M",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107266169",
+                  "size": "size_m",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266169:L",
+              "label": "L",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107266169",
+                  "size": "size_l",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266169:XL",
+              "label": "XL",
+              "expected": 36,
+              "sources": [
+                {
+                  "lineItemId": "107266169",
+                  "size": "size_xl",
+                  "expected": 36
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266169:2XL",
+              "label": "2XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107266169",
+                  "size": "size_2xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52167680:107266169:3XL",
+              "label": "3XL",
+              "expected": 3,
+              "sources": [
+                {
+                  "lineItemId": "107266169",
+                  "size": "size_3xl",
+                  "expected": 3
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107266169"
+          ]
+        }
+      ],
+      "image": "/data/mocks/2026-09-07/6446_1.jpg",
+      "artworkLabel": "Reference from Tuesday’s press board",
+      "note": "Creation Cartel. 5 screens = underbase + 4, no ink changes between the two shirt colors. 11\" wide front center. Production note says the charcoal blanks may have shipped as 'Black Mist' — count in what arrived.",
+      "batchId": "6446-ross",
+      "locationLabel": "Front",
+      "runId": "24213604:26375333:6446-front"
+    },
+    {
+      "id": "6474-enough-front",
+      "job": "6474",
+      "customer": "Renaissance Ranch (Creation Cartel)",
+      "location": "YOU ARE ENOUGH 9.5\" center chest — 1c BLACK, no underbase, matte additive — DM108 Light Hthr Grey, 118 pcs",
+      "day": "2026-09-08",
+      "expected": 118,
+      "scheduleSignature": "[\"6474\",\"YOU ARE ENOUGH 9.5\\\" center chest — 1c BLACK, no underbase, matte additive — DM108 Light Hthr Grey, 118 pcs\",118]",
+      "groups": [
+        {
+          "id": "52389497:107864483",
+          "style": "DM108",
+          "color": "Light Heather Grey",
+          "sizes": [
+            {
+              "id": "52389497:107864483:M",
+              "label": "M",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_m",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52389497:107864483:L",
+              "label": "L",
+              "expected": 30,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_l",
+                  "expected": 30
+                }
+              ]
+            },
+            {
+              "id": "52389497:107864483:XL",
+              "label": "XL",
+              "expected": 30,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_xl",
+                  "expected": 30
+                }
+              ]
+            },
+            {
+              "id": "52389497:107864483:2XL",
+              "label": "2XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_2xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52389497:107864483:3XL",
+              "label": "3XL",
+              "expected": 16,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_3xl",
+                  "expected": 16
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107864483"
+          ]
+        },
+        {
+          "id": "52389497:gildan-4xl",
+          "style": "Gildan substitute · 4XL",
+          "color": "Light Heather Grey · verify substitute color",
+          "sizes": [
+            {
+              "id": "52389497:107864483:4XL",
+              "label": "4XL",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_4xl",
+                  "expected": 6
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107864483"
+          ]
+        }
+      ],
+      "image": "/data/mocks/2026-09-07/6474_enough_shirt.jpg",
+      "artworkLabel": "Reference from Tuesday’s press board",
+      "note": "Creation Cartel rolling job — customer picks up each design as it finishes. YOU ARE ENOUGH front + BAND OF BROTHERS sleeve share the same 118 grey DM108s — no teardown between. Puff additive = MATTE finish only, NOT a puff print. 4XL are Gildan subs.",
+      "batchId": "6474-enough",
+      "locationLabel": "Front",
+      "runId": "24335540:26549707:6474-enough-front"
+    },
+    {
+      "id": "6474-enough-sleeve",
+      "job": "6474",
+      "customer": "Renaissance Ranch (Creation Cartel)",
+      "location": "BAND OF BROTHERS RR left sleeve 3.75\" — 1c BLACK — DM108 Light Hthr Grey, 118 pcs",
+      "day": "2026-09-08",
+      "expected": 118,
+      "scheduleSignature": "[\"6474\",\"BAND OF BROTHERS RR left sleeve 3.75\\\" — 1c BLACK — DM108 Light Hthr Grey, 118 pcs\",118]",
+      "groups": [
+        {
+          "id": "52389497:107864483",
+          "style": "DM108",
+          "color": "Light Heather Grey",
+          "sizes": [
+            {
+              "id": "52389497:107864483:M",
+              "label": "M",
+              "expected": 12,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_m",
+                  "expected": 12
+                }
+              ]
+            },
+            {
+              "id": "52389497:107864483:L",
+              "label": "L",
+              "expected": 30,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_l",
+                  "expected": 30
+                }
+              ]
+            },
+            {
+              "id": "52389497:107864483:XL",
+              "label": "XL",
+              "expected": 30,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_xl",
+                  "expected": 30
+                }
+              ]
+            },
+            {
+              "id": "52389497:107864483:2XL",
+              "label": "2XL",
+              "expected": 24,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_2xl",
+                  "expected": 24
+                }
+              ]
+            },
+            {
+              "id": "52389497:107864483:3XL",
+              "label": "3XL",
+              "expected": 16,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_3xl",
+                  "expected": 16
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107864483"
+          ]
+        },
+        {
+          "id": "52389497:gildan-4xl",
+          "style": "Gildan substitute · 4XL",
+          "color": "Light Heather Grey · verify substitute color",
+          "sizes": [
+            {
+              "id": "52389497:107864483:4XL",
+              "label": "4XL",
+              "expected": 6,
+              "sources": [
+                {
+                  "lineItemId": "107864483",
+                  "size": "size_4xl",
+                  "expected": 6
+                }
+              ]
+            }
+          ],
+          "lineItemIds": [
+            "107864483"
+          ]
+        }
+      ],
+      "image": "/data/mocks/2026-09-07/6474_enough_sleeve.jpg",
+      "artworkLabel": "Reference from Tuesday’s press board",
+      "note": "Same shirts as the YOU ARE ENOUGH front.",
+      "batchId": "6474-enough",
+      "locationLabel": "Left sleeve",
+      "runId": "24335540:26549708:6474-enough-sleeve"
+    }
+  ],
+  "archivedCards": [
     {
       "id": "6355-back-6c",
       "job": "6355",
@@ -6631,12 +7757,16 @@
       "artworkLabel": "Shared job mockup — match the location above",
       "scheduleRowId": "6385-44-wolfbox-back"
     }
+  ],
+  "defaultLanes": [
+    "23955982:26010635:6385-8-camo-back:olive-grey",
+    "24213611:26375338:6447-front"
   ]
 }</script><script>(function(root,factory){const api=factory();if(typeof module==='object')module.exports=api;else root.CatcherCore=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
  'use strict';
  const cells=card=>card.groups.flatMap(g=>g.sizes);
  const fingerprint=card=>JSON.stringify([card.runId,card.expected,card.groups.map(g=>[g.id,g.sizes.map(s=>[s.id,s.expected])])]);
- function blank(card){return{runId:card.runId,fingerprint:fingerprint(card),counts:{},issues:[],history:[],finishedAt:null,owner:'',revision:0};}
+ function blank(card){return{runId:card.runId,fingerprint:fingerprint(card),counts:{},checks:{},issues:[],history:[],finishedAt:null,owner:'',revision:0};}
  function integer(value){if(!['number','string'].includes(typeof value))throw Error('Enter a whole number from 0 to 999999.');if(typeof value==='string'&&!/^\d{1,6}$/.test(value))throw Error('Enter a whole number from 0 to 999999.');const n=Number(value);if(!Number.isSafeInteger(n)||n<0||n>999999||value===null||value==='')throw Error('Enter a whole number from 0 to 999999.');return n;}
  function summary(card,record){const all=cells(card);let checked=0,total=0,short=0,over=0;for(const cell of all){const n=record.counts[cell.id];if(n!==undefined&&n!==null){checked++;total+=n;short+=Math.max(0,cell.expected-n);over+=Math.max(0,n-cell.expected);}}return{checked,total,short,over,remaining:all.length-checked,complete:all.length>0&&checked===all.length,issues:record.issues.length,exact:all.length>0&&checked===all.length&&!short&&!over&&!record.issues.length};}
  function edit(card,record,{cellId,value,actor,reason='',method='actual'},now=new Date().toISOString()){
@@ -6646,13 +7776,24 @@
  const copy=JSON.parse(JSON.stringify(record));copy.counts[cellId]=next;copy.finishedAt=null;copy.owner=actor.trim();copy.revision++;
  copy.history.push({type:'count',at:now,actor:actor.trim(),cellId,from:prior,to:next,reason:reason.trim(),method});return copy;
  }
+ function qualityReady(card,record){const q=record.checks||{};return !!(q.spelling&&(q.mockup||!card.image)&&q.print&&q.printed);}
+ function check(card,record,field,value,actor,now=new Date().toISOString()){
+ if(!actor?.trim())throw Error('Enter the catcher’s name first.');if(record.fingerprint!==fingerprint(card))throw Error('The order changed.');
+ if(!['spelling','mockup','print','printed'].includes(field)||typeof value!=='boolean')throw Error('Unknown checklist item.');
+ const copy=JSON.parse(JSON.stringify(record));copy.checks||={};const prior=!!copy.checks[field];copy.checks[field]=value;copy.owner=actor.trim();copy.revision++;if(!value)copy.finishedAt=null;
+ copy.history.push({type:'check',field,from:prior,to:value,at:now,actor:actor.trim()});return copy;
+ }
+ function reset(card,record,actor,now=new Date().toISOString()){
+ if(!actor?.trim())throw Error('Enter the catcher’s name first.');if(record.fingerprint!==fingerprint(card))throw Error('The order changed.');
+ const copy=JSON.parse(JSON.stringify(record));copy.history.push({type:'reset',at:now,actor:actor.trim(),counts:copy.counts,reason:'Reset location counts for recount'});copy.counts={};copy.finishedAt=null;copy.owner=actor.trim();copy.revision++;return copy;
+ }
  function finish(card,record,actor,now=new Date().toISOString()){
- if(!actor?.trim())throw Error('Enter the catcher’s name first.');if(record.fingerprint!==fingerprint(card))throw Error('The order changed.');const s=summary(card,record);if(!s.complete)throw Error('Count every size before finishing this location.');
+ if(!actor?.trim())throw Error('Enter the catcher’s name first.');if(record.fingerprint!==fingerprint(card))throw Error('The order changed.');const s=summary(card,record);if(!s.complete)throw Error('Count every size before finishing this location.');if(!qualityReady(card,record))throw Error('Complete the first-shirt checklist and confirm this location is printed before finishing.');
  const copy=JSON.parse(JSON.stringify(record));copy.finishedAt=now;copy.owner=actor.trim();copy.revision++;copy.history.push({type:'finish',at:now,actor:actor.trim(),result:s.exact?'matched':'differences'});return copy;
  }
  // Only explicitly selected order fields may enter the catcher interface.
  function scheduleRows(week){return week.days.flatMap(d=>d.rows.map(r=>({id:r.id,day:d.day,job:r.job,customer:r.nickname||r.customer,location:r.location,expected:r.qty,scheduleSignature:JSON.stringify([r.job,r.location,r.qty])})));}
- return{cells,fingerprint,blank,integer,summary,edit,finish,scheduleRows};
+ return{cells,fingerprint,blank,integer,summary,edit,finish,scheduleRows,qualityReady,check,reset};
 });
 </script><script>'use strict';
 const C=CatcherCore,$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -6660,13 +7801,13 @@ const STORE='mayhem-catcher-v1',DEMO='mayhem-catcher-practice-v1';
 let practice=false,key=STORE,db={schema:1,records:{},lanes:[null,null],actor:'',version:0},manifest,cards=[],selection,issueLane,pickerLane,storageBlocked=false,renderedIds=[],sharedHooks=null;
 const examples=[{id:'example-front',runId:'example-front',job:'EXAMPLE A',customer:'Trail Hero',location:'Front left chest · example print run',expected:56,groups:[{id:'example-a',style:'SS4500Z',color:'Army Heather',sizes:[{id:'a-s',label:'S',expected:14},{id:'a-m',label:'M',expected:18},{id:'a-l',label:'L',expected:24}]}]},{id:'example-back',runId:'example-back',job:'EXAMPLE B',customer:'Take it Easy',location:'Full back · example print run',expected:29,groups:[{id:'example-b',style:'1301GD',color:'Faded Bone',sizes:[{id:'b-s',label:'S',expected:4},{id:'b-m',label:'M',expected:10},{id:'b-l',label:'L',expected:15}]}]}];
 function tell(message){$('notice').textContent=message;$('notice').hidden=!message;}
-function load(){storageBlocked=false;try{const saved=localStorage.getItem(key);db=saved?JSON.parse(saved):{schema:1,records:{},lanes:practice?examples.map(c=>c.runId):(manifest.testPreset?.lanes||[null,null]),testFocus:!practice&&!!manifest.testPreset,actor:'',version:0};if(db.schema!==1||!db.records||!Array.isArray(db.lanes))throw Error('Invalid save');}catch(e){storageBlocked=true;tell('Saved counts could not be opened. Nothing has been overwritten. Save a backup before continuing.');} if(!practice&&!storageBlocked&&db.testFocus&&manifest.testPreset?.correctedLanes){const mapping=manifest.testPreset.correctedLanes;if(db.lanes.some(id=>mapping[id])){if(change(next=>{next.lanes=next.lanes.map(id=>mapping[id]||id);}))tell('Trial corrected to 3600M Classic Orange. Earlier counts remain with their original garments.');}} $('catcher-name').value=db.actor||'';$('save-status').textContent=practice?'Example counts · saved on this device':'Counts save on this device only';}
+function load(){storageBlocked=false;try{const saved=localStorage.getItem(key);db=saved?JSON.parse(saved):{schema:1,records:{},lanes:practice?examples.map(c=>c.runId):(manifest.defaultLanes||[null,null]),testFocus:!practice&&!!manifest.testPreset,actor:'',version:0};if(db.schema!==1||!db.records||!Array.isArray(db.lanes))throw Error('Invalid save');}catch(e){storageBlocked=true;tell('Saved counts could not be opened. Nothing has been overwritten. Save a backup before continuing.');} if(!practice&&!storageBlocked&&db.scheduleDay!==manifest.day){change(next=>{next.lanes=(next.lanes.every(id=>cards.some(c=>c.runId===id))?next.lanes:[...manifest.defaultLanes]);next.testFocus=false;next.scheduleDay=manifest.day;});} if(!practice&&!storageBlocked&&db.testFocus&&manifest.testPreset?.correctedLanes){const mapping=manifest.testPreset.correctedLanes;if(db.lanes.some(id=>mapping[id])){if(change(next=>{next.lanes=next.lanes.map(id=>mapping[id]||id);}))tell('Trial corrected to 3600M Classic Orange. Earlier counts remain with their original garments.');}} $('catcher-name').value=db.actor||'';$('save-status').textContent=practice?'Example counts · saved on this device':'Counts save on this device only';}
 function persist(next){
  if(storageBlocked)throw Error('Storage is unavailable. Save a backup before continuing.');
  const stored=localStorage.getItem(key);if(stored&&JSON.parse(stored).version!==db.version)throw Error('Another tab changed these counts. Reload to pick up its latest save.');
  if(!practice)sharedHooks?.prepare(next,db);next.version=db.version+1;try{localStorage.setItem(key,JSON.stringify(next));}catch(e){throw Error('Could not save on this device. Your previous counts are safe. Free some space and try again.');}db=next;$('save-status').textContent=(practice?'Example counts':'Saved')+' on this device · '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});if(!practice)sharedHooks?.afterSave();
 }
-function change(fn){try{const next=JSON.parse(JSON.stringify(db));fn(next);persist(next);render();return true;}catch(e){tell(e.message);return false;}}
+function change(fn,repaint=true){try{const next=JSON.parse(JSON.stringify(db));fn(next);persist(next);if(repaint)render();return true;}catch(e){tell(e.message);return false;}}
 function actor(){const name=$('catcher-name').value.trim();if(!name){$('catcher-name').focus();throw Error('Enter the catcher’s name at the top first.');}return name;}
 function cardAt(lane){return cards.find(c=>c.runId===db.lanes[lane]);}
 function record(card){return db.records[card.runId]||C.blank(card);}
@@ -6674,46 +7815,55 @@ function blocked(card){if(card.blocked)return card.blocked;if(db.conflicts?.[car
 function render(){
  const scroll=[...$('lanes').children].map(el=>el.scrollTop);
  $('reset-practice').hidden=!practice;$('load-test').hidden=practice||!manifest.testPreset;
- $('practice').textContent=practice?'Back to scheduled jobs':'Try example jobs';$('week-label').textContent=practice?'Practice · made-up counts':(db.testFocus&&manifest.testPreset?'#6385 · Classic Orange + ST460LS':'Week of '+manifest.week);$('source-date').textContent=practice?'Practice counts are kept separate.':'Order sizes loaded '+new Date(manifest.generatedAt).toLocaleDateString();
+ $('practice').textContent=practice?'Back to scheduled jobs':'Try example jobs';$('week-label').textContent=practice?'Practice · made-up counts':(db.testFocus&&manifest.testPreset?'#6385 · Classic Orange + ST460LS':'Tuesday · September 8 · '+cards.length+' locations');$('source-date').textContent=practice?'Practice counts are kept separate.':'Order sizes loaded '+new Date(manifest.generatedAt).toLocaleDateString();
  $('lanes').innerHTML=[0,1].map(lane=>{
  const card=cardAt(lane),letter='AB'[lane];if(!card)return `<section class="lane empty" aria-label="Card ${letter}"><span class="eyebrow">CARD ${letter}</span><div class="empty-symbol">＋</div><h2>Ready for a run.</h2><p>Choose a job and the exact location coming down the belt.</p><button class="primary" data-action="choose" data-lane="${lane}">Choose location ${letter}</button></section>`;
  const r=record(card),s=C.summary(card,r),lock=blocked(card);const state=r.finishedAt?(s.exact?'Location matched':'Finished · differences'):s.checked?'Counting':'Ready to count';
  return `<section class="lane" aria-label="Card ${letter}: ${esc(card.customer)}"><div class="lane-top"><span class="eyebrow">CARD ${letter} · #${esc(card.job)}</span><button data-action="choose" data-lane="${lane}">Change job</button></div><div class="intro"><div class="identity"><h2>${esc(card.customer)}</h2><p class="location">${esc(card.location)}</p><span class="chip">${state}</span></div>
  ${card.image?`<button class="art" data-action="art" data-lane="${lane}" aria-label="View artwork for ${esc(card.customer)}"><img src="${esc(card.image)}" alt="Artwork for ${esc(card.customer)}" loading="lazy"><span class="art-copy"><strong>View artwork ↗</strong><span>${esc(card.artworkLabel||'Print location reference')}</span></span></button>`:''}</div>${!card.image&&!practice?'<div class="art-missing">Artwork not attached. Ask the printer for the reference.</div>':''}
  <div class="stats"><strong>${s.total}</strong><span>/ ${card.expected} good pieces caught</span></div><div class="progress" aria-label="${s.checked} of ${C.cells(card).length} sizes counted"><i style="width:${C.cells(card).length?s.checked/C.cells(card).length*100:0}%"></i></div><div class="statusline"><span>${s.checked} / ${C.cells(card).length} sizes counted</span><span class="${s.short||s.over?'warning':''}">${s.short?s.short+' short':''}${s.short&&s.over?' · ':''}${s.over?s.over+' extra':''}${!s.short&&!s.over?(s.complete?'All sizes match':'Count each size below'):''}</span></div>
- ${lock?`<p class="warning">${esc(lock)}</p>`:''}
- ${card.groups.map(g=>`<section class="group"><h3>${esc(g.style)}</h3><p>${esc(g.color)}</p><div class="sizes">${g.sizes.map(cell=>{const n=r.counts[cell.id],counted=n!==undefined&&n!==null,exact=counted&&n===cell.expected;return `<div class="size ${exact?'exact':counted?'diff':''}"><button class="size-main" data-action="count" data-lane="${lane}" data-cell="${esc(cell.id)}" ${lock?'disabled':''} aria-label="${esc(g.style+' '+g.color+' '+cell.label)}, expected ${cell.expected}, ${counted?'caught '+n:'not counted'}"><span class="size-label">${exact?'✓ ':''}${esc(cell.label)}</span><span class="size-expected">Expected ${cell.expected}</span><span class="size-actual">${counted?(exact?n+' caught':n+' caught · '+Math.abs(cell.expected-n)+(n<cell.expected?' short':' extra')):'Enter count'}</span></button><button class="size-quick" data-action="exact" data-lane="${lane}" data-cell="${esc(cell.id)}" ${lock?'disabled':''} aria-label="${esc(cell.label)}: confirm all ${cell.expected} caught">${exact?'✓ Count confirmed':'✓ All '+cell.expected+' caught'}</button></div>`;}).join('')}</div></section>`).join('')}
- <div class="actions"><button data-action="issue" data-lane="${lane}" ${lock?'disabled':''}>Flag a problem${r.issues.length?' ('+r.issues.length+')':''}</button><button data-action="history" data-lane="${lane}">History</button></div><button class="primary wide" data-action="finish" data-lane="${lane}" ${lock||!s.complete||r.finishedAt?'disabled':''}>${r.finishedAt?'Location finished ✓':!s.complete?'Count '+s.remaining+' more size'+(s.remaining===1?'':'s'):s.exact?'Finish this location':'Finish with differences'}</button><p class="finish-label">${r.finishedAt?'Saved by '+esc(r.owner)+'. Tap a size to correct a count.':'Counts stay saved when you change jobs.'}</p></section>`;
+ ${lock?`<p class="warning">${esc(lock)}</p>`:''}${card.note?`<p class="job-note">${esc(card.note)}</p>`:''}${checklists(card,lane)}
+ ${card.groups.map(g=>`<section class="group"><h3>${esc(g.style)}</h3><p>${esc(g.color)}</p><div class="sizes">${g.sizes.map(cell=>{const n=r.counts[cell.id],counted=n!==undefined&&n!==null,exact=counted&&n===cell.expected;return `<div class="size ${exact?'exact':counted?'diff':''}"><div class="size-main"><span class="size-label">${exact?'✓ ':''}${esc(cell.label)}</span><span class="size-expected">Expected ${cell.expected}</span></div><button class="count-box" data-action="count" data-lane="${lane}" data-cell="${esc(cell.id)}" ${lock?'disabled':''} aria-label="Enter count for ${esc(g.style+' '+g.color+' '+cell.label)}, expected ${cell.expected}, ${counted?'caught '+n:'not counted'}">${counted?n:'<span class="placeholder">Enter count</span>'}</button><span class="count-caption">${counted?(exact?'Count matches':Math.abs(cell.expected-n)+(n<cell.expected?' short':' extra')):'Tap for number pad'}</span><button class="size-quick" data-action="exact" data-lane="${lane}" data-cell="${esc(cell.id)}" ${lock?'disabled':''} aria-label="${esc(cell.label)}: confirm all ${cell.expected} caught">${exact?'✓ Count confirmed':'✓ All '+cell.expected+' caught'}</button></div>`;}).join('')}</div></section>`).join('')}
+ <div class="actions"><button data-action="issue" data-lane="${lane}" ${lock?'disabled':''}>Flag a problem${r.issues.length?' ('+r.issues.length+')':''}</button><button data-action="history" data-lane="${lane}">History</button></div><button class="primary wide" data-action="finish" data-lane="${lane}" ${lock||!s.complete||!C.qualityReady(card,r)||r.finishedAt?'disabled':''}>${r.finishedAt?'Location finished ✓':!s.complete?'Count '+s.remaining+' more size'+(s.remaining===1?'':'s'):!C.qualityReady(card,r)?'Complete location checks above':s.exact?'Finish this location':'Finish with differences'}</button><button class="wide reset-counts" data-action="reset" data-lane="${lane}" ${lock||!s.checked?'disabled':''}>Reset location counts</button><p class="finish-label">${r.finishedAt?'Saved on this device by '+esc(r.owner)+'. Use Save a backup to keep a copy.':'Counts stay saved when you change jobs.'}</p></section>`;
  }).join('');
  [...$('lanes').children].forEach((el,i)=>{if(renderedIds[i]===db.lanes[i])el.scrollTop=scroll[i]||0;});renderedIds=[...db.lanes];
  $('lanes').querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>{img.hidden=true;img.nextElementSibling.lastChild.textContent=' Image unavailable — tap to retry.';},{once:true}));
 }
-function openPicker(lane){pickerLane=lane;$('picker-title').textContent='Choose location for card '+'AB'[lane];$('search').value='';$('scope').hidden=practice||!manifest.testPreset;$('scope').value=!practice&&db.testFocus?'test':'all';const days=[...new Set(cards.map(c=>c.day).filter(Boolean))];$('day').innerHTML='<option value="">All scheduled days</option>'+days.map(d=>`<option>${esc(d)}</option>`).join('');listJobs();$('picker').showModal();}
+function checklists(card,lane){
+ const r=record(card),q=r.checks||{},lock=blocked(card),batch=cards.filter(c=>c.runId===card.runId||(card.batchId&&c.batchId===card.batchId));
+ const locations=batch.map(c=>`<label><input type="checkbox" data-check="printed" data-run="${esc(c.runId)}" ${record(c).checks?.printed?'checked':''} ${blocked(c)?'disabled':''}>${esc(c.locationLabel||c.location)} printed</label>`).join('');
+ const prior=(card.priorLocations||[]).map(label=>`<label class="prior"><input type="checkbox" checked disabled>${esc(label)} · already ran per press board</label>`).join('');
+ const question=(field,text)=>`<label><input type="checkbox" data-check="${field}" data-run="${esc(card.runId)}" ${q[field]?'checked':''} ${lock?'disabled':''}>${text}</label>`;
+ return `<section class="checks"><h3>Locations printed · these garments</h3><div class="locations">${prior}${locations}</div></section><section class="checks"><h3>First shirt · ${esc(card.locationLabel||card.location)}</h3>${question('spelling','Is everything spelled right?')}${card.image?question('mockup','Does the shirt match the mockup?'):'<p>Mockup check: N/A — no mockup attached.</p>'}${question('print','Does the print look good?')}<p>Check the first shirt at this location. Recheck after an ink or garment color change.</p></section>`;
+}
+$('lanes').addEventListener('change',e=>{const box=e.target.closest('input[data-check]');if(!box)return;try{const card=cards.find(c=>c.runId===box.dataset.run);if(blocked(card))throw Error(blocked(card));const name=actor(),updated=C.check(card,record(card),box.dataset.check,box.checked,name);if(!change(next=>{next.actor=name;next.records[card.runId]=updated;}))render();}catch(err){tell(err.message);render();}});
+function openPicker(lane){pickerLane=lane;$('picker-title').textContent='Choose location for card '+'AB'[lane];$('search').value='';$('scope').hidden=practice||!manifest.testPreset;$('scope').value=!practice&&db.testFocus?'test':'all';const days=[...new Set(cards.map(c=>c.day).filter(Boolean))];$('day').innerHTML='<option value="">All scheduled days</option>'+days.map(d=>`<option>${esc(d)}</option>`).join('');$('day').value=practice?'':manifest.day;listJobs();$('picker').showModal();}
 function listJobs(){const q=$('search').value.toLowerCase(),day=$('day').value;const testOnly=!practice&&$('scope').value==='test';$('day').hidden=testOnly;const matches=cards.filter(c=>(!testOnly||manifest.testPreset?.runIds.includes(c.runId))&&(testOnly||!day||c.day===day)&&[c.job,c.customer,c.location,...c.groups.map(g=>g.style+' '+g.color)].join(' ').toLowerCase().includes(q));$('job-list').innerHTML=matches.length?matches.map(c=>{const assigned=db.lanes[1-pickerLane]===c.runId;return `<button class="job" data-run="${esc(c.runId)}" ${assigned?'disabled':''}><strong>#${esc(c.job)} · ${esc(c.customer)}</strong><span>${esc(c.location)}</span><span>${c.expected} pieces · ${esc(testOnly?'Invoice 6385 test':c.day||'Example')} ${record(c).finishedAt?'· Location finished':''}</span>${assigned?'<em>Already on the other card</em>':blocked(c)?`<em>${esc(blocked(c))}</em>`:''}</button>`;}).join(''):'<p>No matching locations.</p>';}
 function openCount(lane,cellId,fill){const card=cardAt(lane),cell=C.cells(card).find(c=>c.id===cellId),group=card.groups.find(g=>g.sizes.includes(cell)),r=record(card);selection={lane,cellId};$('count-context').textContent='#'+card.job+' · '+card.location;$('count-title').textContent=cell.label+' · '+group.style;$('count-expected').textContent=group.color+' · Expected '+cell.expected;$('actual').value=fill??r.counts[cellId]??'';$('reason').value='';$('correction').hidden=r.counts[cellId]===null||r.counts[cellId]===undefined;$('uncount').hidden=$('correction').hidden;$('count-error').textContent='';$('count-dialog').showModal();}
-function saveCount(value,method='actual'){try{const card=cardAt(selection.lane),name=actor(),nextRecord=C.edit(card,record(card),{cellId:selection.cellId,value,actor:name,reason:$('reason').value,method});if(change(next=>{next.actor=name;next.records[card.runId]=nextRecord;}))$('count-dialog').close();}catch(e){$('count-error').textContent=e.message;}}
+function saveCount(value,method='actual'){try{const card=cardAt(selection.lane),name=actor(),nextRecord=C.edit(card,record(card),{cellId:selection.cellId,value,actor:name,reason:$('reason').value||(method==='clear'?'Reset count for recount':''),method});if(change(next=>{next.actor=name;next.records[card.runId]=nextRecord;}))$('count-dialog').close();}catch(e){$('count-error').textContent=e.message;}}
 function exact(lane,cellId){try{const card=cardAt(lane),r=record(card),cell=C.cells(card).find(s=>s.id===cellId);if(r.counts[cellId]===cell.expected){openCount(lane,cellId);return;}if(r.counts[cellId]!==undefined&&r.counts[cellId]!==null){openCount(lane,cellId,cell.expected);return;}const name=actor(),updated=C.edit(card,r,{cellId,value:cell.expected,actor:name,method:'size-check'});change(next=>{next.actor=name;next.records[card.runId]=updated;});}catch(e){tell(e.message);}}
 function detail(title,body){$('detail-title').textContent=title;$('detail-body').innerHTML=body;$('detail-dialog').showModal();}
-function history(lane){const card=cardAt(lane),r=record(card);detail('#'+card.job+' · Count history',`<p>${esc(card.location)}</p>${r.issues.map(i=>`<div class="history-row warning">${esc(i.type)} · ${i.quantity} ${esc(i.label)}<p>${esc(i.note)}</p><small>${esc(i.actor)} · ${new Date(i.at).toLocaleString()}</small><button data-resolve="${esc(i.id)}" data-lane="${lane}">Resolve problem</button></div>`).join('')}${[...r.history].reverse().map(h=>{const cell=C.cells(card).find(c=>c.id===h.cellId),g=card.groups.find(g=>g.sizes.includes(cell));return `<div class="history-row">${h.type==='count'?esc((g?.style||'')+' '+(g?.color||'')+' '+(cell?.label||'')+': '+(h.from??'uncounted')+' → '+(h.to??'uncounted')):esc(h.type==='finish'?'Finished location · '+h.result:h.type==='issue'?'Problem flagged: '+h.problem:h.type==='resolve'?'Problem resolved':h.type==='reconcile'?'Conflicting counts reviewed':'Catcher handoff')}${h.reason?'<p>'+esc(h.reason)+'</p>':''}<small>${esc(h.actor)} · ${new Date(h.at).toLocaleString()}</small></div>`;}).join('')||'<p>No counts entered yet.</p>'}`);}
+function history(lane){const card=cardAt(lane),r=record(card);detail('#'+card.job+' · Count history',`<p>${esc(card.location)}</p>${r.issues.map(i=>`<div class="history-row warning">${esc(i.type)} · ${i.quantity} ${esc(i.label)}<p>${esc(i.note)}</p><small>${esc(i.actor)} · ${new Date(i.at).toLocaleString()}</small><button data-resolve="${esc(i.id)}" data-lane="${lane}">Resolve problem</button></div>`).join('')}${[...r.history].reverse().map(h=>{const cell=C.cells(card).find(c=>c.id===h.cellId),g=card.groups.find(g=>g.sizes.includes(cell));return `<div class="history-row">${h.type==='count'?esc((g?.style||'')+' '+(g?.color||'')+' '+(cell?.label||'')+': '+(h.from??'uncounted')+' → '+(h.to??'uncounted')):esc(h.type==='check'?(h.field==='printed'?'Location printed':({spelling:'Spelling',mockup:'Matches mockup',print:'Print looks good'}[h.field]))+': '+(h.to?'checked':'unchecked'):h.type==='reset'?'Location counts reset · previous counts: '+Object.entries(h.counts).map(([id,n])=>(C.cells(card).find(c=>c.id===id)?.label||id)+' '+(n??'uncounted')).join(', '):h.type==='finish'?'Finished location · '+h.result:h.type==='issue'?'Problem flagged: '+h.problem:h.type==='resolve'?'Problem resolved':h.type==='reconcile'?'Conflicting counts reviewed':'Catcher handoff')}${h.reason?'<p>'+esc(h.reason)+'</p>':''}<small>${esc(h.actor)} · ${new Date(h.at).toLocaleString()}</small></div>`;}).join('')||'<p>No counts entered yet.</p>'}`);}
 function openIssue(lane){issueLane=lane;const card=cardAt(lane);$('issue-context').textContent='#'+card.job+' · '+card.location;$('issue-size').innerHTML=card.groups.flatMap(g=>g.sizes.map(s=>`<option value="${esc(s.id)}">${esc(g.style+' · '+g.color+' · '+s.label)}</option>`)).join('');$('issue-qty').value='1';$('issue-note').value='';$('issue-error').textContent='';$('issue-dialog').showModal();}
 function download(name,body,type){const url=URL.createObjectURL(new Blob([body],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
-$('lanes').addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(!b)return;const lane=Number(b.dataset.lane),card=cardAt(lane);switch(b.dataset.action){case'choose':openPicker(lane);break;case'count':openCount(lane,b.dataset.cell);break;case'exact':exact(lane,b.dataset.cell);break;case'issue':openIssue(lane);break;case'history':history(lane);break;case'art':detail('#'+card.job+' · Artwork',`<p>${esc(card.location)}</p><p class="muted">${esc(card.artworkLabel)}</p><img class="big-art" src="${esc(card.image)}" alt="${esc(card.location)}">`);break;case'finish':try{const name=actor(),finished=C.finish(card,record(card),name);change(next=>{next.actor=name;next.records[card.runId]=finished;});}catch(e){tell(e.message);}break;}});
+$('lanes').addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(!b)return;const lane=Number(b.dataset.lane),card=cardAt(lane);switch(b.dataset.action){case'choose':openPicker(lane);break;case'reset':detail('Reset this location’s counts?',`<p>#${esc(card.job)} · ${esc(card.location)}</p><p>Every size will return to uncounted. Earlier counts stay in History. Print checks and problems stay saved.</p><button id="confirm-reset" class="primary wide">Reset location counts</button>`);$('confirm-reset').onclick=()=>{try{const name=actor(),updated=C.reset(card,record(card),name);if(change(next=>{next.actor=name;next.records[card.runId]=updated;})){$('detail-dialog').close();tell('Location counts reset. Earlier counts remain in History.');}}catch(err){tell(err.message);}};break;case'count':openCount(lane,b.dataset.cell);break;case'exact':exact(lane,b.dataset.cell);break;case'issue':openIssue(lane);break;case'history':history(lane);break;case'art':detail('#'+card.job+' · Artwork',`<p>${esc(card.location)}</p><p class="muted">${esc(card.artworkLabel)}</p><img class="big-art" src="${esc(card.image)}" alt="${esc(card.location)}">`);break;case'finish':try{const name=actor(),finished=C.finish(card,record(card),name);change(next=>{next.actor=name;next.records[card.runId]=finished;});}catch(e){tell(e.message);}break;}});
 $('job-list').addEventListener('click',e=>{const b=e.target.closest('button[data-run]');if(!b)return;if(change(next=>next.lanes[pickerLane]=b.dataset.run))$('picker').close();});
 $('search').addEventListener('input',listJobs);$('day').addEventListener('change',listJobs);$('scope').addEventListener('change',listJobs);
+$('load-today').addEventListener('click',()=>{if(practice){practice=false;key=STORE;cards=manifest.cards;load();}if(change(next=>{next.lanes=[...manifest.defaultLanes];next.testFocus=false;}))tell('Tuesday cards loaded. All previous counts stay saved. Use Change job for all six locations.');});
 $('load-test').addEventListener('click',()=>{if(practice||!manifest.testPreset)return;if(change(next=>{next.lanes=[...manifest.testPreset.lanes];next.testFocus=true;}))tell('Invoice 6385 loaded: 3600M Classic Orange and ST460LS fronts. Use Change job to choose the back or sleeve. Any earlier counts stay saved.');});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 $('count-form').addEventListener('submit',e=>{e.preventDefault();saveCount($('actual').value);});$('uncount').addEventListener('click',()=>saveCount(null,'clear'));
 document.querySelectorAll('[data-digit]').forEach(b=>b.addEventListener('click',()=>{const i=$('actual'),v=b.dataset.digit;i.value=v==='clear'?'':v==='back'?i.value.slice(0,-1):(i.value+b.dataset.digit).slice(0,6);$('count-error').textContent='';}));
-function updateCatcher(){const name=$('catcher-name').value.trim();if(name===db.actor)return;change(next=>{if(name){for(const id of next.lanes){const r=next.records[id];if(r&&!r.finishedAt){r.history.push({type:'handoff',at:new Date().toISOString(),actor:name,reason:'Taking over from '+(next.actor||'previous catcher')});r.owner=name;r.revision++;}}}next.actor=name;});}
+function updateCatcher(){const name=$('catcher-name').value.trim();if(name===db.actor)return;change(next=>{if(name){for(const id of next.lanes){const r=next.records[id];if(r&&!r.finishedAt){r.history.push({type:'handoff',at:new Date().toISOString(),actor:name,reason:'Taking over from '+(next.actor||'previous catcher')});r.owner=name;r.revision++;}}}next.actor=name;},false);}
 $('catcher-name').addEventListener('change',updateCatcher);$('catcher-name').addEventListener('blur',updateCatcher);
 $('issue-form').addEventListener('submit',e=>{e.preventDefault();try{const name=actor(),quantity=C.integer($('issue-qty').value);if(!quantity)throw Error('Enter at least one affected piece.');const card=cardAt(issueLane),cell=C.cells(card).find(s=>s.id===$('issue-size').value),group=card.groups.find(g=>g.sizes.includes(cell));const issue={id:crypto.randomUUID(),cellId:cell.id,label:group.style+' '+group.color+' '+cell.label,type:$('issue-type').value,quantity,note:$('issue-note').value.trim(),actor:name,at:new Date().toISOString()};if(change(next=>{const r=next.records[card.runId]||C.blank(card);r.issues.push(issue);r.history.push({type:'issue',at:issue.at,actor:name,problem:issue.type,reason:issue.note});r.revision++;r.finishedAt=null;next.records[card.runId]=r;next.actor=name;}))$('issue-dialog').close();}catch(err){$('issue-error').textContent=err.message;}});
 $('detail-body').addEventListener('click',e=>{const b=e.target.closest('[data-resolve]');if(!b)return;try{const name=actor(),card=cardAt(Number(b.dataset.lane));const issue=record(card).issues.find(i=>i.id===b.dataset.resolve);detail('Resolve problem',`<p>${esc(issue.type+' · '+issue.label)}</p><label for="resolution">What was done?</label><input id="resolution" maxlength="180" placeholder="Reprinted, replaced, or recounted…"><button id="save-resolution" class="primary wide">Save resolution</button>`);$('save-resolution').onclick=()=>{const reason=$('resolution').value.trim();if(!reason){$('resolution').focus();return;}if(change(next=>{const r=next.records[card.runId];r.issues=r.issues.filter(i=>i.id!==issue.id);r.history.push({type:'resolve',actor:name,at:new Date().toISOString(),reason,issueId:issue.id});r.finishedAt=null;r.revision++;}))$('detail-dialog').close();};}catch(err){tell(err.message);}});
 $('export').addEventListener('click',()=>{const saved=storageBlocked?localStorage.getItem(key):JSON.stringify({format:'mayhem-catcher-backup',exportedAt:new Date().toISOString(),practice,manifest,db},null,2);download('mayhem-catcher'+(practice?'-practice':'')+'-'+new Date().toISOString().slice(0,10)+'.json',saved||'No saved data','application/json');});
 $('practice').addEventListener('click',()=>{practice=!practice;key=practice?DEMO:STORE;cards=practice?examples:manifest.cards;load();render();tell(practice?'Practice mode: these are example jobs. Your scheduled-job counts are kept separate.':'');});
 $('reset-practice').addEventListener('click',()=>{if(!practice)return;if(change(next=>{next.archivedPractice??=[];next.archivedPractice.push({at:new Date().toISOString(),records:next.records});next.records={};next.lanes=examples.map(c=>c.runId);next.actor='';})){$('catcher-name').value='';tell('Fresh example jobs. Scheduled-job counts are unchanged.');}});
-$('help').addEventListener('click',()=>detail('Catch. Count. Confirm.',`<ol class="help-list"><li>Enter your name and choose up to two print locations.</li><li>Count the bundle by size. Tap <strong>✓ All caught</strong> when it matches, or tap the size to enter the actual total.</li><li>Enter <strong>0</strong> when you counted none. An empty size means it has not been counted yet.</li><li>Flag damaged blanks or print problems separately. Good-piece counts do not include those pieces.</li><li>Finish each location when every size is counted. Short or extra counts stay flagged.</li><li>Changing jobs keeps your counts. Changing the catcher’s name records a handoff.</li></ol><p><strong>This trial saves on this device only.</strong> Use one tab and keep a backup. Shared saves and office comparison with Printavo receiving are not connected yet.</p><p>The order sizes are a dated snapshot. Printer completion and receiving status are not changed by this app.</p>`));
+$('help').addEventListener('click',()=>detail('Catch. Count. Confirm.',`<ol class="help-list"><li>Enter your name and choose up to two print locations.</li><li>Count the bundle by size. Tap <strong>✓ All caught</strong> when it matches, or tap the white count box for the number pad and enter the actual total.</li><li>Enter <strong>0</strong> when you counted none. An empty size means it has not been counted yet.</li><li>Flag damaged blanks or print problems separately. Good-piece counts do not include those pieces.</li><li>Check spelling, match to the mockup when available, and print quality on the first shirt at each location. Check off each location printed for these garments. Finish each location when its checks and every size are counted. Short or extra counts stay flagged.</li><li>Changing jobs keeps your counts. Changing the catcher’s name records a handoff.</li></ol><p><strong>This trial saves on this device only.</strong> Use one tab and keep a backup. Shared saves and office comparison with Printavo receiving are not connected yet.</p><p>The order sizes are a dated snapshot. Printer completion and receiving status are not changed by this app.</p>`));
 addEventListener('storage',e=>{if(e.key!==key)return;storageBlocked=true;tell('Another tab changed these counts. Reload this tab before entering more; your edits have not been overwritten.');});
-async function init(){try{const r={ok:true,json:async()=>JSON.parse($('catcher-data').textContent)};if(!r.ok)throw Error('Could not load catcher cards.');manifest=await r.json();cards=manifest.cards;load();render();try{const w=await fetch('../data/week.json',{cache:'no-store'});if(w.ok){const latest=await w.json(),rows=C.scheduleRows(latest),map=new Map(rows.map(r=>[r.id,r]));for(const card of cards){const live=map.get(card.scheduleRowId||card.id);if(!live)card.blocked='This location is no longer on the current schedule. Review it before continuing.';else if(live.scheduleSignature!==card.scheduleSignature)card.blocked='This run changed on the schedule. Its size breakdown needs a refresh.';else card.day=live.day;}if(latest.week!==manifest.week){for(const card of cards)card.blocked='A new schedule week is available. Refresh the order-size data before counting.';tell('The schedule has changed weeks. Saved counts are preserved; order sizes need refreshing.');}render();}}catch(e){tell('Schedule could not be checked. Showing the saved order-size snapshot.');}}catch(e){tell(e.message+' Reload when connected.');}}
+async function init(){try{const r={ok:true,json:async()=>JSON.parse($('catcher-data').textContent)};if(!r.ok)throw Error('Could not load catcher cards.');manifest=await r.json();cards=manifest.cards;load();render();try{const w=await fetch('/data/week.json',{cache:'no-store'});if(w.ok){const latest=await w.json(),rows=C.scheduleRows(latest),map=new Map(rows.map(r=>[r.id,r]));for(const card of cards){const live=map.get(card.scheduleRowId||card.id);if(!live)card.blocked='This location is no longer on the current schedule. Review it before continuing.';else if(live.scheduleSignature!==card.scheduleSignature)card.blocked='This run changed on the schedule. Its size breakdown needs a refresh.';else card.day=live.day;}if(latest.week!==manifest.week){for(const card of cards)card.blocked='A new schedule week is available. Refresh the order-size data before counting.';tell('The schedule has changed weeks. Saved counts are preserved; order sizes need refreshing.');}render();}}catch(e){tell('Schedule could not be checked. Showing the saved order-size snapshot.');}}catch(e){tell(e.message+' Reload when connected.');}}
 init();
 </script></body></html>
 
