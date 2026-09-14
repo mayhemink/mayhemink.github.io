@@ -246,6 +246,15 @@
   #noteeditor .btns{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
   #noteeditor .btns button{font:inherit; font-weight:800; padding:10px 14px; border-radius:8px; border:1px solid var(--line); background:#fff;}
   #noteeditor .btns button.save{background:var(--ink); color:#fff; border-color:var(--ink);}
+  /* Editor-only (?editor=1): move a job or one run to another day tab, same modal look. */
+  #moveeditor{display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9998; overflow:auto; padding:24px 12px;}
+  #moveeditor .box{background:var(--card); border-radius:14px; max-width:640px; margin:0 auto; padding:16px;}
+  #moveeditor h3{margin:0 0 10px; font-size:16px;}
+  #moveeditor .btns{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+  #moveeditor .btns button{font:inherit; font-weight:800; padding:10px 14px; border-radius:8px; border:1px solid var(--line); background:#fff;}
+  #moveeditor .btns button.on{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .runmove{font-size:11px; font-weight:800; color:var(--gray); margin-top:4px;}
+  .runmove a{color:var(--gray);}
   .mockstrip{display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding:10px 0 4px;}
   .mockstrip img{height:92px; border-radius:8px; background:#fff; border:1px solid var(--line); flex-shrink:0;}
   .dmock{text-align:center; margin-bottom:12px;}
@@ -445,8 +454,76 @@ function findRow(id){
       return {id:id, job:p[1], _day:p.slice(2).join("_"), customer:"", location:"", _virtual:true};
     }
   }
+  // Virtual "jobday_<rowId>" records carry editor day-moves (2026-09-14). Same trick:
+  // the target day is packed into `notes` (LWW on the worker), keyed on the run's own id,
+  // stored under the run's HOME day so its taps and sync id never change.
+  if(String(id).indexOf("jobday_") === 0){
+    var base = findRow(String(id).slice(7));
+    if(base && !base._virtual){
+      return {id:id, job:base.job, _day:base._day, customer:"", location:"", _virtual:true, _base:base.id};
+    }
+  }
   return null;
 }
+// ---------- day moves (editor) ----------
+// A card keeps living on its week.json day (that's where its state is stored and synced);
+// the override only changes which TAB it renders under. A repush of week.json doesn't
+// clear moves — Reset does. Nothing about timing or stats depends on the tab.
+function jobDayId(rowId){ return "jobday_" + rowId; }
+function dayOverride(row){
+  if(!row || row._virtual) return null;
+  var st = STATES[row._day]; var r = st && st[jobDayId(row.id)];
+  if(!r || !r.notes) return null;
+  try{
+    var o = JSON.parse(r.notes);
+    return (o && o.d && DAYSARR.indexOf(o.d) > -1 && o.d !== row._day) ? o.d : null;
+  }catch(e){ return null; }
+}
+function showDay(row){ return dayOverride(row) || row._day; }
+function writeJobDay(row, day){
+  var id = jobDayId(row.id);
+  var st = STATES[row._day] || (STATES[row._day] = {});
+  var r = st[id] || (st[id] = {id:id, printer:null, pauses:[], handoffs:[], _mt:{}});
+  r.notes = day ? JSON.stringify({d:day, at:now()}) : "";
+  if(!r._mt) r._mt = {};
+  r._mt.notes = now();
+  try{ SYNC.snap[id] = {notes:r.notes}; SYNC.dirty[id] = 1; }catch(e){}
+  saveStateFor(row._day);
+}
+var MV = {rows:[], title:""};
+function openMove(ids, title){
+  MV.rows = []; MV.title = title || "";
+  for(var i = 0; i < ids.length; i++){ var rw = findRow(ids[i]); if(rw && !rw._virtual) MV.rows.push(rw); }
+  if(!MV.rows.length) return;
+  var cur = showDay(MV.rows[0]);
+  var home = MV.rows[0]._day;
+  document.getElementById("mv_title").textContent = "Move " + MV.title;
+  var html = "";
+  for(var d = 0; d < DAYSARR.length; d++){
+    var dd = DAYSARR[d];
+    html += '<button class="' + (dd === cur ? "on" : "") + '" onclick="applyMove(\'' + dd + '\')">' +
+      dayLabel(dd) + (dayNum(dd) ? ' ' + dayNum(dd) : '') + (dd === home ? ' (board day)' : '') + '</button>';
+  }
+  document.getElementById("mv_days").innerHTML = html;
+  document.getElementById("moveeditor").style.display = "block";
+}
+function closeMove(){ document.getElementById("moveeditor").style.display = "none"; }
+function applyMove(day){
+  for(var i = 0; i < MV.rows.length; i++){
+    var row = MV.rows[i];
+    writeJobDay(row, day === row._day ? null : day);
+  }
+  closeMove();
+  if(!currentRow) renderList();
+  try{ syncPush(); }catch(e){}
+  toast("Moved to " + dayLabel(day) + (dayNum(day) ? " " + dayNum(day) : ""));
+}
+function resetMove(){ if(MV.rows.length) applyMove(MV.rows[0]._day); }
+function moveJob(idsCsv, job){
+  var ids = String(idsCsv).split(",").filter(function(x){ return x; });
+  openMove(ids, "job #" + job + " (" + ids.length + " run" + (ids.length === 1 ? "" : "s") + ")");
+}
+function moveRun(id){ var r = findRow(id); if(r) openMove([id], "#" + r.job + " — " + (r.location || "run")); }
 function jobNoteId(day, job){ return "jobnote_" + job + "_" + day; }
 function jobNoteOverride(day, job){
   var st = STATES[day]; var r = st && st[jobNoteId(day, job)];
@@ -525,11 +602,73 @@ function fromHM(hm, refTs){
   return d.getTime();
 }
 function mins(ms){ return Math.round(ms/60000); }
-function isPaused(r){ var p = r.pauses[r.pauses.length-1]; return p && !p.end; }
-function pausedMsBetween(r, a, b){
-  var t = 0;
+// ---------- stops: base entries + patches (2026-09-14) ----------
+// The worker (and unionLog below) keep the FIRST copy of a pause they ever see, keyed on
+// its start — so a resume, an edit or a delete never reached the other iPad, and a deleted
+// stop came straight back on the next pull (Spencer's "stop that cannot be deleted").
+// Every change to an existing stop is therefore appended as a PATCH entry
+//   {at:<unique ts>, k:<start of the stop it changes>, end?, start?, reason?, deleted?}
+// which the union keeps (keyed on `at`), and pausesOf() folds patches over the base
+// entries, latest patch winning. Everything that reads stops goes through pausesOf().
+function isPatch(x){ return !!(x && x.k != null && x.at); }
+function pausesOf(r){
+  var raw = (r && r.pauses) || [], out = [], patches = [], i, j;
+  for(i = 0; i < raw.length; i++){
+    var x = raw[i];
+    if(!x) continue;
+    if(isPatch(x)) patches.push(x);
+    else out.push({start:x.start, end:(x.end == null ? null : x.end), reason:x.reason || "", added:!!x.added, edited:!!x.edited, _k:x.start, _del:false});
+  }
+  patches.sort(function(a, b){ return a.at - b.at; });
+  for(i = 0; i < patches.length; i++){
+    var p = patches[i];
+    for(j = 0; j < out.length; j++){
+      if(out[j]._k !== p.k) continue;
+      if(p.deleted){ out[j]._del = true; }
+      else {
+        out[j]._del = false;
+        if(p.start != null) out[j].start = p.start;
+        if(p.end !== undefined) out[j].end = p.end;
+        if(p.reason != null) out[j].reason = p.reason;
+        if(p.edited) out[j].edited = true;
+      }
+      break;
+    }
+  }
+  out = out.filter(function(x){ return !x._del; });
+  out.sort(function(a, b){ return a.start - b.start; });
+  return out;
+}
+var _lastPatchAt = 0;
+function patchPause(r, k, changes){
+  var at = now();
+  if(at <= _lastPatchAt) at = _lastPatchAt + 1;
+  _lastPatchAt = at;
+  var p = {at:at, k:k};
+  for(var f in changes){ if(changes.hasOwnProperty(f)) p[f] = changes[f]; }
+  r.pauses = r.pauses || [];
+  r.pauses.push(p);
+  // also close/patch the base copy locally so a device that never synced still reads right
   for(var i = 0; i < r.pauses.length; i++){
-    var p = r.pauses[i];
+    var b = r.pauses[i];
+    if(isPatch(b) || b.start !== k) continue;
+    if(changes.deleted) break;
+    if(changes.end !== undefined) b.end = changes.end;
+    if(changes.reason != null) b.reason = changes.reason;
+    if(changes.edited) b.edited = true;
+    break;
+  }
+}
+function openPause(r){
+  var ps = pausesOf(r), op = null;
+  for(var i = 0; i < ps.length; i++) if(!ps[i].end) op = ps[i];   // an open stop is open wherever it sorts
+  return op;
+}
+function isPaused(r){ return !!openPause(r); }
+function pausedMsBetween(r, a, b){
+  var t = 0, ps = pausesOf(r);
+  for(var i = 0; i < ps.length; i++){
+    var p = ps[i];
     var s = Math.max(p.start, a), e = Math.min(p.end || now(), b);
     if(e > s) t += e - s;
   }
@@ -644,17 +783,24 @@ function renderDayTabs(){
   var html = "";
   for(var i = 0; i < DAYSARR.length; i++){
     var d = DAYSARR[i];
-    var rows = ROWSBY[d];
+    var rows = rowsShownOn(d);
     var done = 0;
-    for(var j = 0; j < rows.length; j++) if(status(STATES[d][rows[j].id]) === "done") done++;
+    for(var j = 0; j < rows.length; j++) if(status(STATES[rows[j]._day][rows[j].id]) === "done") done++;
     var cls = "daytab" + (d === curDay && !searchQuery ? " on" : "") + (d === t ? " istoday" : "") + (rows.length && done === rows.length ? " alldone" : "");
     html += '<div class="' + cls + '" onclick="setDay(\'' + d + '\')"><b>' + dayLabel(d) + ' ' + dayNum(d) + '</b><small>' +
       (rows.length ? done + '/' + rows.length + ' done' : 'no cards') + '</small></div>';
   }
   document.getElementById("daytabs").innerHTML = html;
 }
+// Rows rendered under a tab: the day's own rows plus anything moved onto it (moved rows
+// list after the day's own, in week order).
+function rowsShownOn(day){
+  var out = [];
+  for(var i = 0; i < ALLROWS.length; i++) if(showDay(ALLROWS[i]) === day) out.push(ALLROWS[i]);
+  return out;
+}
 function rowsForView(){
-  if(!searchQuery) return ROWSBY[curDay] || [];
+  if(!searchQuery) return rowsShownOn(curDay);
   var out = [];
   for(var i = 0; i < ALLROWS.length; i++){
     var r = ALLROWS[i];
@@ -669,7 +815,7 @@ function renderGroups(){
   var order = [];
   for(var i = 0; i < rows.length; i++){
     var row = rows[i];
-    var k = row._day + "|" + row.job + " — " + row.customer;
+    var k = showDay(row) + "|" + row.job + " — " + row.customer;
     if(!groups[k]){ groups[k] = []; order.push(k); }
     groups[k].push(row);
   }
@@ -678,10 +824,9 @@ function renderGroups(){
     var k = order[oi];
     var g = groups[k];
     var g0 = g[0];
-    var st0 = STATES[g0._day];
     var gScreens = 0;
     for(var j = 0; j < g.length; j++){
-      var r = st0[g[j].id];
+      var r = STATES[g[j]._day][g[j].id];
       gScreens += (r && r.screens != null ? r.screens : g[j].screens);
     }
     var gImgs = [];
@@ -690,7 +835,7 @@ function renderGroups(){
       if(im && IMG[im] && gImgs.indexOf(im) === -1) gImgs.push(im);
     }
     html += '<div class="jobgroup">';
-    if(searchQuery) html += '<div class="dayhint">' + dayLabel(g0._day) + ' ' + dayNum(g0._day) + '</div>';
+    if(searchQuery) html += '<div class="dayhint">' + dayLabel(showDay(g0)) + ' ' + dayNum(showDay(g0)) + '</div>';
     html += '<div class="jobhead"><div class="jrow">' +
       '<div class="jnum"><span>' + (g0.url ? '<a class="jlink" href="' + g0.url + '" target="_blank" onclick="event.stopPropagation()">#' + esc(g0.job) + '</a>' : '#' + esc(g0.job)) + '</span></div>' +
       '<div class="jcust">' + esc(g0.customer) + '</div>' +
@@ -704,7 +849,12 @@ function renderGroups(){
         var h = "";
         if(gNote) h += '<div class="jobnote">' + esc(gNote) + '</div>';
         if(gA) h += '<div class="jobalert">' + esc(gA).replace(/\n/g, '<br>') + '</div>';
-        if(EDITOR) h += '<div class="noteedit"><a href="#" onclick="event.preventDefault();event.stopPropagation();editJobNotes(\'' + g0._day + '\',\'' + esc(g0.job) + '\')">&#9998; edit notes' + (ov ? ' (edited)' : '') + '</a></div>';
+        if(EDITOR){
+          var gids = g.map(function(rr){ return rr.id; }).join(",");
+          var moved = g.filter(function(rr){ return !!dayOverride(rr); }).length;
+          h += '<div class="noteedit"><a href="#" onclick="event.preventDefault();event.stopPropagation();editJobNotes(\'' + g0._day + '\',\'' + esc(g0.job) + '\')">&#9998; edit notes' + (ov ? ' (edited)' : '') + '</a>' +
+            ' &nbsp; <a href="#" onclick="event.preventDefault();event.stopPropagation();moveJob(\'' + gids + '\',\'' + esc(g0.job) + '\')">&#8644; move job' + (moved ? ' (' + moved + ' moved)' : '') + '</a></div>';
+        }
         return h;
       })() +
       (gImgs.length ? '<div class="mockstrip">' + gImgs.map(function(x){ return '<img src="' + IMG[x] + '" onclick="event.stopPropagation();showLightbox(this.src)">'; }).join('') : '');
@@ -731,9 +881,11 @@ function renderGroups(){
       var ss = r2 && r2.screens != null ? r2.screens : row2.screens;
       var e = estFor(row2, r2);
       var estBit = (e && st !== "done") ? ' · <span class="est">~' + fmtDur(e.setup + e.print) + '</span>' : '';
+      var mvFrom = dayOverride(row2) ? ' · moved from ' + dayLabel(row2._day) + (dayNum(row2._day) ? ' ' + dayNum(row2._day) : '') : '';
+      var mvLink = EDITOR ? '<div class="runmove"><a href="#" onclick="event.preventDefault();event.stopPropagation();moveRun(\'' + row2.id + '\')">&#8644; move this run</a></div>' : '';
       html += '<div class="card ' + stCls + '" onclick="openRow(\'' + row2.id + '\')">' +
         '<div class="loc"><div class="l1">' + esc(row2.location) + '</div>' +
-        '<div class="l2">' + cc + ' color · ' + ss + ' screen' + (ss>1?"s":"") + ' · ' + row2.qty + ' pcs' + estBit + '</div></div>' +
+        '<div class="l2">' + cc + ' color · ' + ss + ' screen' + (ss>1?"s":"") + ' · ' + row2.qty + ' pcs' + estBit + mvFrom + '</div>' + mvLink + '</div>' +
         '<div class="stat">' + badge + who + '</div></div>';
     }
     html += '</div>';
@@ -945,10 +1097,11 @@ function renderDetail(){
   var st = status(r);
 
   var html = '<button class="back" onclick="showList()">&#8592; All jobs</button>';
-  if(LABELS[row._day]){
-    html += '<div class="flagbar"><div class="tag">' + dayLabel(row._day) + '</div><div class="txt">This is an EXTRA card — not scheduled for a specific day. Run it whenever the day&#39;s cards are done or a press opens up; it may also move onto next week&#39;s board.</div></div>';
-  } else if(row._day !== todayStr()){
-    html += '<div class="flagbar"><div class="tag">' + dayLabel(row._day) + ' ' + dayNum(row._day) + '</div><div class="txt">Heads up — this card is scheduled for ' + dayLabel(row._day) + '. Running it today is fine, just double-check it&#39;s the right job.</div></div>';
+  var sd = showDay(row);
+  if(LABELS[sd]){
+    html += '<div class="flagbar"><div class="tag">' + dayLabel(sd) + '</div><div class="txt">This is an EXTRA card — not scheduled for a specific day. Run it whenever the day&#39;s cards are done or a press opens up; it may also move onto next week&#39;s board.</div></div>';
+  } else if(sd !== todayStr()){
+    html += '<div class="flagbar"><div class="tag">' + dayLabel(sd) + ' ' + dayNum(sd) + '</div><div class="txt">Heads up — this card is scheduled for ' + dayLabel(sd) + '. Running it today is fine, just double-check it&#39;s the right job.</div></div>';
   }
   if(row.img && IMG[row.img]) html += '<div class="dmock"><img src="' + IMG[row.img] + '" onclick="showLightbox(this.src)"></div>';
   var est = estFor(row, r);
@@ -1056,7 +1209,7 @@ function renderDetail(){
   // stops (pause log) — editable
   if(r.setupStart && !pausePicking){
     html += '<div class="field"><label>Stops</label>';
-    r.pauses.forEach(function(p, i){
+    pausesOf(r).forEach(function(p, i){
       if(editingPause === i){
         html += pauseEditor();
       } else {
@@ -1549,6 +1702,8 @@ function stamp(field){
     if(!confirm("Print ran under 2 minutes — is the job really done?")) return;
   }
   r[field] = now();
+  var op = openPause(r);
+  if(op) patchPause(r, op._k, {end: now()});   // a step tap always ends an open stop
   // whoever finishes setup owns the setup minutes; whoever starts printing owns the print
   // minutes from here until a handoff says otherwise
   if(field === "setupDone"){
@@ -1603,7 +1758,7 @@ function confirmHandoff(){
   save(); renderDetail();
   toast("Handed off to " + r.printer);
 }
-var PAUSE_REASONS = ["Lunch","Ink change","Broke a screen","Waiting on ink","Waiting on approval","Press problem","Other"];
+var PAUSE_REASONS = ["Lunch","Ink change","Broke a screen","Burn screens","Re-glue pallets","Catch shirts / pull bucket","Waiting on ink","Waiting on approval","Press problem","Other"];
 var NEW_PAUSE = -1;
 var pausePicking = false;
 var editingPause = null;
@@ -1612,7 +1767,10 @@ function pauseJob(){ pausePicking = true; renderDetail(); }
 function cancelPause(){ pausePicking = false; renderDetail(); }
 function pickPause(reason){
   pausePicking = false;
-  rec(currentRow.id).pauses.push({start: now(), end: null, reason: reason});
+  var r = rec(currentRow.id);
+  var op = openPause(r);
+  if(op) patchPause(r, op._k, {end: now()});   // never stack two open stops
+  r.pauses.push({start: now(), end: null, reason: reason});
   save(); renderDetail();
 }
 
@@ -1630,7 +1788,7 @@ function pauseEditor(){
   return '<div style="padding:10px 0">' +
     '<div style="display:flex;gap:14px;margin-bottom:10px">' +
     '<div><small style="font-weight:800;color:var(--gray)">STOPPED AT</small><br><input type="time" id="p-start" value="' + toHM(d.start) + '" style="font-size:16px;padding:8px;border:2px solid var(--line);border-radius:8px"></div>' +
-    '<div><small style="font-weight:800;color:var(--gray)">BACK AT</small><br><input type="time" id="p-end" value="' + (d.end ? toHM(d.end) : "") + '" style="font-size:16px;padding:8px;border:2px solid var(--line);border-radius:8px"></div></div>' +
+    '<div><small style="font-weight:800;color:var(--gray)">BACK AT</small><br><input type="time" id="p-end" value="' + (d.end ? toHM(d.end) : "") + '" style="font-size:16px;padding:8px;border:2px solid var(--line);border-radius:8px"><br><small style="color:var(--gray)">empty = still stopped</small></div></div>' +
     '<div class="segs" style="margin-bottom:10px">' +
     PAUSE_REASONS.map(function(x){ return '<div class="seg ' + (d.reason===x?"on":"") + '" style="min-width:30%;padding:10px 6px;font-size:13px" onclick="setPauseReason(\'' + x + '\')">' + x + '</div>'; }).join("") +
     '</div><div style="display:flex;gap:8px">' +
@@ -1642,11 +1800,17 @@ function pauseEditor(){
 function readPauseInputs(){
   var s = document.getElementById("p-start"), e = document.getElementById("p-end");
   if(s && /^\d{1,2}:\d{2}$/.test(s.value)) pauseDraft.start = fromHM(s.value, pauseDraft.start);
-  if(e && /^\d{1,2}:\d{2}$/.test(e.value)) pauseDraft.end = fromHM(e.value, pauseDraft.start);
+  if(e){
+    // A cleared BACK AT means "still stopped" — keep it empty instead of refilling the old
+    // time the moment the editor re-renders (Jalen, 9/8).
+    if(/^\d{1,2}:\d{2}$/.test(e.value)) pauseDraft.end = fromHM(e.value, pauseDraft.start);
+    else if(e.value === "") pauseDraft.end = null;
+  }
 }
 function editPause(i){
-  var p = rec(currentRow.id).pauses[i];
-  pauseDraft = {start: p.start, end: p.end, reason: p.reason};
+  var p = pausesOf(rec(currentRow.id))[i];
+  if(!p) return;
+  pauseDraft = {start: p.start, end: p.end, reason: p.reason, _k: p._k};
   editingPause = i; renderDetail();
 }
 function addPause(){
@@ -1662,10 +1826,10 @@ function savePause(){
     r.pauses.push({start: pauseDraft.start, end: pauseDraft.end, reason: pauseDraft.reason, added: true});
     logEdit(r, "pause added", null, fmt(pauseDraft.start) + "-" + fmt(pauseDraft.end) + " " + pauseDraft.reason);
   } else {
-    var p = r.pauses[editingPause];
-    if(p.start !== pauseDraft.start || p.end !== pauseDraft.end || p.reason !== pauseDraft.reason){
+    var p = pausesOf(r)[editingPause];
+    if(p && (p.start !== pauseDraft.start || p.end !== pauseDraft.end || p.reason !== pauseDraft.reason)){
       logEdit(r, "pause " + (editingPause+1), fmt(p.start) + "-" + (p.end?fmt(p.end):"?") + " " + (p.reason||""), fmt(pauseDraft.start) + "-" + (pauseDraft.end?fmt(pauseDraft.end):"?") + " " + pauseDraft.reason);
-      p.start = pauseDraft.start; p.end = pauseDraft.end; p.reason = pauseDraft.reason; p.edited = true;
+      patchPause(r, p._k, {start: pauseDraft.start, end: pauseDraft.end, reason: pauseDraft.reason, edited: true});
     }
   }
   editingPause = null; pauseDraft = null;
@@ -1674,17 +1838,19 @@ function savePause(){
 function deletePause(){
   var r = rec(currentRow.id);
   if(editingPause !== NEW_PAUSE){
-    var p = r.pauses[editingPause];
-    logEdit(r, "pause deleted", fmt(p.start) + "-" + (p.end?fmt(p.end):"?") + " " + (p.reason||""), null);
-    r.pauses.splice(editingPause, 1);
+    var p = pausesOf(r)[editingPause];
+    if(p){
+      logEdit(r, "pause deleted", fmt(p.start) + "-" + (p.end?fmt(p.end):"?") + " " + (p.reason||""), null);
+      patchPause(r, p._k, {deleted: true});   // tombstone — a splice would come back from the worker
+    }
   }
   editingPause = null; pauseDraft = null;
   save(); renderDetail();
 }
 function resumeJob(){
   var r = rec(currentRow.id);
-  var p = r.pauses[r.pauses.length-1];
-  if(p && !p.end) p.end = now();
+  var p = openPause(r);
+  if(p) patchPause(r, p._k, {end: now()});
   save(); renderDetail();
 }
 function editTime(field){ editingField = field; renderDetail(); }
@@ -1715,7 +1881,7 @@ function calcRow(row){
     out.printMin = mins(printMs);
     if(printMs > 0) out.pph = Math.round(row.qty / (printMs/3600000));
   }
-  out.pauseMin = mins((r.pauses||[]).reduce(function(a,p){ return a + ((p.end||now()) - p.start); }, 0));
+  out.pauseMin = mins(pausesOf(r).reduce(function(a,p){ return a + ((p.end||now()) - p.start); }, 0));
   return out;
 }
 
@@ -1798,9 +1964,11 @@ function buildExport(){
               (sg.pieces != null ? ", " + sg.pieces + " pcs, " + sg.pph + " pcs/hr" : ", PIECES NOT COUNTED — don't split this one") + ")\n";
           }
         }
-        if((r.pauses||[]).length){
-          for(var qi = 0; qi < r.pauses.length; qi++){
-            var p = r.pauses[qi];
+        if(dayOverride(row2)) t += " [moved to " + dayLabel(showDay(row2)) + " tab]";
+        var pz = pausesOf(r);
+        if(pz.length){
+          for(var qi = 0; qi < pz.length; qi++){
+            var p = pz[qi];
             t += "    STOPPED " + fmt(p.start) + "–" + (p.end?fmt(p.end):"?") +
               " (" + mins((p.end||now())-p.start) + "m)" + (p.reason ? ": " + p.reason : "") +
               (p.added ? " *added by hand" : (p.edited ? " *edited" : "")) + "\n";
@@ -1822,7 +1990,15 @@ function buildExport(){
   var raw = {week: WEEKID, days: []};
   for(var di2 = 0; di2 < exportDays.length; di2++){
     var d2 = exportDays[di2];
-    raw.days.push({day: d2, rows: ROWSBY[d2], times: STATES[d2], clock: CLOCKS[d2] || {}});
+    // raw `times` carries RESOLVED stops (patches folded in) so the parser never sees patch entries
+    var times = {};
+    for(var tid in STATES[d2]){
+      if(!STATES[d2].hasOwnProperty(tid)) continue;
+      var tr = JSON.parse(JSON.stringify(STATES[d2][tid]));
+      tr.pauses = pausesOf(STATES[d2][tid]).map(function(p){ return {start:p.start, end:p.end, reason:p.reason, added:p.added||undefined, edited:p.edited||undefined}; });
+      times[tid] = tr;
+    }
+    raw.days.push({day: d2, rows: ROWSBY[d2], times: times, clock: CLOCKS[d2] || {}});
   }
   t += JSON.stringify(raw);
   return t;
@@ -1878,6 +2054,17 @@ loadWeek();
       <button onclick="closeJobNotes()">Cancel</button>
     </div>
     <div style="font-size:12px;color:var(--gray);margin-top:8px;">Saves to the shared board state (both iPads see it within a minute). Empty = hide that band.</div>
+  </div>
+</div>
+<div id="moveeditor" onclick="if(event.target===this)closeMove()">
+  <div class="box">
+    <h3 id="mv_title">Move</h3>
+    <div class="btns" id="mv_days"></div>
+    <div class="btns">
+      <button onclick="resetMove()">Back to board day</button>
+      <button onclick="closeMove()">Cancel</button>
+    </div>
+    <div style="font-size:12px;color:var(--gray);margin-top:8px;">Changes which tab the card shows under (both iPads within a minute). Times already tapped stay with the card.</div>
   </div>
 </div>
 <div id="lightbox" onclick="if(event.target===this)hideLightbox()">
