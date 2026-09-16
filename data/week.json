@@ -476,12 +476,65 @@
      "img": "6435a",
      "note": "Carried from last week's extra cards. 350 pcs, one location — the whole day for one press. Screens can be burned Wed (light day). Cust due Thu 9/17.",
      "nickname": "Recover days 2026"
+    },
+    {
+     "id": "6507-front",
+     "job": "6507",
+     "url": "https://www.printavo.com/invoices/24452795",
+     "customer": "Westrek Flag Antler tees (Brand Makers)",
+     "nickname": "PO #200023-2 Westrek Flag Antler Tees",
+     "location": "Front 9\" wide — American flag antler, 4c: PMS 7693 C navy + PMS 711 C red + White + white UNDERLAY — NL 6210 Black, 107 pcs (M12 L32 XL33 2XL25 3XL5)",
+     "colors": 4,
+     "screens": 4,
+     "qty": 107,
+     "img": "6507a",
+     "note": "Repeat of PO 192552 — same art as last time. Proof page 3 (black shirt) is the reference: 4 layers incl. underlay. MUST SHIP THURSDAY — in-hand at Westrek Fri 9/18 (Brand Makers UPS acct).",
+     "alert": "SHIPS TODAY — box + label before EOD. Tell the office when it's off press."
+    },
+    {
+     "id": "6506-blk",
+     "job": "6506",
+     "url": "https://www.printavo.com/invoices/24452792",
+     "customer": "Westrek Circle Antler hoodies (Brand Makers)",
+     "nickname": "PO #199959-2 Westrek Circle Antler Hoodies",
+     "location": "Front 10.5\" x 12\" — Westrek circle antler, 1c BLACK C — IND4000 Saddle 80 + Dusty Sage 80 = 160 pcs",
+     "colors": 1,
+     "screens": 1,
+     "qty": 160,
+     "img": "6506a",
+     "note": "Repeat of PO 179418. One screen, two inks: run the 160 Saddle/Sage in BLACK on this card, then CLOSE this card and open the 6506 camo card for the WHITE ink change (same screen, no teardown). Ships Fri 9/18, in-hand Mon 9/21."
+    },
+    {
+     "id": "6506-camo",
+     "job": "6506",
+     "url": "https://www.printavo.com/invoices/24452792",
+     "customer": "Westrek Circle Antler hoodies (Brand Makers)",
+     "nickname": "PO #199959-2 Westrek Circle Antler Hoodies",
+     "location": "Front 10.5\" x 12\" — same circle antler screen, 1c WHITE per PO — IND4000 Tiger Camo, 121 pcs",
+     "colors": 1,
+     "screens": 1,
+     "qty": 121,
+     "img": "6506b",
+     "note": "Second half of 6506 — WHITE ink on the Tiger Camo hoodies after the black run. Start this card at the ink change.",
+     "alert": "No camo proof from Brand Makers — PO text says WHITE on camo; the preview shown is the Sage/Saddle art for placement only."
     }
    ],
    "flags": [
     [
      "RUN ORDER",
-     "6435 Lions Gate 350 pcs 2c — one press all day (~4.1 hrs). Second press: anything left from Wed, then Friday's cards early (6503, 6409, 6453 are all ready)."
+     "Press A: 6435 Lions Gate 350 pcs 2c all day (~4.1 hrs). Press B: 6507 Westrek flag tees FIRST (4c, ~2.6 hrs — ships today) → 6506 Westrek hoodies black 160 → ink change to white on the 121 camo (~2.2 hrs). Thursday total ≈ 8.9 press-hrs — two presses is a push, a third printer on 6506 makes it comfortable."
+    ],
+    [
+     "SHIP",
+     "6507 must ship UPS Ground Thursday on the Brand Makers account (in-hand Ephraim Fri). 6506 ships Fri."
+    ],
+    [
+     "INK CHANGE",
+     "6506 is ONE screen, TWO cards. Black card = Saddle + Dusty Sage (160). Tap JOB DONE on it, then START the camo card for white (121). Don't run the whole 281 on one card."
+    ],
+    [
+     "SCREEN ROOM",
+     "6507 = 4 screens (navy, red, white, underlay). Burn Wed/Thu AM. 6506 = 1 screen, 10.5\" x 12\"."
     ]
    ]
   },
@@ -563,20 +616,74 @@
      "note": "Customer-supplied — count in. Due Fri (Titan).",
      "alert": "NO ART, NO MOCKUP IN PRINTAVO — no imprint on the order at all. Do NOT burn anything until Kolton has the logo.",
      "noest": true
+    },
+    {
+     "id": "6515-rocks-ff",
+     "job": "6515",
+     "url": "https://www.printavo.com/invoices/24484930",
+     "customer": "Joshua Tree (Julie Bruley) — RE-DO",
+     "nickname": "Joshua Tree order July 2026",
+     "location": "Full front — JOSHUA TREE ROCKS circle, 1c CREAM (PMS 7499 C) — DM1190L women's V-neck Black, 17 pcs (S3 M5 L5 XL1 2XL3)",
+     "colors": 1,
+     "screens": 1,
+     "qty": 17,
+     "img": "6515a",
+     "note": "RE-DO of the July order — get it right this time. Three separate designs on this job, 88 press pcs total; the 38 hats are heat-press leather patches (not press). Due Fri.",
+     "alert": "VERIFY against the July job before printing — this is a redo. Imprint says cream ink on black shirts; all 17 here are black."
+    },
+    {
+     "id": "6515-og-front",
+     "job": "6515",
+     "url": "https://www.printavo.com/invoices/24484930",
+     "customer": "Joshua Tree (Julie Bruley) — RE-DO",
+     "nickname": "Joshua Tree order July 2026",
+     "location": "Front — OG JOSHUA TREE NATIONAL PARK logo, 2c white fill + black outline — PC340 Desert Tan Heather, 27 pcs (S8 M6 L3 XL2 2XL5 3XL3)",
+     "colors": 2,
+     "screens": 2,
+     "qty": 27,
+     "img": "6515b",
+     "note": "Same 2 screens front and back — print fronts, flip, run backs (no teardown). Printavo matrix says 3-color but the art is white + black only."
+    },
+    {
+     "id": "6515-og-back",
+     "job": "6515",
+     "url": "https://www.printavo.com/invoices/24484930",
+     "customer": "Joshua Tree (Julie Bruley) — RE-DO",
+     "nickname": "Joshua Tree order July 2026",
+     "location": "Back — same OG logo, 2c white + black — same 27 Desert Tan Heather tees",
+     "colors": 2,
+     "screens": 2,
+     "qty": 27,
+     "img": "6515b"
+    },
+    {
+     "id": "6515-round",
+     "job": "6515",
+     "url": "https://www.printavo.com/invoices/24484930",
+     "customer": "Joshua Tree (Julie Bruley) — RE-DO",
+     "nickname": "Joshua Tree order July 2026",
+     "location": "Front — ROUND Joshua Tree sunset logo, 1c tan/khaki — 44 pcs: Bella+Canvas Heather Sage 3 (S) · P&C YOUTH Core Blend Athletic Maroon 12 (YXS6 YS6) · Gildan Softstyle CVC Maroon Mist 29",
+     "colors": 1,
+     "screens": 1,
+     "qty": 44,
+     "img": "6515c",
+     "noest": true,
+     "note": "Order says CONFIRM INK COLOR PER GARMENT — check with the office before setup. Youth tees may need the smaller screen/placement.",
+     "alert": "VERIFY: ink color per garment (sage vs maroon) and location — order doesn't say front/back; carded as front."
     }
    ],
    "flags": [
     [
      "RUN ORDER",
-     "6503 DR Cabinets (ink swap) → 6409 Crystal Sea (teal) → 6453 DR hoodies → 6493 Mtn Life ONLY once art exists."
+     "6503 DR Cabinets (ink swap) → 6409 Crystal Sea (teal) → 6453 DR hoodies → 6515 Joshua Tree (rocks → OG front/back → round) → 6493 Mtn Life ONLY once art exists. Friday ≈ 3.5 press-hrs plus 6515's ink checks — light; anything left from Thursday runs first."
     ],
     [
      "NOT PRESS",
-     "6478 Real Estate Guy (11 hats) is embroidery — not on the board, due today."
+     "6478 Real Estate Guy (11 hats) is embroidery; 6515's 38 hats are heat-press leather patches — neither on the board."
     ],
     [
      "VERIFY",
-     "6493 has NO ART in Printavo. 6409 teal on darks."
+     "6493 has NO ART in Printavo. 6409 teal on darks. 6515 is a RE-DO — confirm the round logo's ink colors per garment and the OG colors (2c, not 3)."
     ]
    ]
   },
@@ -684,6 +791,12 @@
   "6409a": "/data/mocks/2026-09-14/6409_sheet.jpg",
   "6474red2": "/data/mocks/2026-09-07/6474_redrock_shirt.jpg",
   "6474crest2": "/data/mocks/2026-09-07/6474_crest_shirt.jpg",
-  "6474en2": "/data/mocks/2026-09-07/6474_enough_shirt.jpg"
+  "6474en2": "/data/mocks/2026-09-07/6474_enough_shirt.jpg",
+  "6506a": "/data/mocks/2026-09-14/6506_1.jpg",
+  "6506b": "/data/mocks/2026-09-14/6506_2.jpg",
+  "6507a": "/data/mocks/2026-09-14/6507_1.jpg",
+  "6515a": "/data/mocks/2026-09-14/6515_rocks.jpg",
+  "6515b": "/data/mocks/2026-09-14/6515_og.jpg",
+  "6515c": "/data/mocks/2026-09-14/6515_round.jpg"
  }
 }
