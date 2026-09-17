@@ -41,21 +41,21 @@
      "id": "6457-lc",
      "job": "6457",
      "url": "https://www.printavo.com/invoices/24244404",
-     "customer": "Michelle Gouldsberry — Dark Sky",
-     "location": "LC 4\" — SOUTHWEST UT DarkSky badge, 4c (white + purple + orange + brown) — DM108 Black, 24 pcs",
+     "customer": "Michelle Gouldsberry \u2014 Dark Sky",
+     "location": "LC 4\" \u2014 SOUTHWEST UT DarkSky badge, 4c (white + purple + orange + brown) \u2014 DM108 Black, 24 pcs",
      "colors": 4,
      "screens": 4,
      "qty": 24,
      "img": "6457a",
      "note": "Both locations share the same 4 inks. Cust due Thu 9/17.",
-     "alert": "VERIFY: 4 plates per order. Underbase not on the order — printer's call on black."
+     "alert": "VERIFY: 4 plates per order. Underbase not on the order \u2014 printer's call on black."
     },
     {
      "id": "6457-back",
      "job": "6457",
      "url": "https://www.printavo.com/invoices/24244404",
-     "customer": "Michelle Gouldsberry — Dark Sky",
-     "location": "Full back — ASK ME ABOUT DARK SKIES, 4c (same inks) — 24 pcs",
+     "customer": "Michelle Gouldsberry \u2014 Dark Sky",
+     "location": "Full back \u2014 ASK ME ABOUT DARK SKIES, 4c (same inks) \u2014 24 pcs",
      "colors": 4,
      "screens": 4,
      "qty": 24,
@@ -66,7 +66,7 @@
      "job": "6394",
      "url": "https://www.printavo.com/invoices/23984129",
      "customer": "Southern Utah Office Furniture (Richard)",
-     "location": "LC — NEW badge logo, 1c WHITE — NL 6210 Black 6 + Lt Olive 1 + Espresso 1 = 8 pcs",
+     "location": "LC \u2014 NEW badge logo, 1c WHITE \u2014 NL 6210 Black 6 + Lt Olive 1 + Espresso 1 = 8 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 8,
@@ -78,7 +78,7 @@
      "job": "6394",
      "url": "https://www.printavo.com/invoices/23984129",
      "customer": "Southern Utah Office Furniture (Richard)",
-     "location": "Full back — NEW badge logo, 1c WHITE — same 8 pcs",
+     "location": "Full back \u2014 NEW badge logo, 1c WHITE \u2014 same 8 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 8,
@@ -89,7 +89,7 @@
      "job": "6394",
      "url": "https://www.printavo.com/invoices/23984129",
      "customer": "Southern Utah Office Furniture (Richard)",
-     "location": "LC — OG horizontal logo (chair), 1c WHITE — NL 6210 Military Green, 3 pcs",
+     "location": "LC \u2014 OG horizontal logo (chair), 1c WHITE \u2014 NL 6210 Military Green, 3 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 3,
@@ -100,7 +100,7 @@
      "job": "6394",
      "url": "https://www.printavo.com/invoices/23984129",
      "customer": "Southern Utah Office Furniture (Richard)",
-     "location": "Full back — OG logo + OFFICE FURNITURE phone, 1c WHITE — 3 pcs",
+     "location": "Full back \u2014 OG logo + OFFICE FURNITURE phone, 1c WHITE \u2014 3 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 3,
@@ -111,38 +111,38 @@
      "job": "6490",
      "url": "https://www.printavo.com/invoices/24409670",
      "customer": "Buck Circle / True Value (Brad Blackner)",
-     "location": "Front — NATURE'S PLAYGROUND deer skull / Duck Creek, 1c BLACK — CUST-SUPPLIED Coyote Brown LS 58 + Sage hoodies 51 = 109 pcs",
+     "location": "Front \u2014 NATURE'S PLAYGROUND deer skull / Duck Creek, 1c BLACK \u2014 CUST-SUPPLIED Coyote Brown LS 58 + Sage hoodies 51 = 109 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 109,
      "img": "6490a",
-     "note": "Customer-supplied blanks — count in before setup. Due today (Titan).",
-     "alert": "VERIFY: order has no location — front assumed. Confirm with Kolton/Brad before setup."
+     "note": "Customer-supplied blanks \u2014 count in before setup. Due today (Titan).",
+     "alert": "VERIFY: order has no location \u2014 front assumed. Confirm with Kolton/Brad before setup."
     },
     {
      "id": "6492-front",
      "job": "6492",
      "url": "https://www.printavo.com/invoices/24409672",
      "customer": "Smokey Bear / Duck Creek (Brad Blackner)",
-     "location": "Front — SMOKEY BEAR 'Only you can prevent wildfires', 1c dark — CUST-SUPPLIED youth: Brown hoodies 50 + Ash tees 46 = 96 pcs",
+     "location": "Front \u2014 SMOKEY BEAR 'Only you can prevent wildfires', 1c dark \u2014 CUST-SUPPLIED youth: Brown hoodies 50 + Ash tees 46 = 96 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 96,
      "img": "6492a",
-     "note": "All YOUTH sizes (YXS–YXL). Customer-supplied — count in. Due today (Titan).",
-     "alert": "VERIFY: order has no location — front assumed. Ink color not on the order (dark brown/black?)."
+     "note": "All YOUTH sizes (YXS\u2013YXL). Customer-supplied \u2014 count in. Due today (Titan).",
+     "alert": "VERIFY: order has no location \u2014 front assumed. Ink color not on the order (dark brown/black?)."
     },
     {
      "id": "6442-front",
      "job": "6442",
      "url": "https://www.printavo.com/invoices/24199791",
      "customer": "2026 School Tee Order (Rebecca)",
-     "location": "Front — 3 COLOR — mixed tees (6610/6210 Cardinal 24, DM108L/DM108 Eggplant 12 · Royal 22 · Olive 20 · Black 26 · Charcoal 2), 106 pcs",
+     "location": "Front \u2014 3 COLOR \u2014 mixed tees (6610/6210 Cardinal 24, DM108L/DM108 Eggplant 12 \u00b7 Royal 22 \u00b7 Olive 20 \u00b7 Black 26 \u00b7 Charcoal 2), 106 pcs",
      "colors": 3,
      "screens": 3,
      "qty": 106,
      "img": null,
-     "note": "Carried from last week's extra cards. NO MOCKUP IN PRINTAVO — art on the order. 106 mixed-color tees; prod due Mon, cust Tue 9/15.",
+     "note": "Carried from last week's extra cards. NO MOCKUP IN PRINTAVO \u2014 art on the order. 106 mixed-color tees; prod due Mon, cust Tue 9/15.",
      "nickname": "2026 School Tee Order"
     },
     {
@@ -150,7 +150,7 @@
      "job": "6442",
      "url": "https://www.printavo.com/invoices/24199791",
      "customer": "2026 School Tee Order (Rebecca)",
-     "location": "Back — 2 COLOR — same 106 mixed tees",
+     "location": "Back \u2014 2 COLOR \u2014 same 106 mixed tees",
      "colors": 2,
      "screens": 2,
      "qty": 106,
@@ -162,7 +162,7 @@
    "flags": [
     [
      "RUN ORDER",
-     "6394 (4 tiny white screens, due today) → 6490 → 6492 (both Titan, customer-supplied, due today) → 6457 Dark Sky (4c ×2) → 6442 school tees (3c + 2c) if time; 6442 floats to Tue."
+     "6394 (4 tiny white screens, due today) \u2192 6490 \u2192 6492 (both Titan, customer-supplied, due today) \u2192 6457 Dark Sky (4c \u00d72) \u2192 6442 school tees (3c + 2c) if time; 6442 floats to Tue."
     ],
     [
      "CREW",
@@ -174,7 +174,7 @@
     ],
     [
      "COUNT IN",
-     "6490 (109) and 6492 (96) are customer-supplied — count against the size breakdown before setup."
+     "6490 (109) and 6492 (96) are customer-supplied \u2014 count against the size breakdown before setup."
     ]
    ]
   },
@@ -186,13 +186,13 @@
      "job": "6418",
      "url": "https://www.printavo.com/invoices/24103360",
      "customer": "The Rev STG (Jim Zierse)",
-     "location": "LC — THE REV STG logo, 1c — CUST-SUPPLIED performance polos/quarter-zips, 5 pcs: WHITE ink on the darks, BLACK ink on the lights (ink swap, same screen)",
+     "location": "LC \u2014 THE REV STG logo, 1c \u2014 CUST-SUPPLIED performance polos/quarter-zips, 5 pcs: WHITE ink on the darks, BLACK ink on the lights (ink swap, same screen)",
      "colors": 1,
      "screens": 1,
      "qty": 5,
      "img": "6418a",
      "note": "Only the 5 polos are screen print. The hats/patches (heat press) and 9 puff caps (embroidery) are NOT press work. Cust due Fri 9/18.",
-     "alert": "VERIFY: art shows a small 3-bar mark on the sleeve — not on the line items. Ask before printing it.",
+     "alert": "VERIFY: art shows a small 3-bar mark on the sleeve \u2014 not on the line items. Ask before printing it.",
      "noest": true
     },
     {
@@ -200,7 +200,7 @@
      "job": "6451",
      "url": "https://www.printavo.com/invoices/24218101",
      "customer": "Benitez Masonry (Marisol)",
-     "location": "LC — Benitez Masonry logo, 2c (PC54H Ath Hthr 14 + Carolina Blue 14)",
+     "location": "LC \u2014 Benitez Masonry logo, 2c (PC54H Ath Hthr 14 + Carolina Blue 14)",
      "colors": 2,
      "screens": 2,
      "qty": 28,
@@ -212,7 +212,7 @@
      "job": "6451",
      "url": "https://www.printavo.com/invoices/24218101",
      "customer": "Benitez Masonry (Marisol)",
-     "location": "Full back — BENITEZ MASONRY + 702-237-6694, 2c",
+     "location": "Full back \u2014 BENITEZ MASONRY + 702-237-6694, 2c",
      "colors": 2,
      "screens": 2,
      "qty": 28,
@@ -224,12 +224,12 @@
      "job": "6449",
      "url": "https://www.printavo.com/invoices/24215543",
      "customer": "Boots Pest Control",
-     "location": "Front LC — BOOTS PEST CONTROL, lime green (PMS 360) + white — A4 hooded LS 4 + Paragon polos 4 = 8 pcs",
+     "location": "Front LC \u2014 BOOTS PEST CONTROL, lime green (PMS 360) + white \u2014 A4 hooded LS 4 + Paragon polos 4 = 8 pcs",
      "colors": 2,
      "screens": 2,
      "qty": 8,
      "img": "6449a",
-     "note": "Carried from last week's extra cards. 8 pcs — A4 hooded LS 4 + Paragon polos 4. Lime green PMS 360 + white.",
+     "note": "Carried from last week's extra cards. 8 pcs \u2014 A4 hooded LS 4 + Paragon polos 4. Lime green PMS 360 + white.",
      "nickname": "JULY 2026 ORDER",
      "noest": true
     },
@@ -238,12 +238,12 @@
      "job": "6491",
      "url": "https://www.printavo.com/invoices/24409671",
      "customer": "Duck Face / Duck Creek (Brad Blackner)",
-     "location": "Front center — DUCK in yellow beanie 'Duck Creek Utah', BLACK + GOLD (2c) — CUST-SUPPLIED Oatmeal hoodies, 52 pcs",
+     "location": "Front center \u2014 DUCK in yellow beanie 'Duck Creek Utah', BLACK + GOLD (2c) \u2014 CUST-SUPPLIED Oatmeal hoodies, 52 pcs",
      "colors": 2,
      "screens": 2,
      "qty": 52,
      "img": "6491a",
-     "note": "Customer-supplied — count in. Due Tue (Titan).",
+     "note": "Customer-supplied \u2014 count in. Due Tue (Titan).",
      "alert": "VERIFY color count: order says 4 color, art reads black + gold (cream neck highlight may be shirt show-through or a 3rd plate). Check separations before burning."
     },
     {
@@ -251,12 +251,12 @@
      "job": "6438",
      "url": "https://www.printavo.com/invoices/24180997",
      "customer": "Street Eats (Cory LaFranchi)",
-     "location": "Front left — pink heart / spray can, 2c (PC61 Jet Black, 26 pcs)",
+     "location": "Front left \u2014 pink heart / spray can, 2c (PC61 Jet Black, 26 pcs)",
      "colors": 2,
      "screens": 2,
      "qty": 26,
      "img": "6438b",
-     "note": "Carried from last week's extra cards — 26 Jet Black + 26 Ash PC61, two different designs per colorway. Cust due 9/22.",
+     "note": "Carried from last week's extra cards \u2014 26 Jet Black + 26 Ash PC61, two different designs per colorway. Cust due 9/22.",
      "nickname": "Burger shirt and Street shirt"
     },
     {
@@ -264,12 +264,12 @@
      "job": "6438",
      "url": "https://www.printavo.com/invoices/24180997",
      "customer": "Street Eats (Cory LaFranchi)",
-     "location": "Full back — STREET EATS skateboarding burger, 6 COLOR (PC61 Jet Black, 26 pcs)",
+     "location": "Full back \u2014 STREET EATS skateboarding burger, 6 COLOR (PC61 Jet Black, 26 pcs)",
      "colors": 6,
      "screens": 6,
      "qty": 26,
      "img": "6438a",
-     "note": "Burger shirt. 6 screens for 26 pcs — setup is the job. Customer date 9/22.",
+     "note": "Burger shirt. 6 screens for 26 pcs \u2014 setup is the job. Customer date 9/22.",
      "nickname": "Burger shirt and Street shirt",
      "noest": true
     },
@@ -278,7 +278,7 @@
      "job": "6438",
      "url": "https://www.printavo.com/invoices/24180997",
      "customer": "Street Eats (Cory LaFranchi)",
-     "location": "Front left chest — STREET EATS small, 3c (PC61 Ash, 26 pcs)",
+     "location": "Front left chest \u2014 STREET EATS small, 3c (PC61 Ash, 26 pcs)",
      "colors": 3,
      "screens": 3,
      "qty": 26,
@@ -291,7 +291,7 @@
      "job": "6438",
      "url": "https://www.printavo.com/invoices/24180997",
      "customer": "Street Eats (Cory LaFranchi)",
-     "location": "Full back — STREET EATS city scene, 5 COLOR (PC61 Ash, 26 pcs)",
+     "location": "Full back \u2014 STREET EATS city scene, 5 COLOR (PC61 Ash, 26 pcs)",
      "colors": 5,
      "screens": 5,
      "qty": 26,
@@ -304,11 +304,11 @@
    "flags": [
     [
      "RUN ORDER",
-     "6491 Duck Face (Titan, due today) → 6451 Benitez → 6449 Boots → 6438 Street Eats (4 screens sets, two colorways) → 6418 Rev polos (5 pcs, ink swap)."
+     "6491 Duck Face (Titan, due today) \u2192 6451 Benitez \u2192 6449 Boots \u2192 6438 Street Eats (4 screens sets, two colorways) \u2192 6418 Rev polos (5 pcs, ink swap)."
     ],
     [
      "NOT PRESS",
-     "6382 (Lauren Sorensen, 56 black hoodies, RUSH to Arizona) is FULL-COLOR HEAT PRESS — not on the board, but it IS due today."
+     "6382 (Lauren Sorensen, 56 black hoodies, RUSH to Arizona) is FULL-COLOR HEAT PRESS \u2014 not on the board, but it IS due today."
     ],
     [
      "VERIFY",
@@ -324,19 +324,19 @@
      "job": "6433",
      "url": "https://www.printavo.com/invoices/24172170",
      "customer": "RAD Electric (Amber Ebarb)",
-     "location": "Front center chest — RAD electric outline logo, 1c BLACK — Jerzees 363LH Safety Green hooded LS, 24 pcs",
+     "location": "Front center chest \u2014 RAD electric outline logo, 1c BLACK \u2014 Jerzees 363LH Safety Green hooded LS, 24 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 24,
      "img": "6433a",
-     "note": "3 locations, all 1c black, 3 screens. The 24 black trucker caps on this order are heat-press patches — not press work. Due Wed."
+     "note": "3 locations, all 1c black, 3 screens. The 24 black trucker caps on this order are heat-press patches \u2014 not press work. Due Wed."
     },
     {
      "id": "6433-back",
      "job": "6433",
      "url": "https://www.printavo.com/invoices/24172170",
      "customer": "RAD Electric (Amber Ebarb)",
-     "location": "Upper back (below hood) — RAD electric logo, 1c BLACK — 24 pcs",
+     "location": "Upper back (below hood) \u2014 RAD electric logo, 1c BLACK \u2014 24 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 24,
@@ -347,7 +347,7 @@
      "job": "6433",
      "url": "https://www.printavo.com/invoices/24172170",
      "customer": "RAD Electric (Amber Ebarb)",
-     "location": "Left sleeve — American flag, 1c BLACK — 24 pcs",
+     "location": "Left sleeve \u2014 American flag, 1c BLACK \u2014 24 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 24,
@@ -358,7 +358,7 @@
      "job": "6477",
      "url": "https://www.printavo.com/invoices/24343955",
      "customer": "End Overdose / USARA (Marcie Gray)",
-     "location": "Front — #END OVERDOSE heart, 1c BLACK — PC340 Desert Tan Hthr, 20 pcs",
+     "location": "Front \u2014 #END OVERDOSE heart, 1c BLACK \u2014 PC340 Desert Tan Hthr, 20 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 20,
@@ -371,7 +371,7 @@
      "job": "6477",
      "url": "https://www.printavo.com/invoices/24343955",
      "customer": "End Overdose / USARA (Marcie Gray)",
-     "location": "Back — OVERDOSE DOES NOT DISCRIMINATE / USARA, 1c BLACK — Desert Tan, 20 pcs",
+     "location": "Back \u2014 OVERDOSE DOES NOT DISCRIMINATE / USARA, 1c BLACK \u2014 Desert Tan, 20 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 20,
@@ -384,7 +384,7 @@
      "job": "6477",
      "url": "https://www.printavo.com/invoices/24343955",
      "customer": "End Overdose / USARA (Marcie Gray)",
-     "location": "Front — SOUTHWEST RECOVERY DAY, 1c WHITE — BC3001 Teal, 20 pcs",
+     "location": "Front \u2014 SOUTHWEST RECOVERY DAY, 1c WHITE \u2014 BC3001 Teal, 20 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 20,
@@ -397,7 +397,7 @@
      "job": "6477",
      "url": "https://www.printavo.com/invoices/24343955",
      "customer": "End Overdose / USARA (Marcie Gray)",
-     "location": "Back — COMMITTEE, 1c WHITE — BC3001 Teal, 20 pcs",
+     "location": "Back \u2014 COMMITTEE, 1c WHITE \u2014 BC3001 Teal, 20 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 20,
@@ -410,7 +410,7 @@
      "job": "6461",
      "url": "https://www.printavo.com/invoices/24253108",
      "customer": "Gathered in Christ (Kaylee Mason)",
-     "location": "Front left chest — Gathered in Christ flowers, 1c WHITE — Comfort Colors 1717 Yam, 24 pcs",
+     "location": "Front left chest \u2014 Gathered in Christ flowers, 1c WHITE \u2014 Comfort Colors 1717 Yam, 24 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 24,
@@ -423,7 +423,7 @@
      "job": "6461",
      "url": "https://www.printavo.com/invoices/24253108",
      "customer": "Gathered in Christ (Kaylee Mason)",
-     "location": "Back — GATHERED. / Matthew 18:20, 1c WHITE — 1717 Yam, 24 pcs",
+     "location": "Back \u2014 GATHERED. / Matthew 18:20, 1c WHITE \u2014 1717 Yam, 24 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 24,
@@ -436,7 +436,7 @@
      "job": "6461",
      "url": "https://www.printavo.com/invoices/24253108",
      "customer": "Gathered in Christ (Kaylee Mason)",
-     "location": "Bag front — GATHERED IN CHRIST Southern Utah Women's Conference, 1c BLACK — BAGedge BE280 duffel, 24 pcs",
+     "location": "Bag front \u2014 GATHERED IN CHRIST Southern Utah Women's Conference, 1c BLACK \u2014 BAGedge BE280 duffel, 24 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 24,
@@ -449,7 +449,7 @@
    "flags": [
     [
      "RUN ORDER",
-     "6433 RAD Electric (3 × 1c) → 6477 End Overdose (4 × 1c) → 6461 Gathered in Christ (3 × 1c). Light day — ~2.6 press-hrs."
+     "6433 RAD Electric (3 \u00d7 1c) \u2192 6477 End Overdose (4 \u00d7 1c) \u2192 6461 Gathered in Christ (3 \u00d7 1c). Light day \u2014 ~2.6 press-hrs."
     ],
     [
      "SCREEN ROOM",
@@ -457,7 +457,7 @@
     ],
     [
      "NOT PRESS",
-     "6489 Jonny Hats (33 hats) is embroidery — not on the board, due today."
+     "6489 Jonny Hats (33 hats) is embroidery \u2014 not on the board, due today."
     ]
    ]
   },
@@ -469,12 +469,12 @@
      "job": "6435",
      "url": "https://www.printavo.com/invoices/24178731",
      "customer": "Lions Gate Recovery (Kelly Cluff)",
-     "location": "Front — LIONS GATE RECOVERY / IT ALWAYS LINES UP, 2c green + black — DM108 White, 350 pcs",
+     "location": "Front \u2014 LIONS GATE RECOVERY / IT ALWAYS LINES UP, 2c green + black \u2014 DM108 White, 350 pcs",
      "colors": 2,
      "screens": 2,
      "qty": 350,
      "img": "6435a",
-     "note": "Carried from last week's extra cards. 350 pcs, one location — the whole day for one press. Screens can be burned Wed (light day). Cust due Thu 9/17.",
+     "note": "Carried from last week's extra cards. 350 pcs, one location \u2014 the whole day for one press. Screens can be burned Wed (light day). Cust due Thu 9/17.",
      "nickname": "Recover days 2026"
     },
     {
@@ -483,13 +483,13 @@
      "url": "https://www.printavo.com/invoices/24452795",
      "customer": "Westrek Flag Antler tees (Brand Makers)",
      "nickname": "PO #200023-2 Westrek Flag Antler Tees",
-     "location": "Front 9\" wide — American flag antler, 4c: PMS 7693 C navy + PMS 711 C red + White + white UNDERLAY — NL 6210 Black, 107 pcs (M12 L32 XL33 2XL25 3XL5)",
+     "location": "Front 9\" wide \u2014 American flag antler, 4c: PMS 7693 C navy + PMS 711 C red + White + white UNDERLAY \u2014 NL 6210 Black, 107 pcs (M12 L32 XL33 2XL25 3XL5)",
      "colors": 4,
      "screens": 4,
      "qty": 107,
      "img": "6507a",
-     "note": "Repeat of PO 192552 — same art as last time. Proof page 3 (black shirt) is the reference: 4 layers incl. underlay. MUST SHIP THURSDAY — in-hand at Westrek Fri 9/18 (Brand Makers UPS acct).",
-     "alert": "SHIPS TODAY — box + label before EOD. Tell the office when it's off press."
+     "note": "Repeat of PO 192552 \u2014 same art as last time. Proof page 3 (black shirt) is the reference: 4 layers incl. underlay. MUST SHIP THURSDAY \u2014 in-hand at Westrek Fri 9/18 (Brand Makers UPS acct).",
+     "alert": "SHIPS TODAY \u2014 box + label before EOD. Tell the office when it's off press."
     },
     {
      "id": "6506-blk",
@@ -497,7 +497,7 @@
      "url": "https://www.printavo.com/invoices/24452792",
      "customer": "Westrek Circle Antler hoodies (Brand Makers)",
      "nickname": "PO #199959-2 Westrek Circle Antler Hoodies",
-     "location": "Front 10.5\" x 12\" — Westrek circle antler, 1c BLACK C — IND4000 Saddle 80 + Dusty Sage 80 = 160 pcs",
+     "location": "Front 10.5\" x 12\" \u2014 Westrek circle antler, 1c BLACK C \u2014 IND4000 Saddle 80 + Dusty Sage 80 = 160 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 160,
@@ -510,19 +510,19 @@
      "url": "https://www.printavo.com/invoices/24452792",
      "customer": "Westrek Circle Antler hoodies (Brand Makers)",
      "nickname": "PO #199959-2 Westrek Circle Antler Hoodies",
-     "location": "Front 10.5\" x 12\" — same circle antler screen, 1c WHITE per PO — IND4000 Tiger Camo, 121 pcs",
+     "location": "Front 10.5\" x 12\" \u2014 same circle antler screen, 1c WHITE per PO \u2014 IND4000 Tiger Camo, 121 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 121,
      "img": "6506b",
-     "note": "Second half of 6506 — WHITE ink on the Tiger Camo hoodies after the black run. Start this card at the ink change.",
-     "alert": "No camo proof from Brand Makers — PO text says WHITE on camo; the preview shown is the Sage/Saddle art for placement only."
+     "note": "Second half of 6506 \u2014 WHITE ink on the Tiger Camo hoodies after the black run. Start this card at the ink change.",
+     "alert": "No camo proof from Brand Makers \u2014 PO text says WHITE on camo; the preview shown is the Sage/Saddle art for placement only."
     }
    ],
    "flags": [
     [
      "RUN ORDER",
-     "Press A: 6435 Lions Gate 350 pcs 2c all day (~4.1 hrs). Press B: 6507 Westrek flag tees FIRST (4c, ~2.6 hrs — ships today) → 6506 Westrek hoodies black 160 → ink change to white on the 121 camo (~2.2 hrs). Thursday total ≈ 8.9 press-hrs — two presses is a push, a third printer on 6506 makes it comfortable."
+     "Press A: 6435 Lions Gate 350 pcs 2c all day (~4.1 hrs). Press B: 6507 Westrek flag tees FIRST (4c, ~2.6 hrs \u2014 ships today) \u2192 6506 Westrek hoodies black 160 \u2192 ink change to white on the 121 camo (~2.2 hrs). Thursday total \u2248 8.9 press-hrs \u2014 two presses is a push, a third printer on 6506 makes it comfortable."
     ],
     [
      "SHIP",
@@ -545,21 +545,21 @@
      "id": "6503-lc",
      "job": "6503",
      "url": "https://www.printavo.com/invoices/24436646",
-     "customer": "DR Cabinets (Zane) — Fresh Clean tees",
-     "location": "LC — DR monogram, 1c — INK BY SHIRT: Mercury Green (2) BLACK ink · Charcoal (3) + Midnight Navy (5) LIGHT GREY ink — cust-supplied Fresh Clean Threads, 10 pcs all L",
+     "customer": "DR Cabinets (Zane) \u2014 Fresh Clean tees",
+     "location": "LC \u2014 DR monogram, 1c \u2014 INK BY SHIRT: Mercury Green (2) BLACK ink \u00b7 Charcoal (3) + Midnight Navy (5) LIGHT GREY ink \u2014 cust-supplied Fresh Clean Threads, 10 pcs all L",
      "colors": 1,
      "screens": 1,
      "qty": 10,
      "img": "6503a",
-     "note": "Print the 2 green in black first, swap to light grey for the 8 darks — same screens, no teardown. Due Fri.",
+     "note": "Print the 2 green in black first, swap to light grey for the 8 darks \u2014 same screens, no teardown. Due Fri.",
      "noest": true
     },
     {
      "id": "6503-back",
      "job": "6503",
      "url": "https://www.printavo.com/invoices/24436646",
-     "customer": "DR Cabinets (Zane) — Fresh Clean tees",
-     "location": "Full back — DR CABINETS monogram, 1c — same black/light grey swap, 10 pcs",
+     "customer": "DR Cabinets (Zane) \u2014 Fresh Clean tees",
+     "location": "Full back \u2014 DR CABINETS monogram, 1c \u2014 same black/light grey swap, 10 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 10,
@@ -571,7 +571,7 @@
      "job": "6453",
      "url": "https://www.printavo.com/invoices/24231763",
      "customer": "DR Cabinets (Zane)",
-     "location": "Hoodie FULL FRONT — DR CABINETS big logo, 2c (white + grey) — SS4500 Army Heather, 18 pcs",
+     "location": "Hoodie FULL FRONT \u2014 DR CABINETS big logo, 2c (white + grey) \u2014 SS4500 Army Heather, 18 pcs",
      "colors": 2,
      "screens": 2,
      "qty": 18,
@@ -585,20 +585,20 @@
      "job": "6409",
      "url": "https://www.printavo.com/invoices/24070083",
      "customer": "Crystal Sea Pool Service (Brandon Campbell)",
-     "location": "Front center chest 6\" — CRYSTAL SEA wordmark, 1c TEAL — 20 tees: ST350 White 3, ST350LS White 3, ST450LS Black 3, ST450LS Dk Smoke Grey 3, NL 6210 White 4 + Heavy Metal 4",
+     "location": "Front center chest 6\" \u2014 CRYSTAL SEA wordmark, 1c TEAL \u2014 20 tees: ST350 White 3, ST350LS White 3, ST450LS Black 3, ST450LS Dk Smoke Grey 3, NL 6210 White 4 + Heavy Metal 4",
      "colors": 1,
      "screens": 1,
      "qty": 20,
      "img": "6409a",
-     "note": "Order says ALL SHIRTS TEAL INK (mockup sheet shows white/black options — ignore those). The 8 hats on this order are patch sew-on, not press work. Due Fri.",
-     "alert": "VERIFY: teal on the black/dark grey shirts — flash a base or just double-hit? Order says 2 color; card as 1c teal."
+     "note": "Order says ALL SHIRTS TEAL INK (mockup sheet shows white/black options \u2014 ignore those). The 8 hats on this order are patch sew-on, not press work. Due Fri.",
+     "alert": "VERIFY: teal on the black/dark grey shirts \u2014 flash a base or just double-hit? Order says 2 color; card as 1c teal."
     },
     {
      "id": "6409-back",
      "job": "6409",
      "url": "https://www.printavo.com/invoices/24070083",
      "customer": "Crystal Sea Pool Service (Brandon Campbell)",
-     "location": "Full back 12\" — diamond wave logo, 1c TEAL — same 20 tees",
+     "location": "Full back 12\" \u2014 diamond wave logo, 1c TEAL \u2014 same 20 tees",
      "colors": 1,
      "screens": 1,
      "qty": 20,
@@ -608,49 +608,49 @@
      "id": "6493-front",
      "job": "6493",
      "url": "https://www.printavo.com/invoices/24409674",
-     "customer": "Mtn Life — LOGO TBD (Brad Blackner)",
-     "location": "Front — LOGO TBD, 1c? — CUST-SUPPLIED Cement youth hoodies, 50 pcs (YS–YXL)",
+     "customer": "Mtn Life \u2014 LOGO TBD (Brad Blackner)",
+     "location": "Front \u2014 LOGO TBD, 1c? \u2014 CUST-SUPPLIED Cement youth hoodies, 50 pcs (YS\u2013YXL)",
      "colors": 1,
      "screens": 1,
      "qty": 50,
-     "note": "Customer-supplied — count in. Due Fri (Titan).",
-     "alert": "NO ART, NO MOCKUP IN PRINTAVO — no imprint on the order at all. Do NOT burn anything until Kolton has the logo.",
+     "note": "Customer-supplied \u2014 count in. Due Fri (Titan).",
+     "alert": "NO ART, NO MOCKUP IN PRINTAVO \u2014 no imprint on the order at all. Do NOT burn anything until Kolton has the logo.",
      "noest": true
     },
     {
      "id": "6515-rocks-ff",
      "job": "6515",
      "url": "https://www.printavo.com/invoices/24484930",
-     "customer": "Joshua Tree (Julie Bruley) — RE-DO",
+     "customer": "Joshua Tree (Julie Bruley) \u2014 RE-DO",
      "nickname": "Joshua Tree order July 2026",
-     "location": "Full front — JOSHUA TREE ROCKS circle, 1c CREAM (PMS 7499 C) — DM1190L women's V-neck Black, 17 pcs (S3 M5 L5 XL1 2XL3)",
+     "location": "Full front \u2014 JOSHUA TREE ROCKS circle, 1c CREAM (PMS 7499 C) \u2014 DM1190L women's V-neck Black, 17 pcs (S3 M5 L5 XL1 2XL3)",
      "colors": 1,
      "screens": 1,
      "qty": 17,
      "img": "6515a",
-     "note": "RE-DO of the July order — get it right this time. Three separate designs on this job, 88 press pcs total; the 38 hats are heat-press leather patches (not press). Due Fri.",
-     "alert": "VERIFY against the July job before printing — this is a redo. Imprint says cream ink on black shirts; all 17 here are black."
+     "note": "RE-DO of the July order \u2014 get it right this time. Three separate designs on this job, 88 press pcs total; the 38 hats are heat-press leather patches (not press). Due Fri.",
+     "alert": "VERIFY against the July job before printing \u2014 this is a redo. Imprint says cream ink on black shirts; all 17 here are black."
     },
     {
      "id": "6515-og-front",
      "job": "6515",
      "url": "https://www.printavo.com/invoices/24484930",
-     "customer": "Joshua Tree (Julie Bruley) — RE-DO",
+     "customer": "Joshua Tree (Julie Bruley) \u2014 RE-DO",
      "nickname": "Joshua Tree order July 2026",
-     "location": "Front — OG JOSHUA TREE NATIONAL PARK logo, 2c white fill + black outline — PC340 Desert Tan Heather, 27 pcs (S8 M6 L3 XL2 2XL5 3XL3)",
+     "location": "Front \u2014 OG JOSHUA TREE NATIONAL PARK logo, 2c white fill + black outline \u2014 PC340 Desert Tan Heather, 27 pcs (S8 M6 L3 XL2 2XL5 3XL3)",
      "colors": 2,
      "screens": 2,
      "qty": 27,
      "img": "6515b",
-     "note": "Same 2 screens front and back — print fronts, flip, run backs (no teardown). Printavo matrix says 3-color but the art is white + black only."
+     "note": "Same 2 screens front and back \u2014 print fronts, flip, run backs (no teardown). Printavo matrix says 3-color but the art is white + black only."
     },
     {
      "id": "6515-og-back",
      "job": "6515",
      "url": "https://www.printavo.com/invoices/24484930",
-     "customer": "Joshua Tree (Julie Bruley) — RE-DO",
+     "customer": "Joshua Tree (Julie Bruley) \u2014 RE-DO",
      "nickname": "Joshua Tree order July 2026",
-     "location": "Back — same OG logo, 2c white + black — same 27 Desert Tan Heather tees",
+     "location": "Back \u2014 same OG logo, 2c white + black \u2014 same 27 Desert Tan Heather tees",
      "colors": 2,
      "screens": 2,
      "qty": 27,
@@ -660,30 +660,41 @@
      "id": "6515-round",
      "job": "6515",
      "url": "https://www.printavo.com/invoices/24484930",
-     "customer": "Joshua Tree (Julie Bruley) — RE-DO",
+     "customer": "Joshua Tree (Julie Bruley) \u2014 RE-DO",
      "nickname": "Joshua Tree order July 2026",
-     "location": "Front — ROUND Joshua Tree sunset logo, 1c tan/khaki — 44 pcs: Bella+Canvas Heather Sage 3 (S) · P&C YOUTH Core Blend Athletic Maroon 12 (YXS6 YS6) · Gildan Softstyle CVC Maroon Mist 29",
+     "location": "Front \u2014 ROUND Joshua Tree sunset logo, 1c tan/khaki \u2014 44 pcs: Bella+Canvas Heather Sage 3 (S) \u00b7 P&C YOUTH Core Blend Athletic Maroon 12 (YXS6 YS6) \u00b7 Gildan Softstyle CVC Maroon Mist 29",
      "colors": 1,
      "screens": 1,
      "qty": 44,
      "img": "6515c",
      "noest": true,
-     "note": "Order says CONFIRM INK COLOR PER GARMENT — check with the office before setup. Youth tees may need the smaller screen/placement.",
-     "alert": "VERIFY: ink color per garment (sage vs maroon) and location — order doesn't say front/back; carded as front."
+     "note": "Order says CONFIRM INK COLOR PER GARMENT \u2014 check with the office before setup. Youth tees may need the smaller screen/placement.",
+     "alert": "VERIFY: ink color per garment (sage vs maroon) and location \u2014 order doesn't say front/back; carded as front."
+    },
+    {
+     "id": "6515-raven-ff",
+     "job": "6515",
+     "url": "https://www.printavo.com/invoices/24484930",
+     "customer": "Joshua Tree (Julie Bruley) \u2014 RE-DO",
+     "nickname": "Joshua Tree order July 2026",
+     "location": "Front \u2014 RAVEN design, 2c \u2014 68 pcs: DM108L women's Heather Teal 32 (XS4 S6 M8 L8 XL4 2XL2) \u00b7 DM108 men's Black 36 (XS4 S6 M8 L8 XL4 3XL6)",
+     "colors": 2,
+     "screens": 2,
+     "qty": 68
     }
    ],
    "flags": [
     [
      "RUN ORDER",
-     "6503 DR Cabinets (ink swap) → 6409 Crystal Sea (teal) → 6453 DR hoodies → 6515 Joshua Tree (rocks → OG front/back → round) → 6493 Mtn Life ONLY once art exists. Friday ≈ 3.5 press-hrs plus 6515's ink checks — light; anything left from Thursday runs first."
+     "6503 DR Cabinets (ink swap) \u2192 6409 Crystal Sea (teal) \u2192 6453 DR hoodies \u2192 6515 Joshua Tree (rocks \u2192 OG front/back \u2192 round) \u2192 6493 Mtn Life ONLY once art exists. Friday \u2248 3.5 press-hrs plus 6515's ink checks \u2014 light; anything left from Thursday runs first."
     ],
     [
      "NOT PRESS",
-     "6478 Real Estate Guy (11 hats) is embroidery; 6515's 38 hats are heat-press leather patches — neither on the board."
+     "6478 Real Estate Guy (11 hats) is embroidery; 6515's 38 hats are heat-press leather patches \u2014 neither on the board."
     ],
     [
      "VERIFY",
-     "6493 has NO ART in Printavo. 6409 teal on darks. 6515 is a RE-DO — confirm the round logo's ink colors per garment and the OG colors (2c, not 3)."
+     "6493 has NO ART in Printavo. 6409 teal on darks. 6515 is a RE-DO \u2014 confirm the round logo's ink colors per garment and the OG colors (2c, not 3)."
     ]
    ]
   },
@@ -696,12 +707,12 @@
      "job": "6474",
      "url": "https://www.printavo.com/invoices/24335540",
      "customer": "Renaissance Ranch (Creation Cartel)",
-     "location": "RR Redrock Logo 9.5\" center chest — 6 COLOR (underbase + yellow, dk brown, brown, green, black), matte additive — NL 6210 Hthr Heavy Metal, 118 pcs",
+     "location": "RR Redrock Logo 9.5\" center chest \u2014 6 COLOR (underbase + yellow, dk brown, brown, green, black), matte additive \u2014 NL 6210 Hthr Heavy Metal, 118 pcs",
      "colors": 6,
      "screens": 6,
      "qty": 118,
      "img": "6474red2",
-     "note": "LEFTOVER from last week — Kolton did not list 6474 for this week. Staged only; confirm before running.",
+     "note": "LEFTOVER from last week \u2014 Kolton did not list 6474 for this week. Staged only; confirm before running.",
      "nickname": "Renaissance Ranch - 4 Designs"
     },
     {
@@ -709,12 +720,12 @@
      "job": "6474",
      "url": "https://www.printavo.com/invoices/24335540",
      "customer": "Renaissance Ranch (Creation Cartel)",
-     "location": "RR Crest Logo 9.5\" center chest — 1c BLACK, NO underbase, matte additive — NL 6210 Ice Blue, 118 pcs",
+     "location": "RR Crest Logo 9.5\" center chest \u2014 1c BLACK, NO underbase, matte additive \u2014 NL 6210 Ice Blue, 118 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 118,
      "img": "6474crest2",
-     "note": "Rolling job — run when a press opens.",
+     "note": "Rolling job \u2014 run when a press opens.",
      "nickname": "Renaissance Ranch - 4 Designs"
     },
     {
@@ -722,12 +733,12 @@
      "job": "6474",
      "url": "https://www.printavo.com/invoices/24335540",
      "customer": "Renaissance Ranch (Creation Cartel)",
-     "location": "YOU ARE ENOUGH 9.5\" center chest — 1c BLACK, no underbase, matte additive — DM108 Light Hthr Grey, 118 pcs",
+     "location": "YOU ARE ENOUGH 9.5\" center chest \u2014 1c BLACK, no underbase, matte additive \u2014 DM108 Light Hthr Grey, 118 pcs",
      "colors": 1,
      "screens": 1,
      "qty": 118,
      "img": "6474en2",
-     "note": "Started on Press 1 Wed 9/9 (Elijah) — never marked done. Finish or reset?",
+     "note": "Started on Press 1 Wed 9/9 (Elijah) \u2014 never marked done. Finish or reset?",
      "nickname": "Renaissance Ranch - 4 Designs"
     },
     {
@@ -735,12 +746,12 @@
      "job": "6466",
      "url": "https://www.printavo.com/invoices/24315001",
      "customer": "Prime Powersports (Aftyn)",
-     "location": "ADULT LC 4\" — flag, 2c WHITE (underbase + white), matte puff additive — NL 6210 Black, 450 pcs",
+     "location": "ADULT LC 4\" \u2014 flag, 2c WHITE (underbase + white), matte puff additive \u2014 NL 6210 Black, 450 pcs",
      "colors": 2,
      "screens": 2,
      "qty": 450,
      "img": null,
-     "note": "LEFTOVER from last week — Prime Powersports 450 adults; Kolton did not list 6466. adult BACK was started Thu 9/10 (Corey) and never marked done.",
+     "note": "LEFTOVER from last week \u2014 Prime Powersports 450 adults; Kolton did not list 6466. adult BACK was started Thu 9/10 (Corey) and never marked done.",
      "nickname": "Prime Powersports - Flag Front",
      "alert": "Run FRONT on one press and BACK on the other at the same time. Keep the front screens up for Friday's youth."
     },
@@ -749,7 +760,7 @@
      "job": "6466",
      "url": "https://www.printavo.com/invoices/24315001",
      "customer": "Prime Powersports (Aftyn)",
-     "location": "ADULT back yoke 12\" — 2c WHITE (underbase + white), matte additive — 450 pcs",
+     "location": "ADULT back yoke 12\" \u2014 2c WHITE (underbase + white), matte additive \u2014 450 pcs",
      "colors": 2,
      "screens": 2,
      "qty": 450,
