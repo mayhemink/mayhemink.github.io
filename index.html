@@ -36,6 +36,7 @@ img{display:block}
 #top{height:62px;flex:none;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--line);background:var(--bg)}
 .pbadge{font:800 28px/1 var(--bc);letter-spacing:.03em;background:var(--lime);color:var(--bg);padding:5px 12px 4px;border-radius:8px;white-space:nowrap}
 .pbadge.float{background:#fff}
+#v-float .tiles .tile b br+*{display:none}
 .opchip{font:700 15px var(--in);padding:8px 13px;border-radius:99px;background:var(--panel2);display:flex;gap:7px;align-items:center;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}
 .opchip i{width:9px;height:9px;border-radius:50%;background:var(--lime);flex:none}
 .opchip.none{color:var(--mut)} .opchip.none i{background:var(--dim)}
@@ -1311,7 +1312,7 @@ function toast(msg){
 //  pauses, handoffs, sync, export, mailer) carried over unchanged so no logged data,
 //  sync record or export format changes. Everything below renders it.
 // =====================================================================================
-var APP_V = "4.0.4";
+var APP_V = "4.0.5";
 var DATA_URL = "data/week.json";
 var WEEKID = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], DAYSARR = [], IMG = {};
 var LABELS = {}, ALLROWS = [], FLAGSBY = {}, ROWSBY = {}, STATES = {}, CLOCKS = {};
@@ -1329,7 +1330,7 @@ function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; 
 function lsSet(k, v){ try{ if(v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} }
 
 var VIEW = "press", FOCUS = null, JOBVIEW = null, WEEKDAY = "", ARTSEL = {}, LASTRAW = "";
-var PRESS = lsGet("mayhem_press");          // "Press 1" | "Press 2" | "Float" | null
+var PRESS = EDITOR ? "Office" : lsGet("mayhem_press");   // editor devices are always the Office overview, never a press          // "Press 1" | "Press 2" | "Float" | null
 function isPressIpad(){ return PRESS === "Press 1" || PRESS === "Press 2"; }
 
 // ---------- stubs the engine calls ----------
@@ -1433,7 +1434,7 @@ function boot(data, keep){
   if(!keep || DAYSARR.indexOf(WEEKDAY) === -1) WEEKDAY = curDay;
   if(!keep){
     searchQuery = "";
-    VIEW = PRESS === "Float" ? "float" : "press";
+    VIEW = (PRESS === "Float" || PRESS === "Office") ? "float" : "press";
   }
   if(FOCUS && !findRow(FOCUS)) FOCUS = null;
   if(JOBVIEW && !findRow(JOBVIEW)){ JOBVIEW = null; if(VIEW === "job") VIEW = "week"; }
@@ -1995,9 +1996,9 @@ function changePress(){ openPicker("Where does this iPad live?", ["Press 1","Pre
 // ---------- top bar ----------
 function renderTop(){
   var t = todayStr(), h = "";
-  if(PRESS) h += '<div class="pbadge ' + (PRESS === "Float" ? "float" : "") + '">' + esc(PRESS === "Float" ? "BOTH PRESSES" : PRESS.toUpperCase()) + '</div>';
+  if(PRESS) h += '<div class="pbadge ' + (PRESS === "Float" || PRESS === "Office" ? "float" : "") + '">' + esc(PRESS === "Float" ? "BOTH PRESSES" : PRESS === "Office" ? "OFFICE" : PRESS.toUpperCase()) + '</div>';
   if(isPressIpad()){ var op = operator(); h += '<button class="opchip ' + (op ? "" : "none") + '" onclick="openOperator()"><i></i>' + esc(op || "Tap in") + '</button>'; }
-  var tabs = isPressIpad() ? [["press","NOW"],["float","BOTH"],["week","WEEK"]] : [["float","BOTH"],["week","WEEK"]];
+  var tabs = isPressIpad() ? [["press","NOW"],["float","BOTH"],["week","WEEK"]] : [["float", PRESS === "Office" ? "OVERVIEW" : "BOTH"],["week","WEEK"]];
   h += '<div class="navtabs">' + tabs.map(function(x){ return '<button class="navtab ' + (VIEW === x[0] || (VIEW === "job" && x[0] === "week") ? "on" : "") + '" onclick="go(\'' + x[0] + '\')">' + x[1] + '</button>'; }).join("") + '</div>';
   if(EDITOR) h += '<span class="edpill">EDITOR</span>';
   h += '<div class="tclock"><small>' + (DAYSARR.indexOf(t) > -1 || !t ? dow(t) + ' ' + shortDate(t) : '') + '</small><span id="clk">' + fmt(now()).replace(/ (AM|PM)/, "") + '</span></div>';
@@ -2105,7 +2106,7 @@ function openFlags(){
     f.map(function(x){ return '<div class="flag"><div class="ft">' + esc(x[0] || "NOTE") + '</div><div class="fx">' + x[1] + '</div></div>'; }).join("") + '</div>');
 }
 function renderFloat(){
-  var el = document.getElementById("v-float"), t = todayStr(), h = '<div class="lanes">';
+  var el = document.getElementById("v-float"), t = todayStr(), h = daySummary() + '<div class="lanes">';
   PRESSES.forEach(function(P){
     var d = pressData(P), ops = onPress(P);
     var mine = d.queue.filter(function(x){ return assigned(x) === P; });
@@ -2208,7 +2209,7 @@ function renderWeekBody(){
     h += '</div>';
   });
   if(!rows.length) h += '<div class="empty"><h2>' + (searchQuery ? 'NO <span>MATCH</span>' : 'NO <span>CARDS</span>') + '</h2><p>' + (searchQuery ? 'Nothing this week matches “' + esc(searchQuery) + '”.' : 'Nothing on the board for ' + esc(dayLabel(WEEKDAY)) + '.') + '</p></div>';
-  h += '<div class="wfoot"><button class="btn sm" onclick="showExport()">END OF DAY EXPORT (BACKUP)</button><button class="btn sm" onclick="changePress()">THIS iPAD: ' + esc((PRESS || "NOT SET").toUpperCase()) + '</button>' +
+  h += '<div class="wfoot"><button class="btn sm" onclick="showExport()">END OF DAY EXPORT (BACKUP)</button>' + (PRESS === "Office" ? '' : '<button class="btn sm" onclick="changePress()">THIS iPAD: ' + esc((PRESS || "NOT SET").toUpperCase()) + '</button>') +
     (isPressIpad() && operator() ? '<button class="btn sm" onclick="openOperator()">DONE FOR TODAY…</button>' : '') + '<button class="btn sm" onclick="location.reload()">RELOAD</button></div>';
   h += '<div class="hint" style="text-align:center">Press Board v' + APP_V + ' · week of ' + esc(WEEKID) + '</div></div>';
   el.innerHTML = h;
@@ -2433,6 +2434,19 @@ function fitHints(){
 }
 window.addEventListener("resize", function(){ setTimeout(fitHints, 50); });
 document.addEventListener("load", function(e){ if(e.target && e.target.tagName === "IMG") fitHints(); }, true);
+
+// top strip on the Overview / Both screen: how today is going at a glance (counts only, no pace)
+function daySummary(){
+  var t = todayStr(); if(DAYSARR.indexOf(t) === -1) return "";
+  var rows = rowsShownOn(t).filter(visible), done = 0, run = 0, pcs = 0, pdone = 0, carry = 0;
+  rows.forEach(function(r){ var s = st(r); pcs += r.qty || 0; if(s === "done"){ done++; pdone += r.qty || 0; } else if(isActive(s)) run++; });
+  ALLROWS.forEach(function(r){ var sd = showDay(r); if(visible(r) && isDateDay(sd) && sd < t && st(r) !== "done") carry++; });
+  var ops = PRESSES.map(function(P){ var o = onPress(P); return P.replace("Press ", "P") + ": " + (o.length ? o.join(", ") : "—"); }).join(" · ");
+  function tile(b, l, c){ return '<div class="tile ' + (c || "") + '"><b>' + b + '</b><span>' + l + '</span></div>'; }
+  return '<div style="flex:none;padding:12px 14px 0"><div class="tiles" style="grid-template-columns:repeat(5,minmax(0,1fr))">' +
+    tile(done + " / " + rows.length, "RUNS DONE TODAY") + tile(run, "RUNNING NOW") + tile(pdone + " / " + pcs, "PIECES DONE") +
+    tile(carry, "LEFT FROM EARLIER", carry ? "hot" : "") + tile(esc(ops).replace(/ · /, "<br>"), "WHO\u2019S ON", "") + '</div></div>';
+}
 
 </script>
 </body>
