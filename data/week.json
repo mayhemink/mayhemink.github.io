@@ -214,14 +214,21 @@
 "url": "https://www.printavo.com/invoices/24385565",
 "customer": "Safety vests (Preston Meldrum)",
 "nickname": "Safety vest",
-"location": "Location 1 — 1c — Kishigo S5004 surveyor vest LIME, 72 pcs",
+"location": "LEFT CHEST (on the chest pocket) — PATRIOT ARC, 1c BLACK — Kishigo S5004 surveyor vest LIME, 72 pcs",
 "colors": 1,
 "screens": 1,
 "qty": 72,
-"note": "72 lime Kishigo surveyor vests (S 30 · M 30 · 2X 10 · 3X 2), two 1-color locations. NO MOCKUP IN PRINTAVO — art on the order. Due Mon.",
+"note": "72 lime Kishigo surveyor vests (S 30 · M 30 · 2X 10 · 3X 2) — PATRIOT ARC, black ink, left chest + full back. Due Mon.",
 "alert": "Vests = pockets/zips/mesh — check platen fit and cure temp.",
 "noest": true,
-"due": "2026-09-28"
+"due": "2026-09-28",
+"img": "6481_front",
+"inks": [
+{
+"n": "Black",
+"hex": "#111111"
+}
+]
 },
 {
 "id": "6481-back",
@@ -229,11 +236,18 @@
 "url": "https://www.printavo.com/invoices/24385565",
 "customer": "Safety vests (Preston Meldrum)",
 "nickname": "Safety vest",
-"location": "Location 2 — 1c — same 72 vests",
+"location": "FULL BACK — PATRIOT ARC, 1c BLACK — same 72 vests",
 "colors": 1,
 "screens": 1,
 "qty": 72,
-"noest": true
+"noest": true,
+"img": "6481_back",
+"inks": [
+{
+"n": "Black",
+"hex": "#111111"
+}
+]
 },
 {
 "id": "6472-front",
@@ -957,6 +971,8 @@
 "6517_pink_lc": "/data/mocks/2026-09-28/6517_pink_lc.jpg",
 "6517_pink_back": "/data/mocks/2026-09-28/6517_pink_back.jpg",
 "6517_4c_lc": "/data/mocks/2026-09-28/6517_4c_lc.jpg",
-"6517_4c_back": "/data/mocks/2026-09-28/6517_4c_back.jpg"
+"6517_4c_back": "/data/mocks/2026-09-28/6517_4c_back.jpg",
+"6481_front": "/data/mocks/2026-09-28/6481_front.jpg",
+"6481_back": "/data/mocks/2026-09-28/6481_back.jpg"
 }
 }
