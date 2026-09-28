@@ -1,209 +1,443 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17191c"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Catcher"><title>Catcher · Mayhem Ink</title><style>:root{color-scheme:dark;--bg:#17191c;--panel:#24272b;--ink:#f3f5f7;--muted:#b2bac4;--line:#454b54;--blue:#8cccfb;--blue-bg:#183c55;--green:#a1e2bc;--warn:#ffd082;font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit;color:inherit}button{min-height:48px;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px 14px;font-weight:650;cursor:pointer;touch-action:manipulation}button:hover{border-color:var(--blue)}button:active{transform:translateY(1px)}button:disabled{opacity:.42;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:3px}input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;min-height:48px;min-width:0}label{display:block;color:var(--muted);margin:12px 0 6px}header{padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:var(--panel);border-bottom:1px solid var(--line)}.brand{font-weight:850;letter-spacing:.08em;white-space:nowrap}.brand span{color:var(--blue)}.brand small{display:block;font-size:11px;letter-spacing:.25em;margin-top:3px;color:var(--muted)}.header-actions{display:flex;align-items:center;gap:10px}.name-label{display:flex;align-items:center;gap:10px;font-size:13px;margin:0}.name-label input{width:160px}.pilot{display:flex;gap:15px;align-items:center;justify-content:space-between;padding:8px 24px;background:#202f3a;color:var(--blue);font-size:13px}.pilot strong{font-size:10px;letter-spacing:.09em;margin-right:12px}.pilot button{min-height:36px;padding:6px 12px;font-size:13px;background:transparent}.notice{padding:12px 24px;background:#493a23;color:var(--warn)}main{padding:24px;max-width:1600px;margin:auto}.board-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}h1{font-size:30px;letter-spacing:-.035em;margin:0}h2{font-size:23px;line-height:1.2;margin:12px 0 8px;overflow-wrap:anywhere}h3{font-size:16px;margin:0}p{margin:6px 0 12px}.board-title p,.muted{color:var(--muted)}.lanes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}.lane{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:20px;min-width:0}.lane-top{display:flex;justify-content:space-between;align-items:center;gap:8px}.eyebrow{color:var(--blue);font-size:12px;font-weight:750;letter-spacing:.05em}.chip{display:inline-flex;align-items:center;background:var(--blue-bg);color:var(--blue);border-radius:6px;padding:5px 9px;font-size:12px;font-weight:750}.location{color:var(--blue);font-weight:650;min-height:48px}.art{display:flex;width:100%;gap:14px;text-align:left;align-items:center;margin:15px 0;padding:10px;background:var(--bg)}.art img{width:84px;height:76px;object-fit:contain;background:#fff;border-radius:5px}.art .art-copy{display:flex;flex-direction:column;font-size:13px;color:var(--muted);font-weight:400}.art .art-copy strong{color:var(--ink);font-size:14px}.art-missing{margin:14px 0;padding:14px;background:var(--bg);border-radius:8px;color:var(--muted);font-size:13px}.stats{display:flex;align-items:baseline;gap:8px;margin:15px 0 6px}.stats strong{font-size:38px;line-height:1.15;font-variant-numeric:tabular-nums}.stats span{color:var(--muted);font-size:14px}.progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden}.progress i{display:block;height:100%;background:var(--blue)}.statusline{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin:9px 0 18px}.group{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}.group p{font-size:13px;color:var(--muted);margin:2px 0 10px}.sizes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.size{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--bg);min-width:0}.size.exact{border-color:#4d8f6a}.size.diff{border-color:#b68b42}.size-main{border:0;border-radius:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;background:transparent;min-height:94px;padding:10px 5px}.size-label{font-size:20px;font-weight:800}.size-expected{font-size:12px;color:var(--muted);font-weight:400}.size-actual{font-size:13px;font-weight:650}.size-quick{width:100%;border:0;border-top:1px solid var(--line);border-radius:0;min-height:44px;padding:8px 3px;font-size:12px;color:var(--blue);background:var(--blue-bg)}.exact .size-quick,.good{color:var(--green)}.exact .size-quick{background:#203e2d}.warning,.diff .size-actual{color:var(--warn)}.actions{display:flex;gap:8px;margin-top:12px}.actions>*{flex:1}.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}.wide{width:100%;margin-top:12px}.finish-label{font-size:12px;color:var(--muted);margin-top:8px}.empty{min-height:430px;display:flex;flex-direction:column;justify-content:center;text-align:center}.empty-symbol{font-size:44px;color:var(--blue);margin:10px}.empty p{color:var(--muted);max-width:290px;margin:10px auto 20px}.empty .primary{align-self:center}.empty .eyebrow{align-self:flex-start}.empty h2{margin-top:12px}footer{font-size:12px;color:var(--muted);padding:0 24px 24px;max-width:1600px;margin:auto;display:flex;justify-content:space-between;gap:16px}dialog{color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:16px;width:min(680px,calc(100% - 24px));max-height:90dvh;padding:22px;overflow:auto}dialog::backdrop{background:#000a;backdrop-filter:blur(3px)}.dialog-head{display:flex;gap:15px;align-items:center;justify-content:space-between;margin-bottom:16px}.dialog-head h2{margin:0}.dialog-head button{flex-shrink:0}dialog input,dialog select,dialog textarea{width:100%}#search{margin-bottom:10px}#day{margin-bottom:15px}.job{width:100%;text-align:left;display:block;margin:8px 0;padding:14px}.job strong{display:block;font-size:17px}.job span{display:block;font-size:13px;font-weight:400;margin-top:5px}.job em{display:block;font-style:normal;color:var(--warn);font-size:12px;margin-top:6px}#count-dialog{max-width:470px}#actual{font-size:34px;text-align:center;font-weight:750;height:66px;letter-spacing:.03em}.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.keypad button{min-height:56px;font-size:21px;background:var(--bg)}.keypad button[data-digit=clear]{font-size:15px}#correction[hidden]{display:none}.big-art{width:100%;max-height:65vh;object-fit:contain;background:white;border-radius:6px}.history-row{padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}.history-row small{color:var(--muted);display:block}.help-list li{margin:12px 0}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}@media(min-width:1250px){.sizes{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:800px){header{padding:14px 16px;flex-wrap:wrap}.header-actions{flex:1;justify-content:flex-end}.name-label{font-size:0}.name-label input{font-size:16px;width:135px}main{padding:18px 12px}.lane{padding:15px}.lanes{gap:12px}.sizes{grid-template-columns:repeat(2,minmax(0,1fr))}.board-title h1{font-size:26px}.pilot{padding:8px 16px}footer{padding:0 16px 18px;display:block}}@media(max-width:650px){.lanes{grid-template-columns:1fr}.sizes{grid-template-columns:repeat(3,minmax(0,1fr))}.header-actions{flex-wrap:wrap}.board-title{align-items:flex-start;flex-direction:column}.pilot{flex-wrap:wrap;gap:5px}.empty{min-height:250px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
-/* Keep the size controls close to the run identity on a landscape iPad. */
-.intro{display:flex;align-items:center;gap:12px;margin:8px 0 12px}.identity{flex:1;min-width:0}.intro .art{display:block;width:100px;flex:0 0 100px;padding:8px;margin:0;text-align:center}.intro .art img{width:82px;height:64px}.intro .art-copy strong{font-size:11px}.intro .art-copy>span{display:none}.intro .location{min-height:0;margin:5px 0 9px;font-size:14px}.intro h2{font-size:21px;margin:0 0 5px}.stats{margin-top:8px}.statusline{margin-bottom:12px}.group{padding-top:10px;margin-top:10px}.size-main{min-height:78px}.size-quick{font-size:11px}.board-title{margin-bottom:14px}.board-title p{margin-bottom:0}
-@media(min-width:900px){.sizes{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(min-width:700px) and (max-height:900px){header{padding:10px 24px}.pilot{padding-top:5px;padding-bottom:5px}main{padding-top:12px;padding-bottom:14px}.board-title h1{font-size:24px}.board-title p{font-size:13px}.lane{max-height:calc(100dvh - 222px);overflow-y:auto;scrollbar-width:thin}.lane-top{position:sticky;top:-20px;background:var(--panel);padding:5px 0;z-index:1}.empty{min-height:350px}.lane-top button{min-height:44px;font-size:13px}.stats strong{font-size:30px}.stats span{font-size:12px}.intro .art{width:90px;flex-basis:90px}.intro .art img{width:70px;height:60px}}
-.compare{width:100%;border-collapse:collapse;font-size:14px}.compare th,.compare td{padding:9px;text-align:left;border-bottom:1px solid var(--line)}
-
-.board-tools{display:flex;align-items:center;gap:12px}.board-tools .muted{font-size:12px}#load-test{color:var(--blue);background:var(--blue-bg)}#scope{margin-bottom:10px}@media(max-width:800px){.board-tools{align-items:flex-end;flex-direction:column;gap:5px}}
-
-.count-box,#actual{background:#c2c8d0;color:#17191c;color-scheme:light;border:1px solid #c6cbd1;border-radius:6px}
-.count-box{display:block;width:88%;max-width:125px;min-height:44px;margin:6px auto 2px;padding:8px;font-size:20px;font-weight:750;text-align:center}
-.count-box .placeholder{font-size:13px;font-weight:500;color:#59616b}.count-caption{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:8px}
-.checks{margin:12px 0;padding:12px;background:var(--bg);border-radius:8px}.checks h3{font-size:14px}.checks label{display:flex;align-items:center;gap:9px;min-height:48px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;margin:0;color:var(--ink);font-size:14px;cursor:pointer}.checks input{width:26px;height:26px;min-height:26px;flex:0 0 26px;touch-action:manipulation;accent-color:var(--blue)}.checks p{font-size:12px;color:var(--muted);margin:4px 0}.locations{display:flex;flex-wrap:wrap;gap:4px 16px}.checks .prior{color:var(--muted);font-size:12px}.job-note{font-size:12px;color:var(--warn);margin:10px 0}.reset-counts{font-size:12px;min-height:44px}.size-main{cursor:default}
-
-/* Large references and clear placement labels for the catcher iPads. */
-.intro{display:block}.intro .placement,.job .placement{font-size:30px;font-weight:850;letter-spacing:.035em;color:var(--blue);margin:12px 0 7px}.customer-name{font-size:19px;line-height:1.25}
-.intro .art{display:block;width:100%;padding:8px;margin:12px 0 0}.intro .art img{display:block;width:100%;height:clamp(260px,38vh,440px);object-fit:contain;background:#fff}.intro .art-copy strong{font-size:13px}.intro .art-copy>span{display:block;font-size:11px}.art-copy{margin-top:6px}
-.photo-check{border:2px solid var(--warn)}.photo-check label{font-size:21px;font-weight:850;color:var(--warn)}.photo-check input{width:32px;height:32px;flex-basis:32px}.photo-check:has(input:checked){border-color:var(--green)}.photo-check:has(input:checked) label{color:var(--green)}
-.job{display:flow-root;min-height:136px}.job .placement{font-size:24px;margin:0 0 5px}.job-thumb{float:right;width:108px;height:108px;object-fit:contain;background:white;border-radius:6px;margin:0 0 8px 12px}.job .missing-thumb{display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--muted);font-size:12px;margin-top:0}
-@media(max-width:420px){.job-thumb{width:80px;height:90px}.job .placement{font-size:21px}}
-</style></head>
-<body><header><div class="brand">MAYHEM <span>INK</span><small>CATCHER</small></div><div class="header-actions"><label class="name-label">Catching today<input id="catcher-name" placeholder="Your name" maxlength="60" autocomplete="given-name"></label><button id="export">Save a backup</button><button id="help" aria-label="How to use Catcher">?</button></div></header>
-<div class="pilot"><span><strong>SHOP TRIAL</strong> <span id="save-status" role="status">Counts save on this device only</span></span><div><button id="reset-practice" hidden>Reset examples</button> <button id="practice">Try example jobs</button></div></div>
-<div id="notice" role="status" class="notice" hidden></div>
-<main><div class="board-title"><div><h1>On the belt.</h1><p>Every location checked. Every size accounted for.</p></div><div class="board-tools"><label class="sr" for="week-day">Catcher day</label><select id="week-day" aria-label="Catcher day"></select><button id="load-today">Today’s cards</button><button id="load-test" hidden>Load #6385 test</button><span id="week-label" class="muted"></span></div></div><div id="lanes" class="lanes" aria-label="Active catcher cards"></div></main>
-<footer>Expected = this run’s order quantity. Enter the total caught for each size.<span id="source-date"></span></footer>
-<dialog id="picker"><div class="dialog-head"><h2 id="picker-title">Choose a location</h2><button data-close aria-label="Close job picker">✕</button></div><label class="sr" for="search">Search jobs and locations</label><input id="search" type="search" placeholder="Search job, customer, or location"><label class="sr" for="scope">Job list</label><select id="scope"><option value="test">Invoice 6385 test · 3600M Classic Orange + ST460LS</option><option value="all">All scheduled jobs</option></select><label class="sr" for="day">Scheduled day</label><select id="day"></select><div id="job-list"></div></dialog>
-<dialog id="count-dialog"><form id="count-form"><div class="dialog-head"><div><p id="count-context" class="eyebrow"></p><h2 id="count-title"></h2></div><button type="button" data-close aria-label="Close count entry">✕</button></div><p id="count-expected"></p><label for="actual">Total good pieces caught</label><input id="actual" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="6" placeholder="Enter count"><div class="keypad" aria-label="Count keypad"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><button type="button" data-digit="clear">Clear entry</button><button type="button" data-digit="0">0</button><button type="button" data-digit="back" aria-label="Backspace">⌫</button></div><div id="correction"><label for="reason">Reason for changing this count</label><input id="reason" maxlength="180" placeholder="Recount, found another bundle…"></div><p id="count-error" class="warning" role="alert"></p><div class="actions"><button id="uncount" type="button">Reset count</button><button class="primary" type="submit">Save count</button></div></form></dialog>
-<dialog id="detail-dialog"><div class="dialog-head"><h2 id="detail-title"></h2><button data-close aria-label="Close details">✕</button></div><div id="detail-body"></div></dialog>
-<dialog id="issue-dialog"><form id="issue-form"><div class="dialog-head"><h2>Flag a problem</h2><button type="button" data-close aria-label="Close problem form">✕</button></div><p id="issue-context"></p><label for="issue-size">Garment / size</label><select id="issue-size"></select><label for="issue-type">What happened?</label><select id="issue-type"><option>Damaged blank</option><option>Print needs checking / reprint</option><option>Missing pieces</option><option>Other</option></select><label for="issue-qty">Pieces affected</label><input id="issue-qty" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" value="1"><label for="issue-note">Note</label><textarea id="issue-note" rows="2" maxlength="300" placeholder="What should the printer or office know?"></textarea><p>Flagging a problem does not change the good-piece count.</p><p id="issue-error" role="alert" class="warning"></p><button type="submit" class="primary wide">Save problem</button></form></dialog>
-<script>(function(root,factory){const api=factory();if(typeof module==='object')module.exports=api;else root.CatcherCore=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
- 'use strict';
- const cells=card=>card.groups.flatMap(g=>g.sizes);
- const fingerprint=card=>JSON.stringify([card.runId,card.expected,card.groups.map(g=>[g.id,g.sizes.map(s=>[s.id,s.expected])])]);
- function blank(card){return{runId:card.runId,fingerprint:fingerprint(card),counts:{},checks:{},issues:[],history:[],finishedAt:null,owner:'',revision:0};}
- function integer(value){if(!['number','string'].includes(typeof value))throw Error('Enter a whole number from 0 to 999999.');if(typeof value==='string'&&!/^\d{1,6}$/.test(value))throw Error('Enter a whole number from 0 to 999999.');const n=Number(value);if(!Number.isSafeInteger(n)||n<0||n>999999||value===null||value==='')throw Error('Enter a whole number from 0 to 999999.');return n;}
- function summary(card,record){const all=cells(card);let checked=0,total=0,short=0,over=0;for(const cell of all){const n=record.counts[cell.id];if(n!==undefined&&n!==null){checked++;total+=n;short+=Math.max(0,cell.expected-n);over+=Math.max(0,n-cell.expected);}}return{checked,total,short,over,remaining:all.length-checked,complete:all.length>0&&checked===all.length,issues:record.issues.length,exact:all.length>0&&checked===all.length&&!short&&!over&&!record.issues.length};}
- function edit(card,record,{cellId,value,actor,reason='',method='actual'},now=new Date().toISOString()){
- if(!actor?.trim())throw Error('Enter the catcher’s name first.');if(record.fingerprint!==fingerprint(card))throw Error('The order changed. Review the saved count before continuing.');
- const cell=cells(card).find(s=>s.id===cellId);if(!cell)throw Error('Unknown size.');const next=value===null?null:integer(value),prior=record.counts[cellId]??null;
- if(prior!==null&&prior!==next&&!reason.trim())throw Error('Add a short reason for this correction.');
- const copy=JSON.parse(JSON.stringify(record));copy.counts[cellId]=next;copy.finishedAt=null;copy.owner=actor.trim();copy.revision++;
- copy.history.push({type:'count',at:now,actor:actor.trim(),cellId,from:prior,to:next,reason:reason.trim(),method});return copy;
- }
- function qualityReady(card,record){const q=record.checks||{};return !!(q.spelling&&(q.mockup||!card.image)&&q.print&&q.printed&&q.photo);}
- function check(card,record,field,value,actor,now=new Date().toISOString()){
- if(!actor?.trim())throw Error('Enter the catcher’s name first.');if(record.fingerprint!==fingerprint(card))throw Error('The order changed.');
- if(!['spelling','mockup','print','printed','photo'].includes(field)||typeof value!=='boolean')throw Error('Unknown checklist item.');
- const copy=JSON.parse(JSON.stringify(record));copy.checks||={};const prior=!!copy.checks[field];copy.checks[field]=value;copy.owner=actor.trim();copy.revision++;if(!value)copy.finishedAt=null;
- copy.history.push({type:'check',field,from:prior,to:value,at:now,actor:actor.trim()});return copy;
- }
- function reset(card,record,actor,now=new Date().toISOString()){
- if(!actor?.trim())throw Error('Enter the catcher’s name first.');if(record.fingerprint!==fingerprint(card))throw Error('The order changed.');
- const copy=JSON.parse(JSON.stringify(record));copy.history.push({type:'reset',at:now,actor:actor.trim(),counts:copy.counts,reason:'Reset location counts for recount'});copy.counts={};copy.finishedAt=null;copy.owner=actor.trim();copy.revision++;return copy;
- }
- function finish(card,record,actor,now=new Date().toISOString()){
- if(!actor?.trim())throw Error('Enter the catcher’s name first.');if(record.fingerprint!==fingerprint(card))throw Error('The order changed.');const s=summary(card,record);if(!s.complete)throw Error('Count every size before finishing this location.');if(!qualityReady(card,record))throw Error('Complete the first-shirt checklist, confirm this location is printed, and check PICTURE TAKEN??? before finishing.');
- const copy=JSON.parse(JSON.stringify(record));copy.finishedAt=now;copy.owner=actor.trim();copy.revision++;copy.history.push({type:'finish',at:now,actor:actor.trim(),result:s.exact?'matched':'differences'});return copy;
- }
- // Only explicitly selected order fields may enter the catcher interface.
- function scheduleRows(week){return week.days.flatMap(d=>d.rows.map(r=>({id:r.id,day:d.day,job:r.job,customer:r.nickname||r.customer,location:r.location,expected:r.qty,scheduleSignature:JSON.stringify([r.job,r.location,r.qty])})));}
- return{cells,fingerprint,blank,integer,summary,edit,finish,scheduleRows,qualityReady,check,reset};
-});
-</script><script>'use strict';
-const C=CatcherCore,$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const STORE='mayhem-catcher-v1',DEMO='mayhem-catcher-practice-v1';
-let practice=false,key=STORE,db={schema:1,records:{},lanes:[null,null],actor:'',version:0},manifest,cards=[],selection,issueLane,pickerLane,storageBlocked=false,renderedIds=[],sharedHooks=null;
-const examples=[{id:'example-front',runId:'example-front',job:'EXAMPLE A',customer:'Trail Hero',location:'Front left chest · example print run',expected:56,groups:[{id:'example-a',style:'SS4500Z',color:'Army Heather',sizes:[{id:'a-s',label:'S',expected:14},{id:'a-m',label:'M',expected:18},{id:'a-l',label:'L',expected:24}]}]},{id:'example-back',runId:'example-back',job:'EXAMPLE B',customer:'Take it Easy',location:'Full back · example print run',expected:29,groups:[{id:'example-b',style:'1301GD',color:'Faded Bone',sizes:[{id:'b-s',label:'S',expected:4},{id:'b-m',label:'M',expected:10},{id:'b-l',label:'L',expected:15}]}]}];
-function tell(message){$('notice').textContent=message;$('notice').hidden=!message;}
-function shopToday(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Denver',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
-function dayLabel(day){return manifest.days?.find(d=>d.day===day)?.label||day;}
-function defaultDay(){const today=shopToday();return manifest.days.some(d=>d.day===today)?today:(manifest.days.find(d=>cards.some(c=>c.day===d.day))?.day||manifest.days[0].day);}
-function dayLanes(day){return [null,null];}
-function load(){
- storageBlocked=false;
- try{const saved=localStorage.getItem(key);db=saved?JSON.parse(saved):{schema:1,records:{},lanes:practice?examples.map(c=>c.runId):[null,null],actor:'',version:0};if(db.schema!==1||!db.records||!Array.isArray(db.lanes))throw Error('Invalid save');}
- catch(e){storageBlocked=true;tell('Saved counts could not be opened. Nothing has been overwritten. Save a backup before continuing.');}
- if(!practice&&!storageBlocked){
-  const today=shopToday(),newDay=db.lastOpenedDay!==today,newWeek=db.scheduleWeek!==manifest.week;
-  const selected=(!newDay&&!newWeek&&manifest.days.some(d=>d.day===db.viewDay))?db.viewDay:defaultDay();
-  const lanesValid=db.lanes.every(id=>id===null||cards.some(c=>c.runId===id));
-  if(newDay||newWeek||!lanesValid||db.viewDay!==selected)change(next=>{next.viewDay=selected;next.lastOpenedDay=today;next.scheduleWeek=manifest.week;next.testFocus=false;if(newWeek||!lanesValid)next.lanes=db.lanes.map(id=>cards.some(c=>c.runId===id)?id:null);},false);
- }
- $('catcher-name').value=db.actor||'';$('save-status').textContent=practice?'Example counts · saved on this device':'Counts save on this device only';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Catcher">
+<meta name="theme-color" content="#0c0d0f">
+<title>Mayhem Ink — Catcher</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+/* CATCHER v2 — same system as the Press Board v4. Two lanes = the two presses. Each lane follows
+   whatever is printing on that press (from the shared press state) unless the catcher pins a card. */
+:root{--bg:#0c0d0f;--bg2:#0f1113;--panel:#16191c;--panel2:#1a1d21;--line:#23272c;--hard:#353b42;--sub:#aab1b7;--mut:#8a9096;--dim:#5d646b;
+ --lime:#c6ff3d;--limeD:#1a2210;--red:#ff5a36;--redD:#2a1511;--amber:#ffb020;--green:#3ddc84;--greenD:#12301f;
+ --bc:'Barlow Condensed','Avenir Next Condensed','Arial Narrow',Arial,sans-serif;--in:Inter,-apple-system,'Helvetica Neue',Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:#f2f2f2;overflow:hidden}
+body{font-family:var(--in);-webkit-user-select:none;user-select:none;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input{font:inherit;-webkit-user-select:text;user-select:text}
+img{display:block}.hide{display:none!important}
+#app{position:fixed;inset:0;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+#top{height:62px;flex:none;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--line)}
+.badge{font:800 28px/1 var(--bc);letter-spacing:.04em;background:#fff;color:var(--bg);padding:5px 12px 4px;border-radius:8px}
+.pb{font:800 24px/1 var(--bc);letter-spacing:.03em;background:var(--lime);color:var(--bg);padding:4px 10px 3px;border-radius:7px}
+.chip{font:700 15px var(--in);padding:8px 13px;border-radius:99px;background:var(--panel2);display:flex;gap:7px;align-items:center}
+.chip i{width:9px;height:9px;border-radius:50%;background:var(--lime)}.chip.none{color:var(--mut)}.chip.none i{background:var(--dim)}
+.tabs{display:flex;gap:4px;margin-left:6px}.tab{font:800 19px var(--bc);letter-spacing:.07em;color:var(--mut);padding:7px 13px;border-radius:8px}.tab.on{background:#1f2327;color:#fff}
+.clock{margin-left:auto;font:700 25px var(--mono)}.dot{width:9px;height:9px;border-radius:50%;background:var(--dim)}.dot.ok{background:var(--green)}.dot.bad{background:var(--red)}
+#main{flex:1;min-height:0;position:relative}
+.view{position:absolute;inset:0;display:none}.view.on{display:flex}
+/* belt */
+#v-belt{display:none}#v-belt.on{display:grid;grid-template-columns:1fr 1fr}
+.lane{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line)}.lane:last-child{border-right:0}
+.lh{flex:none;display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--bg2)}
+.lh .mode{font:800 15px var(--bc);letter-spacing:.12em;color:var(--mut)}.lh .mode.pin{color:var(--amber)}
+.lh .sw{margin-left:auto;font:800 16px var(--bc);letter-spacing:.08em;color:var(--lime);border:1.5px solid #c6ff3d55;border-radius:7px;padding:6px 10px}
+.lbody{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 20px;display:flex;flex-direction:column;gap:10px}
+.idc{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;align-items:start}
+.idc .th{width:120px;height:120px;object-fit:contain;background:#fff;border-radius:8px}
+.idc .th.none{background:var(--panel2);display:flex;align-items:center;justify-content:center;font:800 13px var(--bc);color:var(--dim);letter-spacing:.1em}
+.st{font:800 15px var(--bc);letter-spacing:.12em;color:var(--lime)}.st.setup{color:var(--amber)}.st.idle{color:var(--mut)}.st.done{color:var(--green)}.st.pause{color:var(--red)}
+.jn{font:800 44px/.95 var(--bc)}.jn span{font:700 17px var(--bc);color:var(--mut);letter-spacing:.04em;margin-left:6px;text-transform:uppercase}
+.loc{font:800 25px/1.02 var(--bc);text-transform:uppercase;margin-top:3px}
+.cust{font:600 13px var(--in);color:var(--sub);margin-top:3px}
+.tot{display:flex;align-items:baseline;gap:10px}
+.tot b{font:800 58px/1 var(--bc)}.tot span{font:800 22px var(--bc);color:var(--mut);letter-spacing:.04em}
+.tot .flag{margin-left:auto;font:800 18px var(--bc);letter-spacing:.08em}
+.bar{height:10px;background:var(--hard);border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--lime)}
+.grp{border:3px solid var(--hard);border-radius:6px;overflow:hidden}
+.grp h4{font:800 17px var(--bc);letter-spacing:.08em;padding:6px 10px;background:var(--panel2);display:flex;gap:8px}
+.grp h4 small{color:var(--mut);font-weight:700;margin-left:auto}
+.sizes{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:3px;background:var(--hard)}
+.sz{background:var(--panel);display:flex;flex-direction:column;align-items:center;padding:8px 4px 0;min-width:0}
+.sz .l{font:800 26px/1 var(--bc)}.sz .e{font:700 12px var(--bc);letter-spacing:.1em;color:var(--mut);margin-top:2px}
+.sz .n{margin:6px 0 6px;min-width:78%;padding:6px 4px;border-radius:7px;background:var(--bg2);border:2px solid var(--hard);font:800 30px/1 var(--bc);text-align:center}
+.sz .n.empty{color:var(--dim);font-size:16px;padding:12px 4px}
+.sz .all{width:100%;padding:9px 2px;font:800 15px var(--bc);letter-spacing:.06em;color:var(--lime);background:var(--limeD);border-top:2px solid var(--hard)}
+.sz.ok{background:var(--greenD)}.sz.ok .n{border-color:var(--green);color:var(--green)}.sz.ok .all{color:var(--green);background:#0f2718}
+.sz.off .n{border-color:var(--amber);color:var(--amber)}
+.checks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ck{padding:12px 4px;border-radius:8px;background:var(--panel);border:2px solid var(--hard);font:800 15px/1.05 var(--bc);letter-spacing:.06em;text-align:center;color:var(--sub)}
+.ck.on{border-color:var(--green);color:var(--green);background:var(--greenD)}
+.ck.photo{border-color:var(--amber);color:var(--amber)}.ck.photo.on{border-color:var(--green);color:var(--green)}
+.note{border-left:5px solid var(--lime);background:var(--limeD);color:#e6f7c9;border-radius:4px;padding:7px 11px;font:700 16px/1.15 var(--bc);text-transform:uppercase}
+.issues{font:700 14px var(--in);color:#ffd4c8;background:var(--redD);border-left:5px solid var(--red);border-radius:4px;padding:8px 10px}
+.row{display:flex;gap:8px}
+.lbody>.btn{flex:none}
+.btn{flex:1;padding:14px 10px;min-height:56px;border-radius:10px;background:var(--panel2);border:2px solid var(--line);font:800 20px var(--bc);letter-spacing:.06em;color:#dfe3e6}
+.btn.lime{background:var(--lime);border-color:var(--lime);color:var(--bg)}.btn.done{background:var(--greenD);border-color:var(--green);color:var(--green)}
+.btn:disabled{opacity:.4}.btn.red{color:var(--red);border-color:#ff5a3666}
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:24px}
+.empty h2{font:800 48px/.95 var(--bc)}.empty h2 span{color:var(--lime)}.empty p{font:600 16px/1.5 var(--in);color:var(--sub);max-width:420px}
+/* week */
+#v-week{flex-direction:column}
+.wt{flex:none;padding:12px 16px 8px;display:flex;gap:6px;border-bottom:1px solid var(--line);overflow-x:auto}
+.day{flex:1;min-width:92px;background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:7px 6px;text-align:center;font:800 20px var(--bc)}
+.day small{display:block;font:700 12px var(--in);color:var(--mut)}.day.on{border-color:#fff;background:#1f2327}
+.wb{flex:1;overflow-y:auto;padding:12px 16px 30px}
+.wr{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:8px;margin-bottom:8px;width:100%;text-align:left}
+.wr img,.wr .th{width:64px;height:64px;border-radius:6px;object-fit:cover;background:#fff}.wr .th{background:var(--panel2)}
+.wr b{font:800 22px/1 var(--bc);display:block}.wr p{font:600 13px var(--in);color:var(--sub);margin-top:3px}
+.pill{font:800 14px var(--bc);letter-spacing:.1em;padding:5px 10px;border-radius:5px;background:var(--panel2);color:var(--mut);white-space:nowrap}
+.pill.go{background:var(--amber);color:#111}.pill.ok{background:var(--greenD);color:var(--green)}.pill.diff{background:var(--red);color:#fff}
+/* modal */
+.md{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:#050607d9;padding:16px}.md.on{display:flex}
+.sheet{width:min(560px,100%);max-height:100%;overflow-y:auto;background:var(--panel);border:3px solid var(--hard);border-radius:16px;padding:22px}
+.sheet h3{font:800 40px/1 var(--bc);text-transform:uppercase}.sheet p.s{font:700 16px var(--bc);letter-spacing:.06em;color:var(--mut);margin:6px 0 12px}
+.num{width:100%;background:#fff;color:#111;border-radius:10px;border:0;font:800 56px var(--bc);text-align:center;padding:6px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.pad button{padding:16px 0;border-radius:10px;background:var(--bg2);border:2px solid var(--hard);font:800 32px var(--bc)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}.opt{flex:1 1 30%;min-width:130px;padding:14px 8px;border-radius:10px;background:var(--bg2);border:3px solid var(--hard);font:800 22px var(--bc);text-align:center}
+.opt.on{border-color:var(--lime);color:var(--lime)}.opt small{display:block;font:700 12px var(--in);color:var(--mut)}
+.fld{display:flex;flex-direction:column;gap:5px;margin:10px 0}.fld label{font:800 14px var(--bc);letter-spacing:.14em;color:var(--mut)}
+.fld input,.fld select{background:var(--bg2);border:2px solid var(--hard);border-radius:8px;color:#fff;padding:10px 12px;font:600 18px var(--in)}
+.row2{display:flex;gap:10px;margin-top:14px}.row2 button{flex:1;height:70px;border-radius:12px;font:800 28px var(--bc);letter-spacing:.04em;background:#23272c}.row2 .y{background:var(--lime);color:var(--bg)}
+.ov{position:fixed;inset:0;z-index:50;display:none;background:#050607f5}.ov.on{display:flex}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 30%,#1a1f14,transparent 60%)}
+.center h2{font:800 96px/.88 var(--bc);margin:14px 0 8px}.center h2 span{color:var(--lime)}.center .sub{font:800 20px var(--bc);letter-spacing:.08em;color:var(--mut)}
+.names{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:26px 0;max-width:900px}
+.nm{min-width:170px;height:110px;padding:0 20px;border-radius:14px;background:var(--panel);border:3px solid var(--hard);font:800 34px var(--bc)}
+#toast{position:fixed;top:72px;right:18px;background:#fff;color:#111;padding:12px 22px;border-radius:99px;font:800 17px var(--in);z-index:99;display:none;box-shadow:0 8px 30px #000a}
+#lightbox{display:none;position:fixed;inset:0;background:#000f;z-index:90;overflow:auto}#lightbox img{display:block;margin:40px auto;width:96%;background:#fff}
+#lightbox button{position:fixed;top:12px;right:14px;font:800 22px var(--bc);color:#111;background:var(--lime);border-radius:10px;padding:10px 18px}
+@media (orientation:portrait){
+ #v-belt.on{grid-template-columns:1fr}
+ .lane.hideP{display:none}
+ .lane{border-right:0}
+ .tclock{display:none}
 }
-function persist(next){
- if(storageBlocked)throw Error('Storage is unavailable. Save a backup before continuing.');
- const stored=localStorage.getItem(key);if(stored&&JSON.parse(stored).version!==db.version)throw Error('Another tab changed these counts. Reload to pick up its latest save.');
- if(!practice)sharedHooks?.prepare(next,db);next.version=db.version+1;try{localStorage.setItem(key,JSON.stringify(next));}catch(e){throw Error('Could not save on this device. Your previous counts are safe. Free some space and try again.');}db=next;$('save-status').textContent=(practice?'Example counts':'Saved')+' on this device · '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});if(!practice)sharedHooks?.afterSave();
+</style>
+</head>
+<body>
+<div id="app"><div id="top"></div><div id="main">
+ <div class="view" id="v-belt"></div>
+ <div class="view" id="v-week"></div>
+</div></div>
+<div class="ov" id="ov-name"></div>
+<div class="md" id="md" onclick="if(event.target===this)closeMd()"><div class="sheet" id="mdbox"></div></div>
+<div id="toast"></div>
+<div id="lightbox" onclick="this.style.display='none'"><button>CLOSE</button><img id="lbimg" alt=""></div>
+<script>
+"use strict";
+// ============================== CATCHER v2 ==============================
+// Sizes come from /data/catcher.json (built every weekend with the press board, same commit
+// as /data/week.json). Live press status + shared catcher records ride the press-state worker:
+// each location's catch is a virtual record "cat_<rowId>" (notes = JSON, last write wins), so
+// the press board and the office can see counts, and nothing is trapped on one iPad.
+var APP_V = "2.0.0";
+var SYNC_URL = "https://mayhem-press-state.autumn-mountain-14c6.workers.dev", SYNC_KEY = "wVUsmD1WhcoLlb_wDMuDDlXCZx2QsnT0";
+var PRESSES = ["Press 1","Press 2"];
+var MAN = null, WEEK = null, CARDS = [], BYID = {}, ROWS = {}, IMG = {}, REMOTE = {}, LASTOK = 0, LASTMAN = "", LASTWK = "";
+var VIEW = "belt", WDAY = "", PLANE = 0;   // PLANE = lane shown in portrait
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ if(v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} }
+function now(){ return Date.now(); }
+function today(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function fmt(ts){ var d = new Date(ts), h = d.getHours(), m = d.getMinutes(); return (h % 12 || 12) + ":" + String(m).padStart(2,"0") + (h >= 12 ? " PM" : " AM"); }
+function hm(ms){ var m = Math.max(0, Math.floor(ms/60000)); return Math.floor(m/60) + ":" + String(m%60).padStart(2,"0"); }
+function toast(t){ var e = $("toast"); e.textContent = t; e.style.display = "block"; clearTimeout(toast._t); toast._t = setTimeout(function(){ e.style.display = "none"; }, 2400); }
+function dow(d){ return new Date(d + "T12:00:00").toLocaleDateString("en-US", {weekday:"short"}).toUpperCase(); }
+function md(d){ var x = new Date(d + "T12:00:00"); return (x.getMonth()+1) + "/" + x.getDate(); }
+
+// ---------- catcher name ----------
+function catcher(){ var n = lsGet("catcher_name_" + today()); return n || null; }
+function setCatcher(n){ lsSet("catcher_name_" + today(), n); var r = JSON.parse(lsGet("catcher_recent") || "[]").filter(function(x){ return x !== n; }); r.unshift(n); lsSet("catcher_recent", JSON.stringify(r.slice(0, 8))); render(); }
+function renderName(){
+  var el = $("ov-name");
+  if(catcher() || !MAN){ el.classList.remove("on"); return; }
+  var names = JSON.parse(lsGet("catcher_recent") || "[]");
+  (WEEK && WEEK.printers || []).forEach(function(p){ if(names.indexOf(p) === -1) names.push(p); });
+  el.innerHTML = '<div class="center"><div class="badge">CATCHER</div><h2>WHO&#39;S <span>CATCHING?</span></h2><div class="sub">TAP YOUR NAME — IT GOES ON EVERY COUNT TODAY</div><div class="names">' +
+    names.map(function(n){ return '<button class="nm" onclick="setCatcher(\'' + esc(n).replace(/'/g, "\\'") + '\')">' + esc(n.toUpperCase()) + '</button>'; }).join("") +
+    '<button class="nm" style="color:var(--lime)" onclick="askName()">+ SOMEONE ELSE</button></div></div>';
+  el.classList.add("on");
 }
-function requirePhoto(lane){const card=cardAt(lane);if(card&&!record(card).checks?.photo)throw Error('PICTURE TAKEN??? Take a picture of #'+card.job+' · '+(card.locationLabel||card.location)+' and check the box before changing jobs.');}
-function change(fn,repaint=true){try{const next=JSON.parse(JSON.stringify(db));fn(next);for(let lane=0;lane<2;lane++){if(next.lanes[lane]!==db.lanes[lane])requirePhoto(lane);}persist(next);if(repaint)render();return true;}catch(e){tell(e.message);return false;}}
-function actor(){const name=$('catcher-name').value.trim();if(!name){$('catcher-name').focus();throw Error('Enter the catcher’s name at the top first.');}return name;}
-function cardAt(lane){return cards.find(c=>c.runId===db.lanes[lane]);}
-function record(card){return db.records[card.runId]||C.blank(card);}
-function blocked(card){if(card.blocked)return card.blocked;if(db.conflicts?.[card.runId])return 'Another device saved a different count. Use Connect / review to compare before continuing.';const r=db.records[card.runId];if(r&&r.fingerprint!==C.fingerprint(card))return 'Order sizes changed after counting began. Keep the saved count and ask the office to review this run.';return '';}
+function askName(){
+  openMd('<h3>Your name</h3><div class="fld"><input id="nm-in" maxlength="40" placeholder="First name"></div><div class="row2"><button onclick="closeMd()">CANCEL</button><button class="y" onclick="var v=$(\'nm-in\').value.trim();if(v){closeMd();setCatcher(v);}">SAVE</button></div>');
+  setTimeout(function(){ var i = $("nm-in"); if(i) i.focus(); }, 50);
+}
+
+// ---------- records (local first, synced) ----------
+function recKey(){ return "catcher_v2_" + (MAN ? MAN.week : "x"); }
+var LOCAL = {};
+function loadLocal(){ try{ LOCAL = JSON.parse(lsGet(recKey()) || "{}"); }catch(e){ LOCAL = {}; } }
+function saveLocal(){ lsSet(recKey(), JSON.stringify(LOCAL)); }
+function fp(card){ return JSON.stringify(card.groups.map(function(g){ return g.sizes.map(function(s){ return [s.id, s.expected]; }); })); }
+function rec(card){
+  var id = card.id, L = LOCAL[id], R = REMOTE[id];
+  var r = (R && (!L || (R.at || 0) > (L.at || 0))) ? R : L;
+  if(!r) r = {counts:{}, checks:{}, issues:[], hist:[], finishedAt:null, by:"", at:0, fp:fp(card)};
+  r.counts = r.counts || {}; r.checks = r.checks || {}; r.issues = r.issues || []; r.hist = r.hist || [];
+  return r;
+}
+var DIRTY = {};
+function write(card, r, what){
+  r.at = now(); r.by = catcher() || r.by || "";
+  r.fp = r.fp || fp(card);
+  if(what) r.hist = r.hist.concat([{at:r.at, by:r.by, w:what}]).slice(-40);
+  LOCAL[card.id] = JSON.parse(JSON.stringify(r)); saveLocal();
+  DIRTY[card.id] = 1; push();
+  render();
+}
+function sumOf(card, r){
+  var cells = [], total = 0, counted = 0, short = 0, over = 0;
+  card.groups.forEach(function(g){ g.sizes.forEach(function(s){ cells.push(s); var n = r.counts[s.id]; if(n != null){ counted++; total += n; short += Math.max(0, s.expected - n); over += Math.max(0, n - s.expected); } }); });
+  var mis = r.issues.reduce(function(a, i){ return a + (i.qty || 0); }, 0);
+  return {cells:cells.length, counted:counted, total:total, short:short, over:over, complete:cells.length > 0 && counted === cells.length, exact:counted === cells.length && !short && !over, mis:mis};
+}
+function checksReady(card, r){ var q = r.checks; return !!(q.photo && q.spell && q.print && (q.mock || !card.image)); }
+
+// ---------- network ----------
+function sf(path, opts){ opts = opts || {}; opts.headers = {"Content-Type":"application/json", "X-Press-Key":SYNC_KEY}; return fetch(SYNC_URL + path, opts).then(function(r){ return r.json(); }); }
+function devId(){ var d = lsGet("catcher_device"); if(!d){ d = "catcher-" + Math.random().toString(36).slice(2, 9); lsSet("catcher_device", d); } return d; }
+var PULLING = false;
+function pull(){
+  if(!MAN || PULLING) return; PULLING = true;
+  sf("/state?week=" + encodeURIComponent(MAN.week) + "&k=" + SYNC_KEY, {method:"GET"}).then(function(j){
+    PULLING = false;
+    if(!j || !j.ok || !j.state) return;
+    ROWS = j.state.rows || {}; LASTOK = now();
+    var changed = false;
+    for(var id in ROWS){
+      if(id.indexOf("cat_") !== 0) continue;
+      var x = ROWS[id]; if(!x || !x.notes) continue;
+      try{ var o = JSON.parse(x.notes); var k = id.slice(4); if(!REMOTE[k] || REMOTE[k].at !== o.at){ REMOTE[k] = o; changed = true; } }catch(e){}
+    }
+    if(!busy()) render(); else renderTop();
+  })["catch"](function(){ PULLING = false; renderTop(); });
+}
+function push(){
+  Object.keys(DIRTY).forEach(function(id){
+    var r = LOCAL[id]; if(!r){ delete DIRTY[id]; return; }
+    var t = now();
+    var row = {id:"cat_" + id, printer:null, pauses:[], handoffs:[], notes:JSON.stringify(r), _mt:{notes:t}};
+    sf("/tap", {method:"POST", body:JSON.stringify({week:MAN.week, deviceId:devId(), press:"Catcher", row:row})})
+      .then(function(j){ if(j && j.ok){ delete DIRTY[id]; REMOTE[id] = r; } })["catch"](function(){});
+  });
+}
+setInterval(function(){ pull(); push(); }, 12000);
+
+// ---------- press status for a row ----------
+function pstat(rowId){
+  var x = ROWS[rowId]; if(!x) return {s:"idle"};
+  var pz = x.pauses || [], open = null, base = {};
+  pz.forEach(function(p){ if(p && p.at && p.k != null){ base[p.k] = base[p.k] || {}; if(p.end !== undefined) base[p.k].end = p.end; if(p.deleted) base[p.k].del = 1; } });
+  pz.forEach(function(p){ if(p && p.start && !(p.k != null && p.at)){ var b = base[p.start] || {}; var end = b.end !== undefined ? b.end : p.end; if(!end && !b.del) open = p; } });
+  var who = x.printBy || x.printer || "";
+  if(x.jobDone) return {s:"done", who:who, press:x.press, at:x.jobDone};
+  if(open) return {s:"pause", who:who, press:x.press, reason:open.reason};
+  if(x.setupDone) return {s:"print", who:who, press:x.press, at:x.setupDone};
+  if(x.setupStart) return {s:"setup", who:who, press:x.press, at:x.setupStart};
+  return {s:"idle"};
+}
+// what the lane shows: pinned card, else what's printing on that press, else the last one it followed
+function laneCard(i){
+  var P = PRESSES[i], pin = lsGet("catcher_pin_" + i);
+  if(pin && BYID[pin]) return {card:BYID[pin], pinned:true};
+  var best = null, bt = 0;
+  CARDS.forEach(function(c){ var p = pstat(c.id); if(p.press === P && (p.s === "print" || p.s === "pause" || p.s === "setup")){ var t = p.at || 1; if(t > bt){ bt = t; best = c; } } });
+  if(best){ lsSet("catcher_last_" + i, best.id); return {card:best, pinned:false}; }
+  var last = lsGet("catcher_last_" + i);
+  if(last && BYID[last]){ var r = rec(BYID[last]); if(!r.finishedAt) return {card:BYID[last], pinned:false, stale:true}; }
+  return {card:null};
+}
+
+// ---------- load ----------
+function load(first){
+  Promise.all([
+    fetch("/data/catcher.json?v=" + now(), {cache:"no-store"}).then(function(r){ if(!r.ok) throw Error("HTTP " + r.status); return r.text(); }),
+    fetch("/data/week.json?v=" + now(), {cache:"no-store"}).then(function(r){ return r.ok ? r.text() : ""; })["catch"](function(){ return ""; })
+  ]).then(function(t){
+    if(t[0] === LASTMAN && t[1] === LASTWK) return;
+    LASTMAN = t[0]; LASTWK = t[1];
+    MAN = JSON.parse(t[0]); WEEK = t[1] ? JSON.parse(t[1]) : null;
+    if(WEEK && WEEK.week !== MAN.week) WEEK = null;
+    IMG = {}; var rows = {};
+    if(WEEK){ IMG = WEEK.img || {}; WEEK.days.forEach(function(d){ d.rows.forEach(function(r){ rows[r.id] = r; }); }); }
+    CARDS = MAN.cards.map(function(c){ var x = JSON.parse(JSON.stringify(c)); var w = rows[c.id]; if(w){ x.day = x.day || w._day; x.inks = w.inks || null; x.alert = w.alert || ""; } return x; });
+    BYID = {}; CARDS.forEach(function(c){ BYID[c.id] = c; });
+    loadLocal(); migrate();
+    var t0 = today(); if(!WDAY || !MAN.days.some(function(d){ return d.day === WDAY; })) WDAY = MAN.days.some(function(d){ return d.day === t0; }) ? t0 : MAN.days[0].day;
+    if(!first) toast("Cards updated");
+    pull(); render();
+  })["catch"](function(e){ if(first) $("main").innerHTML = '<div class="empty"><h2>NO <span>CARDS</span></h2><p>Couldn&#39;t load the catcher cards (' + esc(e.message) + '). Check the wifi — it retries on its own.</p></div>'; });
+}
+// bring over counts from the v1 catcher (same runIds for carried-over cards)
+function migrate(){
+  if(lsGet("catcher_migrated_" + MAN.week)) return;
+  try{
+    var old = JSON.parse(lsGet("mayhem-catcher-v1") || "null");
+    if(old && old.records){
+      CARDS.forEach(function(c){
+        var o = old.records[c.runId]; if(!o || LOCAL[c.id]) return;
+        if(!Object.keys(o.counts || {}).length) return;
+        LOCAL[c.id] = {counts:o.counts, checks:{photo:!!(o.checks||{}).photo, spell:!!(o.checks||{}).spelling, mock:!!(o.checks||{}).mockup, print:!!(o.checks||{}).print}, issues:(o.issues||[]).map(function(i){ return {cell:i.cellId, type:i.type, qty:i.quantity, note:i.note, by:i.actor, at:Date.parse(i.at) || 0}; }), hist:[], finishedAt:o.finishedAt ? Date.parse(o.finishedAt) : null, by:o.owner || "", at:1, fp:fp(c)};
+      });
+      saveLocal();
+    }
+  }catch(e){}
+  lsSet("catcher_migrated_" + MAN.week, "1");
+}
+setInterval(function(){ if(!busy()) load(false); }, 60000);
+setInterval(function(){ fetch("/data/app-catcher.json?v=" + now(), {cache:"no-store"}).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){ if(j && j.v && j.v !== APP_V && !busy()) location.reload(); })["catch"](function(){}); }, 300000);
+document.addEventListener("visibilitychange", function(){ if(!document.hidden){ load(false); pull(); wake(); } });
+var WL = null;
+function wake(){ try{ if(WL || !navigator.wakeLock) return; navigator.wakeLock.request("screen").then(function(l){ WL = l; l.addEventListener("release", function(){ WL = null; }); })["catch"](function(){}); }catch(e){} }
+document.addEventListener("pointerdown", wake, {passive:true});
+
+// ---------- render ----------
+function busy(){ return $("md").classList.contains("on") || $("lightbox").style.display === "block"; }
 function render(){
- const scroll=[...$('lanes').children].map(el=>el.scrollTop);
- $('week-day').hidden=practice;$('load-today').hidden=practice;if(!practice){$('week-day').innerHTML=manifest.days.map(d=>`<option value="${esc(d.day)}">${esc(d.label)} · ${cards.filter(c=>c.day===d.day).length} locations</option>`).join('');$('week-day').value=db.viewDay||defaultDay();}$('reset-practice').hidden=!practice;$('load-test').hidden=practice||!manifest.testPreset;
- $('practice').textContent=practice?'Back to scheduled jobs':'Try example jobs';$('week-label').textContent=practice?'Practice · made-up counts':(db.testFocus&&manifest.testPreset?'#6385 · Classic Orange + ST460LS':'Week of '+manifest.week+' · '+cards.length+' locations');$('source-date').textContent=practice?'Practice counts are kept separate.':'Order sizes loaded '+new Date(manifest.generatedAt).toLocaleDateString();
- $('lanes').innerHTML=[0,1].map(lane=>{
- const card=cardAt(lane),letter='AB'[lane];if(!card)return `<section class="lane empty" aria-label="Card ${letter}"><span class="eyebrow">CARD ${letter}</span><div class="empty-symbol">＋</div><h2>Ready for a run.</h2><p>${!practice&&!cards.some(c=>c.day===db.viewDay)?'No locations scheduled for this day. Choose another day above or browse the week.':'Choose a job and the exact location coming down the belt.'}</p><button class="primary" data-action="choose" data-lane="${lane}">Choose location ${letter}</button></section>`;
- const r=record(card),s=C.summary(card,r),lock=blocked(card);const state=r.finishedAt?(s.exact?'Location matched':'Finished · differences'):s.checked?'Counting':'Ready to count';
- return `<section class="lane" aria-label="Card ${letter}: ${esc(card.customer)}"><div class="lane-top"><span class="eyebrow">CARD ${letter} · #${esc(card.job)}</span><button data-action="choose" data-lane="${lane}">Change job</button></div><div class="intro"><div class="identity"><h2 class="placement">${esc((card.locationLabel||card.location).toUpperCase())}</h2><h3 class="customer-name">${esc(card.customer)}</h3><p class="location">${esc(card.location)}</p><span class="chip">${state}</span></div>
- ${card.image?`<button class="art" data-action="art" data-lane="${lane}" aria-label="View artwork for ${esc(card.customer)}"><img src="${esc(card.image)}" alt="Artwork for ${esc(card.customer)}" loading="lazy"><span class="art-copy"><strong>View artwork ↗</strong><span>${esc(card.artworkLabel||'Print location reference')}</span></span></button>`:''}</div>${!card.image&&!practice?'<div class="art-missing">Artwork not attached. Ask the printer for the reference.</div>':''}
- <div class="stats"><strong>${s.total}</strong><span>/ ${card.expected} good pieces caught</span></div><div class="progress" aria-label="${s.checked} of ${C.cells(card).length} sizes counted"><i style="width:${C.cells(card).length?s.checked/C.cells(card).length*100:0}%"></i></div><div class="statusline"><span>${s.checked} / ${C.cells(card).length} sizes counted</span><span class="${s.short||s.over?'warning':''}">${s.short?s.short+' short':''}${s.short&&s.over?' · ':''}${s.over?s.over+' extra':''}${!s.short&&!s.over?(s.complete?'All sizes match':'Count each size below'):''}</span></div>
- ${lock?`<p class="warning">${esc(lock)}</p>`:''}${card.note?`<p class="job-note">${esc(card.note)}</p>`:''}${checklists(card,lane)}
- ${card.groups.map(g=>`<section class="group"><h3>${esc(g.style)}</h3><p>${esc(g.color)}</p><div class="sizes">${g.sizes.map(cell=>{const n=r.counts[cell.id],counted=n!==undefined&&n!==null,exact=counted&&n===cell.expected;return `<div class="size ${exact?'exact':counted?'diff':''}"><div class="size-main"><span class="size-label">${exact?'✓ ':''}${esc(cell.label)}</span><span class="size-expected">Expected ${cell.expected}</span></div><button class="count-box" data-action="count" data-lane="${lane}" data-cell="${esc(cell.id)}" ${lock?'disabled':''} aria-label="Enter count for ${esc(g.style+' '+g.color+' '+cell.label)}, expected ${cell.expected}, ${counted?'caught '+n:'not counted'}">${counted?n:'<span class="placeholder">Enter count</span>'}</button><span class="count-caption">${counted?(exact?'Count matches':Math.abs(cell.expected-n)+(n<cell.expected?' short':' extra')):'Tap for number pad'}</span><button class="size-quick" data-action="exact" data-lane="${lane}" data-cell="${esc(cell.id)}" ${lock?'disabled':''} aria-label="${esc(cell.label)}: confirm all ${cell.expected} caught">${exact?'✓ Count confirmed':'✓ All '+cell.expected+' caught'}</button></div>`;}).join('')}</div></section>`).join('')}
- <div class="actions"><button data-action="issue" data-lane="${lane}" ${lock?'disabled':''}>Flag a problem${r.issues.length?' ('+r.issues.length+')':''}</button><button data-action="history" data-lane="${lane}">History</button></div><button class="primary wide" data-action="finish" data-lane="${lane}" ${lock||!s.complete||!C.qualityReady(card,r)||r.finishedAt?'disabled':''}>${r.finishedAt?'Location finished ✓':!s.complete?'Count '+s.remaining+' more size'+(s.remaining===1?'':'s'):!C.qualityReady(card,r)?'Complete location checks above':s.exact?'Finish this location':'Finish with differences'}</button><button class="wide reset-counts" data-action="reset" data-lane="${lane}" ${lock||!s.checked?'disabled':''}>Reset location counts</button><p class="finish-label">${r.finishedAt?'Saved on this device by '+esc(r.owner)+'. Use Save a backup to keep a copy.':'Counts stay saved when you change jobs.'}</p></section>`;
- }).join('');
- [...$('lanes').children].forEach((el,i)=>{if(renderedIds[i]===db.lanes[i])el.scrollTop=scroll[i]||0;});renderedIds=[...db.lanes];
- $('lanes').querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>{img.hidden=true;img.nextElementSibling.lastChild.textContent=' Image unavailable — tap to retry.';},{once:true}));
+  if(!MAN) return;
+  renderTop();
+  $("v-belt").classList.toggle("on", VIEW === "belt"); $("v-week").classList.toggle("on", VIEW === "week");
+  if(VIEW === "belt") renderBelt(); else renderWeek();
+  renderName();
 }
-function checklists(card,lane){
- const r=record(card),q=r.checks||{},lock=blocked(card),batch=cards.filter(c=>c.runId===card.runId||(card.batchKeys?.some(k=>c.batchKeys?.includes(k)))||(card.batchId&&c.batchId===card.batchId));
- const locations=batch.map(c=>`<label><input type="checkbox" data-check="printed" data-run="${esc(c.runId)}" ${record(c).checks?.printed?'checked':''} ${blocked(c)?'disabled':''}>${esc(c.locationLabel||c.location)} printed</label>`).join('');
- const prior=(card.priorLocations||[]).map(label=>`<label class="prior"><input type="checkbox" checked disabled>${esc(label)} · already ran per press board</label>`).join('');
- const question=(field,text)=>`<label><input type="checkbox" data-check="${field}" data-run="${esc(card.runId)}" ${q[field]?'checked':''} ${lock?'disabled':''}>${text}</label>`;
- return `<section class="checks photo-check">${question('photo','PICTURE TAKEN???')}<p>Take a photo of this print location, then check this box to unlock Change job.</p></section><section class="checks"><h3>Locations printed · these garments</h3><div class="locations">${prior}${locations}</div></section><section class="checks"><h3>First shirt · ${esc(card.locationLabel||card.location)}</h3>${question('spelling','Is everything spelled right?')}${card.image?question('mockup','Does the shirt match the mockup?'):'<p>Mockup check: N/A — no mockup attached.</p>'}${question('print','Does the print look good?')}<p>Check the first shirt at this location. Recheck after an ink or garment color change.</p></section>`;
+function renderTop(){
+  var c = catcher();
+  var h = '<div class="badge">CATCHER</div><button class="chip ' + (c ? "" : "none") + '" onclick="lsSet(\'catcher_name_\'+today(),null);render()"><i></i>' + esc(c || "Tap in") + '</button>' +
+    '<div class="tabs"><button class="tab ' + (VIEW === "belt" ? "on" : "") + '" onclick="VIEW=\'belt\';render()">ON THE BELT</button><button class="tab ' + (VIEW === "week" ? "on" : "") + '" onclick="VIEW=\'week\';render()">WEEK</button></div>' +
+    '<div class="clock tclock">' + fmt(now()).replace(/ (AM|PM)/, "") + '</div><div class="dot ' + (LASTOK && now() - LASTOK < 60000 ? "ok" : (LASTOK ? "bad" : "")) + '"></div>';
+  $("top").innerHTML = h;
 }
-// Preserve the checkbox/label nodes through an iPad tap. Replacing their parents
-// inside the change event can interrupt native touch activation and scroll position.
-function refreshCheckState(){
- $('lanes').querySelectorAll('input[data-check]').forEach(box=>{const card=cards.find(c=>c.runId===box.dataset.run);if(card){box.checked=!!record(card).checks?.[box.dataset.check];box.disabled=!!blocked(card);}});
- [0,1].forEach(lane=>{const card=cardAt(lane),section=$('lanes').children[lane];if(!card||!section)return;const r=record(card),s=C.summary(card,r),finish=section.querySelector('[data-action="finish"]');
- finish.disabled=!!(blocked(card)||!s.complete||!C.qualityReady(card,r)||r.finishedAt);
- finish.textContent=r.finishedAt?'Location finished ✓':!s.complete?'Count '+s.remaining+' more size'+(s.remaining===1?'':'s'):!C.qualityReady(card,r)?'Complete location checks above':s.exact?'Finish this location':'Finish with differences';
- section.querySelector('.chip').textContent=r.finishedAt?(s.exact?'Location matched':'Finished · differences'):s.checked?'Counting':'Ready to count';
- section.querySelector('.finish-label').textContent=r.finishedAt?'Saved on this device by '+r.owner+'. Use Save a backup to keep a copy.':'Counts stay saved when you change jobs.';
- });
+function renderBelt(){
+  var el = $("v-belt"), keep = [].map.call(el.querySelectorAll(".lbody"), function(b){ return b.scrollTop; });
+  var h = "";
+  [0,1].forEach(function(i){
+    var L = laneCard(i), P = PRESSES[i];
+    h += '<div class="lane' + (PLANE !== i ? " hideP" : "") + '"><div class="lh"><div class="pb">' + P.toUpperCase() + '</div>' +
+      '<span class="mode ' + (L.pinned ? "pin" : "") + '">' + (L.pinned ? "PINNED" : (L.card ? (L.stale ? "LAST RUN ON THIS PRESS" : "FOLLOWING THE PRESS") : "")) + '</span>' +
+      '<button class="sw" onclick="PLANE=' + (1 - i) + ';render()" style="display:none" data-p>' + PRESSES[1-i].toUpperCase() + ' →</button>' +
+      (L.pinned ? '<button class="sw" onclick="lsSet(\'catcher_pin_' + i + '\',null);render()">FOLLOW PRESS</button>' : '<button class="sw" onclick="pickFor(' + i + ')">PICK A CARD</button>') + '</div>';
+    h += '<div class="lbody">' + (L.card ? laneHtml(L.card, i) : '<div class="empty"><h2>WAITING ON <span>' + P.toUpperCase() + '</span></h2><p>When the printer taps SETUP DONE on ' + P + ', that run shows up here on its own. Or pick a card.</p><button class="btn lime" style="flex:none;padding:14px 24px" onclick="pickFor(' + i + ')">PICK A CARD</button></div>') + '</div></div>';
+  });
+  el.innerHTML = h;
+  if(window.matchMedia("(orientation:portrait)").matches) [].forEach.call(el.querySelectorAll("[data-p]"), function(b){ b.style.display = "block"; });
+  [].forEach.call(el.querySelectorAll(".lbody"), function(b, i){ b.scrollTop = keep[i] || 0; });
 }
-$('lanes').addEventListener('change',e=>{const box=e.target.closest('input[data-check]');if(!box)return;
- try{const card=cards.find(c=>c.runId===box.dataset.run);if(blocked(card))throw Error(blocked(card));const name=actor(),updated=C.check(card,record(card),box.dataset.check,box.checked,name);change(next=>{next.actor=name;next.records[card.runId]=updated;},false);}
- catch(err){tell(err.message);}refreshCheckState();
-});
-function openPicker(lane){try{requirePhoto(lane);}catch(e){tell(e.message);const box=$('lanes').children[lane]?.querySelector('[data-check=photo]');box?.scrollIntoView({block:'center'});box?.focus();return;}pickerLane=lane;$('picker-title').textContent='Choose location for card '+'AB'[lane];$('search').value='';$('scope').hidden=practice||!manifest.testPreset;$('scope').value='all';const days=practice?[]:manifest.days.map(d=>d.day);$('day').innerHTML='<option value="">All scheduled days</option>'+days.map(d=>`<option value="${esc(d)}">${esc(dayLabel(d))}</option>`).join('');$('day').value='';listJobs();$('picker').showModal();refresh(false);}
-function listJobs(){const q=$('search').value.toLowerCase(),day=$('day').value;const testOnly=!practice&&$('scope').value==='test';$('day').hidden=testOnly;const matches=cards.filter(c=>(!testOnly||manifest.testPreset?.runIds.includes(c.runId))&&(testOnly||!day||c.day===day)&&[c.job,c.customer,c.location,...c.groups.map(g=>g.style+' '+g.color)].join(' ').toLowerCase().includes(q));$('job-list').innerHTML=matches.length?matches.map(c=>{const assigned=db.lanes[1-pickerLane]===c.runId;return `<button class="job" data-run="${esc(c.runId)}" ${assigned?'disabled':''}>${c.image?`<img class="job-thumb" src="${esc(c.image)}" alt="Artwork reference" loading="lazy">`:`<span class="job-thumb missing-thumb">No artwork</span>`}<h2 class="placement">${esc((c.locationLabel||c.location).toUpperCase())}</h2><strong>#${esc(c.job)} · ${esc(c.customer)}</strong><span>${esc(c.location)}</span><span>${c.expected} pieces · ${esc(practice?'Example':dayLabel(c.day))} ${record(c).finishedAt?'· Location finished':''}</span>${assigned?'<em>Already on the other card</em>':blocked(c)?`<em>${esc(blocked(c))}</em>`:''}</button>`;}).join(''):'<p>No matching locations.</p>';}
-function openCount(lane,cellId,fill){const card=cardAt(lane),cell=C.cells(card).find(c=>c.id===cellId),group=card.groups.find(g=>g.sizes.includes(cell)),r=record(card);selection={lane,cellId};$('count-context').textContent='#'+card.job+' · '+card.location;$('count-title').textContent=cell.label+' · '+group.style;$('count-expected').textContent=group.color+' · Expected '+cell.expected;$('actual').value=fill??r.counts[cellId]??'';$('reason').value='';$('correction').hidden=r.counts[cellId]===null||r.counts[cellId]===undefined;$('uncount').hidden=$('correction').hidden;$('count-error').textContent='';$('count-dialog').showModal();}
-function saveCount(value,method='actual'){try{const card=cardAt(selection.lane),name=actor(),nextRecord=C.edit(card,record(card),{cellId:selection.cellId,value,actor:name,reason:$('reason').value||(method==='clear'?'Reset count for recount':''),method});if(change(next=>{next.actor=name;next.records[card.runId]=nextRecord;}))$('count-dialog').close();}catch(e){$('count-error').textContent=e.message;}}
-function exact(lane,cellId){try{const card=cardAt(lane),r=record(card),cell=C.cells(card).find(s=>s.id===cellId);if(r.counts[cellId]===cell.expected){openCount(lane,cellId);return;}if(r.counts[cellId]!==undefined&&r.counts[cellId]!==null){openCount(lane,cellId,cell.expected);return;}const name=actor(),updated=C.edit(card,r,{cellId,value:cell.expected,actor:name,method:'size-check'});change(next=>{next.actor=name;next.records[card.runId]=updated;});}catch(e){tell(e.message);}}
-function detail(title,body){$('detail-title').textContent=title;$('detail-body').innerHTML=body;$('detail-dialog').showModal();}
-function history(lane){const card=cardAt(lane),r=record(card);detail('#'+card.job+' · Count history',`<p>${esc(card.location)}</p>${r.issues.map(i=>`<div class="history-row warning">${esc(i.type)} · ${i.quantity} ${esc(i.label)}<p>${esc(i.note)}</p><small>${esc(i.actor)} · ${new Date(i.at).toLocaleString()}</small><button data-resolve="${esc(i.id)}" data-lane="${lane}">Resolve problem</button></div>`).join('')}${[...r.history].reverse().map(h=>{const cell=C.cells(card).find(c=>c.id===h.cellId),g=card.groups.find(g=>g.sizes.includes(cell));return `<div class="history-row">${h.type==='count'?esc((g?.style||'')+' '+(g?.color||'')+' '+(cell?.label||'')+': '+(h.from??'uncounted')+' → '+(h.to??'uncounted')):esc(h.type==='check'?(h.field==='printed'?'Location printed':({spelling:'Spelling',mockup:'Matches mockup',print:'Print looks good',photo:'Picture taken'}[h.field]))+': '+(h.to?'checked':'unchecked'):h.type==='reset'?'Location counts reset · previous counts: '+Object.entries(h.counts).map(([id,n])=>(C.cells(card).find(c=>c.id===id)?.label||id)+' '+(n??'uncounted')).join(', '):h.type==='finish'?'Finished location · '+h.result:h.type==='issue'?'Problem flagged: '+h.problem:h.type==='resolve'?'Problem resolved':h.type==='reconcile'?'Conflicting counts reviewed':'Catcher handoff')}${h.reason?'<p>'+esc(h.reason)+'</p>':''}<small>${esc(h.actor)} · ${new Date(h.at).toLocaleString()}</small></div>`;}).join('')||'<p>No counts entered yet.</p>'}`);}
-function openIssue(lane){issueLane=lane;const card=cardAt(lane);$('issue-context').textContent='#'+card.job+' · '+card.location;$('issue-size').innerHTML=card.groups.flatMap(g=>g.sizes.map(s=>`<option value="${esc(s.id)}">${esc(g.style+' · '+g.color+' · '+s.label)}</option>`)).join('');$('issue-qty').value='1';$('issue-note').value='';$('issue-error').textContent='';$('issue-dialog').showModal();}
-function download(name,body,type){const url=URL.createObjectURL(new Blob([body],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
-$('lanes').addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(!b)return;const lane=Number(b.dataset.lane),card=cardAt(lane);switch(b.dataset.action){case'choose':openPicker(lane);break;case'reset':detail('Reset this location’s counts?',`<p>#${esc(card.job)} · ${esc(card.location)}</p><p>Every size will return to uncounted. Earlier counts stay in History. Print checks and problems stay saved.</p><button id="confirm-reset" class="primary wide">Reset location counts</button>`);$('confirm-reset').onclick=()=>{try{const name=actor(),updated=C.reset(card,record(card),name);if(change(next=>{next.actor=name;next.records[card.runId]=updated;})){$('detail-dialog').close();tell('Location counts reset. Earlier counts remain in History.');}}catch(err){tell(err.message);}};break;case'count':openCount(lane,b.dataset.cell);break;case'exact':exact(lane,b.dataset.cell);break;case'issue':openIssue(lane);break;case'history':history(lane);break;case'art':detail('#'+card.job+' · Artwork',`<p>${esc(card.location)}</p><p class="muted">${esc(card.artworkLabel)}</p><img class="big-art" src="${esc(card.image)}" alt="${esc(card.location)}">`);break;case'finish':try{const name=actor(),finished=C.finish(card,record(card),name);change(next=>{next.actor=name;next.records[card.runId]=finished;});}catch(e){tell(e.message);}break;}});
-$('job-list').addEventListener('click',e=>{const b=e.target.closest('button[data-run]');if(!b)return;if(change(next=>next.lanes[pickerLane]=b.dataset.run))$('picker').close();});
-$('search').addEventListener('input',listJobs);$('day').addEventListener('change',listJobs);$('scope').addEventListener('change',listJobs);
-function selectDay(day){if(change(next=>{next.viewDay=day;next.lastOpenedDay=shopToday();next.lanes=dayLanes(day);next.testFocus=false;}))tell('');else $('week-day').value=db.viewDay;}
-$('week-day').addEventListener('change',()=>selectDay($('week-day').value));
-$('load-today').addEventListener('click',()=>selectDay(defaultDay()));
-$('load-test').addEventListener('click',()=>{if(practice||!manifest.testPreset)return;if(change(next=>{next.lanes=[...manifest.testPreset.lanes];next.testFocus=true;}))tell('Invoice 6385 loaded: 3600M Classic Orange and ST460LS fronts. Use Change job to choose the back or sleeve. Any earlier counts stay saved.');});
-document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
-$('count-form').addEventListener('submit',e=>{e.preventDefault();saveCount($('actual').value);});$('uncount').addEventListener('click',()=>saveCount(null,'clear'));
-document.querySelectorAll('[data-digit]').forEach(b=>b.addEventListener('click',()=>{const i=$('actual'),v=b.dataset.digit;i.value=v==='clear'?'':v==='back'?i.value.slice(0,-1):(i.value+b.dataset.digit).slice(0,6);$('count-error').textContent='';}));
-function updateCatcher(){const name=$('catcher-name').value.trim();if(name===db.actor)return;change(next=>{if(name){for(const id of next.lanes){const r=next.records[id];if(r&&!r.finishedAt){r.history.push({type:'handoff',at:new Date().toISOString(),actor:name,reason:'Taking over from '+(next.actor||'previous catcher')});r.owner=name;r.revision++;}}}next.actor=name;},false);}
-$('catcher-name').addEventListener('change',updateCatcher);$('catcher-name').addEventListener('blur',updateCatcher);
-$('issue-form').addEventListener('submit',e=>{e.preventDefault();try{const name=actor(),quantity=C.integer($('issue-qty').value);if(!quantity)throw Error('Enter at least one affected piece.');const card=cardAt(issueLane),cell=C.cells(card).find(s=>s.id===$('issue-size').value),group=card.groups.find(g=>g.sizes.includes(cell));const issue={id:crypto.randomUUID(),cellId:cell.id,label:group.style+' '+group.color+' '+cell.label,type:$('issue-type').value,quantity,note:$('issue-note').value.trim(),actor:name,at:new Date().toISOString()};if(change(next=>{const r=next.records[card.runId]||C.blank(card);r.issues.push(issue);r.history.push({type:'issue',at:issue.at,actor:name,problem:issue.type,reason:issue.note});r.revision++;r.finishedAt=null;next.records[card.runId]=r;next.actor=name;}))$('issue-dialog').close();}catch(err){$('issue-error').textContent=err.message;}});
-$('detail-body').addEventListener('click',e=>{const b=e.target.closest('[data-resolve]');if(!b)return;try{const name=actor(),card=cardAt(Number(b.dataset.lane));const issue=record(card).issues.find(i=>i.id===b.dataset.resolve);detail('Resolve problem',`<p>${esc(issue.type+' · '+issue.label)}</p><label for="resolution">What was done?</label><input id="resolution" maxlength="180" placeholder="Reprinted, replaced, or recounted…"><button id="save-resolution" class="primary wide">Save resolution</button>`);$('save-resolution').onclick=()=>{const reason=$('resolution').value.trim();if(!reason){$('resolution').focus();return;}if(change(next=>{const r=next.records[card.runId];r.issues=r.issues.filter(i=>i.id!==issue.id);r.history.push({type:'resolve',actor:name,at:new Date().toISOString(),reason,issueId:issue.id});r.finishedAt=null;r.revision++;}))$('detail-dialog').close();};}catch(err){tell(err.message);}});
-$('export').addEventListener('click',()=>{const saved=storageBlocked?localStorage.getItem(key):JSON.stringify({format:'mayhem-catcher-backup',exportedAt:new Date().toISOString(),practice,manifest,db},null,2);download('mayhem-catcher'+(practice?'-practice':'')+'-'+new Date().toISOString().slice(0,10)+'.json',saved||'No saved data','application/json');});
-$('practice').addEventListener('click',()=>{try{[0,1].forEach(requirePhoto);}catch(e){tell(e.message);return;}practice=!practice;key=practice?DEMO:STORE;cards=practice?examples:liveCards;load();render();tell(practice?'Practice mode: these are example jobs. Your scheduled-job counts are kept separate.':'');});
-$('reset-practice').addEventListener('click',()=>{if(!practice)return;if(change(next=>{next.archivedPractice??=[];next.archivedPractice.push({at:new Date().toISOString(),records:next.records});next.records={};next.lanes=examples.map(c=>c.runId);next.actor='';})){$('catcher-name').value='';tell('Fresh example jobs. Scheduled-job counts are unchanged.');}});
-$('help').addEventListener('click',()=>detail('Catch. Count. Confirm.',`<ol class="help-list"><li>Enter your name. Choose a day above, including Extra cards, then choose up to two print locations. Change job lets you search all scheduled days. The whole week is loaded; no daily card update is needed.</li><li>Count the bundle by size. Tap <strong>✓ All caught</strong> when it matches, or tap the white count box for the number pad and enter the actual total.</li><li>Enter <strong>0</strong> when you counted none. An empty size means it has not been counted yet.</li><li>Flag damaged blanks or print problems separately. Good-piece counts do not include those pieces.</li><li>Check spelling, match to the mockup when available, and print quality on the first shirt at each location. Check off each location printed for these garments. Finish each location when its checks and every size are counted. Short or extra counts stay flagged.</li><li>Take a picture at each print location and check <strong>PICTURE TAKEN???</strong> before changing jobs. The checkbox confirms you took the photo; it does not upload it. Changing jobs keeps your counts. Changing the catcher’s name records a handoff.</li></ol><p><strong>This trial saves on this device only.</strong> Use one tab and keep a backup. Shared saves and office comparison with Printavo receiving are not connected yet.</p><p>Order sizes come from the weekly timecards board and update on their own when jobs are added or changed. Counts from earlier days stay saved on this device. Printer completion and receiving status are not changed by this app.</p>`));
-addEventListener('storage',e=>{if(e.key!==key)return;storageBlocked=true;tell('Another tab changed these counts. Reload this tab before entering more; your edits have not been overwritten.');});
-// Order sizes are published by the weekly timecards build as /data/catcher.json, in the same
-// commit as /data/week.json. Nothing here may clear or rewrite saved counts.
-const MANIFEST_URL='/data/catcher.json',SCHEDULE_URL='/data/week.json',CACHE='mayhem-catcher-manifest-cache-v1',REFRESH_MS=180000;
-let liveCards=[],lastStamp='',pendingRender=false,refreshing=false;
-function savedLanes(){try{const s=JSON.parse(localStorage.getItem(STORE)||'null');return Array.isArray(s?.lanes)?s.lanes:[];}catch(e){return[];}}
-function applySchedule(next,latest){
- let notice='';const rows=C.scheduleRows(latest),map=new Map(rows.map(r=>[r.id,r]));
- for(const card of next.cards){const live=map.get(card.scheduleRowId||card.id);if(!live)card.blocked='This location is no longer on the current schedule. Review it before continuing.';else if(live.scheduleSignature!==card.scheduleSignature)card.blocked='This run changed on the schedule. Its size breakdown needs a refresh.';else card.day=live.day;}
- if(latest.week!==next.week){for(const card of next.cards)card.blocked='A new schedule week is available. Refresh the order-size data before counting.';notice='The schedule has changed weeks. Saved counts are preserved; order sizes need refreshing.';}
- else if(rows.some(r=>!next.cards.some(c=>(c.scheduleRowId||c.id)===r.id)))notice='The timecards board has locations that are not in the catcher yet. Ask the office to refresh it.';
- return notice;
+function laneHtml(c, lane){
+  var r = rec(c), s = sumOf(c, r), p = pstat(c.id), img = c.image || "";
+  var stl = {idle:["idle","NOT STARTED ON PRESS"], setup:["setup","SETTING UP"], print:["","● PRINTING"], pause:["pause","❚❚ STOPPED" + (p.reason ? " · " + p.reason.toUpperCase() : "")], done:["done","✓ PRESS DONE"]}[p.s];
+  var h = '<div class="idc">' + (img ? '<img class="th" src="' + esc(img) + '" onclick="lb(this.src)">' : '<div class="th none">NO ART</div>') +
+    '<div style="min-width:0"><div class="st ' + stl[0] + '">' + stl[1] + (p.who ? " · " + esc(p.who.toUpperCase()) : "") + (p.s === "print" ? " · " + hm(now() - p.at) : "") + '</div>' +
+    '<div class="jn">#' + esc(c.job) + '<span>' + esc(c.customer) + '</span></div><div class="loc">' + esc(c.locationLabel || c.location) + '</div>' +
+    '<div class="cust">' + esc(c.location) + '</div></div></div>';
+  if(c.note) h += '<div class="note">' + esc(c.note) + '</div>';
+  var col = s.complete ? (s.exact ? "var(--green)" : "var(--amber)") : "var(--mut)";
+  h += '<div class="tot"><b>' + s.total + '</b><span>/ ' + c.expected + ' CAUGHT</span><span class="flag" style="color:' + col + '">' +
+    (s.short ? s.short + " SHORT " : "") + (s.over ? s.over + " OVER " : "") + (s.complete && s.exact ? "✓ ALL SIZES MATCH" : (!s.short && !s.over ? (s.cells - s.counted) + " SIZES LEFT" : "")) + '</span></div>' +
+    '<div class="bar"><i style="width:' + (c.expected ? Math.min(100, s.total / c.expected * 100) : 0) + '%;background:' + (s.over ? "var(--amber)" : "var(--lime)") + '"></i></div>';
+  c.groups.forEach(function(g){
+    var gt = g.sizes.reduce(function(a, x){ return a + x.expected; }, 0);
+    h += '<div class="grp"><h4>' + esc(g.style) + ' · ' + esc(String(g.color || "").toUpperCase()) + '<small>' + gt + ' PCS</small></h4><div class="sizes">';
+    g.sizes.forEach(function(sz){
+      var n = r.counts[sz.id], has = n != null, ok = has && n === sz.expected;
+      h += '<div class="sz ' + (ok ? "ok" : has ? "off" : "") + '"><div class="l">' + (ok ? "✓ " : "") + esc(sz.label) + '</div><div class="e">EXPECT ' + sz.expected + '</div>' +
+        '<button class="n ' + (has ? "" : "empty") + '" onclick="openCount(\'' + c.id + '\',\'' + esc(sz.id) + '\')">' + (has ? n : "TAP TO COUNT") + '</button>' +
+        '<button class="all" onclick="allCaught(\'' + c.id + '\',\'' + esc(sz.id) + '\')">' + (ok ? "✓ COUNTED" : "✓ ALL " + sz.expected) + '</button></div>';
+    });
+    h += '</div></div>';
+  });
+  var q = r.checks;
+  h += '<div class="checks">' +
+    '<button class="ck photo ' + (q.photo ? "on" : "") + '" onclick="tog(\'' + c.id + '\',\'photo\')">📷 PICTURE<br>TAKEN</button>' +
+    '<button class="ck ' + (q.spell ? "on" : "") + '" onclick="tog(\'' + c.id + '\',\'spell\')">SPELLED<br>RIGHT</button>' +
+    (c.image ? '<button class="ck ' + (q.mock ? "on" : "") + '" onclick="tog(\'' + c.id + '\',\'mock\')">MATCHES<br>MOCKUP</button>' : '<div class="ck" style="opacity:.4">NO<br>MOCKUP</div>') +
+    '<button class="ck ' + (q.print ? "on" : "") + '" onclick="tog(\'' + c.id + '\',\'print\')">PRINT<br>LOOKS GOOD</button></div>';
+  if(r.issues.length) h += '<div class="issues">⚠ ' + r.issues.map(function(i){ return i.qty + " × " + esc(i.type) + (i.label ? " (" + esc(i.label) + ")" : "") + (i.note ? " — " + esc(i.note) : ""); }).join("<br>⚠ ") + '</div>';
+  var ready = s.complete && checksReady(c, r);
+  h += '<div class="row"><button class="btn red" onclick="openIssue(\'' + c.id + '\')">⚠ MISPRINT / PROBLEM' + (s.mis ? " (" + s.mis + ")" : "") + '</button><button class="btn" onclick="openHist(\'' + c.id + '\')">HISTORY</button></div>';
+  if(r.finishedAt) h += '<button class="btn done" onclick="reopen(\'' + c.id + '\')">✓ LOCATION FINISHED ' + fmt(r.finishedAt) + (r.by ? " · " + esc(r.by.toUpperCase()) : "") + '</button>';
+  else h += '<button class="btn ' + (ready ? "lime" : "") + '" ' + (ready ? "" : "disabled") + ' onclick="finishLoc(\'' + c.id + '\',' + lane + ')">' +
+    (!s.complete ? "COUNT " + (s.cells - s.counted) + " MORE SIZE" + (s.cells - s.counted === 1 ? "" : "S") : !checksReady(c, r) ? "FINISH THE CHECKS ABOVE" : (s.exact ? "FINISH THIS LOCATION ✓" : "FINISH WITH DIFFERENCES")) + '</button>';
+  return h;
 }
-// A run that is on a card but was replaced or removed stays visible and locked, never silently dropped.
-function withSelectedArchived(next){const have=new Set(next.cards.map(c=>c.runId)),extra=[];for(const id of new Set([...savedLanes(),...(practice?[]:db.lanes||[])])){if(!id||have.has(id))continue;const old=[...(next.archivedCards||[])].reverse().find(c=>c.runId===id);if(old){extra.push({...old,blocked:'This location was changed or removed on the schedule. Saved counts are kept. Ask the office to review it.'});have.add(id);}}return next.cards.concat(extra);}
-function anyDialogOpen(){return !!document.querySelector('dialog[open]');}
-function repaint(){if($('picker').open)listJobs();if(anyDialogOpen()&&!$('picker').open){pendingRender=true;return;}pendingRender=false;render();}
-document.querySelectorAll('dialog').forEach(d=>d.addEventListener('close',()=>{if(pendingRender&&!anyDialogOpen()){pendingRender=false;render();}}));
-async function refresh(first){
- if(refreshing)return;refreshing=true;
- try{
-  let text=null,offline=false;
-  try{const r=await fetch(MANIFEST_URL,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);text=await r.text();JSON.parse(text);}catch(e){offline=true;text=null;}
-  if(text===null){if(!first)return;try{text=localStorage.getItem(CACHE);}catch(e){}if(!text){tell('Could not load catcher cards. Reload when connected.');return;}}
-  else{try{localStorage.setItem(CACHE,text);}catch(e){}}
-  const next=JSON.parse(text);if(next.schema!==1||!Array.isArray(next.cards)||!Array.isArray(next.days)||!next.days.length)throw Error('Catcher cards did not load correctly.');
-  let notice=offline?'Working from the last saved order sizes. Schedule could not be checked.':'',weekText='';
-  if(!offline){try{const w=await fetch(SCHEDULE_URL,{cache:'no-store'});if(!w.ok)throw Error('HTTP '+w.status);weekText=await w.text();notice=applySchedule(next,JSON.parse(weekText));}catch(e){notice='Schedule could not be checked. Showing the saved order-size snapshot.';}}
-  const stamp=text.length+':'+next.generatedAt+'|'+weekText.length+':'+notice;if(!first&&stamp===lastStamp)return;
-  const before=new Set(liveCards.map(c=>c.runId)),weekChanged=!first&&manifest&&manifest.week!==next.week;
-  lastStamp=stamp;manifest=next;liveCards=withSelectedArchived(next);if(!practice)cards=liveCards;
-  if(first||(weekChanged&&!practice))load();
-  const added=first?0:liveCards.filter(c=>!before.has(c.runId)&&!c.blocked).length;
-  if(notice)tell(notice);else if(added)tell(added+' new location'+(added===1?'':'s')+' added from the timecards board. Cards and counts on this iPad were not changed.');
-  if(first)render();else repaint();
- }catch(e){if(first)tell(e.message+' Reload when connected.');}
- finally{refreshing=false;}
-}
-function init(){return refresh(true);}
-setInterval(()=>{if(!document.hidden)refresh(false);},REFRESH_MS);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh(false);});
-init();
-</script></body></html>
+function lb(src){ $("lbimg").src = src; $("lightbox").style.display = "block"; }
 
-
-
+// ---------- actions ----------
+function need(){ if(!catcher()){ renderName(); toast("Tap your name first"); return false; } return true; }
+function tog(id, k){ if(!need()) return; var c = BYID[id], r = rec(c); r.checks[k] = !r.checks[k]; if(!r.checks[k]) r.finishedAt = null; write(c, r, k + (r.checks[k] ? " ✓" : " ✗")); }
+function allCaught(id, cell){
+  if(!need()) return; var c = BYID[id], r = rec(c), sz = findCell(c, cell);
+  if(r.counts[cell] != null && r.counts[cell] !== sz.expected) return openCount(id, cell, sz.expected);
+  r.counts[cell] = sz.expected; r.finishedAt = null; write(c, r, sz.label + " = " + sz.expected + " (all)");
+}
+function findCell(c, cell){ var f = null; c.groups.forEach(function(g){ g.sizes.forEach(function(s){ if(s.id === cell) f = s; }); }); return f; }
+var CNT = null;
+function openCount(id, cell, prefill){
+  if(!need()) return; var c = BYID[id], r = rec(c), sz = findCell(c, cell), g = c.groups.filter(function(x){ return x.sizes.indexOf(sz) > -1; })[0];
+  CNT = {id:id, cell:cell, v:String(prefill != null ? prefill : (r.counts[cell] != null ? r.counts[cell] : ""))};
+  openMd('<h3>' + esc(sz.label) + ' · ' + esc(g.style) + '</h3><p class="s">' + esc(String(g.color).toUpperCase()) + ' · EXPECT ' + sz.expected + ' · GOOD PIECES ONLY</p>' +
+    '<div class="num" id="cnt-v">' + (CNT.v || "&nbsp;") + '</div><div class="pad">' +
+    [1,2,3,4,5,6,7,8,9,"CLR",0,"⌫"].map(function(k){ return '<button onclick="padKey(\'' + k + '\')">' + k + '</button>'; }).join("") + '</div>' +
+    '<div class="row2"><button onclick="clearCount()">UNCOUNT</button><button class="y" onclick="saveCount()">SAVE</button></div>');
+}
+function padKey(k){ if(k === "CLR") CNT.v = ""; else if(k === "⌫") CNT.v = CNT.v.slice(0, -1); else CNT.v = (CNT.v + k).replace(/^0+(?=\d)/, "").slice(0, 5); $("cnt-v").innerHTML = CNT.v || "&nbsp;"; }
+function saveCount(){ if(CNT.v === ""){ toast("Enter a number — 0 if none"); return; } var c = BYID[CNT.id], r = rec(c), sz = findCell(c, CNT.cell), prev = r.counts[CNT.cell]; r.counts[CNT.cell] = Number(CNT.v); r.finishedAt = null; closeMd(); write(c, r, sz.label + ": " + (prev == null ? "—" : prev) + " → " + CNT.v); }
+function clearCount(){ var c = BYID[CNT.id], r = rec(c), sz = findCell(c, CNT.cell); delete r.counts[CNT.cell]; r.finishedAt = null; closeMd(); write(c, r, sz.label + " uncounted"); }
+var ISS = null;
+function openIssue(id){
+  if(!need()) return; var c = BYID[id]; ISS = {id:id, type:"Misprint", qty:1};
+  var cells = []; c.groups.forEach(function(g){ g.sizes.forEach(function(s){ cells.push([s.id, g.style + " " + g.color + " " + s.label]); }); });
+  openMd('<h3>Flag a problem</h3><p class="s">#' + esc(c.job) + ' · ' + esc(c.locationLabel || c.location) + ' — NOT COUNTED AS GOOD PIECES</p><div class="opts">' +
+    ["Misprint","Damaged blank","Missing pieces","Other"].map(function(t){ return '<button class="opt ' + (t === "Misprint" ? "on" : "") + '" onclick="ISS.type=\'' + t + '\';[].forEach.call(this.parentNode.children,function(b){b.classList.remove(\'on\')});this.classList.add(\'on\')">' + t.toUpperCase() + '</button>'; }).join("") + '</div>' +
+    '<div class="fld"><label>SIZE</label><select id="is-cell">' + cells.map(function(x){ return '<option value="' + esc(x[0]) + '">' + esc(x[1]) + '</option>'; }).join("") + '</select></div>' +
+    '<div class="fld"><label>HOW MANY</label><input id="is-qty" type="number" inputmode="numeric" value="1"></div><div class="fld"><label>NOTE</label><input id="is-note" maxlength="120" placeholder="Smudge on 2 larges, blank had a hole…"></div>' +
+    '<div class="row2"><button onclick="closeMd()">CANCEL</button><button class="y" onclick="saveIssue()">SAVE</button></div>');
+}
+function saveIssue(){
+  var c = BYID[ISS.id], r = rec(c), q = Math.max(1, Math.round(Number($("is-qty").value) || 1)), sel = $("is-cell");
+  r.issues.push({cell:sel.value, label:sel.options[sel.selectedIndex].text, type:ISS.type, qty:q, note:$("is-note").value.trim(), by:catcher(), at:now()});
+  r.finishedAt = null; closeMd(); write(c, r, "problem: " + q + " × " + ISS.type);
+}
+function finishLoc(id, lane){
+  var c = BYID[id], r = rec(c); r.finishedAt = now(); write(c, r, "finished");
+  toast("#" + c.job + " " + (c.locationLabel || "") + " finished");
+  if(lsGet("catcher_pin_" + lane) === id) lsSet("catcher_pin_" + lane, null);
+}
+function reopen(id){ var c = BYID[id], r = rec(c); r.finishedAt = null; write(c, r, "reopened"); }
+function openHist(id){
+  var c = BYID[id], r = rec(c);
+  openMd('<h3>History</h3><p class="s">#' + esc(c.job) + ' · ' + esc(c.locationLabel || c.location) + '</p>' +
+    (r.hist.slice().reverse().map(function(x){ return '<div style="padding:8px 0;border-top:1px solid var(--line);font:600 15px var(--in)"><b>' + fmt(x.at) + '</b> · ' + esc(x.by) + ' · ' + esc(x.w) + '</div>'; }).join("") || '<p class="s">NOTHING YET</p>') +
+    '<div class="row2"><button onclick="closeMd()">CLOSE</button>' + (r.issues.length ? '<button onclick="clearIssues(\'' + id + '\')">CLEAR PROBLEMS</button>' : '') + '</div>');
+}
+function clearIssues(id){ var c = BYID[id], r = rec(c); r.issues = []; closeMd(); write(c, r, "problems cleared"); }
+function pickFor(i){
+  var t = today(), list = CARDS.filter(function(c){ return c.day === t; });
+  if(!list.length) list = CARDS;
+  var others = CARDS.filter(function(c){ return list.indexOf(c) === -1; });
+  function item(c){ var r = rec(c), s = sumOf(c, r), p = pstat(c.id); return '<button class="wr" onclick="pin(' + i + ',\'' + c.id + '\')">' + (c.image ? '<img src="' + esc(c.image) + '">' : '<div class="th"></div>') + '<div style="min-width:0"><b>#' + esc(c.job) + ' · ' + esc(String(c.locationLabel || "").toUpperCase()) + '</b><p>' + esc(c.customer) + ' · ' + c.expected + ' pcs' + (p.press ? ' · ' + esc(p.press) : '') + '</p></div>' + pillFor(c, r, s) + '</button>'; }
+  openMd('<h3>Pick a card — ' + PRESSES[i] + '</h3><p class="s">TODAY FIRST · THE LANE STAYS PINNED UNTIL YOU FINISH THE LOCATION</p>' + list.map(item).join("") +
+    (others.length ? '<p class="s" style="margin-top:14px">REST OF THE WEEK</p>' + others.map(item).join("") : "") + '<div class="row2"><button onclick="closeMd()">CANCEL</button></div>');
+}
+function pin(i, id){ lsSet("catcher_pin_" + i, id); closeMd(); render(); }
+function pillFor(c, r, s){
+  if(r.finishedAt) return '<span class="pill ' + (s.exact && !s.mis ? "ok" : "diff") + '">' + (s.exact && !s.mis ? "✓ MATCHED" : "DIFFERENCES") + '</span>';
+  if(s.counted) return '<span class="pill go">COUNTING ' + s.total + '/' + c.expected + '</span>';
+  return '<span class="pill">NOT CAUGHT</span>';
+}
+function renderWeek(){
+  var h = '<div class="wt">' + MAN.days.map(function(d){ var n = CARDS.filter(function(c){ return c.day === d.day; }), f = n.filter(function(c){ return rec(c).finishedAt; }).length;
+    return '<button class="day ' + (d.day === WDAY ? "on" : "") + '" onclick="WDAY=\'' + d.day + '\';render()">' + dow(d.day) + ' ' + md(d.day) + '<small>' + f + '/' + n.length + ' caught</small></button>'; }).join("") + '</div><div class="wb">';
+  var list = CARDS.filter(function(c){ return c.day === WDAY; });
+  list.forEach(function(c){ var r = rec(c), s = sumOf(c, r), p = pstat(c.id);
+    h += '<button class="wr" onclick="VIEW=\'belt\';pin(' + (p.press === "Press 2" ? 1 : 0) + ',\'' + c.id + '\')">' + (c.image ? '<img src="' + esc(c.image) + '">' : '<div class="th"></div>') +
+      '<div style="min-width:0"><b>#' + esc(c.job) + ' · ' + esc(String(c.locationLabel || "").toUpperCase()) + '</b><p>' + esc(c.customer) + ' · ' + c.expected + ' pcs · press: ' + ({idle:"not started", setup:"setting up", print:"printing", pause:"stopped", done:"done"})[p.s] + (s.mis ? ' · ' + s.mis + ' flagged' : '') + '</p></div>' + pillFor(c, r, s) + '</button>'; });
+  if(!list.length) h += '<div class="empty"><h2>NO <span>CARDS</span></h2></div>';
+  h += '<p style="text-align:center;font:600 13px var(--in);color:var(--dim);margin-top:14px">Catcher v' + APP_V + ' · week of ' + esc(MAN.week) + ' · sizes from Printavo ' + esc(new Date(MAN.generatedAt).toLocaleDateString()) + '</p></div>';
+  $("v-week").innerHTML = h;
+}
+function openMd(h){ $("mdbox").innerHTML = h; $("md").classList.add("on"); }
+function closeMd(){ $("md").classList.remove("on"); render(); }
+setInterval(function(){ if(!busy()) render(); }, 30000);
+load(true);
+</script>
+</body>
+</html>
