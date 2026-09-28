@@ -46,7 +46,7 @@
 "colors": 2,
 "screens": 2,
 "qty": 72,
-"note": "Two designs × 72 on NL 6210 Black. PUFF ADDITIVE in ALL prints (matte). Pink = 219 C, Yellow = 803 C to match the patches; dark grey = match from stock. 14 screens total. No relabel/bags/tags. NO MOCKUP IN PRINTAVO — art on the order.",
+"note": "Two designs × 72 on NL 6210 Black. PUFF ADDITIVE in ALL prints (matte). Pink = 219 C, Yellow = 803 C to match the patches; dark grey = match from stock. 14 screens total. No relabel/bags/tags.",
 "alert": "PUFF ADDITIVE ON EVERYTHING — watch cure temp/dwell.",
 "noest": true,
 "due": "2026-09-28",
@@ -62,7 +62,8 @@
 ],
 "tags": [
 "PUFF"
-]
+],
+"img": "6517_pink_lc"
 },
 {
 "id": "6517-pink-back",
@@ -84,7 +85,8 @@
 "n": "Pink 219 C",
 "hex": "#DA1884"
 }
-]
+],
+"img": "6517_pink_back"
 },
 {
 "id": "6517-4c-lc",
@@ -118,7 +120,8 @@
 "n": "Black",
 "hex": "#111111"
 }
-]
+],
+"img": "6517_4c_lc"
 },
 {
 "id": "6517-4c-back",
@@ -152,7 +155,8 @@
 "n": "Black",
 "hex": "#111111"
 }
-]
+],
+"img": "6517_4c_back"
 },
 {
 "id": "6503-lc",
@@ -949,6 +953,10 @@
 "6226_a1": "/data/mocks/2026-09-28/6226_a1.jpg",
 "6226_a2": "/data/mocks/2026-09-28/6226_a2.jpg",
 "6226_b1": "/data/mocks/2026-09-28/6226_b1.jpg",
-"6226_b2": "/data/mocks/2026-09-28/6226_b2.jpg"
+"6226_b2": "/data/mocks/2026-09-28/6226_b2.jpg",
+"6517_pink_lc": "/data/mocks/2026-09-28/6517_pink_lc.jpg",
+"6517_pink_back": "/data/mocks/2026-09-28/6517_pink_back.jpg",
+"6517_4c_lc": "/data/mocks/2026-09-28/6517_4c_lc.jpg",
+"6517_4c_back": "/data/mocks/2026-09-28/6517_4c_back.jpg"
 }
 }
