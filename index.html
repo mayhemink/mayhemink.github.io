@@ -1309,7 +1309,7 @@ function toast(msg){
 //  pauses, handoffs, sync, export, mailer) carried over unchanged so no logged data,
 //  sync record or export format changes. Everything below renders it.
 // =====================================================================================
-var APP_V = "4.0.0";
+var APP_V = "4.0.3";
 var DATA_URL = "data/week.json";
 var WEEKID = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], DAYSARR = [], IMG = {};
 var LABELS = {}, ALLROWS = [], FLAGSBY = {}, ROWSBY = {}, STATES = {}, CLOCKS = {};
@@ -1344,7 +1344,7 @@ function showList(){ go(VIEW === "job" ? "week" : VIEW); }
 //   pul_<row>   {at,by}                     blanks pulled / staged
 //   edt_<row>   {location,qty,...,img,hidden} Kolton's card edits
 //   add_<week>  {cards:[...]}               cards Kolton added from the board
-var VPFX = ["ord_","prs_","cnt_","pul_","edt_","add_"];
+var VPFX = ["ord_","prs_","cnt_","pul_","edt_","add_","cat_"];
 function vKind(id){ id = String(id); for(var i = 0; i < VPFX.length; i++) if(id.indexOf(VPFX[i]) === 0) return VPFX[i]; return null; }
 var findRowV3 = findRow;
 findRow = function(id){
@@ -1772,13 +1772,19 @@ function openPicker(title, list, cb, extra){
 function pickerPick(i){ var cb = MD.cb, v = MD._list[i]; MD.kind = null; document.getElementById("md").classList.remove("on"); MD.cb = null; if(cb) cb(v); render(); }
 
 // ---------- JOB DONE check ----------
+function catchOf(id){
+  var c = vget("cat_" + id); if(!c || !c.counts) return null;
+  var t = 0, n = 0; for(var k in c.counts) if(c.counts.hasOwnProperty(k) && c.counts[k] != null){ t += c.counts[k]; n++; }
+  var mis = (c.issues || []).reduce(function(a, i){ return a + (i.qty || 0); }, 0);
+  return n ? {good:t, mis:mis, done:!!c.finishedAt, by:c.by || ""} : null;
+}
 function openDoneCheck(id){
-  var row = findRow(id), r = rec(id);
+  var row = findRow(id), r = rec(id), ct = catchOf(id);
   var h = '<h3>#' + esc(row.job) + ' ' + esc(shortLoc(row)) + ' — 100% done?</h3>' +
     '<p class="s">TWO TAPS IF IT&#39;S CLEAN. THE CARD CLOSES AND THE OFFICE HEARS ABOUT IT WHEN THE LAST LOCATION IS OFF.</p>' +
-    '<div class="chk" onclick="if(event.target.tagName!==\'INPUT\')document.getElementById(\'dn-good\').focus()"><i>✓</i><div>ALL PIECES PRINTED<small>CHANGE THE NUMBER IF IT CAME UP SHORT</small></div><input id="dn-good" type="number" inputmode="numeric" value="' + (row.qty || "") + '"></div>' +
+    '<div class="chk" onclick="if(event.target.tagName!==\'INPUT\')document.getElementById(\'dn-good\').focus()"><i>✓</i><div>ALL PIECES PRINTED<small>CHANGE THE NUMBER IF IT CAME UP SHORT</small></div><input id="dn-good" type="number" inputmode="numeric" value="' + (ct ? ct.good : (row.qty || "")) + '"></div>' + (ct ? '<div class="hint" style="margin:-4px 0 10px">Filled in from the Catcher' + (ct.by ? ' (' + esc(ct.by) + ')' : '') + (ct.done ? ' — location finished there.' : ' — still counting there.') + '</div>' : '') +
     '<button class="chk" id="dn-stack" onclick="this.classList.toggle(\'off\')"><i>✓</i><div>COUNTED &amp; STACKED BY SIZE<small>TAP TO UNCHECK IF NOT YET</small></div></button>' +
-    '<div class="chk off" onclick="if(event.target.tagName!==\'INPUT\')document.getElementById(\'dn-mis\').focus()"><i></i><div>MISPRINTS<small>BLANK = ZERO</small></div><input id="dn-mis" type="number" inputmode="numeric" placeholder="0"></div>' +
+    '<div class="chk off" onclick="if(event.target.tagName!==\'INPUT\')document.getElementById(\'dn-mis\').focus()"><i></i><div>MISPRINTS<small>BLANK = ZERO</small></div><input id="dn-mis" type="number" inputmode="numeric" placeholder="0" value="' + (ct && ct.mis ? ct.mis : "") + '"></div>' +
     '<div class="row2"><button onclick="closeMd()">NOT YET</button><button class="y" onclick="confirmDone(\'' + id + '\')">YES — CLOSE IT</button></div>';
   openMd("done", h, id);
 }
@@ -2164,7 +2170,7 @@ function renderWeekBody(){
   } else rows = sortDay(WEEKDAY, rowsShownOn(WEEKDAY).filter(function(r){ return visible(r) || EDITOR; }));
   var h = '<div class="wcols">';
   if(!searchQuery) (FLAGSBY[WEEKDAY] || []).forEach(function(f){ h += '<div class="flag"><div class="ft">' + esc(f[0] || "NOTE") + '</div><div class="fx">' + f[1] + '</div></div>'; });
-  if(EDITOR && !searchQuery) h += '<div class="edrow" style="margin:10px 0"><button class="edb" onclick="openAddCard(\'' + WEEKDAY + '\')">+ ADD A CARD TO ' + dayLabel(WEEKDAY) + '</button><button class="edb" onclick="openSettings()">⚙ EDITOR SETTINGS</button></div>';
+  if(EDITOR && !searchQuery) h += '<div class="edrow" style="margin:10px 0"><button class="edb" onclick="openAddCard(\'' + WEEKDAY + '\')">+ ADD A CARD TO ' + dayLabel(WEEKDAY) + '</button><button class="edb" onclick="openSettings()">⚙ PHOTO UPLOADS (OPTIONAL)</button></div>';
   // group by job, keeping run order
   var groups = [], byKey = {};
   rows.forEach(function(r){ var k = (searchQuery ? showDay(r) + "|" : "") + r.job; if(!byKey[k]){ byKey[k] = []; groups.push(byKey[k]); } byKey[k].push(r); });
@@ -2186,7 +2192,7 @@ function renderWeekBody(){
       var who = r && (r.printBy || r.printer) ? (crewStr(r) + (r.press ? " · " + r.press : "")) : (a ? a : "");
       var cnt = vget("cnt_" + x.id);
       h += '<div class="run ' + s + '"' + (x.hidden ? ' style="opacity:.35"' : '') + '><div class="rl" onclick="openJob(\'' + x.id + '\')"><b>' + esc(x.location) + '</b><p>' +
-        [((r && r.screens != null) ? r.screens : x.screens) + " SCR", x.qty + " PCS", (e && s !== "done") ? "~" + fmtDur(e.setup + e.print) : "", who, dayOverride(x) ? "moved from " + dayLabel(x._day) : "", cnt && s === "done" ? (cnt.good != null ? cnt.good : x.qty) + " counted" + (cnt.mis ? ", " + cnt.mis + " misprints" : "") : "", x.hidden ? "HIDDEN" : ""].filter(Boolean).map(esc).join(" · ") + '</p></div>' +
+        [((r && r.screens != null) ? r.screens : x.screens) + " SCR", x.qty + " PCS", (e && s !== "done") ? "~" + fmtDur(e.setup + e.print) : "", who, dayOverride(x) ? "moved from " + dayLabel(x._day) : "", cnt && s === "done" ? (cnt.good != null ? cnt.good : x.qty) + " counted" + (cnt.mis ? ", " + cnt.mis + " misprints" : "") : "", (function(){ var ct = catchOf(x.id); return ct ? "catcher " + ct.good + "/" + x.qty + (ct.done ? " ✓" : "") : ""; })(), x.hidden ? "HIDDEN" : ""].filter(Boolean).map(esc).join(" · ") + '</p></div>' +
         '<div class="rundd"><span class="stbadge ' + s + '" onclick="openJob(\'' + x.id + '\')">' + ({idle:"NOT STARTED", setup:"SETTING UP", print:"PRINTING", pause:"STOPPED", done:"DONE"})[s] + '</span>';
       if(EDITOR){
         h += '<div class="runed"><button onclick="nudge(\'' + x.id + '\',-1)">▲</button><button onclick="nudge(\'' + x.id + '\',1)">▼</button>' +
@@ -2279,6 +2285,7 @@ function openEditCard(id){
     '<div class="row2"><button onclick="closeMd()">CANCEL</button><button class="r" onclick="hideCard()">' + (row.hidden ? "UNHIDE" : "HIDE CARD") + '</button><button onclick="resetCard()">RESET</button><button class="y" onclick="saveCard()">SAVE</button></div>', id);
 }
 function photoFieldHtml(cur){
+  if(!lsGet("mayhem_ghkey")) return "";   // photo uploads are optional; hidden until a key is set in Editor settings
   return '<div class="fld"><label>MOCKUP PHOTO</label><div style="display:flex;gap:12px;align-items:center">' +
     '<img id="ec-prev" src="' + esc(EC.img || cur || "") + '" style="width:96px;height:96px;object-fit:contain;background:#fff;border-radius:8px;' + ((EC.img || cur) ? '' : 'display:none') + '">' +
     '<button class="btn sm" onclick="pickPhoto()">📷 ' + ((EC.img || cur) ? "REPLACE" : "ADD") + ' PHOTO</button><span id="ec-up" class="hint"></span></div></div>';
