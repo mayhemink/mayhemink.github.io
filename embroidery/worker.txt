@@ -1,0 +1,309 @@
+// Mayhem Ink — Embroidery Board worker (mayhem-emb)
+// Bindings: KV namespace EMB. Secrets: PRINTAVO_EMAIL, PRINTAVO_TOKEN. (EMB_KEY optional.)
+// Cron: */15 13-23 * * 1-5  (≈7am–6pm Mountain, weekdays)
+//
+// GET  /all                 -> {jobs, board, redo, threads, pulledAt, pullError}
+// POST /refresh             -> pull Printavo now (max once per 60s)
+// POST /set   {key, patch}  -> merge fields into board.cards[key]  (patch value null deletes the field)
+// POST /order {tab, keys}   -> board.order[tab] = keys
+// POST /manual {card} | {remove:key}
+// POST /redo  {slug, record} | {remove:slug}
+// POST /thread {no, name, hex}
+// POST /photo  (body = image/jpeg bytes) -> {id, url}
+// GET  /p/<id>.jpg          -> photo (public, so Printavo can copy it)
+// POST /done  {key, by, photoIds, slug, noteLines} -> Printavo file + note, then marks done
+// POST /push  {key}         -> retry a failed Printavo push
+
+const PV = 'https://www.printavo.com/api/v2';
+// Shop key — same value is in the public page, so it only gates casual writes. Override with an EMB_KEY variable if ever rotated.
+const SHOP_KEY = 'BcRk0wsnrZkezI3M8W5wvmO94U2E-_93';
+const DONE_STATUS = /order complete|ready for pickup|shipped|request final payment|cancel|write off|ready needs payment/i;
+const KEEP_STATUS = /partial/i;
+
+const J = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', ...cors() } });
+function cors() {
+  return { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type,x-emb-key' };
+}
+
+async function getJSON(env, k, d) { const v = await env.EMB.get(k, 'json'); return v == null ? d : v; }
+async function putJSON(env, k, v) { await env.EMB.put(k, JSON.stringify(v)); }
+
+async function pv(env, query, variables) {
+  const r = await fetch(PV, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', email: env.PRINTAVO_EMAIL, token: env.PRINTAVO_TOKEN },
+    body: JSON.stringify({ query, variables }),
+  });
+  const t = await r.text();
+  let j; try { j = JSON.parse(t); } catch { throw new Error('Printavo HTTP ' + r.status + ': ' + t.slice(0, 200)); }
+  if (j.errors) throw new Error('Printavo: ' + JSON.stringify(j.errors).slice(0, 300));
+  return j.data;
+}
+
+// ---------------------------------------------------------------- classify
+const FEE = /digiti[sz]|\bfee\b|screen use|set-?up|one[- ]time|^\W*note\b|^\W*\*+\s*note/i;
+const BOILER = /customer supplied garments are at the risk[^\n]*/ig;
+
+function clean(s) { return String(s || '').replace(BOILER, '').replace(/\r/g, '').replace(/\n{2,}/g, '\n').trim(); }
+function shortDesc(s) {
+  let d = clean(s).replace(/\+{2,}/g, ' · ').split('\n').map(x => x.trim()).filter(Boolean).join(' · ').replace(/(\s*·\s*){2,}/g, ' · ');
+  d = d.replace(/^([^-–]+?)\s*[-–]\s*\1\s*/i, '$1 '); // "District - District Perfect Tri" -> "District Perfect Tri"
+  return d.length > 140 ? d.slice(0, 137) + '…' : d;
+}
+
+function classifyGroup(g, statusName) {
+  const imps = (g.imprints && g.imprints.nodes) || [];
+  const lines = ((g.lineItems && g.lineItems.nodes) || []);
+  const tw = imps.map(i => (i.typeOfWork && i.typeOfWork.name || '').toLowerCase());
+  const txt = (imps.map(i => i.details || '').join(' ') + ' ' + lines.map(l => l.description || '').join(' ')).toLowerCase();
+  const st = (statusName || '').toLowerCase();
+  const typedEmb = tw.some(t => t.includes('embroid'));
+  const typedHeat = tw.some(t => t.includes('heat'));
+  const typedSP = tw.some(t => t.includes('screen'));
+  const sewOn = /sew[ -]?on|patch sew/.test(txt);
+  const embWord = (/embroid|3 ?-?d puff|puff logo|puff emb|thread/.test(txt)) && !/puff additive/.test(txt);
+  const dtfWord = /\bdtf\b|dtfilm|direct[ -]to[ -]film|transfer/.test(txt);
+  const patchWord = /patch|woven|leatherette|leather|silicone|pvc|chenille/.test(txt);
+  if (/golf ball|pro v1/.test(txt) || /straight mayhem/.test(st)) return 'other';
+  if (typedEmb || sewOn || embWord) return 'emb';
+  if (dtfWord) return 'dtf';
+  if (patchWord && (typedHeat || /heat press/.test(st) || !typedSP)) return 'patch';
+  if (typedHeat || /heat press/.test(st)) return 'dtf';
+  if (/embroidery only/.test(st) && !typedSP && !/print|ink\b/.test(txt)) return 'emb';
+  if (typedSP || /print|ink\b|screen/.test(txt)) return 'print';
+  return 'other';
+}
+
+function patchInfo(txt) {
+  const t = txt.toLowerCase();
+  const type = /laser|engrav/.test(t) ? 'LASER' : /leatherette|leather/.test(t) ? 'LEATHERETTE' : /silicone/.test(t) ? 'SILICONE'
+    : /woven/.test(t) ? 'WOVEN' : /pvc/.test(t) ? 'PVC' : /chenille/.test(t) ? 'CHENILLE' : /\buv\b/.test(t) ? 'UV' : /embroider/.test(t) ? 'EMBROIDERED' : 'PATCH';
+  const owner = (type === 'LASER' || type === 'LEATHERETTE') ? 'KOLTON' : 'JOE';
+  return { type, owner };
+}
+
+function blanksLine(note) {
+  const txt = String(note || '').replace(/<\/div>|<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ');
+  const m = txt.match(/BLANKS ETA:[^\n]*/gi);
+  return m ? m[m.length - 1].trim().slice(0, 120) : '';
+}
+
+function buildCards(inv) {
+  const st = inv.status && inv.status.name || '';
+  const groups = (inv.lineItemGroups && inv.lineItemGroups.nodes) || [];
+  const byTab = {}; const tabsSeen = new Set();
+  for (const g of groups) {
+    const tab = classifyGroup(g, st);
+    tabsSeen.add(tab);
+    if (!['emb', 'patch', 'dtf'].includes(tab)) continue;
+    const c = byTab[tab] || (byTab[tab] = { groups: [], mockups: [], details: [], lines: [], txt: '' });
+    c.groups.push(g.id);
+    for (const i of (g.imprints && g.imprints.nodes) || []) {
+      if (i.details && i.details.trim()) c.details.push(clean(i.details));
+      for (const m of (i.mockups && i.mockups.nodes) || []) {
+        const u = m.fullImageUrl || '';
+        if (u && !/ico-document/.test(u) && !c.mockups.includes(u)) c.mockups.push(u);
+      }
+    }
+    for (const l of (g.lineItems && g.lineItems.nodes) || []) {
+      c.txt += ' ' + (l.description || '');
+      if (!l.items || FEE.test(l.description || '') || FEE.test(l.itemNumber || '')) continue;
+      const part = /^\W*(woven |leather(ette)? |silicone |pvc |laser |uv |custom )*patch(es)?\b|patch sew|sew[ -]?on/i.test((l.description || '').trim()) || /^(WP|PATCH)/i.test(l.itemNumber || '');
+      c.lines.push({ style: (l.itemNumber || '').trim(), color: (l.color || '').trim(), qty: l.items, desc: shortDesc(l.description), part });
+    }
+    c.txt += ' ' + c.details.join(' ');
+  }
+  const out = [];
+  for (const tab of Object.keys(byTab)) {
+    const c = byTab[tab];
+    const others = [...tabsSeen].filter(t => t !== tab && t !== 'other');
+    const card = {
+      key: inv.id + ':' + tab, tab, src: 'printavo', invoiceId: inv.id, job: inv.visualId,
+      nick: (inv.nickname || '').trim(), customer: (inv.contact && inv.contact.fullName || '').trim(),
+      status: st, due: (inv.dueAt || '').slice(0, 10), created: (inv.createdAt || '').slice(0, 10),
+      url: 'https://www.printavo.com/invoices/' + inv.id,
+      mockups: c.mockups.slice(0, 6), details: [...new Set(c.details)].slice(0, 6), lines: c.lines.slice(0, 30),
+      qty: (c.lines.some(l => !l.part) ? c.lines.filter(l => !l.part) : c.lines).reduce((a, l) => a + (l.qty || 0), 0),
+      also: others.map(t => ({ print: 'SCREEN PRINT', emb: 'EMBROIDERY', patch: 'PATCHES', dtf: 'DTF' })[t]).filter(Boolean),
+      blanks: blanksLine(inv.productionNote),
+      puff: /3 ?-?d puff|puff logo|puff emb/i.test(c.txt) && !/puff additive/i.test(c.txt),
+    };
+    if (tab === 'patch') Object.assign(card, patchInfo(c.txt));
+    out.push(card);
+  }
+  return out;
+}
+
+async function pull(env) {
+  const now = Date.now();
+  const after = new Date(now - 90 * 864e5).toISOString();
+  const before = new Date(now + 120 * 864e5).toISOString();
+  const Q = `query($a:String){ invoices(first:15, after:$a, inProductionAfter:"${after}", inProductionBefore:"${before}"){ pageInfo{hasNextPage endCursor} nodes{ id visualId nickname createdAt dueAt productionNote status{name} contact{fullName} lineItemGroups(first:12){ nodes{ id imprints(first:4){nodes{details typeOfWork{name} mockups(first:3){nodes{fullImageUrl}}}} lineItems(first:15){nodes{description itemNumber color items}} } } } } }`;
+  let cursor = null; const cards = []; let pages = 0;
+  do {
+    const d = await pv(env, Q, { a: cursor });
+    const inv = d.invoices;
+    for (const n of inv.nodes) {
+      const st = n.status && n.status.name || '';
+      if (DONE_STATUS.test(st) && !KEEP_STATUS.test(st)) continue;
+      cards.push(...buildCards(n));
+    }
+    cursor = inv.pageInfo.hasNextPage ? inv.pageInfo.endCursor : null;
+  } while (cursor && ++pages < 20);
+  const prev = await env.EMB.get('jobs');
+  const next = JSON.stringify(cards);
+  if (prev !== next) await env.EMB.put('jobs', next);
+  await putJSON(env, 'meta', { pulledAt: new Date().toISOString(), pullError: '' });
+  return cards.length;
+}
+
+// ---------------------------------------------------------------- printavo writes
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+async function pushPrintavo(env, origin, card, entry) {
+  const res = entry.printavo || {};
+  const photoIds = (entry.photoIds || []).filter(id => !(res.files || []).some(f => f.photo === id));
+  if (photoIds.length) {
+    const m = 'mutation{' + photoIds.map((id, i) =>
+      `f${i}: productionFileCreate(parentId:"${card.invoiceId}", publicFileUrl:"${origin}/p/${id}.jpg"){ id fileUrl }`).join(' ') + '}';
+    const d = await pv(env, m);
+    res.files = (res.files || []).concat(photoIds.map((id, i) => ({ photo: id, id: d['f' + i] && d['f' + i].id })));
+  }
+  if (!res.noted && entry.noteLines && entry.noteLines.length) {
+    const cur = await pv(env, `{ invoice(id:"${card.invoiceId}"){ productionNote } }`);
+    const old = (cur.invoice && cur.invoice.productionNote) || '';
+    const add = entry.noteLines.map(l => '<div>' + esc(l) + '</div>').join('');
+    const note = old ? old + '<div>—</div>' + add : add;
+    await pv(env, `mutation($id:ID!,$n:String){ invoiceUpdate(id:$id, input:{productionNote:$n}){ id } }`, { id: card.invoiceId, n: note });
+    res.noted = true;
+  }
+  res.ok = true; res.at = new Date().toISOString(); delete res.error;
+  return res;
+}
+
+// ---------------------------------------------------------------- state helpers
+async function mutateBoard(env, fn) {
+  const b = await getJSON(env, 'board', { cards: {}, order: {}, manual: {} });
+  b.cards = b.cards || {}; b.order = b.order || {}; b.manual = b.manual || {};
+  const r = await fn(b);
+  await putJSON(env, 'board', b);
+  return r === undefined ? b : r;
+}
+function mergeInto(obj, patch) {
+  for (const [k, v] of Object.entries(patch || {})) { if (v === null) delete obj[k]; else obj[k] = v; }
+  obj._t = Date.now();
+  return obj;
+}
+async function findCard(env, key) {
+  const jobs = await getJSON(env, 'jobs', []);
+  const b = await getJSON(env, 'board', { manual: {} });
+  return jobs.find(c => c.key === key) || (b.manual || {})[key] || null;
+}
+
+// ---------------------------------------------------------------- router
+export default {
+  async scheduled(ev, env, ctx) {
+    ctx.waitUntil(pull(env).catch(async e => putJSON(env, 'meta', { pulledAt: new Date().toISOString(), pullError: String(e.message || e) })));
+  },
+  async fetch(req, env) {
+    const url = new URL(req.url);
+    const p = url.pathname.replace(/\/+$/, '') || '/';
+    if (req.method === 'OPTIONS') return new Response(null, { headers: cors() });
+
+    const pm = p.match(/^\/p\/([a-z0-9]+)\.jpg$/);
+    if (pm && req.method === 'GET') {
+      const v = await env.EMB.get('ph:' + pm[1], 'arrayBuffer');
+      if (!v) return new Response('not found', { status: 404, headers: cors() });
+      return new Response(v, { headers: { 'content-type': 'image/jpeg', 'cache-control': 'public, max-age=31536000, immutable', ...cors() } });
+    }
+    if (p === '/' || p === '/health') return J({ ok: true, app: 'mayhem-emb' });
+
+    if (req.headers.get('x-emb-key') !== (env.EMB_KEY || SHOP_KEY)) return J({ error: 'bad key' }, 401);
+
+    try {
+      if (p === '/all' && req.method === 'GET') {
+        const [jobs, board, redo, threads, meta] = await Promise.all([
+          getJSON(env, 'jobs', []), getJSON(env, 'board', { cards: {}, order: {}, manual: {} }),
+          getJSON(env, 'redo', {}), getJSON(env, 'threads', {}), getJSON(env, 'meta', {})]);
+        return J({ jobs, board, redo, threads, ...meta });
+      }
+      if (req.method !== 'POST') return J({ error: 'not found' }, 404);
+
+      if (p === '/refresh') {
+        const meta = await getJSON(env, 'meta', {});
+        if (meta.pulledAt && Date.now() - Date.parse(meta.pulledAt) < 60e3) return J({ ok: true, skipped: true, ...meta });
+        try { const n = await pull(env); return J({ ok: true, count: n }); }
+        catch (e) { await putJSON(env, 'meta', { pulledAt: new Date().toISOString(), pullError: String(e.message || e) }); return J({ ok: false, error: String(e.message || e) }, 502); }
+      }
+
+      if (p === '/photo') {
+        const buf = await req.arrayBuffer();
+        if (!buf.byteLength || buf.byteLength > 8e6) return J({ error: 'photo size' }, 400);
+        const id = crypto.randomUUID().replace(/-/g, '').slice(0, 20);
+        await env.EMB.put('ph:' + id, buf);
+        return J({ id, url: url.origin + '/p/' + id + '.jpg' });
+      }
+
+      const body = await req.json();
+
+      if (p === '/set') {
+        if (!body.key) return J({ error: 'key' }, 400);
+        const b = await mutateBoard(env, b => { b.cards[body.key] = mergeInto(b.cards[body.key] || {}, body.patch); });
+        return J({ ok: true, card: b.cards[body.key] });
+      }
+      if (p === '/order') {
+        if (!['emb', 'patch', 'dtf'].includes(body.tab) || !Array.isArray(body.keys)) return J({ error: 'order' }, 400);
+        await mutateBoard(env, b => { b.order[body.tab] = body.keys.slice(0, 500); });
+        return J({ ok: true });
+      }
+      if (p === '/manual') {
+        await mutateBoard(env, b => {
+          if (body.remove) delete b.manual[body.remove];
+          else if (body.card && body.card.key && body.card.key.startsWith('m:')) b.manual[body.card.key] = { ...body.card, src: 'manual' };
+        });
+        return J({ ok: true });
+      }
+      if (p === '/redo') {
+        const r = await getJSON(env, 'redo', {});
+        if (body.remove) delete r[body.remove];
+        else if (body.slug && body.record) r[body.slug] = { ...(r[body.slug] || {}), ...body.record, slug: body.slug, updatedAt: new Date().toISOString() };
+        await putJSON(env, 'redo', r);
+        return J({ ok: true, record: r[body.slug] || null });
+      }
+      if (p === '/thread') {
+        const t = await getJSON(env, 'threads', {});
+        const no = String(body.no || '').trim();
+        if (!no) return J({ error: 'no' }, 400);
+        t[no] = { name: String(body.name || '').slice(0, 40), hex: /^#[0-9a-f]{6}$/i.test(body.hex) ? body.hex : '#999999' };
+        await putJSON(env, 'threads', t);
+        return J({ ok: true });
+      }
+      if (p === '/done' || p === '/push') {
+        const card = await findCard(env, body.key);
+        if (!card) return J({ error: 'card not on the board' }, 404);
+        let entry = await mutateBoard(env, b => {
+          const e = b.cards[body.key] || (b.cards[body.key] = {});
+          if (p === '/done') {
+            e.done = { at: new Date().toISOString(), by: body.by || '' };
+            e.photoIds = [...new Set([...(e.photoIds || []), ...(body.photoIds || [])])];
+            if (body.slug) e.redo = body.slug;
+            if (Array.isArray(body.noteLines)) e.noteLines = body.noteLines.map(String).slice(0, 20);
+          }
+          e._t = Date.now();
+          return e;
+        });
+        let printavo = null;
+        if (card.invoiceId) {
+          try { printavo = await pushPrintavo(env, url.origin, card, entry); }
+          catch (e) { printavo = { ...(entry.printavo || {}), ok: false, error: String(e.message || e).slice(0, 300) }; }
+          await mutateBoard(env, b => { const e = b.cards[body.key] || (b.cards[body.key] = {}); e.printavo = printavo; e._t = Date.now(); });
+        }
+        return J({ ok: true, printavo });
+      }
+      return J({ error: 'not found' }, 404);
+    } catch (e) {
+      return J({ error: String(e.message || e) }, 500);
+    }
+  },
+};
+
