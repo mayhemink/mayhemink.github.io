@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Mayhem Embroidery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f2ee; --panel:#ffffff; --ink:#1b1d21; --ink2:#4a4f57; --mute:#8a8f97; --line:#dedcd5; --line2:#ecebe6;
+  --accent:#0f6e6a; --accent-bg:#e2f1ef; --red:#c8102e; --red-bg:#fbe7ea; --amber:#b86e00; --amber-bg:#fdf1dc;
+  --green:#2f7d32; --green-bg:#e6f3e6; --blue:#2458a6; --blue-bg:#e6eefa;
+  --r:10px; --shadow:0 1px 2px rgba(0,0,0,.05),0 2px 10px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.35 Barlow,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit;color:var(--ink)}
+.cond{font-family:"Barlow Condensed",Barlow,sans-serif;letter-spacing:.01em}
+/* header */
+header{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap}
+.brand{font:800 22px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.brand i{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--accent)}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;max-width:100%;scrollbar-width:none;background:var(--line2);padding:4px;border-radius:12px}
+nav.tabs button{padding:8px 14px;border-radius:9px;font:700 16px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.03em;color:var(--ink2);display:flex;gap:6px;align-items:center}
+nav.tabs button.on{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+nav.tabs .n{font:600 12px/1 Barlow;background:var(--line);color:var(--ink2);padding:3px 6px;border-radius:20px}
+nav.tabs button.on .n{background:var(--accent);color:#fff}
+.hsp{flex:1}
+.sync{font-size:13px;color:var(--mute);display:flex;align-items:center;gap:8px}
+.sync.err{color:var(--red)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);font-weight:600;white-space:nowrap}
+.btn:hover{border-color:#c9c6bd}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.sm{padding:6px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.me{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:20px;background:var(--accent-bg);color:var(--accent);font-weight:700}
+main{padding:16px;max-width:1500px;margin:0 auto}
+/* layout */
+.split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(340px,1fr);gap:16px;align-items:start}
+@media (max-width:980px){.split{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.ptitle{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line2);font:700 15px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;color:var(--ink2);text-transform:uppercase;flex-wrap:wrap}
+/* NOW card */
+.now{padding:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px}
+@media (max-width:700px){.now{grid-template-columns:1fr}}
+.art{background:#fafaf8;border:1px solid var(--line2);border-radius:12px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.art img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in}
+.art .none{color:var(--mute);font-weight:600;text-align:center;padding:20px}
+.thumbs{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.thumbs img{width:54px;height:54px;object-fit:cover;border-radius:8px;border:2px solid var(--line2);cursor:pointer;background:#fff}
+.thumbs img.on{border-color:var(--accent)}
+.jobno{font:800 44px/0.95 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.01em}
+.jobno a{color:inherit;text-decoration:none}
+.cust{font:700 22px/1.1 "Barlow Condensed","Arial Narrow",sans-serif;margin-top:4px}
+.nick{color:var(--ink2);margin-top:2px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}
+.tile{border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0}
+.tile .k{font:700 11px/1 Barlow;letter-spacing:.08em;color:var(--mute);text-transform:uppercase}
+.tile .v{font:800 24px/1.1 "Barlow Condensed","Arial Narrow",sans-serif;margin-top:4px;overflow:hidden;text-overflow:ellipsis}
+.tile .v.small{font:600 14px/1.25 Barlow}
+.tile.red{background:var(--red-bg);border-color:#f2c4cc}.tile.red .v{color:var(--red)}
+.tile.amber{background:var(--amber-bg);border-color:#f1d9ae}.tile.amber .v{color:var(--amber)}
+.tile.green{background:var(--green-bg);border-color:#c9e4c9}.tile.green .v{color:var(--green)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font:700 12px/1.1 Barlow;letter-spacing:.04em;text-transform:uppercase;background:var(--line2);color:var(--ink2)}
+.chip.red{background:var(--red-bg);color:var(--red)}.chip.amber{background:var(--amber-bg);color:var(--amber)}
+.chip.teal{background:var(--accent-bg);color:var(--accent)}.chip.green{background:var(--green-bg);color:var(--green)}
+.chip.blue{background:var(--blue-bg);color:var(--blue)}.chip.dark{background:var(--ink);color:#fff}
+.sec{margin-top:14px}
+.sec h4{margin:0 0 6px;font:700 12px/1 Barlow;letter-spacing:.08em;color:var(--mute);text-transform:uppercase}
+.details{white-space:pre-wrap;background:#fafaf8;border:1px solid var(--line2);border-radius:8px;padding:8px 10px}
+table.lines{width:100%;border-collapse:collapse;font-size:14px}
+table.lines td{padding:7px 6px;border-bottom:1px solid var(--line2);vertical-align:top}
+table.lines td.q{font:800 20px/1 "Barlow Condensed","Arial Narrow",sans-serif;text-align:right;width:44px}
+table.lines .sty{font-weight:700}
+table.lines .d{color:var(--ink2);font-size:13px}
+.redo{border:1px solid #bfe0dc;background:var(--accent-bg);border-radius:10px;padding:10px 12px}
+.redo .t{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.redo b{font:800 16px/1.1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.02em}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin-top:6px;font-size:14px}
+.kv span:nth-child(odd){color:var(--ink2);font-weight:600}
+.sw{display:inline-flex;align-items:center;gap:6px;padding:3px 8px 3px 3px;border-radius:20px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:600;margin:2px 4px 2px 0}
+.sw i{width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.15);display:inline-block}
+.bigbtn{width:100%;margin-top:16px;padding:18px;border-radius:12px;background:var(--accent);color:#fff;font:800 26px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.05em}
+.bigbtn:active{transform:translateY(1px)}
+.row2{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.empty{padding:40px 20px;text-align:center;color:var(--mute)}
+.empty b{display:block;font:800 26px "Barlow Condensed","Arial Narrow",sans-serif,"Arial Narrow",sans-serif;color:var(--ink2);margin-bottom:6px}
+/* queue */
+.q{list-style:none;margin:0;padding:6px}
+.qi{display:grid;grid-template-columns:24px 52px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px;border-radius:10px;border:1px solid transparent;cursor:pointer;background:var(--panel);touch-action:pan-y}
+.qi:hover{background:#faf9f6}
+.qi.sel{border-color:var(--accent);background:var(--accent-bg)}
+.qi.blocked{opacity:.7}
+.qi.drag{box-shadow:0 8px 24px rgba(0,0,0,.18);position:relative;z-index:5;background:#fff}
+.qi .h{color:var(--mute);font-size:18px;cursor:grab;text-align:center;touch-action:none;user-select:none;padding:8px 0}
+.qi img,.qi .ph{width:52px;height:52px;border-radius:8px;object-fit:cover;background:#f1f0ec;border:1px solid var(--line2)}
+.qi .l1{font:800 18px/1 "Barlow Condensed","Arial Narrow",sans-serif;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.qi .l2{font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qi .r{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.qi .qty{font:800 20px/1 "Barlow Condensed","Arial Narrow",sans-serif}
+.due{font:700 12px/1 Barlow;padding:3px 6px;border-radius:5px;background:var(--line2);color:var(--ink2)}
+.due.red{background:var(--red-bg);color:var(--red)}.due.amber{background:var(--amber-bg);color:var(--amber)}
+.qsep{padding:10px 10px 4px;font:700 12px/1 Barlow;letter-spacing:.08em;color:var(--mute);text-transform:uppercase}
+.more{position:relative}
+.menu{position:absolute;right:0;top:100%;z-index:30;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.15);min-width:210px;padding:6px}
+.menu button{display:block;width:100%;text-align:left;padding:9px 10px;border-radius:7px;font-weight:600}
+.menu button:hover{background:var(--line2)}
+.menu hr{border:0;border-top:1px solid var(--line2);margin:4px 0}
+.seg{display:inline-flex;background:var(--line2);border-radius:9px;padding:3px;gap:2px}
+.seg button{padding:6px 10px;border-radius:7px;font-weight:700;font-size:13px;color:var(--ink2)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+/* DTF */
+.dtf{width:100%;border-collapse:collapse}
+.dtf th{font:700 11px/1 Barlow;letter-spacing:.08em;color:var(--mute);text-transform:uppercase;text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+.dtf td{padding:10px 8px;border-bottom:1px solid var(--line2);vertical-align:middle}
+.dtf tr.danger td{background:var(--amber-bg)}
+.dtf .job{font:800 20px/1 "Barlow Condensed","Arial Narrow",sans-serif}
+.ck{display:inline-flex;align-items:center;justify-content:center;min-width:92px;padding:8px 10px;border-radius:9px;border:1.5px solid var(--line);font:700 13px/1 Barlow;letter-spacing:.04em;background:#fff;color:var(--ink2)}
+.ck.on{background:var(--green);border-color:var(--green);color:#fff}
+@media (max-width:760px){.dtf .hide-s{display:none}}
+/* library */
+.lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:14px}
+.lc{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;cursor:pointer;display:flex;flex-direction:column}
+.lc .im{aspect-ratio:4/3;background:#f1f0ec;display:flex;align-items:center;justify-content:center;color:var(--mute);font-weight:600}
+.lc .im img{width:100%;height:100%;object-fit:cover}
+.lc .b{padding:10px 12px}
+.lc .b b{font:800 18px/1.05 "Barlow Condensed","Arial Narrow",sans-serif;display:block}
+.search{flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:#fff}
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(20,22,25,.45);z-index:50;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px}
+.modal{background:#fff;border-radius:16px;width:min(720px,100%);box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.mh{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line2)}
+.mh h3{margin:0;font:800 24px/1 "Barlow Condensed","Arial Narrow",sans-serif;flex:1}
+.mb{padding:16px 18px;display:grid;gap:16px}
+.mf{display:flex;gap:8px;justify-content:flex-end;padding:14px 18px;border-top:1px solid var(--line2);flex-wrap:wrap;align-items:center}
+.fl{display:grid;gap:6px}
+#formHost{display:grid;gap:16px}
+#formHost:empty{display:none}
+.fl>label{font:700 12px/1 Barlow;letter-spacing:.08em;color:var(--ink2);text-transform:uppercase}
+.fl .req::after{content:" *";color:var(--red)}
+.in{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.in:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+.opts{display:flex;gap:6px;flex-wrap:wrap}
+.opt{padding:9px 12px;border-radius:9px;border:1.5px solid var(--line);font-weight:700;font-size:14px;background:#fff}
+.opt.on{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.thr{display:grid;grid-template-columns:96px minmax(0,1fr) 44px 36px;gap:6px;align-items:center}
+.thr input[type=color]{width:44px;height:40px;border:1px solid var(--line);border-radius:8px;padding:2px;background:#fff}
+.photos{display:flex;gap:8px;flex-wrap:wrap}
+.photos .p{width:92px;height:92px;border-radius:10px;overflow:hidden;border:1px solid var(--line);position:relative;background:#f1f0ec;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:12px}
+.photos .p img{width:100%;height:100%;object-fit:cover}
+.photos .p button{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);color:#fff;border-radius:50%;width:22px;height:22px;font-size:13px;line-height:22px}
+.camera{width:92px;height:92px;border-radius:10px;border:2px dashed var(--accent);color:var(--accent);font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;text-align:center;gap:2px;background:var(--accent-bg)}
+.camera span{font-size:26px;line-height:1}
+.hint{font-size:13px;color:var(--mute)}
+.warn{background:var(--amber-bg);color:var(--amber);border-radius:9px;padding:9px 12px;font-weight:600;font-size:14px}
+.same{border:1.5px solid var(--accent);background:var(--accent-bg);border-radius:12px;padding:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;z-index:90;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:90vw}
+.toast.err{background:var(--red)}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:95;display:flex;align-items:center;justify-content:center;padding:20px}
+.lightbox img{max-width:100%;max-height:100%;background:#fff;border-radius:8px}
+.foot{padding:10px 14px;border-top:1px solid var(--line2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:700;color:var(--mute)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><i></i>MAYHEM · STITCH BOARD</div>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="hsp"></div>
+  <div class="sync" id="sync"></div>
+  <button class="btn sm" id="refreshBtn" title="Pull new jobs from Printavo now">⟳ Refresh</button>
+  <button class="btn sm" id="addBtn">＋ Add job</button>
+  <button class="me" id="meBtn"></button>
+</header>
+<main id="main"></main>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+
+<script>
+'use strict';
+const APP_V = '1.0.0';
+const API = 'https://mayhem-emb.autumn-mountain-14c6.workers.dev';
+const KEY = 'BcRk0wsnrZkezI3M8W5wvmO94U2E-_93';
+const PEOPLE = ['Lindsie', 'Kolton', 'Joe'];
+const TABS = [
+  { id: 'emb', label: 'Embroidery' },
+  { id: 'patch', label: 'Patches' },
+  { id: 'dtf', label: 'DTF' },
+  { id: 'lib', label: 'Redo Library' },
+];
+const BLOCKS = ['DIGITIZING', 'BLANKS', 'PATCHES', 'ART / APPROVAL', 'TRANSFERS', 'OTHER'];
+const HOOPS = ['CAP FRAME', '4"', '5.5"', '7"', '8x8', '12x8', 'JACKET', 'CLAMP'];
+const BACKINGS = ['CUTAWAY', 'TEARAWAY', 'NO-SHOW MESH', 'NONE'];
+const PTYPES = ['LASER', 'LEATHERETTE', 'WOVEN', 'SILICONE', 'PVC', 'EMBROIDERED', 'UV', 'CHENILLE', 'PATCH'];
+
+// ------------------------------------------------------------ storage (per device)
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem('emb_' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('emb_' + k, JSON.stringify(v)); } catch {} },
+};
+const S = { jobs: [], board: { cards: {}, order: {}, manual: {} }, redo: {}, threads: {}, pulledAt: '', pullError: '', loaded: false, netErr: '' };
+const ui = { tab: LS.get('tab', 'emb'), sel: {}, owner: LS.get('owner', 'ALL'), q: '', showDone: false, menu: null, modal: null };
+let me = LS.get('me', '');
+
+// ------------------------------------------------------------ utils
+const $ = s => document.querySelector(s);
+const h = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const slugOf = (customer, design) => norm(customer).replace(/ /g, '-') + '__' + norm(design).replace(/ /g, '-');
+function todayStr() { return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Denver' }).format(new Date()); }
+function dayDiff(a, b) { return Math.round((Date.parse(a + 'T12:00:00Z') - Date.parse(b + 'T12:00:00Z')) / 864e5); }
+function fmtDue(d) {
+  if (!d) return '—';
+  const dt = new Date(d + 'T12:00:00Z');
+  return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric', timeZone: 'UTC' });
+}
+function dueClass(d) { if (!d) return ''; const n = dayDiff(d, todayStr()); return n <= 0 ? 'red' : n <= 2 ? 'amber' : ''; }
+function ago(iso) {
+  if (!iso) return 'never';
+  const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
+  return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : Math.round(m / 60) + ' hr ago';
+}
+function isPdf(u) { return /\.pdf(\?|$|\+)/i.test(u) || /\.pdf/i.test(u.split('?')[1] || ''); }
+function toast(msg, err) {
+  const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), err ? 6000 : 3200);
+}
+
+// ------------------------------------------------------------ api
+async function api(path, body, raw) {
+  const opt = { method: body === undefined ? 'GET' : 'POST', headers: { 'x-emb-key': KEY } };
+  if (body !== undefined) {
+    if (raw) { opt.headers['content-type'] = 'image/jpeg'; opt.body = body; }
+    else { opt.headers['content-type'] = 'application/json'; opt.body = JSON.stringify(body); }
+  }
+  const r = await fetch(API + path, opt);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok && !j.printavo) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+async function load() {
+  try {
+    const d = await api('/all');
+    Object.assign(S, { jobs: d.jobs || [], board: d.board || { cards: {}, order: {}, manual: {} }, redo: d.redo || {}, threads: d.threads || {}, pulledAt: d.pulledAt || '', pullError: d.pullError || '', loaded: true, netErr: '' });
+    S.board.cards = S.board.cards || {}; S.board.order = S.board.order || {}; S.board.manual = S.board.manual || {};
+  } catch (e) { S.netErr = String(e.message || e); S.loaded = true; }
+  render();
+}
+async function refreshNow(quiet) {
+  const b = $('#refreshBtn'); b.disabled = true; b.textContent = '⟳ Pulling…';
+  try { const r = await api('/refresh', {}); if (!quiet && r.ok === false) toast('Printavo pull failed: ' + r.error, true); }
+  catch (e) { if (!quiet) toast('Printavo pull failed: ' + e.message, true); }
+  b.disabled = false; b.textContent = '⟳ Refresh';
+  await load();
+}
+async function setCard(key, patch) {
+  const c = S.board.cards[key] = S.board.cards[key] || {};
+  for (const [k, v] of Object.entries(patch)) { if (v === null) delete c[k]; else c[k] = v; }
+  render();
+  try { await api('/set', { key, patch }); } catch (e) { toast('Not saved — ' + e.message, true); }
+}
+
+// ------------------------------------------------------------ model
+function allCards() {
+  const list = S.jobs.concat(Object.values(S.board.manual || {}));
+  return list.map(c => ({ ...c, ov: S.board.cards[c.key] || {} }));
+}
+function cardByKey(k) { return allCards().find(c => c.key === k); }
+function tabCards(tab, includeDone) {
+  return allCards().filter(c => c.tab === tab && (includeDone || (!c.ov.done && !c.ov.hidden)));
+}
+function ordered(tab) {
+  const cards = tabCards(tab);
+  const byDue = [...cards].sort((a, b) => (a.due || '9999') < (b.due || '9999') ? -1 : (a.due || '9999') > (b.due || '9999') ? 1 : (+a.job || 0) - (+b.job || 0));
+  const ord = (S.board.order[tab] || []).filter(k => cards.some(c => c.key === k));
+  let list = ord.map(k => cards.find(c => c.key === k));
+  for (const c of byDue) {
+    if (ord.includes(c.key)) continue;
+    const i = list.findIndex(x => (x.due || '9999') > (c.due || '9999'));
+    if (i < 0) list.push(c); else list.splice(i, 0, c);
+  }
+  const top = list.filter(c => (c.ov.pin || c.ov.rush) && !c.ov.blocked);
+  const ready = list.filter(c => !(c.ov.pin || c.ov.rush) && !c.ov.blocked);
+  const blocked = list.filter(c => c.ov.blocked);
+  return { top, ready, blocked, all: top.concat(ready, blocked) };
+}
+function recordsFor(customer, tab) {
+  const n = norm(customer);
+  return Object.values(S.redo).filter(r => norm(r.customer) === n && (!tab || r.tab === tab))
+    .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+}
+function matchedRecord(c) {
+  if (c.ov.redo && S.redo[c.ov.redo]) return S.redo[c.ov.redo];
+  const rs = recordsFor(c.customer, c.tab);
+  return rs.length === 1 ? rs[0] : null;
+}
+function threadInfo(no) { return S.threads[String(no).trim()] || null; }
+
+// ------------------------------------------------------------ header
+function renderHeader() {
+  $('#tabs').innerHTML = TABS.map(t => {
+    const n = t.id === 'lib' ? Object.keys(S.redo).length : tabCards(t.id).length;
+    return `<button class="${ui.tab === t.id ? 'on' : ''}" data-tab="${t.id}">${t.label}<span class="n">${n}</span></button>`;
+  }).join('');
+  const s = $('#sync');
+  if (S.netErr) { s.className = 'sync err'; s.textContent = 'Offline — ' + S.netErr; }
+  else if (S.pullError) { s.className = 'sync err'; s.textContent = 'Printavo error · ' + ago(S.pulledAt); s.title = S.pullError; }
+  else { s.className = 'sync'; s.textContent = 'Printavo · ' + ago(S.pulledAt); s.title = ''; }
+  $('#meBtn').textContent = me ? '● ' + me : 'Who are you?';
+}
+
+// ------------------------------------------------------------ queue views
+function qItem(c, selKey) {
+  const img = c.mockups && c.mockups.find(u => !isPdf(u));
+  const rec = matchedRecord(c) || recordsFor(c.customer, c.tab)[0];
+  const flags = [];
+  if (c.ov.rush) flags.push('<span class="chip red">RUSH</span>');
+  if (c.ov.pin && !c.ov.rush) flags.push('<span class="chip dark">PINNED</span>');
+  if (c.ov.blocked) flags.push(`<span class="chip amber">WAIT · ${h(c.ov.blocked)}</span>`);
+  if (rec) flags.push('<span class="chip teal">REORDER</span>');
+  if (c.tab === 'patch') flags.push(`<span class="chip ${ownerOf(c) === 'KOLTON' ? 'blue' : ''}">${ownerOf(c)}</span>`);
+  if (c.src === 'manual') flags.push('<span class="chip">MANUAL</span>');
+  return `<li class="qi ${c.key === selKey ? 'sel' : ''} ${c.ov.blocked ? 'blocked' : ''}" data-key="${h(c.key)}">
+    <div class="h" data-drag="${h(c.key)}" title="Drag to reorder">⠿</div>
+    ${img ? `<img src="${h(img)}" alt="" loading="lazy">` : '<div class="ph"></div>'}
+    <div style="min-width:0"><div class="l1">#${h(c.job || '—')} ${flags.join('')}</div>
+      <div class="l2">${h(c.customer)}${c.nick ? ' · ' + h(c.nick) : ''}</div></div>
+    <div class="r"><div class="qty">${c.qty || '—'}</div><span class="due ${dueClass(c.due)}">${fmtDue(c.due)}</span></div>
+  </li>`;
+}
+function ownerOf(c) { return c.ov.owner || c.owner || 'JOE'; }
+function ptypeOf(c) { return c.ov.ptype || c.type || 'PATCH'; }
+
+function renderQueueTab(tab) {
+  let { top, ready, blocked, all } = ordered(tab);
+  if (tab === 'patch' && ui.owner !== 'ALL') {
+    const f = c => ownerOf(c) === ui.owner;
+    top = top.filter(f); ready = ready.filter(f); blocked = blocked.filter(f); all = all.filter(f);
+  }
+  let sel = ui.sel[tab];
+  if (!all.some(c => c.key === sel)) sel = (top[0] || ready[0] || blocked[0] || {}).key;
+  ui.sel[tab] = sel;
+  const cur = all.find(c => c.key === sel);
+  const nowHtml = cur ? nowCard(cur, tab) : `<div class="empty"><b>All caught up</b>Nothing waiting on the ${tab === 'emb' ? 'machine' : 'patch table'}. New approved jobs from Printavo show up here on their own.</div>`;
+  const doneList = ui.showDone ? tabCards(tab, true).filter(c => c.ov.done || c.ov.hidden) : [];
+  const ownerSeg = tab === 'patch' ? `<div class="seg" style="margin-left:auto">${['ALL', 'KOLTON', 'JOE'].map(o => `<button class="${ui.owner === o ? 'on' : ''}" data-owner="${o}">${o}</button>`).join('')}</div>` : '';
+  return `<div class="split">
+    <section class="panel">${nowHtml}</section>
+    <section class="panel">
+      <div class="ptitle">Up next · ${all.length}${ownerSeg}</div>
+      <ul class="q" id="queue" data-tab="${tab}">
+        ${top.length ? '<li class="qsep">Pinned / rush</li>' + top.map(c => qItem(c, sel)).join('') : ''}
+        ${ready.length ? (top.length ? '<li class="qsep">Ready</li>' : '') + ready.map(c => qItem(c, sel)).join('') : ''}
+        ${blocked.length ? '<li class="qsep">Waiting on something</li>' + blocked.map(c => qItem(c, sel)).join('') : ''}
+        ${!all.length ? '<li class="empty">Queue is empty.</li>' : ''}
+      </ul>
+      <div class="foot"><button class="btn sm" data-act="toggleDone">${ui.showDone ? 'Hide' : 'Show'} done &amp; hidden</button>
+        <span class="pill">Drag ⠿ to reorder · sorted by due date otherwise</span></div>
+      ${ui.showDone ? `<ul class="q">${doneList.length ? doneList.map(c => doneRow(c)).join('') : '<li class="empty">Nothing done or hidden yet.</li>'}</ul>` : ''}
+    </section></div>`;
+}
+function doneRow(c) {
+  const pv = c.ov.printavo;
+  const pvChip = c.src !== 'printavo' ? '' : !pv ? '' : pv.ok ? '<span class="chip green">PRINTAVO ✓</span>' : '<span class="chip red">PRINTAVO FAILED</span>';
+  return `<li class="qi" style="grid-template-columns:minmax(0,1fr) auto;cursor:default">
+    <div style="min-width:0"><div class="l1">#${h(c.job)} ${c.ov.done ? `<span class="chip green">DONE ${h(c.ov.done.by || '')}</span>` : '<span class="chip">HIDDEN</span>'} ${pvChip}</div>
+    <div class="l2">${h(c.customer)}${c.nick ? ' · ' + h(c.nick) : ''}${c.ov.done ? ' · ' + new Date(c.ov.done.at).toLocaleString('en-US', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''}</div></div>
+    <div class="row2" style="margin:0">${pv && !pv.ok ? `<button class="btn sm pri" data-act="retry" data-key="${h(c.key)}">Retry Printavo</button>` : ''}
+      <button class="btn sm" data-act="${c.ov.done ? 'undone' : 'unhide'}" data-key="${h(c.key)}">${c.ov.done ? 'Undo done' : 'Unhide'}</button></div></li>`;
+}
+
+function nowCard(c, tab) {
+  const imgs = (c.mockups || []);
+  const pics = imgs.filter(u => !isPdf(u));
+  const pdfs = imgs.filter(isPdf);
+  const rec = matchedRecord(c);
+  const recs = recordsFor(c.customer, c.tab);
+  const lastPhoto = rec && rec.photos && rec.photos[0];
+  const main = ui.art && pics.includes(ui.art) ? ui.art : pics[0];
+  const dc = dueClass(c.due);
+  const chips = [];
+  if (c.ov.rush) chips.push('<span class="chip red">RUSH</span>');
+  if (c.ov.blocked) chips.push(`<span class="chip amber">WAITING · ${h(c.ov.blocked)}</span>`);
+  if (c.puff) chips.push('<span class="chip dark">3D PUFF</span>');
+  for (const a of c.also || []) chips.push(`<span class="chip amber">ALSO NEEDS ${h(a)}</span>`);
+  if (recs.length) chips.push('<span class="chip teal">REORDER</span>');
+  if (tab === 'patch') chips.push(`<span class="chip ${ownerOf(c) === 'KOLTON' ? 'blue' : ''}">${ownerOf(c)}</span><span class="chip">${h(ptypeOf(c))}</span>`);
+  const blanksFull = c.blanks ? c.blanks.replace(/^BLANKS ETA:\s*/i, '') : '';
+  const blanks = blanksFull.split(' (')[0];
+  const tiles = [
+    `<div class="tile"><div class="k">Pieces</div><div class="v">${c.qty || '—'}</div></div>`,
+    `<div class="tile ${dc}"><div class="k">Due</div><div class="v">${fmtDue(c.due)}</div></div>`,
+    tab === 'patch'
+      ? `<div class="tile ${c.ov.arrived ? 'green' : c.ov.source === 'ORDERED' ? 'amber' : ''}"><div class="k">Patches</div><div class="v small">${c.ov.source === 'ORDERED' ? (c.ov.arrived ? 'Ordered · ARRIVED' : 'Ordered · not here yet') : c.ov.source === 'IN-HOUSE' ? 'Made in-house' : 'Source not set'}</div></div>`
+      : `<div class="tile ${blanks ? '' : ''}"><div class="k">Blanks</div><div class="v small" title="${h(blanksFull)}">${blanks ? h(blanks) : (c.src === 'manual' ? '—' : 'No ETA note')}</div></div>`,
+  ];
+  const redoHtml = rec ? redoSummary(rec, true) : recs.length > 1
+    ? `<div class="redo"><div class="t"><b>${recs.length} saved designs for this customer</b></div>
+       <div class="row2">${recs.map(r => `<button class="btn sm" data-act="pickRedo" data-key="${h(c.key)}" data-slug="${h(r.slug)}">${h(r.design)}</button>`).join('')}</div>
+       <div class="hint" style="margin-top:6px">Tap the one this job matches.</div></div>` : '';
+  return `<div class="now">
+    <div>
+      <div class="art">${main ? `<img src="${h(main)}" data-zoom="${h(main)}" alt="Mockup">` : `<div class="none">NO MOCKUP IN PRINTAVO<br><span class="hint">Art is on the order</span></div>`}</div>
+      <div class="thumbs">${pics.length > 1 || lastPhoto ? pics.map(u => `<img src="${h(u)}" data-art="${h(u)}" class="${u === main ? 'on' : ''}" alt="">`).join('') : ''}
+        ${lastPhoto ? `<img src="${h(lastPhoto.url)}" data-zoom="${h(lastPhoto.url)}" title="Last sew-out" style="border-color:var(--accent)">` : ''}</div>
+      ${lastPhoto ? '<div class="hint">Teal-bordered photo = last sew-out</div>' : ''}
+      ${pdfs.map(u => `<div class="row2"><a class="btn sm" href="${h(u)}" target="_blank" rel="noopener">Open PDF art</a></div>`).join('')}
+    </div>
+    <div style="min-width:0">
+      <div class="jobno">${c.url ? `<a href="${h(c.url)}" target="_blank" rel="noopener">#${h(c.job)} ↗</a>` : '#' + h(c.job || '—')}</div>
+      <div class="cust">${h(c.customer)}</div>
+      ${c.nick ? `<div class="nick">${h(c.nick)}</div>` : ''}
+      <div class="tiles">${tiles.join('')}</div>
+      ${chips.length ? `<div class="chips">${chips.join('')}</div>` : ''}
+      ${c.details && c.details.length ? `<div class="sec"><h4>Location / details</h4><div class="details">${h(c.details.join('\n'))}</div></div>` : ''}
+      ${c.lines && c.lines.length ? `<div class="sec"><h4>Garments</h4><table class="lines">${c.lines.map(l => `<tr${l.part ? ' style="opacity:.65"' : ''}><td class="q">${l.qty}</td><td><div class="sty">${h([l.style, l.color].filter(Boolean).join(' · ') || 'Item')}${l.part ? ' <span class="chip">PATCHES · not in piece count</span>' : ''}</div><div class="d">${h(l.desc)}</div></td></tr>`).join('')}</table></div>` : ''}
+      ${c.note ? `<div class="sec"><h4>Note</h4><div class="details">${h(c.note)}</div></div>` : ''}
+      ${redoHtml ? `<div class="sec">${redoHtml}</div>` : ''}
+      ${tab === 'patch' ? `<div class="sec"><h4>Patch source</h4><div class="row2" style="margin:0">
+          <div class="seg">${['IN-HOUSE', 'ORDERED'].map(s => `<button class="${c.ov.source === s ? 'on' : ''}" data-act="source" data-key="${h(c.key)}" data-v="${s}">${s}</button>`).join('')}</div>
+          ${c.ov.source === 'ORDERED' ? `<button class="ck ${c.ov.arrived ? 'on' : ''}" data-act="arrived" data-key="${h(c.key)}">${c.ov.arrived ? '✓ ARRIVED' : 'ARRIVED?'}</button>` : ''}</div></div>` : ''}
+      <button class="bigbtn" data-act="done" data-key="${h(c.key)}">MARK DONE</button>
+      <div class="row2">
+        <button class="btn sm" data-act="menu" data-key="${h(c.key)}">⋯ Pin / rush / wait / hide</button>
+        ${c.src === 'manual' ? `<button class="btn sm" data-act="delManual" data-key="${h(c.key)}">Delete manual job</button>` : ''}
+      </div>
+    </div></div>`;
+}
+function swatches(threads) {
+  return (threads || []).map(t => {
+    const info = threadInfo(t.no) || {};
+    const hex = t.hex || info.hex || '#cccccc';
+    return `<span class="sw"><i style="background:${h(hex)}"></i>${h(t.no)}${(t.name || info.name) ? ' ' + h(t.name || info.name) : ''}</span>`;
+  }).join('');
+}
+function redoSummary(r, withEdit) {
+  const rows = [];
+  if (r.tab === 'emb') {
+    if (r.hoop) rows.push(['Hoop', r.hoop]);
+    if (r.load) rows.push(['Load spot', r.load]);
+    if (r.backing) rows.push(['Backing', r.backing]);
+    if (r.topping) rows.push(['Topping', r.topping]);
+    if (r.foam) rows.push(['Puff foam', r.foam]);
+  } else {
+    if (r.ptype) rows.push(['Patch', r.ptype]);
+    if (r.placement) rows.push(['Placement', r.placement]);
+    if (r.press) rows.push(['Press', r.press]);
+    if (r.peel) rows.push(['Peel', r.peel]);
+  }
+  if (r.notes) rows.push(['Notes', r.notes]);
+  return `<div class="redo"><div class="t"><b>REDO · ${h(r.design)}</b>${withEdit ? `<button class="btn sm" data-act="editRedo" data-slug="${h(r.slug)}">Edit</button>` : ''}</div>
+    ${r.threads && r.threads.length ? `<div style="margin-top:6px">${swatches(r.threads)}</div>` : ''}
+    ${rows.length ? `<div class="kv">${rows.map(([k, v]) => `<span>${h(k)}</span><span>${h(v)}</span>`).join('')}</div>` : ''}
+    <div class="hint" style="margin-top:6px">Last saved ${r.updatedAt ? new Date(r.updatedAt).toLocaleDateString('en-US') : ''}${r.by ? ' by ' + h(r.by) : ''}${r.jobs && r.jobs.length ? ' · jobs ' + r.jobs.slice(-4).map(j => '#' + h(j)).join(' ') : ''}</div></div>`;
+}
+
+// ------------------------------------------------------------ DTF checklist
+function renderDtf() {
+  const t = todayStr();
+  const cards = tabCards('dtf').map(c => {
+    const dd = c.due ? dayDiff(c.due, t) : 99;
+    const danger = dd <= 3;
+    const age = c.created ? dayDiff(t, c.created) : 0;
+    const rank = danger ? 0 : !c.ov.ordered ? 1 : !c.ov.arrived ? 2 : 3;
+    return { c, dd, danger, age, rank };
+  }).sort((a, b) => a.rank - b.rank || (a.c.due || '9999').localeCompare(b.c.due || '9999'));
+  const notOrdered = cards.filter(x => !x.c.ov.ordered).length, danger = cards.filter(x => x.danger).length;
+  return `<section class="panel">
+    <div class="ptitle">DTF — Joe's list · ${cards.length} open
+      ${danger ? `<span class="chip amber">${danger} due within 3 days</span>` : ''}
+      ${notOrdered ? `<span class="chip red">${notOrdered} not ordered</span>` : ''}</div>
+    ${cards.length ? `<table class="dtf"><thead><tr><th>Job</th><th>Customer</th><th class="hide-s">Pcs</th><th>Due</th><th class="hide-s">Age</th><th>Ordered</th><th>Arrived</th><th>Pressed</th><th></th></tr></thead><tbody>
+    ${cards.map(({ c, danger, age }) => `<tr class="${danger ? 'danger' : ''}">
+      <td class="job">${c.url ? `<a href="${h(c.url)}" target="_blank" rel="noopener" style="color:inherit">#${h(c.job)}</a>` : '#' + h(c.job || '—')}</td>
+      <td><b>${h(c.customer)}</b><div class="hint">${h(c.nick || (c.details || [])[0] || '')}</div>${(c.also || []).length ? `<div class="chips" style="margin-top:4px">${c.also.map(a => `<span class="chip">+ ${h(a)}</span>`).join('')}</div>` : ''}</td>
+      <td class="hide-s"><b>${c.qty || '—'}</b></td>
+      <td><span class="due ${dueClass(c.due)}">${fmtDue(c.due)}</span></td>
+      <td class="hide-s">${!c.ov.ordered && age > 0 ? `<span class="chip ${age >= 3 ? 'red' : ''}">${age}d, not ordered</span>` : ''}</td>
+      <td><button class="ck ${c.ov.ordered ? 'on' : ''}" data-act="flag" data-f="ordered" data-key="${h(c.key)}">${c.ov.ordered ? '✓ ' + new Date(c.ov.ordered).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' }) : 'ORDERED'}</button></td>
+      <td><button class="ck ${c.ov.arrived ? 'on' : ''}" data-act="flag" data-f="arrived" data-key="${h(c.key)}">${c.ov.arrived ? '✓ HERE' : 'ARRIVED'}</button></td>
+      <td><button class="ck" data-act="done" data-key="${h(c.key)}">PRESSED</button></td>
+      <td><button class="btn sm" data-act="menu" data-key="${h(c.key)}">⋯</button></td></tr>`).join('')}
+    </tbody></table>` : '<div class="empty"><b>No DTF waiting</b>Approved jobs with DTF work show up here.</div>'}
+    <div class="foot"><button class="btn sm" data-act="toggleDone">${ui.showDone ? 'Hide' : 'Show'} pressed &amp; hidden</button></div>
+    ${ui.showDone ? `<ul class="q">${tabCards('dtf', true).filter(c => c.ov.done || c.ov.hidden).map(doneRow).join('') || '<li class="empty">Nothing yet.</li>'}</ul>` : ''}
+  </section>`;
+}
+
+// ------------------------------------------------------------ library
+function renderLib() {
+  const q = norm(ui.q);
+  const recs = Object.values(S.redo).filter(r => !q || norm(r.customer + ' ' + r.design + ' ' + (r.threads || []).map(t => t.no + ' ' + (t.name || '')).join(' ')).includes(q))
+    .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  const tabName = { emb: 'EMBROIDERY', patch: 'PATCH', dtf: 'DTF' };
+  return `<section class="panel">
+    <div class="ptitle"><input class="search" id="libq" placeholder="Search customer, design, or thread #" value="${h(ui.q)}"><button class="btn sm" data-act="newRedo">＋ New record</button></div>
+    ${recs.length ? `<div class="lib">${recs.map(r => `<div class="lc" data-act="editRedo" data-slug="${h(r.slug)}">
+      <div class="im">${r.photos && r.photos[0] ? `<img src="${h(r.photos[0].url)}" loading="lazy" alt="">` : 'No photo yet'}</div>
+      <div class="b"><span class="chip ${r.tab === 'emb' ? 'teal' : r.tab === 'patch' ? 'blue' : ''}">${tabName[r.tab] || ''}</span>
+        <b style="margin-top:6px">${h(r.design)}</b><div class="hint">${h(r.customer)}</div>
+        <div style="margin-top:6px">${swatches(r.threads)}</div></div></div>`).join('')}</div>`
+      : `<div class="empty"><b>${q ? 'No matches' : 'No redo records yet'}</b>${q ? '' : 'Every job marked done saves one here, keyed by customer + design.'}</div>`}
+  </section>`;
+}
+
+// ------------------------------------------------------------ render
+function render() {
+  renderHeader();
+  const m = $('#main');
+  if (!S.loaded) { m.innerHTML = '<div class="empty"><b>Loading…</b></div>'; return; }
+  const libFocus = document.activeElement && document.activeElement.id === 'libq';
+  m.innerHTML = ui.tab === 'lib' ? renderLib() : ui.tab === 'dtf' ? renderDtf() : renderQueueTab(ui.tab);
+  if (libFocus) { const i = $('#libq'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+  if (ui.menu) drawMenu();
+}
+
+// ------------------------------------------------------------ menu
+function drawMenu() {
+  const { key, x, y } = ui.menu; const c = cardByKey(key); if (!c) { ui.menu = null; return; }
+  const el = document.createElement('div'); el.className = 'menu'; el.id = 'menu';
+  el.style.position = 'fixed'; el.style.left = Math.max(8, Math.min(x - 200, innerWidth - 230)) + 'px'; el.style.top = Math.min(y + 6, innerHeight - 380) + 'px';
+  el.innerHTML = `
+    <button data-m="pin">${c.ov.pin ? 'Unpin' : '📌 Pin to top'}</button>
+    <button data-m="rush">${c.ov.rush ? 'Clear RUSH' : '🔥 Mark RUSH'}</button><hr>
+    ${c.ov.blocked ? '<button data-m="unblock">✓ Not waiting anymore</button>' : BLOCKS.map(b => `<button data-m="block" data-v="${b}">⏳ Waiting on ${b.toLowerCase()}</button>`).join('')}<hr>
+    ${c.tab === 'patch' ? `<button data-m="owner">Switch owner → ${ownerOf(c) === 'KOLTON' ? 'JOE' : 'KOLTON'}</button><button data-m="ptype">Change patch type…</button><hr>` : ''}
+    ${c.tab !== 'emb' ? '<button data-m="move" data-v="emb">Move to Embroidery</button>' : ''}
+    ${c.tab !== 'patch' ? '<button data-m="move" data-v="patch">Move to Patches</button>' : ''}
+    ${c.tab !== 'dtf' ? '<button data-m="move" data-v="dtf">Move to DTF</button>' : ''}<hr>
+    <button data-m="hide">🙈 Hide (not really ${c.tab === 'emb' ? 'embroidery' : c.tab === 'patch' ? 'patches' : 'DTF'})</button>`;
+  document.body.appendChild(el);
+}
+function closeMenu() { ui.menu = null; const m = $('#menu'); if (m) m.remove(); }
+document.addEventListener('click', async e => {
+  const mb = e.target.closest('#menu button');
+  if (mb) {
+    const key = ui.menu.key; const c = cardByKey(key); const v = mb.dataset.v; const m = mb.dataset.m; closeMenu();
+    if (m === 'pin') setCard(key, { pin: c.ov.pin ? null : true });
+    if (m === 'rush') setCard(key, { rush: c.ov.rush ? null : true });
+    if (m === 'block') setCard(key, { blocked: v });
+    if (m === 'unblock') setCard(key, { blocked: null });
+    if (m === 'hide') { setCard(key, { hidden: true }); toast('Hidden. "Show done & hidden" brings it back.'); }
+    if (m === 'owner') setCard(key, { owner: ownerOf(c) === 'KOLTON' ? 'JOE' : 'KOLTON' });
+    if (m === 'ptype') openPType(c);
+    if (m === 'move') moveTab(c, v);
+    return;
+  }
+  if (ui.menu && !e.target.closest('#menu')) { closeMenu(); if (!e.target.closest('[data-act="menu"]')) return; }
+  const t = e.target.closest('[data-tab],[data-owner],[data-act],[data-key].qi,[data-art],[data-zoom]');
+  if (!t) return;
+  if (t.dataset.tab) { ui.tab = t.dataset.tab; ui.art = null; LS.set('tab', ui.tab); ui.showDone = false; render(); scrollTo(0, 0); return; }
+  if (t.dataset.owner) { ui.owner = t.dataset.owner; LS.set('owner', ui.owner); render(); return; }
+  if (t.dataset.zoom) { lightbox(t.dataset.zoom); return; }
+  if (t.dataset.art) { ui.art = t.dataset.art; render(); return; }
+  const act = t.dataset.act; const key = t.dataset.key;
+  if (!act && t.classList.contains('qi')) {
+    if (e.target.closest('.h')) return;
+    ui.sel[ui.tab] = key; ui.art = null; render();
+    if (innerWidth <= 980) scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  if (act === 'menu') { const r = t.getBoundingClientRect(); ui.menu = { key, x: r.right, y: r.bottom }; drawMenu(); return; }
+  if (act === 'toggleDone') { ui.showDone = !ui.showDone; render(); return; }
+  if (act === 'undone') { setCard(key, { done: null }); return; }
+  if (act === 'unhide') { setCard(key, { hidden: null }); return; }
+  if (act === 'retry') {
+    t.disabled = true; t.textContent = 'Sending…';
+    try { const r = await api('/push', { key }); S.board.cards[key].printavo = r.printavo; toast(r.printavo && r.printavo.ok ? 'Sent to Printavo ✓' : 'Still failing: ' + (r.printavo && r.printavo.error), !(r.printavo && r.printavo.ok)); }
+    catch (err) { toast(err.message, true); }
+    load(); return;
+  }
+  if (act === 'source') { const c = cardByKey(key); setCard(key, { source: c.ov.source === t.dataset.v ? null : t.dataset.v }); return; }
+  if (act === 'arrived') { const c = cardByKey(key); setCard(key, { arrived: c.ov.arrived ? null : new Date().toISOString() }); return; }
+  if (act === 'flag') { const c = cardByKey(key); const f = t.dataset.f; setCard(key, { [f]: c.ov[f] ? null : new Date().toISOString() }); return; }
+  if (act === 'pickRedo') { setCard(key, { redo: t.dataset.slug }); return; }
+  if (act === 'editRedo') { openRedoEditor(S.redo[t.dataset.slug]); return; }
+  if (act === 'newRedo') { openRedoEditor(null); return; }
+  if (act === 'done') { openDone(cardByKey(key)); return; }
+  if (act === 'delManual') {
+    if (!confirmInline(t, 'Tap again to delete')) return;
+    delete S.board.manual[key]; render(); api('/manual', { remove: key }).catch(err => toast(err.message, true)); return;
+  }
+});
+function confirmInline(btn, msg) {
+  if (btn.dataset.armed) return true;
+  btn.dataset.armed = '1'; const old = btn.textContent; btn.textContent = msg;
+  setTimeout(() => { if (btn.isConnected) { delete btn.dataset.armed; btn.textContent = old; } }, 3000);
+  return false;
+}
+function moveTab(c, tab) {
+  if (c.src === 'manual') {
+    const m = S.board.manual[c.key]; const nk = 'm:' + Math.random().toString(36).slice(2, 10);
+    const card = { ...m, key: nk, tab }; delete S.board.manual[c.key]; S.board.manual[nk] = card; render();
+    api('/manual', { remove: c.key }).then(() => api('/manual', { card })).catch(e => toast(e.message, true));
+    return;
+  }
+  // Printavo card: hide here, add a manual copy on the other tab that still points at the invoice
+  const nk = 'm:' + Math.random().toString(36).slice(2, 10);
+  const card = { ...c, key: nk, tab, src: 'manual', movedFrom: c.key, ov: undefined };
+  delete card.ov;
+  S.board.manual[nk] = card; setCard(c.key, { hidden: true });
+  api('/manual', { card }).catch(e => toast(e.message, true));
+  toast('Moved to ' + (tab === 'emb' ? 'Embroidery' : tab === 'patch' ? 'Patches' : 'DTF'));
+}
+function lightbox(u) {
+  const d = document.createElement('div'); d.className = 'lightbox'; d.innerHTML = `<img src="${h(u)}" alt="">`;
+  d.onclick = () => d.remove(); document.body.appendChild(d);
+}
+document.addEventListener('input', e => { if (e.target.id === 'libq') { ui.q = e.target.value; render(); } });
+
+// ------------------------------------------------------------ drag to reorder (pointer-based, works on iPad)
+let drag = null;
+document.addEventListener('pointerdown', e => {
+  const hnd = e.target.closest('[data-drag]'); if (!hnd) return;
+  const li = hnd.closest('.qi'); const ul = li.parentElement;
+  e.preventDefault();
+  drag = { li, ul, key: hnd.dataset.drag, startY: e.clientY, id: e.pointerId };
+  li.classList.add('drag'); hnd.setPointerCapture(e.pointerId);
+});
+document.addEventListener('pointermove', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const dy = e.clientY - drag.startY; drag.li.style.transform = `translateY(${dy}px)`;
+  const items = [...drag.ul.querySelectorAll('.qi')].filter(x => x !== drag.li);
+  const mid = drag.li.getBoundingClientRect(); const cy = mid.top + mid.height / 2;
+  let before = null; for (const it of items) { const r = it.getBoundingClientRect(); if (cy < r.top + r.height / 2) { before = it; break; } }
+  drag.before = before;
+  items.forEach(it => it.style.boxShadow = it === before ? 'inset 0 3px 0 var(--accent)' : '');
+  if (!before && items.length) items[items.length - 1].style.boxShadow = 'inset 0 -3px 0 var(--accent)';
+});
+function endDrag(e) {
+  if (!drag || e.pointerId !== drag.id) return;
+  const d = drag; drag = null;
+  const moved = Math.abs(e.clientY - d.startY) > 6;
+  if (!moved) { d.li.classList.remove('drag'); d.li.style.transform = ''; return; }
+  const tab = d.ul.dataset.tab;
+  const keys = [...d.ul.querySelectorAll('.qi')].map(x => x.dataset.key).filter(k => k !== d.key);
+  const bi = d.before ? keys.indexOf(d.before.dataset.key) : keys.length;
+  keys.splice(bi < 0 ? keys.length : bi, 0, d.key);
+  // keep keys hidden by the owner filter in their old relative place
+  const full = ordered(tab).all.map(c => c.key);
+  const rest = full.filter(k => !keys.includes(k));
+  const newOrder = keys.concat(rest);
+  // dragging a card into / out of the pinned or waiting groups doesn't change its flags — only order
+  S.board.order[tab] = newOrder; render();
+  api('/order', { tab, keys: newOrder }).catch(err => toast('Order not saved — ' + err.message, true));
+}
+document.addEventListener('pointerup', endDrag);
+document.addEventListener('pointercancel', endDrag);
+
+// ------------------------------------------------------------ modals
+function openModal(html, onMount) {
+  closeModal();
+  const s = document.createElement('div'); s.className = 'scrim'; s.id = 'scrim';
+  s.innerHTML = `<div class="modal" role="dialog">${html}</div>`;
+  s.addEventListener('click', e => { if (e.target === s) closeModal(); });
+  document.body.appendChild(s); document.body.style.overflow = 'hidden';
+  ui.modal = s; if (onMount) onMount(s);
+}
+function closeModal() { const s = $('#scrim'); if (s) s.remove(); ui.modal = null; document.body.style.overflow = ''; }
+
+function pickMe(after) {
+  openModal(`<div class="mh"><h3>Who's using this device?</h3></div>
+    <div class="mb"><div class="opts">${PEOPLE.map(p => `<button class="opt ${p === me ? 'on' : ''}" data-p="${p}" style="font-size:18px;padding:14px 20px">${p}</button>`).join('')}</div>
+    <div class="hint">Saved on this device. Tap the name chip up top to switch.</div></div>`, s => {
+    s.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { me = b.dataset.p; LS.set('me', me); closeModal(); render(); if (after) after(); });
+  });
+}
+$('#meBtn').onclick = () => pickMe();
+$('#refreshBtn').onclick = () => refreshNow(false);
+
+// photo capture + upload ------------------------------------------------------
+function takePhoto() {
+  return new Promise(res => {
+    const inp = $('#cam'); inp.value = '';
+    inp.onchange = () => res(inp.files && inp.files[0] || null);
+    inp.click();
+  });
+}
+async function shrink(file) {
+  let bmp;
+  try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+  catch { bmp = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = URL.createObjectURL(file); }); }
+  const W = bmp.width, H = bmp.height, sc = Math.min(1, 1600 / Math.max(W, H));
+  const cv = document.createElement('canvas'); cv.width = Math.round(W * sc); cv.height = Math.round(H * sc);
+  const ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); ctx.drawImage(bmp, 0, 0, cv.width, cv.height);
+  return new Promise(ok => cv.toBlob(ok, 'image/jpeg', 0.85));
+}
+async function uploadPhoto(file) {
+  const blob = await shrink(file);
+  return api('/photo', blob, true);
+}
+
+// redo form (shared by DONE + library editor) --------------------------------------
+function redoFormHtml(tab, r, card) {
+  r = r || {};
+  const threads = (r.threads && r.threads.length ? r.threads : [{ no: '', name: '', hex: '' }]);
+  if (tab === 'emb') return `
+    <div class="fl"><label class="req">Thread colors (Madeira #)</label><div id="thrList">${threads.map(threadRow).join('')}</div>
+      <div><button class="btn sm" id="addThr" type="button">＋ Add thread</button></div>
+      <div class="hint">Type the Madeira number. New numbers: name it and pick the swatch once, and it's remembered for everyone.</div></div>
+    <div class="fl"><label class="req">Hoop / frame</label>${optsHtml('hoop', HOOPS, r.hoop)}<input class="in" data-f="hoopX" placeholder="Other hoop…" value="${h(HOOPS.includes(r.hoop) ? '' : r.hoop || '')}"></div>
+    <div class="fl"><label>Load spot (flats) / placement</label><input class="in" data-f="load" placeholder='e.g. 3" down from collar, centered on placket' value="${h(r.load || '')}"></div>
+    <div class="fl"><label>Backing</label>${optsHtml('backing', BACKINGS, r.backing)}</div>
+    <div class="fl"><label>Topping</label>${optsHtml('topping', ['YES', 'NO'], r.topping)}</div>
+    ${(card && card.puff) || r.foam ? `<div class="fl"><label>Puff foam (color + thickness)</label><input class="in" data-f="foam" placeholder="e.g. Black 3mm" value="${h(r.foam || '')}"></div>` : ''}
+    <div class="fl"><label>Notes</label><textarea class="in" data-f="notes" rows="2" placeholder="Speed, trims, anything you'd want next time">${h(r.notes || '')}</textarea></div>`;
+  if (tab === 'patch') return `
+    <div class="fl"><label class="req">Patch type</label>${optsHtml('ptype', PTYPES, r.ptype || (card && ptypeOf(card)))}</div>
+    <div class="fl"><label>Placement / size</label><input class="in" data-f="placement" placeholder='e.g. Front center of hat, 2.5" wide' value="${h(r.placement || '')}"></div>
+    <div class="fl"><label>Press / attach settings</label><input class="in" data-f="press" placeholder="e.g. 320°F · 15s · medium, or sewn" value="${h(r.press || '')}"></div>
+    <div class="fl"><label>Notes</label><textarea class="in" data-f="notes" rows="2">${h(r.notes || '')}</textarea></div>`;
+  return `
+    <div class="fl"><label class="req">Placement / size</label><input class="in" data-f="placement" placeholder='e.g. Left chest 4"' value="${h(r.placement || '')}"></div>
+    <div class="fl"><label>Press settings</label><input class="in" data-f="press" placeholder="e.g. 300°F · 12s · medium" value="${h(r.press || '')}"></div>
+    <div class="fl"><label>Peel</label>${optsHtml('peel', ['HOT', 'WARM', 'COLD'], r.peel)}</div>
+    <div class="fl"><label>Notes</label><textarea class="in" data-f="notes" rows="2">${h(r.notes || '')}</textarea></div>`;
+}
+function optsHtml(f, list, v) { return `<div class="opts" data-opts="${f}">${list.map(o => `<button type="button" class="opt ${o === v ? 'on' : ''}" data-o="${h(o)}">${h(o)}</button>`).join('')}</div>`; }
+function threadRow(t) {
+  const info = threadInfo(t.no) || {};
+  return `<div class="thr" style="margin-bottom:6px"><input class="in" data-t="no" inputmode="numeric" placeholder="1753" value="${h(t.no || '')}">
+    <input class="in" data-t="name" placeholder="Color name" value="${h(t.name || info.name || '')}">
+    <input type="color" data-t="hex" value="${h(t.hex || info.hex || '#cccccc')}"><button type="button" class="btn sm" data-t="del">✕</button></div>`;
+}
+function wireRedoForm(root) {
+  root.querySelectorAll('[data-opts]').forEach(g => g.addEventListener('click', e => {
+    const b = e.target.closest('.opt'); if (!b) return;
+    const on = b.classList.contains('on'); g.querySelectorAll('.opt').forEach(x => x.classList.remove('on')); if (!on) b.classList.add('on');
+    root.dispatchEvent(new Event('change'));
+  }));
+  const list = root.querySelector('#thrList');
+  if (list) {
+    root.querySelector('#addThr').onclick = () => { list.insertAdjacentHTML('beforeend', threadRow({})); };
+    list.addEventListener('click', e => { if (e.target.dataset.t === 'del') { e.target.closest('.thr').remove(); root.dispatchEvent(new Event('change')); } });
+    list.addEventListener('input', e => {
+      if (e.target.dataset.t !== 'no') return;
+      const row = e.target.closest('.thr'); const info = threadInfo(e.target.value);
+      if (info) { row.querySelector('[data-t=name]').value = info.name; row.querySelector('[data-t=hex]').value = info.hex; }
+    });
+  }
+}
+function readRedoForm(root, tab) {
+  const r = { tab };
+  root.querySelectorAll('[data-opts]').forEach(g => { const on = g.querySelector('.opt.on'); r[g.dataset.opts] = on ? on.dataset.o : ''; });
+  root.querySelectorAll('[data-f]').forEach(i => { r[i.dataset.f] = i.value.trim(); });
+  if (tab === 'emb') {
+    if (r.hoopX) r.hoop = r.hoopX; delete r.hoopX;
+    r.threads = [...root.querySelectorAll('.thr')].map(row => ({
+      no: row.querySelector('[data-t=no]').value.trim(), name: row.querySelector('[data-t=name]').value.trim(), hex: row.querySelector('[data-t=hex]').value,
+    })).filter(t => t.no || t.name);
+  }
+  return r;
+}
+function redoMissing(r) {
+  if (r.tab === 'emb') { const m = []; if (!r.threads || !r.threads.length) m.push('a thread color'); if (!r.hoop) m.push('the hoop'); return m; }
+  if (r.tab === 'patch') return r.ptype ? [] : ['the patch type'];
+  return r.placement ? [] : ['the placement'];
+}
+async function saveThreads(threads) {
+  for (const t of threads || []) {
+    if (!t.no) continue;
+    const cur = S.threads[t.no];
+    if (!cur || cur.name !== t.name || cur.hex !== t.hex) {
+      S.threads[t.no] = { name: t.name, hex: t.hex };
+      api('/thread', { no: t.no, name: t.name, hex: t.hex }).catch(() => {});
+    }
+  }
+}
+function noteLines(c, r, by) {
+  const d = new Date(); const ds = (d.getMonth() + 1) + '/' + d.getDate() + '/' + String(d.getFullYear()).slice(2);
+  const head = { emb: '🧵 EMBROIDERY DONE', patch: '🏷 PATCHES DONE', dtf: '🔥 DTF PRESSED' }[c.tab];
+  const L = [`${head} ${ds} · ${by}`, `Design: ${r.design}`];
+  if (c.tab === 'emb') {
+    if (r.threads && r.threads.length) L.push('Thread (Madeira): ' + r.threads.map(t => t.no + (t.name ? ' ' + t.name : '')).join(', '));
+    const a = [r.hoop && 'Hoop: ' + r.hoop, r.load && 'Load: ' + r.load].filter(Boolean); if (a.length) L.push(a.join(' · '));
+    const b = [r.backing && 'Backing: ' + r.backing, r.topping && 'Topping: ' + r.topping, r.foam && 'Foam: ' + r.foam].filter(Boolean); if (b.length) L.push(b.join(' · '));
+  } else {
+    const a = [r.ptype && 'Patch: ' + r.ptype, r.placement && 'Placement: ' + r.placement, r.press && 'Press: ' + r.press, r.peel && 'Peel: ' + r.peel].filter(Boolean); if (a.length) L.push(a.join(' · '));
+  }
+  if (r.notes) L.push('Notes: ' + r.notes);
+  return L;
+}
+
+// DONE flow -----------------------------------------------------------------
+function openDone(c) {
+  if (!c) return;
+  if (!me) return pickMe(() => openDone(c));
+  const recs = recordsFor(c.customer, c.tab);
+  const pre = matchedRecord(c);
+  const st = { design: pre ? pre.design : '', slug: pre ? pre.slug : '', same: !!pre, photos: [], busy: false };
+  const defaultDesign = (c.details && c.details[0]) || c.nick || '';
+  const needPhoto = c.tab === 'emb';
+  const title = { emb: 'Mark done', patch: 'Patches done', dtf: 'Pressed' }[c.tab];
+  function body() {
+    const rec = st.slug ? S.redo[st.slug] : null;
+    return `<div class="mh"><h3>${title} · #${h(c.job || '')}</h3><button class="btn sm" data-x>Cancel</button></div>
+    <div class="mb">
+      <div class="hint">${h(c.customer)}${c.nick ? ' · ' + h(c.nick) : ''} · ${c.qty || ''} pcs · by <b>${h(me)}</b> <a href="#" data-chme>(not you?)</a></div>
+      <div class="fl"><label class="req">Which design is this? (saved as the redo record)</label>
+        ${recs.length ? `<div class="opts">${recs.map(r => `<button type="button" class="opt ${st.slug === r.slug ? 'on' : ''}" data-pick="${h(r.slug)}">${h(r.design)}</button>`).join('')}<button type="button" class="opt ${!st.slug ? 'on' : ''}" data-pick="">＋ New design</button></div>` : ''}
+        ${!st.slug ? `<input class="in" id="designName" placeholder="Design name, e.g. Left chest logo, 3D puff hat logo" value="${h(st.design || defaultDesign)}">` : ''}
+      </div>
+      ${rec ? `<div class="same">${redoSummary(rec, false)}
+          <div class="opts" style="margin-top:10px"><button type="button" class="opt ${st.same ? 'on' : ''}" data-same="1">✓ Same as last time</button><button type="button" class="opt ${!st.same ? 'on' : ''}" data-same="0">Something changed</button></div></div>` : ''}
+      <div id="formHost">${!rec || !st.same ? redoFormHtml(c.tab, rec || { tab: c.tab }, c) : ''}</div>
+      <div class="fl"><label class="${needPhoto ? 'req' : ''}">${needPhoto ? 'Sew-out / first piece photo' : 'Photo (optional)'}</label>
+        <div class="photos" id="photos">${st.photos.map((p, i) => `<div class="p">${p.url ? `<img src="${h(p.local || p.url)}">` : p.err ? 'Failed' : 'Uploading…'}<button type="button" data-rm="${i}">✕</button></div>`).join('')}
+          <button type="button" class="camera" id="shoot"><span>📷</span>TAKE PHOTO</button></div>
+        <div class="hint">Goes into Printavo as a production file${needPhoto ? ' and becomes the reorder reference' : ''}.</div></div>
+      <div id="miss"></div>
+    </div>
+    <div class="mf"><span class="hint" style="margin-right:auto">Adds a note to Printavo. Never changes the status.</span>
+      <button class="btn" data-x>Cancel</button><button class="btn pri" id="saveDone" style="font-size:17px;padding:12px 22px">SAVE &amp; MARK DONE</button></div>`;
+  }
+  let formState = null; // keep typed values across re-renders
+  function draw() {
+    const s = $('#scrim');
+    if (s) { const fh = s.querySelector('#formHost'); if (fh && fh.innerHTML) formState = readRedoForm(fh, c.tab); const dn = s.querySelector('#designName'); if (dn) st.design = dn.value; }
+    const html = body();
+    if (!s) openModal(html, wire); else { s.querySelector('.modal').innerHTML = html; wire(s); }
+  }
+  function wire(s) {
+    s.querySelectorAll('[data-x]').forEach(b => b.onclick = closeModal);
+    const chme = s.querySelector('[data-chme]'); if (chme) chme.onclick = e => { e.preventDefault(); closeModal(); pickMe(() => openDone(c)); };
+    s.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { st.slug = b.dataset.pick; st.same = !!st.slug; st.design = st.slug ? S.redo[st.slug].design : ''; formState = null; draw(); });
+    s.querySelectorAll('[data-same]').forEach(b => b.onclick = () => { st.same = b.dataset.same === '1'; formState = null; draw(); });
+    const fh = s.querySelector('#formHost');
+    if (fh.innerHTML) {
+      if (formState) { fh.innerHTML = redoFormHtml(c.tab, formState, c); }
+      wireRedoForm(fh);
+    }
+    s.querySelector('#shoot').onclick = async () => {
+      const f = await takePhoto(); if (!f) return;
+      const p = { local: URL.createObjectURL(f) }; st.photos.push(p); draw();
+      try { const r = await uploadPhoto(f); p.id = r.id; p.url = r.url; }
+      catch (e) { p.err = e.message; toast('Photo upload failed — ' + e.message, true); st.photos.splice(st.photos.indexOf(p), 1); }
+      draw();
+    };
+    s.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { st.photos.splice(+b.dataset.rm, 1); draw(); });
+    s.querySelector('#saveDone').onclick = save;
+  }
+  async function save() {
+    if (st.busy) return;
+    const s = $('#scrim'); const miss = [];
+    const dn = s.querySelector('#designName'); if (dn) st.design = dn.value.trim();
+    const design = st.slug ? S.redo[st.slug].design : st.design;
+    if (!design) miss.push('a design name');
+    let rec;
+    const fh = s.querySelector('#formHost');
+    if (st.slug && st.same) rec = { ...S.redo[st.slug] };
+    else { rec = readRedoForm(fh, c.tab); miss.push(...redoMissing(rec)); }
+    if (needPhoto && !st.photos.some(p => p.id)) miss.push('a sew-out photo');
+    if (st.photos.some(p => !p.id && !p.err)) miss.push('photo still uploading');
+    if (miss.length) { s.querySelector('#miss').innerHTML = `<div class="warn">Still need: ${miss.join(', ')}.</div>`; return; }
+    st.busy = true; const btn = s.querySelector('#saveDone'); btn.disabled = true; btn.textContent = 'Saving…';
+    const slug = st.slug || slugOf(c.customer, design);
+    const prev = S.redo[slug] || {};
+    const photos = st.photos.filter(p => p.id).map(p => ({ url: p.url, id: p.id, at: new Date().toISOString(), job: c.job }));
+    const record = { ...prev, ...rec, slug, tab: c.tab, customer: c.customer, design, by: me,
+      photos: photos.concat(prev.photos || []).slice(0, 8), jobs: [...new Set([...(prev.jobs || []), c.job].filter(Boolean))].slice(-20) };
+    try {
+      saveThreads(record.threads);
+      const r1 = await api('/redo', { slug, record }); S.redo[slug] = r1.record || record;
+      const r2 = await api('/done', { key: c.key, by: me, photoIds: photos.map(p => p.id), slug, noteLines: noteLines(c, record, me) });
+      closeModal();
+      const pv = r2.printavo;
+      if (!c.invoiceId) toast('Done ✓ (manual job — nothing sent to Printavo)');
+      else if (pv && pv.ok) toast('Done ✓ Photo + note sent to Printavo');
+      else toast('Marked done, but Printavo didn\'t take it: ' + ((pv && pv.error) || 'unknown') + ' — use Retry in "Show done".', true);
+    } catch (e) { toast('Not saved — ' + e.message, true); st.busy = false; btn.disabled = false; btn.textContent = 'SAVE & MARK DONE'; return; }
+    await load();
+  }
+  draw();
+}
+
+// library editor ------------------------------------------------------------------
+function openRedoEditor(r) {
+  const isNew = !r; r = r || { tab: 'emb' };
+  let tab = r.tab || 'emb';
+  const draw = () => {
+    const html = `<div class="mh"><h3>${isNew ? 'New redo record' : h(r.design)}</h3><button class="btn sm" data-x>Close</button></div>
+      <div class="mb">
+        ${isNew ? `<div class="fl"><label>Type</label><div class="seg">${[['emb', 'Embroidery'], ['patch', 'Patch'], ['dtf', 'DTF']].map(([k, l]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tabsel="${k}">${l}</button>`).join('')}</div></div>
+          <div class="fl"><label class="req">Customer</label><input class="in" id="rc" value="${h(r.customer || '')}" placeholder="Exactly as it shows on Printavo jobs"></div>
+          <div class="fl"><label class="req">Design name</label><input class="in" id="rd" value="${h(r.design || '')}"></div>`
+          : `<div class="hint">${h(r.customer)} · ${{ emb: 'Embroidery', patch: 'Patch', dtf: 'DTF' }[tab]}</div>`}
+        <div id="formHost">${redoFormHtml(tab, r)}</div>
+        ${r.photos && r.photos.length ? `<div class="fl"><label>Photos</label><div class="photos">${r.photos.map(p => `<div class="p"><img src="${h(p.url)}" data-zoom="${h(p.url)}"></div>`).join('')}</div></div>` : ''}
+        <div id="miss"></div>
+      </div>
+      <div class="mf">${!isNew ? '<button class="btn" id="delRec" style="margin-right:auto;color:var(--red)">Delete record</button>' : ''}<button class="btn" data-x>Cancel</button><button class="btn pri" id="saveRec">Save</button></div>`;
+    const s = $('#scrim'); if (!s) openModal(html, wire); else { s.querySelector('.modal').innerHTML = html; wire(s); }
+  };
+  function wire(s) {
+    s.querySelectorAll('[data-x]').forEach(b => b.onclick = closeModal);
+    s.querySelectorAll('[data-tabsel]').forEach(b => b.onclick = () => { r.customer = s.querySelector('#rc').value; r.design = s.querySelector('#rd').value; tab = b.dataset.tabsel; draw(); });
+    s.querySelectorAll('[data-zoom]').forEach(i => i.onclick = () => lightbox(i.dataset.zoom));
+    wireRedoForm(s.querySelector('#formHost'));
+    const del = s.querySelector('#delRec');
+    if (del) del.onclick = () => { if (!confirmInline(del, 'Tap again to delete')) return; delete S.redo[r.slug]; api('/redo', { remove: r.slug }).catch(e => toast(e.message, true)); closeModal(); render(); };
+    s.querySelector('#saveRec').onclick = async () => {
+      const f = readRedoForm(s.querySelector('#formHost'), tab);
+      const customer = isNew ? s.querySelector('#rc').value.trim() : r.customer;
+      const design = isNew ? s.querySelector('#rd').value.trim() : r.design;
+      const miss = []; if (!customer) miss.push('customer'); if (!design) miss.push('design name');
+      if (miss.length) { s.querySelector('#miss').innerHTML = `<div class="warn">Still need: ${miss.join(', ')}.</div>`; return; }
+      const slug = r.slug || slugOf(customer, design);
+      const record = { ...r, ...f, tab, slug, customer, design, by: me || r.by || '' };
+      saveThreads(record.threads);
+      try { const res = await api('/redo', { slug, record }); S.redo[slug] = res.record || record; closeModal(); render(); toast('Saved'); }
+      catch (e) { toast('Not saved — ' + e.message, true); }
+    };
+  }
+  draw();
+}
+
+function openPType(c) {
+  openModal(`<div class="mh"><h3>Patch type · #${h(c.job)}</h3></div><div class="mb">${optsHtml('ptype', PTYPES, ptypeOf(c))}</div>
+    <div class="mf"><button class="btn" data-x>Cancel</button></div>`, s => {
+    s.querySelector('[data-x]').onclick = closeModal;
+    s.querySelectorAll('.opt').forEach(b => b.onclick = () => { const v = b.dataset.o; const patch = { ptype: v };
+      if (!c.ov.owner) patch.owner = (v === 'LASER' || v === 'LEATHERETTE') ? 'KOLTON' : 'JOE';
+      setCard(c.key, patch); closeModal(); });
+  });
+}
+
+// add job by hand ---------------------------------------------------------------
+$('#addBtn').onclick = () => {
+  const tab0 = ui.tab === 'lib' ? 'emb' : ui.tab;
+  openModal(`<div class="mh"><h3>Add a job by hand</h3><button class="btn sm" data-x>Cancel</button></div>
+    <div class="mb">
+      <div class="fl"><label>Goes on</label><div class="seg" id="atab">${[['emb', 'Embroidery'], ['patch', 'Patches'], ['dtf', 'DTF']].map(([k, l]) => `<button type="button" class="${tab0 === k ? 'on' : ''}" data-v="${k}">${l}</button>`).join('')}</div></div>
+      <div class="fl"><label>Printavo job # (if there is one)</label><input class="in" id="aj" inputmode="numeric" placeholder="6512"></div>
+      <div class="fl"><label class="req">Customer</label><input class="in" id="ac"></div>
+      <div class="fl"><label class="req">What / where</label><input class="in" id="aw" placeholder="e.g. Left chest logo on 12 polos"></div>
+      <div class="fl" style="grid-template-columns:1fr 1fr;display:grid;gap:10px"><div class="fl"><label>Pieces</label><input class="in" id="aq" inputmode="numeric"></div>
+        <div class="fl"><label>Due</label><input class="in" id="ad" type="date"></div></div>
+      <div class="fl"><label>Notes</label><textarea class="in" id="an" rows="2"></textarea></div>
+      <div id="miss"></div></div>
+    <div class="mf"><button class="btn" data-x>Cancel</button><button class="btn pri" id="asave">Add to queue</button></div>`, s => {
+    let tab = tab0;
+    s.querySelectorAll('[data-x]').forEach(b => b.onclick = closeModal);
+    s.querySelectorAll('#atab button').forEach(b => b.onclick = () => { tab = b.dataset.v; s.querySelectorAll('#atab button').forEach(x => x.classList.toggle('on', x === b)); });
+    s.querySelector('#asave').onclick = async () => {
+      const g = id => s.querySelector(id).value.trim();
+      if (!g('#ac') || !g('#aw')) { s.querySelector('#miss').innerHTML = '<div class="warn">Customer and what/where are required.</div>'; return; }
+      const job = g('#aj');
+      const hit = job && S.jobs.find(j => String(j.job) === job);
+      const card = { key: 'm:' + Math.random().toString(36).slice(2, 10), tab, src: 'manual', job, customer: g('#ac'), nick: g('#aw'),
+        details: [g('#aw')], lines: [], qty: +g('#aq') || 0, due: g('#ad'), note: g('#an'), created: todayStr(), mockups: hit ? hit.mockups : [], also: [],
+        invoiceId: hit ? hit.invoiceId : '', url: hit ? hit.url : '' };
+      S.board.manual[card.key] = card; closeModal(); ui.tab = tab; ui.sel[tab] = card.key; render();
+      try { await api('/manual', { card }); toast('Added'); } catch (e) { toast('Not saved — ' + e.message, true); }
+    };
+  });
+};
+
+// ------------------------------------------------------------ boot
+async function wake() { try { if (navigator.wakeLock && document.visibilityState === 'visible') await navigator.wakeLock.request('screen'); } catch {} }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { wake(); load(); } });
+(async function boot() {
+  render();
+  await load();
+  wake();
+  if (!me) pickMe();
+  if (!S.netErr && (!S.pulledAt || Date.now() - Date.parse(S.pulledAt) > 20 * 60e3)) refreshNow(true);
+  setInterval(() => { if (!ui.modal && !drag && !ui.menu) load(); }, 45000);
+  setInterval(renderHeader, 30000);
+})();
+</script>
+</body>
+</html>
