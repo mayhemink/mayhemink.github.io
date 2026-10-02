@@ -313,7 +313,7 @@ function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|
 function markDirty(msg){dirty=true;$('dlZip').classList.add('dirty');$('pubStatus').textContent=msg;}
 
 /* ================= LOAD CATALOG ================= */
-fetch(MB+'styles.json').then(r=>{if(!r.ok)throw 0;return r.json();}).then(j=>{
+fetch(MB+'styles.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json();}).then(j=>{
   CAT=j;
   $('badge').textContent='catalog: live · '+Object.keys(j.styles).length+' styles';
   $('badge').classList.add('live');

@@ -3112,7 +3112,7 @@ function handleFiles(files){
   });
 }
 /* hosted auto-load */
-fetch('styles.json').then(r=>{
+fetch('styles.json',{cache:'no-cache'}).then(r=>{
   if(!r.ok)throw 0;
   return r.json();
 }).then(data=>{
