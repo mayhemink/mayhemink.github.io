@@ -15715,6 +15715,86 @@
      "color": "White"
     }
    ]
+  },
+  "CSV104": {
+   "name": "CornerStone CSV104",
+   "sub": "ANSI 107 Class 2 Mesh Six-Pocket Zippered Vest",
+   "tokens": [
+    "csv104"
+   ],
+   "calib": {
+    "front": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 210,
+     "leftChestX": 500,
+     "default": true
+    },
+    "back": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 160,
+     "leftChestX": 500,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/CSV104/front/csv104-safety-orange-front.jpg",
+     "side": "front",
+     "color": "Safety Orange"
+    },
+    {
+     "file": "styles/CSV104/back/csv104-safety-orange-back.jpg",
+     "side": "back",
+     "color": "Safety Orange"
+    },
+    {
+     "file": "styles/CSV104/front/csv104-safety-yellow-front.jpg",
+     "side": "front",
+     "color": "Safety Yellow"
+    },
+    {
+     "file": "styles/CSV104/back/csv104-safety-yellow-back.jpg",
+     "side": "back",
+     "color": "Safety Yellow"
+    }
+   ]
+  },
+  "S5004": {
+   "name": "Kishigo S5004",
+   "sub": "High-Performance Surveyors Vest",
+   "tokens": [
+    "s5004"
+   ],
+   "calib": {
+    "front": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 210,
+     "leftChestX": 500,
+     "default": true
+    },
+    "back": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 160,
+     "leftChestX": 500,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/S5004/front/s5004-lime-front.jpg",
+     "side": "front",
+     "color": "Lime"
+    },
+    {
+     "file": "styles/S5004/back/s5004-lime-back.jpg",
+     "side": "back",
+     "color": "Lime"
+    }
+   ]
   }
  }
 }
