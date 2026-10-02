@@ -1036,7 +1036,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM MOCKUP LAB · V8.40 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
+  <span>MAYHEM MOCKUP LAB · V8.41 · CALIBRATION / MOCKUPS / PRINT SUMMARY / SUPPLIED MOCKUPS</span>
   <span>pantone swatches approximate — confirm on a physical book</span>
 </footer>
 
@@ -1241,7 +1241,9 @@ function normCalib(c,side){
     centerX:c.centerX||d.centerX,
     collarY:(c.collarY!=null?c.collarY:(c.collarboneY!=null?c.collarboneY:d.collarY)),
     leftChestX:c.leftChestX||d.leftChestX,
-    default:!!c.default
+    default:!!c.default,
+    /* v8.41: Style Lab v1.7 PRINT AREAS ride along untouched */
+    ...(Array.isArray(c.areas)&&c.areas.length?{areas:c.areas.map(a=>({...a}))}:{})
   };
 }
 /* per style+side calibration: {ppi, centerX, collarY, leftChestX} */
@@ -1576,8 +1578,59 @@ function effRule(styleKey,side,loc){
     return Object.assign({},rule,{drop:0});
   return rule;
 }
+/* ===== v8.41 PRINT AREAS (Style Lab v1.7) =====
+   Odd garments (safety vests, totes, aprons) skip the collar/center/left-chest
+   lines. Kolton draws a BOX on the photo in Style Lab and types its real max
+   width; each box "stands in for" one standard location (maps). The box gives
+   scale (w px / wIn), position, and a hard CAP — art is fitted INSIDE the box
+   (width AND height), centred, and nudges are clamped to stay inside it.
+   A location with no mapped box falls back to the side's first box. */
+function areasOf(styleKey,side){
+  const c=CALIB[styleKey]&&CALIB[styleKey][side];
+  return (c&&Array.isArray(c.areas)&&c.areas.length)?c.areas:null;
+}
+function areaFor(styleKey,side,loc){
+  const A=areasOf(styleKey,side);if(!A)return null;
+  return A.find(a=>a.maps===loc)||A[0];
+}
+function areaHIn(a){return a.h*a.wIn/a.w;}
+function areaFitIn(a,widthIn,art){
+  let w=Math.min(widthIn,a.wIn);
+  if(art&&art.width&&art.height){const ar=art.height/art.width,hIn=areaHIn(a);if(w*ar>hIn)w=hIn/ar;}
+  return w;
+}
+/* outputs (approval page, print sheet, films): per-garment when we know the
+   photo; set-wide only when EVERY garment in the set uses a print area */
+function setAreaFor(side){
+  const its=activeSet().items||[];if(!its.length)return null;
+  let first=null;
+  for(const it of its){const a=areaFor(it.styleKey,side,state.loc[side]);if(!a)return null;if(!first)first=a;}
+  return first;
+}
+function outArea(side,photo){return photo?areaFor(photo.styleKey,side,state.loc[side]):setAreaFor(side);}
+function locLabelOut(side,photo){const a=outArea(side,photo);return a?a.name:locLabel(side);}
+function locWidthOut(side,photo){
+  const a=outArea(side,photo),w=locWidth(side);
+  return a?+areaFitIn(a,w,artFor(side)).toFixed(2):w;
+}
 function computePlacement(photo,side,loc){
   if(!photo||!photo.canvas)return null;
+  const __ar=areaFor(photo.styleKey,side,loc);
+  if(__ar){
+    const ppi=__ar.w/__ar.wIn;
+    const fit=state.fit[side+':'+loc]||{};
+    const want=fit.widthIn||((RULES[side][loc]||{}).defaultWidth)||__ar.wIn;
+    const art=artFor(side);
+    const widthIn=areaFitIn(__ar,want,art);
+    const ar=(art&&art.width)?art.height/art.width:0.4;
+    const wpx=widthIn*ppi,hpx=wpx*ar;
+    let cx=__ar.x+__ar.w/2+(fit.nudgeX||0)*ppi;
+    let top=__ar.y+(__ar.h-hpx)/2+(fit.nudgeY||0)*ppi;
+    cx=Math.max(__ar.x+wpx/2,Math.min(__ar.x+__ar.w-wpx/2,cx));
+    top=Math.max(__ar.y,Math.min(__ar.y+__ar.h-hpx,top));
+    return {anchorX:cx,topY:top,wpx,widthIn,dropIn:(top-__ar.y)/ppi,rot:fit.rot||0,
+      area:__ar,capped:widthIn<want-0.005};
+  }
   const cal=smartizeCalib(CALIB[photo.styleKey][side],photo,side);
   const rule=effRule(photo.styleKey,side,loc);
   if(!cal||!rule)return null;
@@ -1856,6 +1909,7 @@ function setSide(side){const b=$(side==='front'?'sideFront':'sideBack');if(b&&st
 /* v8.15: FRONT and BACK placement are stacked blocks — both preset lists are
    always visible, each with its own How-wide. Touching a block flips the
    preview/edit side; clicking a preset in the other block flips too. */
+function escHtmlArea(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function buildLocBtns(){
   const __ph=activePhoto();
   [['front','locBtnsF'],['back','locBtnsB']].forEach(([side,elId])=>{
@@ -1864,7 +1918,10 @@ function buildLocBtns(){
       const b=document.createElement('button');
       const r=__ph?effRule(__ph.styleKey,side,key):RULES[side][key];
       const hooded=__ph&&r.drop===0&&side==='back'&&hoodStyle(__ph.styleKey)&&RULES[side][key].drop>0;
-      b.innerHTML=label+`<span class="st">@ ${r.drop}" down${hooded?' · below hood':''}</span>`;
+      const __pa=__ph?areaFor(__ph.styleKey,side,key):null;
+      b.innerHTML=__pa
+        ?label+(__pa.maps===key?' → '+escHtmlArea(__pa.name):'')+`<span class="st">▭ ${__pa.maps===key?'':escHtmlArea(__pa.name)+' · '}max ${__pa.wIn}"</span>`
+        :label+`<span class="st">@ ${r.drop}" down${hooded?' · below hood':''}</span>`;
       if(state.loc[side]===key)b.classList.add('active');
       b.onclick=()=>{setSide(side);state.loc[side]=key;buildLocBtns();syncRuleInputs();syncFitInputs();refresh();
         renderSetupTabs();renderShirtAssign();};   /* placement can flip which shirts read dark */
@@ -2326,7 +2383,9 @@ function refresh(){
         if(p2){
           const h2=p2.widthIn*a.height/a.width;
           ov=p2.widthIn>12.51||h2>17.01;
-          txt=`${p2.widthIn.toFixed(2)}" wide × ${h2.toFixed(2)}" tall · top ${p2.dropIn.toFixed(2)}" below collar`;
+          txt=p2.area
+            ?`${p2.widthIn.toFixed(2)}" wide × ${h2.toFixed(2)}" tall · inside ${p2.area.name} (max ${p2.area.wIn}")${p2.capped?' · CAPPED to fit':''}`
+            :`${p2.widthIn.toFixed(2)}" wide × ${h2.toFixed(2)}" tall · top ${p2.dropIn.toFixed(2)}" below collar`;
         }
       }
       const ro=$(sd==='front'?'actualInF':'actualInB');
@@ -3841,7 +3900,7 @@ function approvalFor(item,ret){
     ctx.fillStyle='#4B9CD3';ctx.font='700 14px "JetBrains Mono", monospace';
     ctx.fillText(side.toUpperCase(),x0+24,180);
     ctx.fillStyle='#666';ctx.font='500 14px "JetBrains Mono", monospace';
-    ctx.fillText(locLabel(side)+(state.exportNoSize?'':' · '+locWidth(side)+'" wide'),x0+86,180);
+    ctx.fillText(locLabelOut(side,photo)+(state.exportNoSize?'':' · '+locWidthOut(side,photo)+'" wide'),x0+86,180);
     drawInkChipsL(ctx,x0+24,chipTop,lay);
     stampWatermark(ctx,x0,cardY,cardW,cardH,'rgba(19,21,23,0.0375)',24);
     x0+=cardW+gap;
@@ -4149,10 +4208,10 @@ function renderSummaryTo(pg){
       const art=isSlv?(sleeveRecolored(k,gr.dark)||sleeveObj(k).art)
         :(recoloredArtFor(sd,gr.dark)||artFor(sd));
       if(!art)return;
-      const wIn=isSlv?(sleeveObj(k).widthIn||3):locWidth(sd);
+      const wIn=isSlv?(sleeveObj(k).widthIn||3):locWidthOut(sd);
       const hIn=wIn*art.height/art.width;
       prints.push({art:art,wIn:wIn,hIn:hIn,inks:inksForLoc(sd,isSlv,k),
-        lab:isSlv?(k==='L'?'L SLEEVE':'R SLEEVE'):locLabel(sd).toUpperCase()});
+        lab:isSlv?(k==='L'?'L SLEEVE':'R SLEEVE'):locLabelOut(sd).toUpperCase()});
     });
     if(prints.length){
       let lockTier=null;
@@ -4514,7 +4573,7 @@ function pvLocations(){
     if(!artFor(side))return;
     out.push({kind:side,loc:state.loc[side],
       label:pvTitleCase(locLabel(side)),
-      widthIn:locWidth(side)});
+      widthIn:locWidthOut(side)});
   });
   sleevesWithArt().forEach(function(k){
     const d=sleeveDims(k);
@@ -6644,7 +6703,7 @@ function productionSpecs(){
   for(const side of ['front','back']){
     const art=artFor(side);if(!art)continue;
     const f=state.fit[side+':'+state.loc[side]]||{};
-    specs.push({key:side,label:locLabel(side),width:locWidth(side),art,rotation:Number(f.rot)||0});
+    specs.push({key:side,label:locLabelOut(side),width:locWidthOut(side),art,rotation:Number(f.rot)||0});
   }
   for(const k of sleevesWithArt()){const s=sleeveObj(k);specs.push({key:k,label:k==='L'?'Left sleeve':'Right sleeve',width:s.widthIn||3,art:s.art,rotation:0});}
   return specs;

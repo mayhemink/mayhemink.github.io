@@ -105,6 +105,30 @@
   ::-webkit-scrollbar-thumb{background:#2C3238;border-radius:5px;border:2px solid #0E0F10;}
   ::-webkit-scrollbar-thumb:hover{background:var(--accent);}
   #pvc{cursor:zoom-in;}
+  /* v1.7 catalog sections + search */
+  .catsearch{position:relative;margin-bottom:6px;}
+  .catsearch input{padding-left:30px;}
+  .catsearch::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-52%);color:var(--muted);font-size:15px;}
+  .stylelist{max-height:62vh;overflow:auto;padding-right:2px;}
+  .secthead{display:flex;align-items:center;gap:8px;margin:10px 0 2px;padding:6px 2px;cursor:pointer;user-select:none;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    border-bottom:1px solid var(--line2);}
+  .secthead:first-child{margin-top:0;}
+  .secthead .cnt{border:1px solid var(--line2);border-radius:2px;padding:0 6px;font-size:10px;}
+  .secthead .tog{margin-left:auto;}
+  .secthead.sec-need{color:var(--warn);} .secthead.sec-need .cnt{border-color:var(--warn);}
+  .secthead.sec-prop{color:var(--accent2);} .secthead.sec-prop .cnt{border-color:var(--accent);}
+  .secthead.sec-cal{color:var(--ok);} .secthead.sec-cal .cnt{border-color:var(--ok);}
+  .cst.area{border-color:var(--accent2);color:var(--accent2);}
+  /* v1.7 print areas */
+  .areaform{margin-top:12px;background:var(--surface2);border:1px solid var(--accent);border-radius:3px;padding:12px;max-width:640px;}
+  .areaform[hidden]{display:none;}
+  .areaform .row3{display:grid;grid-template-columns:1.3fr .8fr 1.2fr;gap:10px;}
+  @media(max-width:700px){.areaform .row3{grid-template-columns:1fr;}}
+  .arealist{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .areachip{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:5px 9px;border:1px solid var(--accent);border-radius:3px;color:var(--accent2);display:flex;align-items:center;gap:8px;}
+  .areachip .x{cursor:pointer;color:var(--warn);font-weight:700;}
+  .areachip .m{color:var(--muted);}
   #lb{position:fixed;inset:0;background:rgba(10,11,12,.95);z-index:100;display:flex;
     flex-direction:column;align-items:center;padding:16px;gap:12px;overflow:auto;}
   #lb[hidden]{display:none;}
@@ -133,6 +157,7 @@
     <div class="panel">
       <h3><span class="pn">01</span> Catalog</h3>
       <p class="desc">Everything the Mockup Lab can build from. Click a style to work on it.</p>
+      <div class="catsearch"><input type="search" id="styleSearch" placeholder="search style #, name, brand…" autocomplete="off"></div>
       <div class="stylelist" id="styleList"></div>
     </div>
 
@@ -190,6 +215,21 @@
         <button class="btn sm" id="calibBtn">⌖ Calibrate this side</button>
         <button class="btn ghost sm" id="showLines">Show grid lines</button>
         <button class="btn sm" id="revBtn" hidden>⚡ Review proposal</button>
+        <button class="btn ghost sm" id="areaBtn" title="For odd items (safety vests, totes, aprons): draw a box over the print area and type its real max width">▭ Add print area instead</button>
+      </div>
+      <div class="arealist" id="areaList"></div>
+      <div class="areaform" id="areaForm" hidden>
+        <div class="row3">
+          <div><label class="lbl" style="margin-top:0;">Area name</label><input type="text" id="areaName" maxlength="24" placeholder="e.g. L POCKET"></div>
+          <div><label class="lbl" style="margin-top:0;">Real max width (in)</label><input type="number" id="areaW" step="0.25" min="0.5" max="16" placeholder="4.5"></div>
+          <div><label class="lbl" style="margin-top:0;">Stands in for</label><select id="areaMaps"></select></div>
+        </div>
+        <div class="val" id="areaRead">Type the real width of the box you drew.</div>
+        <div class="btnrow">
+          <button class="btn sm" id="areaSave">✓ Save print area</button>
+          <button class="btn ghost sm" id="areaRedraw">↺ Redraw box</button>
+          <button class="btn ghost sm" id="areaCancel">✕ Cancel</button>
+        </div>
       </div>
       <div class="cchips" id="chips" style="display:none;"></div>
       <div class="drawbanner" id="banner" style="margin-top:12px;"></div>
@@ -244,7 +284,7 @@
 </div>
 
 <footer>
-  <span>MAYHEM STYLE LAB · V1.6 · CALIBRATES IN MOCKUP-LAB CANVAS SPACE</span>
+  <span>MAYHEM STYLE LAB · V1.7 · CALIBRATES IN MOCKUP-LAB CANVAS SPACE</span>
   <span>calibrations save only when the exported styles.json is pushed to the repo</span>
 </footer>
 
@@ -284,21 +324,68 @@ fetch(MB+'styles.json').then(r=>{if(!r.ok)throw 0;return r.json();}).then(j=>{
 });
 
 function calOK(st,side){const c=CAT.styles[st]&&CAT.styles[st].calib&&CAT.styles[st].calib[side];return c&&!c.default;}
+/* v1.7: catalog split into NEEDS CALIBRATION / PENDING YOUR APPROVAL /
+   CALIBRATED, with live search. A style is calibrated when every side that HAS
+   photos is calibrated (logo-as-ruler OR print areas). Sides with no photos
+   don't hold a style back. Searching auto-expands every section. */
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function sideHasPhotos(k,side){
+  return (CAT.styles[k].photos||[]).some(p=>p.side===side)||NEWPHOTOS.some(p=>p.styleKey===k&&p.side===side);
+}
+function hasAreas(k,side){
+  const c=CAT.styles[k]&&CAT.styles[k].calib&&CAT.styles[k].calib[side];
+  return !!(c&&Array.isArray(c.areas)&&c.areas.length);
+}
+function styleState(k){
+  const sides=['front','back'].filter(sd=>sideHasPhotos(k,sd));
+  if(!sides.length)return 'need';
+  if(sides.every(sd=>calOK(k,sd)))return 'cal';
+  if(sides.some(sd=>hasProposal(k,sd)))return 'prop';
+  return 'need';
+}
+let catQ='';
+const catCollapsed={need:false,prop:false,cal:false};
+function sideChip(key,side){
+  if(hasAreas(key,side))return `<span class="cst area">${side} ▭${CAT.styles[key].calib[side].areas.length}</span>`;
+  const ok=calOK(key,side),pr=hasProposal(key,side);
+  return `<span class="cst ${ok?'ok':(pr?'prop':'no')}">${side} ${ok?'✓':(pr?'⚡':'!')}</span>`;
+}
+function styleRow(key){
+  const s=CAT.styles[key];
+  const row=document.createElement('div');
+  row.className='strow'+(sel.style===key?' sel':'');
+  const nF=s.photos.filter(p=>p.side==='front').length;
+  const nB=s.photos.filter(p=>p.side==='back').length;
+  row.innerHTML=`<div><div class="sk">${esc(key)}</div><div class="sn">${esc(s.name||'')}${s.sub?' · '+esc(s.sub):''}</div></div>
+    <div class="right">${nF}F · ${nB}B<br>${sideChip(key,'front')}${sideChip(key,'back')}</div>`;
+  row.onclick=()=>{sel.style=key;cancelCalib();buildStyleList();buildPhotoSel();refreshStatus();};
+  return row;
+}
 function buildStyleList(){
   const el=$('styleList');el.innerHTML='';
-  Object.entries(CAT.styles).forEach(([key,s])=>{
-    const row=document.createElement('div');
-    row.className='strow'+(sel.style===key?' sel':'');
-    const nF=s.photos.filter(p=>p.side==='front').length;
-    const nB=s.photos.filter(p=>p.side==='back').length;
-    row.innerHTML=`<div><div class="sk">${key}</div><div class="sn">${s.name||''}</div></div>
-      <div class="right">${nF}F · ${nB}B<br>
-      <span class="cst ${calOK(key,'front')?'ok':(hasProposal(key,'front')?'prop':'no')}">front ${calOK(key,'front')?'✓':(hasProposal(key,'front')?'⚡':'!')}</span>
-      <span class="cst ${calOK(key,'back')?'ok':(hasProposal(key,'back')?'prop':'no')}">back ${calOK(key,'back')?'✓':(hasProposal(key,'back')?'⚡':'!')}</span></div>`;
-    row.onclick=()=>{sel.style=key;cancelCalib();buildStyleList();buildPhotoSel();refreshStatus();};
-    el.appendChild(row);
+  const q=catQ.trim().toLowerCase();
+  const terms=q.split(/\s+/).filter(Boolean);
+  const keys=Object.keys(CAT.styles).filter(k=>{
+    if(!terms.length)return true;
+    const s=CAT.styles[k];
+    const hay=(k+' '+(s.name||'')+' '+(s.sub||'')+' '+(s.tokens||[]).join(' ')).toLowerCase();
+    return terms.every(t=>hay.includes(t));
+  }).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  if(!keys.length){el.innerHTML=`<div class="val">No styles match “${esc(catQ)}”.</div>`;return;}
+  [['need','Needs calibration'],['prop','Pending your approval'],['cal','Calibrated']].forEach(([id,title])=>{
+    const ks=keys.filter(k=>styleState(k)===id);
+    if(!ks.length&&terms.length)return;   /* searching: hide empty sections */
+    const col=!terms.length&&catCollapsed[id];
+    const h=document.createElement('div');h.className='secthead sec-'+id;
+    h.innerHTML=`<span>${title}</span><span class="cnt">${ks.length}</span><span class="tog">${col?'▸ show':'▾'}</span>`;
+    h.onclick=()=>{catCollapsed[id]=!catCollapsed[id];buildStyleList();};
+    el.appendChild(h);
+    if(!ks.length){const e=document.createElement('div');e.className='val';e.style.margin='2px 2px 6px';
+      e.textContent=id==='need'?'✓ all caught up':'none right now';el.appendChild(e);return;}
+    if(!col)ks.forEach(k=>el.appendChild(styleRow(k)));
   });
 }
+$('styleSearch').addEventListener('input',e=>{catQ=e.target.value;buildStyleList();});
 
 /* ================= PHOTO ACCESS ================= */
 function photoEntries(){
@@ -346,12 +433,16 @@ function refreshStatus(){
   $('calWho').textContent=sel.style?(sel.style+' · '+sel.side):'pick a style';
   const c=sel.style&&CAT.styles[sel.style].calib&&CAT.styles[sel.style].calib[sel.side];
   const prop=!!(sel.style&&hasProposal(sel.style,sel.side));
-  $('calStatus').innerHTML=!sel.style?'—':(c&&!c.default)
+  const nA=sel.style&&hasAreas(sel.style,sel.side)?c.areas.length:0;
+  $('calStatus').innerHTML=!sel.style?'—':nA
+    ?`<span style="color:var(--accent2)">▭ ${nA} print area${nA>1?'s':''} — overrides the shirt lines</span>`
+    :(c&&!c.default)
     ?`<span style="color:var(--ok)">✓ calibrated · 1"=${(+c.ppi).toFixed(1)}px</span>`
     :prop?`<span style="color:var(--accent2)">⚡ Claude proposed — review it</span>`
     :`<span style="color:var(--warn)">defaults — calibrate</span>`;
   const rb=$('revBtn');
   if(rb){rb.hidden=!prop&&!reviewMode;rb.textContent=reviewMode?'✕ exit review':'⚡ Review proposal ('+proposalCount()+' left)';}
+  renderAreaList();
 }
 
 /* ================= INTAKE ================= */
@@ -527,6 +618,7 @@ function startCalib(){
   applyZoom();renderChips();render();
 }
 function cancelCalib(){
+  if(areaMode)exitAreaMode(true);
   reviewMode=false;revTemp=null;revDrag=null;
   calStep=-1;calTemp={};calGuide=null;pendingAutoCalib=false;
   frame.classList.remove('calibrating');
@@ -536,7 +628,7 @@ function cancelCalib(){
   applyZoom();
 }
 function applyZoom(){
-  const act=calStep>=0||reviewMode;
+  const act=calStep>=0||reviewMode||!!areaMode;
   frame.classList.toggle('zoomed',act&&zoom>1);
   cvEl.style.width=act?(zoom*100)+'%':'';
 }
@@ -769,6 +861,172 @@ $('revBtn').onclick=()=>{
   startReview();
 };
 
+/* ================= v1.7 PRINT AREAS =================
+   For garments the collar/center/left-chest lines don't fit (safety vests,
+   totes, aprons): drag a box over the real print area, name it, type its REAL
+   max width. Stored in calib[side].areas as photo-space px (same max-dim-1100
+   space as calibration) + wIn. Each area "stands in for" one standard Mockup
+   Lab location (maps) so it works with every existing job/press/handoff flow.
+   The side's ppi/centerX/collarY are synced from the first area so anything
+   that still reads the plain calib lands in a sane spot. Mockup Lab (v8.41)
+   fits art INSIDE the box — capped on width AND height. */
+const AREA_LOCS={
+  front:[['leftChest','Left chest'],['fullFront','Full front'],['customF','Custom front']],
+  back:[['fullBack','Full back'],['lockerTag','Locker tag'],['customB','Custom back']]
+};
+let areaMode=null;   // {rect,drag}
+function sideCal(){
+  const st=CAT.styles[sel.style];
+  if(!st.calib)st.calib={};
+  return st.calib[sel.side]||(st.calib[sel.side]={ppi:30,centerX:366,collarY:sel.side==='front'?210:160,leftChestX:500,default:true});
+}
+function startAreaMode(){
+  if(!sel.style||!curPhotoCanvas){alert('Pick a style (and make sure a photo loads) first.');return;}
+  if(calStep>=0||reviewMode)cancelCalib();
+  areaMode={rect:null,drag:null};zoom=0.5;
+  frame.classList.add('calibrating');
+  $('areaBtn').classList.add('on');
+  applyZoom();renderAreaChips();render();
+}
+function exitAreaMode(silent){
+  areaMode=null;
+  $('areaForm').hidden=true;
+  $('areaBtn').classList.remove('on');
+  frame.classList.remove('calibrating');
+  $('banner').classList.remove('show');
+  $('chips').style.display='none';
+  if(!silent){applyZoom();render();}
+}
+function renderAreaChips(){
+  const el=$('chips');el.style.display='flex';el.innerHTML='';
+  [0.5,1,2,3].forEach(z=>{
+    const c=document.createElement('span');
+    c.className='cchip zoom'+(zoom===z?' zon':'');
+    c.textContent='🔍'+(z===0.5?'½':z)+'x';
+    c.onclick=()=>{zoom=z;applyZoom();renderAreaChips();};
+    el.appendChild(c);
+  });
+  const no=document.createElement('span');no.className='cchip undo';no.textContent='✕ cancel';
+  no.onclick=()=>exitAreaMode();el.appendChild(no);
+  const b=$('banner');
+  b.innerHTML=(areaMode&&areaMode.rect&&!areaMode.drag
+    ?'NAME IT + TYPE ITS REAL WIDTH — '+sel.style+' '+sel.side.toUpperCase()
+    :'DRAG A BOX OVER THE PRINT AREA — '+sel.style+' '+sel.side.toUpperCase())+
+    '<span class="how">Box the whole space the print may use (e.g. the pocket on a safety vest, the panel between reflective stripes). Art in the Mockup Lab is fitted inside this box — never bigger.</span>';
+  b.classList.add('show');
+}
+function areaMapsOptions(){
+  const s=$('areaMaps');s.innerHTML='';
+  const used=new Set((sideCal().areas||[]).map(a=>a.maps));
+  let firstFree=null;
+  AREA_LOCS[sel.side].forEach(([k,l])=>{
+    const o=document.createElement('option');o.value=k;
+    o.textContent=l+(used.has(k)?' (replaces existing)':'');
+    if(!used.has(k)&&firstFree==null)firstFree=k;
+    s.appendChild(o);
+  });
+  s.value=firstFree||AREA_LOCS[sel.side][0][0];
+}
+function areaReadout(){
+  const r=areaMode&&areaMode.rect;const w=parseFloat($('areaW').value);
+  if(!r){$('areaRead').textContent='Drag a box first.';return;}
+  $('areaRead').innerHTML=(w>=0.5)
+    ?`Box ${Math.round(r.w)}×${Math.round(r.h)}px → <b style="color:var(--ink)">${w}" wide × ${(r.h*w/r.w).toFixed(2)}" tall</b> max print · 1" = ${(r.w/w).toFixed(1)}px`
+    :'Type the real width of the box you drew (inches).';
+}
+function showAreaForm(){
+  areaMapsOptions();
+  $('areaName').value='';$('areaW').value='';
+  $('areaForm').hidden=false;
+  renderAreaChips();areaReadout();
+  setTimeout(()=>{$('areaName').focus();},0);
+}
+$('areaW').addEventListener('input',areaReadout);
+$('areaBtn').onclick=()=>{areaMode?exitAreaMode():startAreaMode();};
+$('areaCancel').onclick=()=>exitAreaMode();
+$('areaRedraw').onclick=()=>{if(!areaMode)return;areaMode.rect=null;$('areaForm').hidden=true;renderAreaChips();render();};
+$('areaSave').onclick=()=>{
+  const r=areaMode&&areaMode.rect;
+  const wIn=parseFloat($('areaW').value);
+  if(!r){alert('Drag a box over the print area first.');return;}
+  if(!(wIn>=0.5&&wIn<=16)){alert('Type the real max width in inches (0.5 – 16).');$('areaW').focus();return;}
+  const maps=$('areaMaps').value;
+  const label=(AREA_LOCS[sel.side].find(x=>x[0]===maps)||[,maps])[1];
+  const name=($('areaName').value.trim()||label).toUpperCase().slice(0,24);
+  const cal=sideCal();
+  cal.areas=(cal.areas||[]).filter(a=>a.maps!==maps);
+  cal.areas.push({name,maps,x:+r.x.toFixed(1),y:+r.y.toFixed(1),w:+r.w.toFixed(1),h:+r.h.toFixed(1),wIn:+wIn.toFixed(2)});
+  syncAreaCalib(cal);
+  const st=sel.style,sd=sel.side;
+  exitAreaMode();
+  markDirty(st+' '+sd+' print area "'+name+'" saved — publish to save');
+  buildStyleList();refreshStatus();render();refreshPvIfOpen();
+};
+function refreshPvIfOpen(){if(!$('pvWrap').hidden)loadSidePhoto('front',()=>loadSidePhoto('back',renderPreview));}
+function syncAreaCalib(cal){
+  if(!cal.areas||!cal.areas.length){delete cal.areas;cal.default=true;return;}
+  const a=cal.areas[0],ppi=a.w/a.wIn;
+  cal.ppi=ppi;cal.centerX=a.x+a.w/2;cal.collarY=a.y-2*ppi;cal.leftChestX=cal.centerX;
+  cal.default=false;delete cal.proposed;
+}
+function deleteArea(i){
+  const cal=sideCal();if(!cal.areas)return;
+  const a=cal.areas.splice(i,1)[0];
+  syncAreaCalib(cal);
+  markDirty(sel.style+' '+sel.side+' print area "'+(a&&a.name)+'" removed'+(cal.areas?'':' — side needs calibrating again')+' — publish to save');
+  buildStyleList();refreshStatus();render();refreshPvIfOpen();
+}
+function renderAreaList(){
+  const el=$('areaList');if(!el)return;el.innerHTML='';
+  if(!sel.style||!hasAreas(sel.style,sel.side))return;
+  CAT.styles[sel.style].calib[sel.side].areas.forEach((a,i)=>{
+    const lab=(AREA_LOCS[sel.side].find(x=>x[0]===a.maps)||[,a.maps])[1];
+    const c=document.createElement('span');c.className='areachip';
+    c.innerHTML=`▭ <b>${esc(a.name)}</b> · max ${a.wIn}" × ${(a.h*a.wIn/a.w).toFixed(2)}" <span class="m">→ ${esc(lab)}</span><span class="x" title="remove">✕</span>`;
+    c.querySelector('.x').onclick=()=>deleteArea(i);
+    el.appendChild(c);
+  });
+}
+cvEl.addEventListener('mousedown',e=>{
+  if(!areaMode||!$('areaForm').hidden)return;
+  e.preventDefault();
+  const p=pos(e);
+  areaMode.drag={x:p.x,y:p.y};areaMode.rect={x:p.x,y:p.y,w:0,h:0};
+  render();
+});
+cvEl.addEventListener('mousemove',e=>{
+  if(!areaMode||!areaMode.drag)return;
+  const p=pos(e),d=areaMode.drag;
+  const cx=v=>Math.max(0,Math.min(cvEl.width,v)),cy=v=>Math.max(0,Math.min(cvEl.height,v));
+  const x1=cx(Math.min(d.x,p.x)),x2=cx(Math.max(d.x,p.x)),y1=cy(Math.min(d.y,p.y)),y2=cy(Math.max(d.y,p.y));
+  areaMode.rect={x:x1,y:y1,w:x2-x1,h:y2-y1};
+  render();
+});
+window.addEventListener('mouseup',()=>{
+  if(!areaMode||!areaMode.drag)return;
+  areaMode.drag=null;
+  const r=areaMode.rect;
+  if(!r||r.w<8||r.h<8){
+    areaMode.rect=null;render();
+    $('banner').innerHTML='⚠ THAT BOX WAS TOO SMALL — DRAG A BIGGER ONE<span class="how">Click and hold, drag across the whole print area, then let go.</span>';
+    return;
+  }
+  render();showAreaForm();
+});
+function drawAreaBox(ctx,a,color,label){
+  ctx.save();ctx.setLineDash([8,5]);
+  ctx.globalAlpha=.14;ctx.fillStyle=color;ctx.fillRect(a.x,a.y,a.w,a.h);
+  ctx.globalAlpha=1;ctx.strokeStyle=color;ctx.lineWidth=2;ctx.strokeRect(a.x,a.y,a.w,a.h);
+  if(label){
+    ctx.setLineDash([]);ctx.font='700 12px "JetBrains Mono", monospace';
+    const tw=ctx.measureText(label).width;
+    const ly=a.y>22?a.y-20:a.y+a.h+4;
+    ctx.fillStyle='rgba(14,15,16,0.85)';ctx.fillRect(a.x,ly,tw+12,18);
+    ctx.fillStyle='#E8EAEC';ctx.fillText(label,a.x+6,ly+13);
+  }
+  ctx.restore();
+}
+
 /* ================= RENDER ================= */
 function render(){
   if(!curPhotoCanvas){
@@ -875,7 +1133,16 @@ function render(){
     }
   }
   ctx.setLineDash([]);
+  if(sel.style&&calStep<0&&!reviewMode&&hasAreas(sel.style,sel.side)){
+    CAT.styles[sel.style].calib[sel.side].areas.forEach(a=>drawAreaBox(ctx,a,areaMode?'rgba(152,160,166,.9)':'#4B9CD3',a.name+' · max '+a.wIn+'"'));
+  }
+  if(areaMode&&areaMode.rect&&areaMode.rect.w>0){
+    const w=parseFloat($('areaW').value);
+    drawAreaBox(ctx,areaMode.rect,'#4CC38A',areaMode.drag?'':((($('areaName').value||'NEW AREA').toUpperCase())+(w>=0.5?' · max '+w+'"':'')));
+  }
 }
+$('areaName').addEventListener('input',()=>{if(areaMode)render();});
+$('areaW').addEventListener('input',()=>{if(areaMode)render();});
 
 /* ================= SIDE / BUTTONS ================= */
 function setSide(s){
@@ -910,8 +1177,25 @@ const PV_CELLS=[
   {side:'back',label:'FULL BACK · 10"',line:'centerX',drop:4,w:10},
   {side:'back',label:'LOCKER TAG · 3"',line:'centerX',drop:1,w:3}
 ];
+/* v1.7: sides with print areas preview their AREAS (one cell each, logo
+   fitted inside the box) instead of the shirt presets */
+function pvCells(){
+  const out=[];
+  ['front','back'].forEach(side=>{
+    if(sel.style&&hasAreas(sel.style,side))
+      CAT.styles[sel.style].calib[side].areas.forEach(a=>out.push({side,label:a.name+' · MAX '+a.wIn+'"',area:a}));
+    else PV_CELLS.filter(c=>c.side===side).forEach(c=>out.push(c));
+  });
+  return out;
+}
+function areaLogoRect(a){
+  const ar=LOGO_DARK?LOGO_DARK.height/LOGO_DARK.width:0.4;
+  let w=a.w,h=w*ar;if(h>a.h){h=a.h;w=h/ar;}
+  return {x:a.x+(a.w-w)/2,y:a.y+(a.h-h)/2,w,h};
+}
 function renderPreview(){
   const pvc=$('pvc');
+  const PV_CELLS=pvCells();
   const st=CAT.styles[sel.style];if(!st)return;
   const CW=340,CH=470,PAD=14,LBL=34;
   pvc.width=PV_CELLS.length*CW+PAD*(PV_CELLS.length+1);
@@ -933,7 +1217,13 @@ function renderPreview(){
       const dw=photo.width*sc,dh=photo.height*sc;
       const dx=x+(CW-dw)/2,dy=y+(CH-dh)/2;
       ctx.drawImage(photo,dx,dy,dw,dh);
-      if(LOGO_DARK){
+      if(cell.area){
+        const a=cell.area;
+        ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='#4B9CD3';ctx.lineWidth=1.5;
+        ctx.strokeRect(dx+a.x*sc,dy+a.y*sc,a.w*sc,a.h*sc);ctx.restore();
+        if(LOGO_DARK){const L=areaLogoRect(a);ctx.globalAlpha=0.92;
+          ctx.drawImage(LOGO_DARK,dx+L.x*sc,dy+L.y*sc,L.w*sc,L.h*sc);ctx.globalAlpha=1;}
+      } else if(LOGO_DARK){
         const anchorX=(cell.line==='leftChestX'?(cal.leftChestX||cal.centerX):cal.centerX);
         const wpx=cell.w*cal.ppi;
         const topY=cal.collarY+cell.drop*cal.ppi;
@@ -978,16 +1268,17 @@ function openLb(i){
 }
 function closeLb(){lbEl.hidden=true;lbIndex=-1;}
 $('lbClose').onclick=closeLb;
-$('lbPrev').onclick=()=>{lbIndex=(lbIndex+PV_CELLS.length-1)%PV_CELLS.length;renderLb();};
-$('lbNext').onclick=()=>{lbIndex=(lbIndex+1)%PV_CELLS.length;renderLb();};
+$('lbPrev').onclick=()=>{const n=pvCells().length;lbIndex=(lbIndex+n-1)%n;renderLb();};
+$('lbNext').onclick=()=>{lbIndex=(lbIndex+1)%pvCells().length;renderLb();};
 lbEl.addEventListener('click',e=>{if(e.target===lbEl)closeLb();});
 document.addEventListener('keydown',e=>{
   if(lbEl.hidden)return;
   if(e.key==='Escape')closeLb();
-  else if(e.key==='ArrowLeft'){lbIndex=(lbIndex+PV_CELLS.length-1)%PV_CELLS.length;renderLb();}
-  else if(e.key==='ArrowRight'){lbIndex=(lbIndex+1)%PV_CELLS.length;renderLb();}
+  else if(e.key==='ArrowLeft'){const n=pvCells().length;lbIndex=(lbIndex+n-1)%n;renderLb();}
+  else if(e.key==='ArrowRight'){lbIndex=(lbIndex+1)%pvCells().length;renderLb();}
 });
 function renderLb(){
+  const PV_CELLS=pvCells();
   const cell=PV_CELLS[lbIndex];if(!cell)return;
   const st=CAT.styles[sel.style];
   const photo=pvPhotos[cell.side];
@@ -1001,7 +1292,11 @@ function renderLb(){
     lbc.width=photo.width;lbc.height=photo.height;
     const x=lbc.getContext('2d');
     x.drawImage(photo,0,0);
-    if(cal&&!cal.default&&LOGO_DARK){
+    if(cell.area){
+      x.save();x.setLineDash([8,5]);x.strokeStyle='#4B9CD3';x.lineWidth=2;
+      x.strokeRect(cell.area.x,cell.area.y,cell.area.w,cell.area.h);x.restore();
+      if(LOGO_DARK){const L=areaLogoRect(cell.area);x.globalAlpha=0.92;x.drawImage(LOGO_DARK,L.x,L.y,L.w,L.h);x.globalAlpha=1;}
+    } else if(cal&&!cal.default&&LOGO_DARK){
       const anchorX=(cell.line==='leftChestX'?(cal.leftChestX||cal.centerX):cal.centerX);
       const wpx=cell.w*cal.ppi;
       const topY=cal.collarY+cell.drop*cal.ppi;
@@ -1013,6 +1308,7 @@ function renderLb(){
   }
   // fine nudge controls for this cell's side
   const ctl=$('lbCtl');ctl.innerHTML='';
+  if(cell.area){ctl.innerHTML='<span class="val">Print area — to move it, redraw the box (▭ Add print area, same “stands in for”).</span>';return;}
   const mk=(label,side,key,d)=>{
     const b=document.createElement('button');b.className='btn ghost sm';b.textContent=label;
     b.onclick=()=>{if(nudgeCal(side,key,d))renderLb();};
@@ -1027,7 +1323,7 @@ $('pvc').addEventListener('click',e=>{
   const px=(e.clientX-r.left)*($('pvc').width/r.width);
   const CW=340,PAD=14;
   const i=Math.floor((px-PAD)/(CW+PAD));
-  if(i>=0&&i<PV_CELLS.length)openLb(i);
+  if(i>=0&&i<pvCells().length)openLb(i);
 });
 $('calibBtn').onclick=()=>{calStep>=0?cancelCalib():startCalib();render();};
 $('showLines').onclick=()=>{showLines=!showLines;$('showLines').classList.toggle('on',showLines);render();};
