@@ -1021,6 +1021,179 @@
           "4/5X": 14.08
         }
       }
+    },
+    "LK240": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL",
+        "5XL",
+        "6XL"
+      ],
+      "verified": true,
+      "checked": "2026-10-02",
+      "costs": {
+        "color": {
+          "base": 10.93,
+          "2XL": 11.93,
+          "3XL": 13.93,
+          "4XL": 14.93,
+          "5XL": 16.93,
+          "6XL": 17.93
+        }
+      }
+    },
+    "LPC450V": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL"
+      ],
+      "verified": true,
+      "checked": "2026-10-02",
+      "costs": {
+        "white": {
+          "base": 3.47,
+          "2XL": 4.55,
+          "3XL": 5.84,
+          "4XL": 5.84
+        },
+        "color": {
+          "base": 3.76,
+          "2XL": 5.53,
+          "3XL": 6.1,
+          "4XL": 6.1
+        }
+      }
+    },
+    "PC450TD": {
+      "sizes": [
+        "2T",
+        "3T",
+        "4T"
+      ],
+      "verified": true,
+      "checked": "2026-10-02",
+      "costs": {
+        "color": {
+          "base": 3.66
+        }
+      }
+    },
+    "AL2019": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL"
+      ],
+      "verified": true,
+      "checked": "2026-10-02",
+      "costs": {
+        "color": {
+          "base": 5.96,
+          "2XL": 6.96,
+          "3XL": 8.96,
+          "4XL": 9.96
+        }
+      }
+    },
+    "NL1540": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": true,
+      "checked": "2026-10-02",
+      "costs": {
+        "color": {
+          "base": 4.33,
+          "2XL": 5.38,
+          "3XL": 6.43
+        }
+      }
+    },
+    "BP78": {
+      "sizes": [
+        "OSFA"
+      ],
+      "verified": true,
+      "checked": "2026-10-02",
+      "costs": {
+        "color": {
+          "base": 10.75
+        }
+      }
+    },
+    "PC54V": {
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL"
+      ],
+      "verified": true,
+      "checked": "2026-10-02",
+      "costs": {
+        "white": {
+          "base": 2.88,
+          "2XL": 4.36,
+          "3XL": 5.41,
+          "4XL": 5.41
+        },
+        "color": {
+          "base": 3.38,
+          "2XL": 5.32,
+          "3XL": 6.43,
+          "4XL": 6.43
+        }
+      }
+    },
+    "IND4000": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL",
+        "5XL"
+      ],
+      "verified": false
+    },
+    "4400": {
+      "sizes": [
+        "NB",
+        "6M",
+        "12M",
+        "18M",
+        "24M"
+      ],
+      "verified": false
     }
   }
 }
