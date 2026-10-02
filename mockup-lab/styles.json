@@ -17766,91 +17766,92 @@
    ],
    "calib": {
     "front": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 12.22,
+     "centerX": 366.5,
+     "collarY": 356.46,
+     "leftChestX": 417.46,
+     "default": true,
+     "proposed": true
     }
    },
    "photos": [
     {
-     "file": "styles/BP78/front/bp78-ash-front.jpg",
+     "file": "styles/BP78/front/bp78-ash-open-front.jpg",
      "side": "front",
      "color": "Ash"
     },
     {
-     "file": "styles/BP78/front/bp78-athletic-heather-front.jpg",
+     "file": "styles/BP78/front/bp78-athletic-heather-open-front.jpg",
      "side": "front",
      "color": "Athletic Heather"
     },
     {
-     "file": "styles/BP78/front/bp78-carolina-blue-front.jpg",
+     "file": "styles/BP78/front/bp78-carolina-blue-open-front.jpg",
      "side": "front",
      "color": "Carolina Blue"
     },
     {
-     "file": "styles/BP78/front/bp78-charcoal-front.jpg",
+     "file": "styles/BP78/front/bp78-charcoal-open-front.jpg",
      "side": "front",
      "color": "Charcoal"
     },
     {
-     "file": "styles/BP78/front/bp78-dark-green-front.jpg",
+     "file": "styles/BP78/front/bp78-dark-green-open-front.jpg",
      "side": "front",
      "color": "Dark Green"
     },
     {
-     "file": "styles/BP78/front/bp78-dark-heather-grey-front.jpg",
+     "file": "styles/BP78/front/bp78-dark-heather-grey-open-front.jpg",
      "side": "front",
      "color": "Dark Heather Grey"
     },
     {
-     "file": "styles/BP78/front/bp78-gold-front.jpg",
+     "file": "styles/BP78/front/bp78-gold-open-front.jpg",
      "side": "front",
      "color": "Gold"
     },
     {
-     "file": "styles/BP78/front/bp78-heather-navy-front.jpg",
+     "file": "styles/BP78/front/bp78-heather-navy-open-front.jpg",
      "side": "front",
      "color": "Heather Navy"
     },
     {
-     "file": "styles/BP78/front/bp78-heather-royal-front.jpg",
+     "file": "styles/BP78/front/bp78-heather-royal-open-front.jpg",
      "side": "front",
      "color": "Heather Royal"
     },
     {
-     "file": "styles/BP78/front/bp78-jet-black-front.jpg",
+     "file": "styles/BP78/front/bp78-jet-black-open-front.jpg",
      "side": "front",
      "color": "Jet Black"
     },
     {
-     "file": "styles/BP78/front/bp78-maroon-front.jpg",
+     "file": "styles/BP78/front/bp78-maroon-open-front.jpg",
      "side": "front",
      "color": "Maroon"
     },
     {
-     "file": "styles/BP78/front/bp78-navy-front.jpg",
+     "file": "styles/BP78/front/bp78-navy-open-front.jpg",
      "side": "front",
      "color": "Navy"
     },
     {
-     "file": "styles/BP78/front/bp78-neon-pink-front.jpg",
+     "file": "styles/BP78/front/bp78-neon-pink-open-front.jpg",
      "side": "front",
      "color": "Neon Pink"
     },
     {
-     "file": "styles/BP78/front/bp78-purple-front.jpg",
+     "file": "styles/BP78/front/bp78-purple-open-front.jpg",
      "side": "front",
      "color": "Purple"
     },
     {
-     "file": "styles/BP78/front/bp78-red-front.jpg",
+     "file": "styles/BP78/front/bp78-red-open-front.jpg",
      "side": "front",
      "color": "Red"
     },
     {
-     "file": "styles/BP78/front/bp78-royal-front.jpg",
+     "file": "styles/BP78/front/bp78-royal-open-front.jpg",
      "side": "front",
      "color": "Royal"
     }
