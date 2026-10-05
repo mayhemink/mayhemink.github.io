@@ -311,6 +311,34 @@
       "INK SWAP",
       "VERIFY"
      ]
+    },
+    {
+     "id": "6501-lc",
+     "job": "6501",
+     "url": "https://www.printavo.com/invoices/24427898",
+     "customer": "R Staheli Plumbing",
+     "nickname": "R Staheli Plumbing",
+     "location": "LEFT CHEST — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)",
+     "qty": 84,
+     "colors": 1,
+     "screens": 1,
+     "img": "6501_lc",
+     "noest": true,
+     "due": "2026-10-05",
+     "arrived": "2026-10-05",
+     "inks": [
+      {
+       "n": "White — Black + Navy Frost (adult + youth)",
+       "hex": "#FFFFFF"
+      },
+      {
+       "n": "Navy — White Smoke + Ice Blue",
+       "hex": "#1F2A44"
+      }
+     ],
+     "tags": [
+      "INK SWAP"
+     ]
     }
    ],
    "flags": [
@@ -1324,6 +1352,7 @@
   "6545_lc": "/data/mocks/2026-10-05/6545_lc.jpg",
   "6545_back": "/data/mocks/2026-10-05/6545_back.jpg",
   "6555_1": "/data/mocks/2026-10-05/6555_1.jpg",
-  "6501_front": "/data/mocks/2026-10-05/6501_front.jpg"
+  "6501_front": "/data/mocks/2026-10-05/6501_front.jpg",
+  "6501_lc": "/data/mocks/2026-10-05/6501_lc.jpg"
  }
 }

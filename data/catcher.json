@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "week": "2026-10-05",
- "generatedAt": "2026-10-05T17:34:39.846248+00:00",
+ "generatedAt": "2026-10-05T17:51:05.252442+00:00",
  "source": "Weekly press board and verified Printavo order sizes",
  "days": [
   {
@@ -1330,6 +1330,341 @@
    "scheduleSignature": "[\"6501\",\"FRONT — new badge logo · 84 tees (80 adult DM130 + 4 youth DT130Y) · 4 shirt colors, own seps each\",84]",
    "note": "Blanks received. All 4 colorway mockups on the order in Printavo.",
    "image": "/data/mocks/2026-10-05/6501_front.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "52555983:108317528",
+     "style": "DM130",
+     "color": "White Smoke",
+     "lineItemIds": [
+      "108317528"
+     ],
+     "sizes": [
+      {
+       "id": "52555983:108317528:M",
+       "label": "M",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317528",
+         "size": "size_m",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "52555983:108317528:L",
+       "label": "L",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "108317528",
+         "size": "size_l",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "52555983:108317528:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "108317528",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555983:108317529",
+     "style": "DM130",
+     "color": "White Smoke",
+     "lineItemIds": [
+      "108317529"
+     ],
+     "sizes": [
+      {
+       "id": "52555983:108317529:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317529",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555983:108317530",
+     "style": "DM130",
+     "color": "Ice Blue",
+     "lineItemIds": [
+      "108317530"
+     ],
+     "sizes": [
+      {
+       "id": "52555983:108317530:M",
+       "label": "M",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317530",
+         "size": "size_m",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "52555983:108317530:L",
+       "label": "L",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "108317530",
+         "size": "size_l",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "52555983:108317530:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "108317530",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555983:108317531",
+     "style": "DM130",
+     "color": "Ice Blue",
+     "lineItemIds": [
+      "108317531"
+     ],
+     "sizes": [
+      {
+       "id": "52555983:108317531:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317531",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555983:108317532",
+     "style": "DM130",
+     "color": "Navy Frost",
+     "lineItemIds": [
+      "108317532"
+     ],
+     "sizes": [
+      {
+       "id": "52555983:108317532:M",
+       "label": "M",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317532",
+         "size": "size_m",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "52555983:108317532:L",
+       "label": "L",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "108317532",
+         "size": "size_l",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "52555983:108317532:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "108317532",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555983:108317533",
+     "style": "DM130",
+     "color": "Navy Frost",
+     "lineItemIds": [
+      "108317533"
+     ],
+     "sizes": [
+      {
+       "id": "52555983:108317533:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317533",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555983:108317534",
+     "style": "DM130",
+     "color": "Black",
+     "lineItemIds": [
+      "108317534"
+     ],
+     "sizes": [
+      {
+       "id": "52555983:108317534:M",
+       "label": "M",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317534",
+         "size": "size_m",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "52555983:108317534:L",
+       "label": "L",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "108317534",
+         "size": "size_l",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "52555983:108317534:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "108317534",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555983:108317535",
+     "style": "DM130",
+     "color": "Black",
+     "lineItemIds": [
+      "108317535"
+     ],
+     "sizes": [
+      {
+       "id": "52555983:108317535:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317535",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555984:108317536",
+     "style": "DT130Y",
+     "color": "Navy Frost",
+     "lineItemIds": [
+      "108317536"
+     ],
+     "sizes": [
+      {
+       "id": "52555984:108317536:YXL",
+       "label": "YXL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317536",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "52555984:108317537",
+     "style": "DT130Y",
+     "color": "Black",
+     "lineItemIds": [
+      "108317537"
+     ],
+     "sizes": [
+      {
+       "id": "52555984:108317537:YXL",
+       "label": "YXL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "108317537",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6501-lc",
+   "job": "6501",
+   "runId": "24427898:6501-lc",
+   "batchKeys": [
+    "24427898:52555983",
+    "24427898:52555984"
+   ],
+   "customer": "R Staheli Plumbing",
+   "location": "LEFT CHEST — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)",
+   "locationLabel": "Left Chest",
+   "day": "2026-10-05",
+   "expected": 84,
+   "scheduleSignature": "[\"6501\",\"LEFT CHEST — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)\",84]",
+   "image": "/data/mocks/2026-10-05/6501_lc.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
