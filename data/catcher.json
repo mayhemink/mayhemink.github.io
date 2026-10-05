@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "week": "2026-10-05",
- "generatedAt": "2026-10-05T17:51:05.252442+00:00",
+ "generatedAt": "2026-10-05T18:53:11.792937+00:00",
  "source": "Weekly press board and verified Printavo order sizes",
  "days": [
   {
@@ -1319,17 +1319,16 @@
    "job": "6501",
    "runId": "24427898:6501-front",
    "batchKeys": [
-    "24427898:52555983",
-    "24427898:52555984"
+    "24427898:52555983"
    ],
    "customer": "R Staheli Plumbing",
-   "location": "FRONT — new badge logo · 84 tees (80 adult DM130 + 4 youth DT130Y) · 4 shirt colors, own seps each",
-   "locationLabel": "Front",
+   "location": "FULL BACK 11\" — badge logo · 84 tees (80 adult DM130 + 4 youth DT130Y) · 4 shirt colors, own seps each",
+   "locationLabel": "Full Back 11\"",
    "day": "2026-10-05",
    "expected": 84,
-   "scheduleSignature": "[\"6501\",\"FRONT — new badge logo · 84 tees (80 adult DM130 + 4 youth DT130Y) · 4 shirt colors, own seps each\",84]",
+   "scheduleSignature": "[\"6501\",\"FULL BACK 11\\\" — badge logo · 84 tees (80 adult DM130 + 4 youth DT130Y) · 4 shirt colors, own seps each\",84]",
    "note": "Blanks received. All 4 colorway mockups on the order in Printavo.",
-   "image": "/data/mocks/2026-10-05/6501_front.jpg",
+   "image": "/data/mocks/2026-10-05/6501_back_ml.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
@@ -1605,7 +1604,7 @@
      ]
     },
     {
-     "id": "52555984:108317536",
+     "id": "52555983:108317536",
      "style": "DT130Y",
      "color": "Navy Frost",
      "lineItemIds": [
@@ -1613,7 +1612,7 @@
      ],
      "sizes": [
       {
-       "id": "52555984:108317536:YXL",
+       "id": "52555983:108317536:YXL",
        "label": "YXL",
        "expected": 2,
        "sources": [
@@ -1627,7 +1626,7 @@
      ]
     },
     {
-     "id": "52555984:108317537",
+     "id": "52555983:108317537",
      "style": "DT130Y",
      "color": "Black",
      "lineItemIds": [
@@ -1635,7 +1634,7 @@
      ],
      "sizes": [
       {
-       "id": "52555984:108317537:YXL",
+       "id": "52555983:108317537:YXL",
        "label": "YXL",
        "expected": 2,
        "sources": [
@@ -1655,16 +1654,15 @@
    "job": "6501",
    "runId": "24427898:6501-lc",
    "batchKeys": [
-    "24427898:52555983",
-    "24427898:52555984"
+    "24427898:52555983"
    ],
    "customer": "R Staheli Plumbing",
-   "location": "LEFT CHEST — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)",
-   "locationLabel": "Left Chest",
+   "location": "LEFT CHEST 4\" — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)",
+   "locationLabel": "Left Chest 4\"",
    "day": "2026-10-05",
    "expected": 84,
-   "scheduleSignature": "[\"6501\",\"LEFT CHEST — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)\",84]",
-   "image": "/data/mocks/2026-10-05/6501_lc.jpg",
+   "scheduleSignature": "[\"6501\",\"LEFT CHEST 4\\\" — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)\",84]",
+   "image": "/data/mocks/2026-10-05/6501_lc_ml.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
@@ -1940,7 +1938,7 @@
      ]
     },
     {
-     "id": "52555984:108317536",
+     "id": "52555983:108317536",
      "style": "DT130Y",
      "color": "Navy Frost",
      "lineItemIds": [
@@ -1948,7 +1946,7 @@
      ],
      "sizes": [
       {
-       "id": "52555984:108317536:YXL",
+       "id": "52555983:108317536:YXL",
        "label": "YXL",
        "expected": 2,
        "sources": [
@@ -1962,7 +1960,7 @@
      ]
     },
     {
-     "id": "52555984:108317537",
+     "id": "52555983:108317537",
      "style": "DT130Y",
      "color": "Black",
      "lineItemIds": [
@@ -1970,7 +1968,7 @@
      ],
      "sizes": [
       {
-       "id": "52555984:108317537:YXL",
+       "id": "52555983:108317537:YXL",
        "label": "YXL",
        "expected": 2,
        "sources": [

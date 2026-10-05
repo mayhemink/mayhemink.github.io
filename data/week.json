@@ -279,11 +279,11 @@
      "url": "https://www.printavo.com/invoices/24427898",
      "customer": "R Staheli Plumbing",
      "nickname": "R Staheli Plumbing",
-     "location": "FRONT — new badge logo · 84 tees (80 adult DM130 + 4 youth DT130Y) · 4 shirt colors, own seps each",
+     "location": "FULL BACK 11\" — badge logo · 84 tees (80 adult DM130 + 4 youth DT130Y) · 4 shirt colors, own seps each",
      "qty": 84,
      "colors": 4,
      "screens": 11,
-     "img": "6501_front",
+     "img": "6501_back_ml",
      "alert": "4 SHIRT COLORS, DIFFERENT INKS — White Smoke 20: FN Navy + Bright Red · Black 22: UB, Navy, Bright Red, HL White · Navy Frost 22: UB, 7585 Burnt Orange, HL White · Ice Blue 20: Black + Cool Gray 11",
      "note": "Blanks received. All 4 colorway mockups on the order in Printavo.",
      "noest": true,
@@ -318,11 +318,11 @@
      "url": "https://www.printavo.com/invoices/24427898",
      "customer": "R Staheli Plumbing",
      "nickname": "R Staheli Plumbing",
-     "location": "LEFT CHEST — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)",
+     "location": "LEFT CHEST 4\" — badge logo, 1c · 84 tees: WHITE on Black + Navy Frost (44) · NAVY on White Smoke + Ice Blue (40)",
      "qty": 84,
      "colors": 1,
      "screens": 1,
-     "img": "6501_lc",
+     "img": "6501_lc_ml",
      "noest": true,
      "due": "2026-10-05",
      "arrived": "2026-10-05",
@@ -1352,7 +1352,7 @@
   "6545_lc": "/data/mocks/2026-10-05/6545_lc.jpg",
   "6545_back": "/data/mocks/2026-10-05/6545_back.jpg",
   "6555_1": "/data/mocks/2026-10-05/6555_1.jpg",
-  "6501_front": "/data/mocks/2026-10-05/6501_front.jpg",
-  "6501_lc": "/data/mocks/2026-10-05/6501_lc.jpg"
+  "6501_back_ml": "/data/mocks/2026-10-05/6501_back_ml.jpg",
+  "6501_lc_ml": "/data/mocks/2026-10-05/6501_lc_ml.jpg"
  }
 }
