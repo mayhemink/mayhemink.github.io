@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hat Lab — Mayhem Ink</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  :root{
+    --bg:#0E0F10; --surface:#17181A; --surface2:#1E2124; --ink:#E8EAEC; --muted:#98A0A6;
+    --line:#282C30; --line2:#3A4046; --accent:#4B9CD3; --accent2:#7BAFD4; --ok:#4CC38A; --warn:#E8C447; --bad:#E5484D;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.5;padding-bottom:60px;}
+  ::selection{background:var(--accent);color:#111;}
+  .topbar{background:linear-gradient(180deg,#131517,#0E0F10);border-bottom:3px solid var(--accent);padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand img{height:34px;}
+  .brand .t{font-family:'Archivo Black',sans-serif;font-size:20px;letter-spacing:.02em;text-transform:uppercase;}
+  .brand .t b{color:var(--accent);font-weight:400;}
+  .brand .s{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;}
+  .toplinks{display:flex;gap:8px;align-items:center;}
+  .toplinks a{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--line2);padding:6px 10px;border-radius:3px;}
+  .toplinks a:hover{color:var(--accent2);border-color:var(--accent);}
+  .app{max-width:1560px;margin:18px auto 0;padding:0 26px;display:grid;grid-template-columns:400px minmax(0,1fr);gap:18px;align-items:start;}
+  @media(max-width:1100px){.app{grid-template-columns:1fr;}}
+  .col-l{display:flex;flex-direction:column;gap:12px;}
+  .col-r{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px;}
+  @media(max-width:1100px){.col-r{position:static;}}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;}
+  .panel.glow{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;}
+  .panel h3{margin:0 0 4px;font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:10px;}
+  .pn{background:var(--accent);color:#111;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:2px 7px;border-radius:2px;}
+  .desc{color:var(--muted);font-size:12px;margin:2px 0 10px;}
+  label.lbl{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:10px 0 4px;}
+  select,input[type=number],input[type=text],input[type=search]{width:100%;background:var(--surface2);border:1px solid var(--line2);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:13px;padding:8px 10px;border-radius:4px;}
+  input[type=range]{width:100%;accent-color:var(--accent);}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .val{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+  .btn{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:12px;letter-spacing:.05em;background:var(--accent);color:#111;border:none;padding:11px 16px;border-radius:4px;cursor:pointer;width:100%;}
+  .btn:hover{background:#63ACDD;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line2);}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent2);}
+  .btn.sm{padding:6px 10px;font-size:10.5px;width:auto;}
+  .btnrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .drop{display:block;border:1.5px dashed var(--line2);background:var(--surface2);border-radius:4px;padding:16px;text-align:center;cursor:pointer;font-size:12px;color:var(--muted);}
+  .drop:hover,.drop.drag{border-color:var(--accent);color:var(--ink);}
+  .drop b{color:var(--ink);display:block;font-size:13px;margin-bottom:2px;}
+  .drop img{max-width:100%;max-height:110px;display:block;margin:0 auto 6px;background:repeating-conic-gradient(#2a2d31 0 25%,#1e2124 0 50%) 0 0/14px 14px;}
+  input[type=file]{display:none;}
+  .msg{font-size:12px;border-left:3px solid var(--warn);background:rgba(232,196,71,.08);padding:7px 10px;margin-top:8px;border-radius:0 3px 3px 0;color:#efe2b0;}
+  .msg.ok{border-color:var(--ok);background:rgba(76,195,138,.08);color:#bfe9d3;}
+  .msg.info{border-color:var(--accent);background:rgba(75,156,211,.08);color:#cfe3f2;}
+  /* hats */
+  .hatlist{max-height:250px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;margin-top:8px;padding-right:2px;}
+  .hat{background:#fff;border:2px solid transparent;border-radius:4px;cursor:pointer;overflow:hidden;position:relative;}
+  .hat img{width:100%;height:70px;object-fit:cover;object-position:50% 20%;display:block;}
+  .hat span{display:block;background:var(--surface2);color:var(--ink);font-size:9.5px;line-height:1.2;padding:3px 4px;font-family:'JetBrains Mono',monospace;min-height:26px;}
+  .hat.on{border-color:var(--accent);}
+  .hat.on::after{content:'✓';position:absolute;top:2px;right:4px;color:#fff;background:var(--accent);font-size:11px;font-weight:700;padding:0 4px;border-radius:2px;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border:1px solid var(--line2);background:var(--surface2);padding:4px 8px;border-radius:3px;cursor:pointer;display:flex;gap:6px;align-items:center;}
+  .chip.cur{border-color:var(--accent);color:var(--accent2);}
+  .chip i{font-style:normal;color:var(--muted);}
+  .chip i:hover{color:var(--bad);}
+  /* threads */
+  .thr{display:grid;grid-template-columns:22px 28px 1fr auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);}
+  .thr:last-child{border-bottom:none;}
+  .sw{width:26px;height:26px;border-radius:3px;border:1px solid rgba(255,255,255,.18);}
+  .sw.art{width:20px;height:20px;border-radius:50%;}
+  .thr .nm{font-size:12px;line-height:1.25;}
+  .thr .nm b{font-family:'JetBrains Mono',monospace;}
+  .thr .nm small{display:block;color:var(--muted);font-size:10.5px;}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:1px 5px;border-radius:2px;border:1px solid;}
+  .tag.shelf{color:var(--ok);border-color:var(--ok);}
+  .tag.order{color:var(--warn);border-color:var(--warn);}
+  .thr.off .nm,.thr.off .sw{opacity:.35;}
+  .iconbtn{background:var(--surface2);border:1px solid var(--line2);color:var(--ink);border-radius:3px;font-size:11px;padding:4px 7px;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+  .iconbtn:hover{border-color:var(--accent);}
+  .seg{display:flex;border:1px solid var(--line2);border-radius:4px;overflow:hidden;}
+  .seg button{flex:1;background:var(--surface2);color:var(--muted);border:none;padding:7px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;}
+  .seg button.on{background:var(--accent);color:#111;font-weight:700;}
+  /* stage */
+  .stage{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;}
+  .stagehead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .stagehead .ttl{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.05em;}
+  .stagehead .ttl small{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:11px;letter-spacing:0;text-transform:none;margin-left:8px;}
+  #view{width:100%;display:block;background:#fff;border-radius:4px;}
+  .stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
+  .stats b{color:var(--ink);font-weight:500;}
+  .empty{padding:80px 20px;text-align:center;color:var(--muted);font-size:13px;}
+  /* modal */
+  #pickWrap{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:70;display:none;align-items:center;justify-content:center;}
+  #pickWrap.open{display:flex;}
+  #pick{background:var(--surface);border:1px solid var(--accent);border-radius:6px;width:min(520px,94vw);max-height:86vh;display:flex;flex-direction:column;padding:14px;}
+  #pickList{overflow:auto;margin-top:8px;flex:1;}
+  .pk{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:6px 6px;border-radius:3px;cursor:pointer;}
+  .pk:hover{background:var(--surface2);}
+  .pk .sw{width:28px;height:28px;}
+  .pk small{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10.5px;}
+  .foot{color:var(--muted);font-size:11px;margin-top:6px;}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="assets/mayhem-logo.png" alt="" onerror="this.remove()">
+    <div><div class="t">HAT <b>LAB</b></div><div class="s">EMBROIDERY MOCKUPS · v1.0</div></div>
+  </div>
+  <div class="toplinks">
+    <a href="./">← MOCKUP LAB (SHIRTS)</a>
+    <a href="../inkmatch/" target="_blank">THREAD PICKER ↗</a>
+  </div>
+</header>
+
+<div class="app">
+<aside class="col-l">
+
+  <div class="panel" id="pJob">
+    <h3><span class="pn">1</span> Job</h3>
+    <p class="desc">Goes on every page you download.</p>
+    <div class="row2">
+      <div><label class="lbl" style="margin-top:0">Customer</label><input type="text" id="jobCustomer" placeholder="Customer name"></div>
+      <div><label class="lbl" style="margin-top:0">Quote #</label><input type="text" id="jobQuote" placeholder="#6541"></div>
+    </div>
+    <label class="lbl">Job / design name</label><input type="text" id="jobName" placeholder="Front logo">
+  </div>
+
+  <div class="panel" id="pArt">
+    <h3><span class="pn">2</span> Logo</h3>
+    <p class="desc">PNG with transparency or SVG is best. A white background gets knocked out; white <i>inside</i> the art stays as a thread colour (turn it off in step 4 if the hat should show through).</p>
+    <label class="drop" id="artDrop"><input type="file" id="artFile" accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg"><img id="artThumb" class="hidden" alt=""><b id="artDropT">Drop logo here</b><span id="artDropS">or click to choose</span></label>
+    <div id="artMsg"></div>
+  </div>
+
+  <div class="panel" id="pHats">
+    <h3><span class="pn">3</span> Hats</h3>
+    <p class="desc">Pick every colourway on the order — one approval page each.</p>
+    <select id="hatStyle"></select>
+    <input type="search" id="hatSearch" placeholder="Search colours — e.g. navy white, char" style="margin-top:8px">
+    <div class="hatlist" id="hatList"></div>
+    <div class="chips" id="hatChips"></div>
+  </div>
+
+  <div class="panel" id="pThreads">
+    <h3><span class="pn">4</span> Threads</h3>
+    <p class="desc">Each art colour is matched to the closest Madeira Polyneon <b>on our shelf</b>. Click a thread to swap it. ✕ = don't stitch that colour (hat shows through).</p>
+    <div class="seg" id="thrScope"><button data-s="all" class="on">ALL HATS</button><button data-s="hat">THIS HAT ONLY</button></div>
+    <div id="thrList" style="margin-top:6px"><div class="val">Add a logo first.</div></div>
+    <div id="thrMsg"></div>
+  </div>
+
+  <div class="panel" id="pPlace">
+    <h3><span class="pn">5</span> Size &amp; placement</h3>
+    <p class="desc">Front centre. Width in real inches — the tool keeps the height inside the hat's sewable front.</p>
+    <label class="lbl">Width <span class="val" id="wVal"></span></label>
+    <input type="range" id="wIn" min="1" max="4.5" step="0.05" value="3.5">
+    <label class="lbl">Height above bill seam <span class="val" id="yVal"></span></label>
+    <input type="range" id="yIn" min="0.3" max="1.4" step="0.05" value="0.55">
+    <div id="placeMsg"></div>
+  </div>
+
+  <div class="panel" id="pOut">
+    <h3><span class="pn">6</span> Download</h3>
+    <p class="desc">Approval PDF goes to the customer (one page per hat colour). The digitizing sheet is for us / Vitor.</p>
+    <button class="btn" id="dlApproval" disabled>⬇ Customer approval PDF</button>
+    <div class="btnrow">
+      <button class="btn ghost sm" id="dlSheet" disabled>⬇ Digitizing / thread sheet</button>
+      <button class="btn ghost sm" id="cpVitor" disabled>⧉ Copy Vitor request</button>
+      <button class="btn ghost sm" id="cpJob">⧉ Copy job JSON</button>
+      <button class="btn ghost sm" id="newJob">✕ New job</button>
+    </div>
+    <div id="outMsg"></div>
+  </div>
+
+</aside>
+
+<main class="col-r">
+  <div class="stage">
+    <div class="stagehead">
+      <div class="ttl" id="stageTtl">Preview<small id="stageSub"></small></div>
+      <div class="seg" id="viewSeg" style="width:240px"><button data-v="hat" class="on">ON THE HAT</button><button data-v="close">STITCH CLOSE-UP</button></div>
+    </div>
+    <div id="emptyView" class="empty">Drop a logo (step 2) and pick a hat (step 3) to see it stitched.</div>
+    <canvas id="view" class="hidden"></canvas>
+    <div class="stats" id="stats"></div>
+    <div id="warnBox"></div>
+  </div>
+</main>
+</div>
+
+<div id="pickWrap"><div id="pick">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+    <div style="font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase">Pick thread <span class="val" id="pickFor"></span></div>
+    <button class="iconbtn" id="pickClose">✕ close</button>
+  </div>
+  <input type="search" id="pickSearch" placeholder="Number or name — 1801, navy, gold…" style="margin-top:8px">
+  <label style="font-size:12px;color:var(--muted);margin-top:6px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="pickShelf" checked> On our shelf only</label>
+  <div id="pickList"></div>
+  <div class="foot">Sorted by closeness to the art colour (★ = on the shelf). Swatches are approximate — the physical Madeira card decides.</div>
+</div></div>
+
+<script>
+/* =====================================================================
+   HAT LAB v1.0 — embroidery mockups for hats (Mayhem Ink)
+   Sibling of the Mockup Lab. Engine = analyzeArt → renderStitch → composeHat.
+   AGENT API: window.HatLab (see bottom). Job state is plain JSON (JOB).
+   ===================================================================== */
+const VERSION='1.0';
+const $=id=>document.getElementById(id);
+
+/* ---------- colour math (copied from inkmatch so matches agree) ---------- */
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(x=>x+x).join(""); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+function rgb2lab(r,g,b){
+  let f=v=>{v/=255; return v>0.04045?Math.pow((v+0.055)/1.055,2.4):v/12.92;};
+  r=f(r); g=f(g); b=f(b);
+  let x=(r*0.4124564+g*0.3575761+b*0.1804375)/0.95047,
+      y=(r*0.2126729+g*0.7151522+b*0.0721750),
+      z=(r*0.0193339+g*0.1191920+b*0.9503041)/1.08883;
+  let t=v=>v>0.008856?Math.cbrt(v):(7.787*v+16/116);
+  x=t(x); y=t(y); z=t(z);
+  return [116*y-16, 500*(x-y), 200*(y-z)];
+}
+function de2000(l1,l2){
+  const [L1,a1,b1]=l1,[L2,a2,b2]=l2, rad=Math.PI/180, deg=180/Math.PI;
+  const C1=Math.hypot(a1,b1), C2=Math.hypot(a2,b2), Cb=(C1+C2)/2;
+  const G=0.5*(1-Math.sqrt(Math.pow(Cb,7)/(Math.pow(Cb,7)+Math.pow(25,7))));
+  const a1p=a1*(1+G), a2p=a2*(1+G);
+  const C1p=Math.hypot(a1p,b1), C2p=Math.hypot(a2p,b2);
+  let h1p=Math.atan2(b1,a1p)*deg; if(h1p<0)h1p+=360;
+  let h2p=Math.atan2(b2,a2p)*deg; if(h2p<0)h2p+=360;
+  const dLp=L2-L1, dCp=C2p-C1p;
+  let dhp=0;
+  if(C1p*C2p!==0){ dhp=h2p-h1p; if(dhp>180)dhp-=360; else if(dhp<-180)dhp+=360; }
+  const dHp=2*Math.sqrt(C1p*C2p)*Math.sin(dhp/2*rad);
+  const Lbp=(L1+L2)/2, Cbp=(C1p+C2p)/2;
+  let hbp=h1p+h2p;
+  if(C1p*C2p!==0){ if(Math.abs(h1p-h2p)>180){ hbp += (h1p+h2p<360)?360:-360; } hbp/=2; }
+  const T=1-0.17*Math.cos((hbp-30)*rad)+0.24*Math.cos(2*hbp*rad)+0.32*Math.cos((3*hbp+6)*rad)-0.20*Math.cos((4*hbp-63)*rad);
+  const dTheta=30*Math.exp(-Math.pow((hbp-275)/25,2));
+  const Rc=2*Math.sqrt(Math.pow(Cbp,7)/(Math.pow(Cbp,7)+Math.pow(25,7)));
+  const Sl=1+(0.015*Math.pow(Lbp-50,2))/Math.sqrt(20+Math.pow(Lbp-50,2));
+  const Sc=1+0.045*Cbp, Sh=1+0.015*Cbp*T;
+  const Rt=-Math.sin(2*dTheta*rad)*Rc;
+  return Math.sqrt(Math.pow(dLp/Sl,2)+Math.pow(dCp/Sc,2)+Math.pow(dHp/Sh,2)+Rt*(dCp/Sc)*(dHp/Sh));
+}
+
+/* ---------- Madeira Polyneon #40 — live from the thread picker (inkmatch),
+   snapshot below is the fallback if that page can't be read. ---------- */
+const THREADS_SNAPSHOT=[["1500","#1C1C1C","Black"],["1502","#5A5B63","Zipper"],["1505","#8F8F96","Polished Silver"],["1506","#303036","Deep Steel Blue"],["1507","#2A2A2C","Pea Coat Lining"],["1508","#E84A66","Cherry Pie"],["1509","#E84E70","Rhubarb"],["1510","#715127","Multicolor",1],["1511","#C9BE83","Multicolor",1],["1512","#878171","Multicolor",1],["1513","#494034","Multicolor",1],["1514","#3A322F","Multicolor",1],["1515","#2F2C2B","Multicolor",1],["1516","#555759","Multicolor",1],["1517","#333131","Multicolor",1],["1518","#2E2D30","Multicolor",1],["1519","#505B74","Multicolor",1],["1521","#F08973","Autumn Orange"],["1522","#AC8EBF","Lavender Blue"],["1526","#C7BD8A","French Vanilla"],["1527","#F9D0B1","Teddy Bear"],["1528","#4476AF","Serene Sky"],["1529","#E7DDED","Orchid Mist"],["1531","#495A90","Delphinium"],["1532","#ACC0E3","Little Boy Blue"],["1535","#786D58","Tarnished Taupe"],["1538","#8F6E49","Tiramisu"],["1539","#4A4644","Stone"],["1540","#2E2D2C","Cobblestone"],["1541","#F9F2A4","Chartreuse"],["1542","#576E9B","Blue Heather"],["1544","#444551","Chimney Smoke"],["1545","#F9FBFB","Winter Mint"],["1548","#F0CFE3","Pink Plush"],["1549","#FAE8F2","Pink Sorbet"],["1550","#ACBACB","Light Periwinkle"],["1552","#D4D291","Golden Green"],["1553","#71658D","Galaxy Blue"],["1554","#FCEFF0","Dogwood"],["1555","#655168","Carbon Paper"],["1556","#FAD5BD","Taste of Honey"],["1557","#7C6264","Mud Facial"],["1558","#68565A","French Roast"],["1559","#6C5A61","Mud Pie"],["1560","#78565D","Espresso"],["1561","#CCC58C","Cornmeal"],["1562","#7393B6","Blue Hydrangea"],["1563","#F2F5F8","Icy Blue"],["1564","#47454A","Dark Pewter"],["1565","#B26B5F","Irish Coffee"],["1566","#4E569F","Brilliant Blue"],["1567","#A15767","Pickled Beet"],["1568","#BCAB94","Granite Green"],["1569","#A78C7D","Hemlock"],["1572","#7D7B83","Winter Gray"],["1573","#E3CFC8","Vintage Lace"],["1574","#595565","Dark Slate Blue"],["1575","#64666B","Iron Gray"],["1577","#5991CB","Dark Blue Turquoise"],["1578","#BFC8C7","Faded Jade"],["1580","#4C9993","Jungle Green"],["1582","#BAB4AD","White Linen"],["1584","#ED78A4","Deep Pink"],["1588","#E95461","Salsa"],["1589","#323131","Ebony"],["1592","#F8FCFF","Misty Mint"],["1593","#52A7DC","Blue Macaw"],["1594","#90D3EF","Cool Aqua"],["1595","#E73F70","Fluorescent Pink"],["1596","#D02750","Fluorescent Pink"],["1597","#E4447E","Fluorescent Pink"],["1598","#E63F28","Fluorescent Orange"],["1599","#81BC52","Fluorescent Green"],["1600","#734128","Multicolor",1],["1601","#556A80","Multicolor",1],["1602","#769E78","Multicolor",1],["1603","#778F7E","Multicolor",1],["1604","#825D43","Multicolor",1],["1605","#7E5351","Multicolor",1],["1606","#828EB0","Multicolor",1],["1607","#4C778E","Multicolor",1],["1608","#47655A","Multicolor",1],["1609","#9C533A","Multicolor",1],["1610","#B7C3C5","Silver"],["1611","#9EA9B1","Smoke"],["1612","#97A6B4","Steel"],["1613","#939E9E","Gull Gray"],["1614","#636767","Twister"],["1615","#707676","Battleship"],["1616","#E17274","Conch Shell"],["1617","#5A5660","Slate Purple"],["1618","#71737E","Gun Powder"],["1619","#63656C","Granite"],["1620","#FC8C97","Light Salmon"],["1621","#C4562D","Rust"],["1622","#EEDFBC","Parchment"],["1623","#F5E154","Daffodil"],["1624","#F4A731","Egg Yolk"],["1625","#C37F29","Butterscotch"],["1626","#F8C578","Peaches \u2018n\u2019 Cream"],["1627","#79758B","Dusty Lilac"],["1628","#7EA8C0","Worn Denim"],["1629","#C2C7DA","Ice"],["1630","#9491BA","Lavendula"],["1631","#8D679D","Velvet Violet"],["1632","#40354F","Blackberry Purple"],["1633","#5D2A65","Purple Passion"],["1634","#40345A","Grape Jelly"],["1635","#6C2F41","Burgundy"],["1637","#BC2130","Cinnamon Candy"],["1638","#852D32","Barn Red"],["1639","#AD3E41","Cinnabar"],["1640","#5E6162","Lead"],["1641","#35393D","Obsidian"],["1642","#295A94","Lapis"],["1643","#2D3541","Navy"],["1645","#77C7BB","Light Mint"],["1647","#88BA9C","Mantis"],["1648","#899B63","Celery"],["1649","#74952B","Granny Smith"],["1650","#367936","Fresh Pine"],["1651","#008445","Celtic Green"],["1652","#3B797A","Mermaid"],["1653","#F0BCA9","Light Coral"],["1654","#664F4C","Cocoa"],["1656","#BF9A88","Fawn"],["1657","#875B43","Golden Oak"],["1658","#794639","Mocha"],["1659","#523834","Coffee Bean"],["1660","#B1A4A0","Sand Castle"],["1661","#F1EBCA","Moonbeam"],["1662","#8B8476","Slate"],["1663","#6E6355","Clove"],["1664","#615D56","Graphite"],["1665","#494943","Coal"],["1666","#F4E5B3","Cornsilk"],["1668","#64766A","Silver Sage"],["1669","#414C42","Rosemary"],["1670","#D5A768","Vegas Gold"],["1671","#5B85A2","Country Kitchen Blue"],["1672","#A7793E","Toasted Almond"],["1673","#AD8E5E","Khaki"],["1674","#8DBCDC","Light Denim"],["1675","#7AAED5","Nordic Blue"],["1676","#2E4B86","Hanukkah Blue"],["1677","#004D51","Mallard Teal"],["1678","#ED552E","Pumpkin"],["1680","#5C3C5B","Purple Heart"],["1681","#BD3755","Azalea"],["1682","#CDBFAC","Tusk"],["1683","#FFC556","Lemon Drop"],["1684","#BEA273","Wheat"],["1685","#008681","Tree Frog"],["1686","#D2D3D2","Mist"],["1687","#BDC5C3","Sterling Silver"],["1689","#6C6E6C","Shark"],["1690","#174C4B","Deep Sea"],["1692","#9EC7C3","Limestone"],["1694","#00A0AE","Caribbean Blue"],["1695","#0089A3","Cyan"],["1701","#489F30","Spring Green"],["1702","#68BA84","Spearmint"],["1703","#0A5D42","Fir"],["1704","#1A4A3F","Evergreen"],["1705","#373D32","Fresh Oregano"],["1706","#948949","Guacamole"],["1707","#C54A5B","Honeysuckle"],["1709","#CE3893","Shocking Pink"],["1710","#963071","Magenta"],["1711","#A18CB1","Lavender"],["1712","#AA7AA6","Lilac"],["1713","#F4CBCD","Peach Blush"],["1718","#919BA2","Overcast Gray"],["1719","#6E3E65","Chokecherry"],["1720","#6C385B","Plum"],["1721","#EB6492","Flamingo Pink"],["1722","#43377B","Royal Purple"],["1723","#F6D1A8","Flan"],["1724","#DEAD39","Gold Nugget"],["1725","#CA8C3F","Liquid Gold"],["1726","#B5805A","Light Brown Sugar"],["1727","#EDD475","Baby Chick"],["1728","#98806A","Bark"],["1729","#967B6C","Buckskin"],["1730","#7D5C39","Cumin"],["1731","#9E7D92","Purple Pearl"],["1733","#3B7BB0","Blue Jay"],["1734","#E43546","Electric Red"],["1735","#F2D262","Lemonade"],["1736","#91857A","Dark Taupe"],["1738","#C5B79C","Champagne"],["1739","#4E4A4A","Charcoal"],["1740","#7B787D","Weimaraner"],["1741","#747573","Gun Metal"],["1742","#223D5C","Blue Ink"],["1743","#2F375C","Oxford Blue"],["1744","#68574C","Siamese Cat"],["1745","#765D53","Toasted Marshmellow"],["1746","#28A39D","Teal Green"],["1747","#A41E35","Candy Apple Red"],["1748","#A9DD76","Margarita Lime"],["1749","#37A346","Green Thumb"],["1750","#00714A","Christmas Green"],["1751","#007C49","Emerald Isle"],["1752","#F8AC88","Cantalope"],["1753","#B86B45","Penny"],["1754","#D83A4A","Raspberry Punch"],["1755","#F78F47","Marmalade"],["1756","#5B5A2F","Pea Green"],["1757","#63522F","Dark Olive"],["1758","#6E4A35","Grizzly Bear"],["1759","#967D39","Medium Camo Green"],["1760","#4A707F","Antique Blue"],["1761","#88A6B4","Dolphin"],["1762","#135368","Deep Ocean"],["1763","#DD7B2A","Copper"],["1764","#2C485D","Denim"],["1765","#ED701F","Tiger"],["1766","#353B1A","Sailor Blue"],["1767","#263D76","Ultramarine"],["1768","#A9B882","Bamboo Green"],["1769","#5C772C","Clover"],["1770","#46713E","Light Emerald Green"],["1771","#E0A242","Whipped Butterscotch"],["1772","#D89625","Military Gold"],["1773","#B06632","Autumn Gold"],["1775","#3F7B9D","Dark Federal Blue"],["1776","#1C4E68","Independence Blue"],["1777","#EF877E","Bright Peach"],["1778","#E75F3E","Carrot"],["1779","#E23E28","Sweet Potato"],["1780","#006852","Rainforest"],["1781","#991E3A","Radish"],["1782","#853448","Mulberry"],["1783","#852C58","Dark Raspberry"],["1784","#752C3A","Merlot"],["1785","#682B44","Bordeaux"],["1786","#B02E54","Hibiscus"],["1787","#B5326C","Fuchsia"],["1788","#773269","Dark Magenta"],["1789","#643E58","Plum Drop"],["1790","#7E6F31","Dill Pickle"],["1791","#AF7940","Brass"],["1792","#B28836","Old Gold"],["1793","#75602F","Bullfrog"],["1794","#564D30","Field Gear"],["1795","#494735","Dark Camo Green"],["1796","#5F572F","Aged Moss"],["1797","#00699B","Calypso Blue"],["1798","#3F4034","Bass Green"],["1799","#00B09E","Green Turquoise"],["1800","#1A1A1A","Emerald Black"],["1801","#FAFAFA","Super White"],["1802","#F2F3F2","Snow White"],["1803","#EDE6D6","Cream White"],["1804","#EFEDE6","Natural White"],["1805","#F8FAFF","Fluorescent White"],["1809","#B6A155","Brushed Bronze"],["1810","#ADB0AE","Gray Haze"],["1811","#A9B0B1","Chrome"],["1812","#A9AAA4","Cement"],["1815","#FCBED2","Baby Pink"],["1816","#FDAFC0","Rustic Pink"],["1817","#F6A696","Pleasant Peach"],["1818","#E4BDB9","Powder Pink"],["1819","#FB9F9D","Blush Pink"],["1820","#F59482","Peach Tea"],["1821","#A43B34","Terra Cotta"],["1822","#E2DCC5","Coconut Cream"],["1823","#F9FF00","Fluorescent Yellow Green"],["1824","#FFDD00","Fluorescent Yellow Orange"],["1825","#F9B200","Summer Sun"],["1826","#FFC67C","Peach Pie"],["1827","#55B9D6","Swimming Pool"],["1828","#418BAE","Work Shirt"],["1829","#0066A0","Blue Bird"],["1830","#6586BC","China Blue"],["1831","#9A649C","Purple Pansy"],["1832","#6A5595","Majestic Purple"],["1833","#772D73","Heliotrope"],["1834","#967AA2","Amethyst"],["1835","#863149","Cranberry"],["1836","#4C3738","Cappuccino"],["1837","#FF3E26","Fluorescent Red Orange"],["1838","#B42232","Brick Red"],["1839","#AD1D31","Christmas Red"],["1840","#747D87","Cadet Gray"],["1841","#4F565C","Pewter"],["1842","#005595","True Blue"],["1843","#0F4678","Persian Blue"],["1844","#31333E","Indigo"],["1845","#6DC39F","Mint"],["1846","#009290","Dark Teal"],["1847","#42AB92","Sea Foam Green"],["1848","#759F56","Lime Green"],["1849","#217B68","Tropical Teal"],["1850","#5CCA4B","Fluorescent Green"],["1851","#005E38","Cadmium Green"],["1852","#327C92","Cobalt"],["1853","#EFBC9A","Light Apricot"],["1854","#9C8480","Rain Barrel"],["1855","#B39371","Coffee with Cream"],["1856","#9F5539","Burnt Orange"],["1857","#895235","Chocolate Lab"],["1858","#653730","Chestnut"],["1859","#4B3F3E","Dark Chocolate"],["1860","#B0A697","Pussy Willow"],["1861","#F0CB7B","Palomino"],["1862","#948F83","Rhino"],["1863","#DBD2B1","Chamois"],["1866","#F0DD91","Buff"],["1867","#E4FF82","Fluorescent Green"],["1868","#00936D","Bottle Green"],["1869","#DD883A","Pumpkin Spice"],["1870","#EBA66D","Orange Sorbet"],["1871","#78ACC8","Porcelain Blue"],["1872","#635142","Brunette"],["1874","#90B3D8","Baby Blue"],["1878","#C82F2B","Tomato Red"],["1879","#007865","Oregon Green"],["1880","#783F84","Deep Lilac"],["1882","#F9C5AD","Peach Bloosom"],["1883","#FFF900","Fluorescent Yellow"],["1884","#C5A98D","Burly Wood"],["1885","#A07E61","Camel"],["1886","#BFB9BA","Light Steel"],["1887","#462F39","Mince Pie"],["1888","#00A1A3","Deep Sky Blue"],["1890","#007C80","Midnight Green"],["1891","#005561","Teal Velvet"],["1892","#78C8CC","Robin\u2019s Egg"],["1893","#2EADC9","Sky Blue"],["1895","#0094AA","Teal Blue"],["1896","#007088","Liberty"],["1898","#9D4B38","Auburn"],["1899","#873B31","Henna"],["1900","#9ABA9B","Celadon"],["1901","#60AB27","Fluorescent Green"],["1902","#2D4A38","Hunter Green"],["1903","#3A594E","Spruce Green"],["1904","#475B4A","Dark Sage"],["1905","#3B4A37","Moss Green"],["1906","#6A563F","Antique Bronze"],["1907","#FF3D67","Fluorescent Pink"],["1908","#FF4368","Fluorescent Pink"],["1909","#FF6790","Electric Pink"],["1910","#D6245E","Electric Magenta"],["1911","#CBADCF","Evening Mist"],["1915","#FDAFB7","Bermuda Sand"],["1917","#CB7387","Dusty Rose"],["1918","#8A8B8E","Polished Pewter"],["1919","#A05566","English Rose"],["1920","#CEC489","Light Khaki"],["1921","#F393B8","Bubble Gum Pink"],["1922","#4D3275","Regal Purple"],["1923","#FFBB54","Apricot"],["1924","#FBD400","Lemon Tart"],["1925","#FFD82B","Fluorescent Yellow Orange"],["1926","#AE846C","Dark Champagne"],["1927","#DCB192","Shiny Penny"],["1928","#8D7765","Natural Suede"],["1929","#695B53","Brown Hare"],["1930","#4A5191","Bahamas Blue"],["1931","#403A3C","Bittersweet Chocolate"],["1932","#7CC5DC","Summer Sky"],["1933","#7980AF","Lavender Lilac"],["1934","#005D99","Royal Blue"],["1935","#E8FF00","Fluorescent Yellow Green"],["1936","#7D6F62","Mink"],["1937","#FFAB00","Fluorescent Orange"],["1938","#B9A999","Doe Skin"],["1939","#A08A60","Peanut Brittle"],["1940","#CCCB4C","Key Lime"],["1941","#BC8B8F","Mauve"],["1942","#8F5653","Rose Gold"],["1943","#5B70AC","Dark Periwinkle"],["1944","#2E3C4A","Blueberry Smash"],["1945","#724F46","Sienna"],["1946","#FF6115","Fluorescent Orange"],["1947","#FF4943","Fluorescent Orange Pink"],["1948","#FD8BA5","Pink Carnation"],["1949","#F0E7D4","Ivory"],["1950","#76D638","Fluorescent Green"],["1951","#F6992A","Pumpkin Chiffon"],["1952","#FB7B62","Melon Burst"],["1953","#A2C4DC","Powder Blue"],["1954","#FF4951","Fluorescent Orange Pink"],["1955","#F38B1C","Citrus Burst"],["1956","#8B8055","Olive Green"],["1957","#4A4032","Burnt Taupe"],["1958","#70494A","Cedar Bark"],["1959","#A78915","Burnished Gold"],["1960","#738C9E","Dusty Blue"],["1961","#4F6D83","Blue Spruce"],["1962","#254553","Admiral Blue"],["1963","#4B576D","Dusty Plum"],["1964","#485B72","Stormy Sky Blue"],["1965","#F96722","Orange Peel"],["1966","#293451","Pea Coat"],["1967","#233957","Dark Denim"],["1968","#6B9659","Green Tea"],["1969","#6C6C58","Army Green"],["1970","#345C3E","Emerald Ink"],["1971","#F9B324","Saffron"],["1972","#FFBB00","Fluorescent Yellow Orange"],["1973","#935D34","Bronze"],["1974","#8A3F40","Cinnamon Stick"],["1975","#285578","Colonial Blue"],["1976","#2C3646","Night Sky"],["1977","#0081AF","Peacock Blue"],["1978","#FF8442","Fluorescent Orange"],["1979","#005F43","Dark Amazon"],["1980","#FBC11A","Sunflower"],["1981","#872A39","Carmine"],["1982","#7F2531","Sangria"],["1983","#4E3443","Eggplant"],["1984","#B52962","Orchid"],["1985","#005B4F","Deep Rain Forest"],["1986","#AB2245","Ripe Raspberry"],["1987","#E43C22","Paprika"],["1988","#008C43","Kelly Green"],["1989","#009A67","Leaf"],["1990","#D85F95","Pink Rose"],["1991","#007379","Malachite"],["1992","#005F76","Rough Caribbean Sea"],["1993","#D7315C","Watermelon"],["1994","#EB4D70","Lipstick Rose"],["1995","#FFFF00","Fluorescent Yellow"],["1996","#2A4240","Deep Emerald"],["1997","#3B303D","Plum Pudding"],["1998","#7E6064","Dark Mauve"],["1999","#663131","Raisin"]];
+const STOCK_SNAPSHOT=["1516","1526","1538","1545","1550","1557","1560","1597","1610","1613","1623","1624","1637","1648","1649","1651","1652","1653","1657","1661","1668","1670","1671","1678","1687","1694","1729","1745","1747","1754","1761","1765","1772","1785","1792","1798","1800","1801","1802","1803","1805","1811","1812","1815","1824","1839","1841","1842","1843","1850","1880","1902","1911","1918","1922","1923","1934","1938","1943","1946","1960","1961","1967","1977","1983","1984","1988","1990","1995"];
+let THREADS=THREADS_SNAPSHOT, STOCK=new Set(STOCK_SNAPSHOT), THR={}, thrPool=[], thrShelf=[];
+function buildThreadPools(){
+  THR={};thrPool=[];thrShelf=[];
+  THREADS.forEach(t=>{ if(t[3])return; const o={n:t[0],hex:t[1],name:t[2],lab:rgb2lab(...hex2rgb(t[1])),stock:STOCK.has(t[0])}; THR[o.n]=o; thrPool.push(o); if(o.stock)thrShelf.push(o); });
+}
+buildThreadPools();
+const threadSource={live:false};
+fetch('../inkmatch/').then(r=>r.ok?r.text():Promise.reject()).then(s=>{
+  const a=s.match(/const THREADS=(\[[\s\S]*?\]);/), b=s.match(/const STOCK=new Set\(\[([\s\S]*?)\]\)/);
+  if(!a||!b)return;
+  THREADS=JSON.parse(a[1]); STOCK=new Set(JSON.parse('['+b[1]+']'));
+  buildThreadPools(); threadSource.live=true;
+  if(JOB.slots.length){ renderThreads(); scheduleRender(); }
+}).catch(()=>{});
+function nearestThreads(hex,k,shelfOnly){
+  const lab=rgb2lab(...hex2rgb(hex));
+  return (shelfOnly?thrShelf:thrPool).map(t=>({...t,de:de2000(lab,t.lab)})).sort((a,b)=>a.de-b.de).slice(0,k);
+}
+
+/* ---------- hat catalog (photos shared with the Patch Lab) ----------
+   calib (photo px, 733×1100 SanMar-style frames):
+   centerX = crown centre line · seamY = bill seam at centre · ppi = px per inch at the front panel
+   crown = [[y, half-width px]] — drives the cylinder wrap · maxW/maxH = sewable front (inches)
+   crop = [x0,y0,x1,y1] of the photo used on pages · fabric = [x,y] spot to sample the fabric colour */
+const HAT_STYLES={
+  R112:{name:'Richardson 112',sub:'Trucker Snapback',base:'../patch-lab/hats/R112/',
+    photo:(slug)=>'front/r112-'+slug+'-front.jpg',
+    calib:{centerX:367,seamY:351,ppi:56,maxW:4.5,maxH:2.5,
+      crown:[[120,70],[140,108],[180,148],[220,163],[260,171],[300,174],[351,174]],
+      crop:[96,70,640,470],fabric:[300,230]}}
+};
+const hatColors={};   // style → {slug:name}
+
+/* ---------- job state (THIS is what an agent reads/writes) ---------- */
+const JOBKEY='hatlab.job.v1';
+function blankJob(){return {v:1,customer:'',quote:'',name:'',art:null,artName:'',style:'R112',hats:[],cur:0,slots:[],widthIn:3.5,seamGapIn:0.55,scope:'all'};}
+let JOB=blankJob();
+/* slot = {id, artHex, share, thread:'1801', off:false}  ·  hat = {slug, name, threads:{slotId:'1801'}|null, off:{slotId:true}|null} */
+
+/* ---------- art intake ---------- */
+let ART=null;   // trimmed canvas
+function loadImage(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});}
+function fileToDataURL(f){return new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f);});}
+async function artFromDataURL(url){
+  const img=await loadImage(url);
+  let w=img.naturalWidth||img.width,h=img.naturalHeight||img.height;
+  if(!w||!h){w=1600;h=1600;}
+  const isSvg=/^data:image\/svg/.test(url);
+  const T=isSvg?2400:Math.max(w,h); const sc=Math.min(4,T/Math.max(w,h));  // SVGs rasterised big (vector-first)
+  const c=document.createElement('canvas');c.width=Math.round(w*sc);c.height=Math.round(h*sc);
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  knockWhiteBg(c);
+  return trimAlpha(c);
+}
+/* quiet white-background knockout: flood from the border through near-white only — interior white stays */
+function knockWhiteBg(c){
+  const x=c.getContext('2d'),W=c.width,H=c.height,d=x.getImageData(0,0,W,H),p=d.data;
+  let opaqueEdge=0,edges=0;
+  for(let i=0;i<W;i++){for(const j of [0,H-1]){edges++;if(p[(j*W+i)*4+3]>200)opaqueEdge++;}}
+  if(opaqueEdge<edges*0.5)return false;      // already transparent around the edges
+  const near=i=>p[i+3]>0&&p[i]>238&&p[i+1]>238&&p[i+2]>238;
+  const seen=new Uint8Array(W*H),st=[];
+  const push=(i)=>{if(!seen[i]&&near(i*4)){seen[i]=1;st.push(i);}};
+  for(let i=0;i<W;i++){push(i);push((H-1)*W+i);} for(let j=0;j<H;j++){push(j*W);push(j*W+W-1);}
+  while(st.length){const i=st.pop();p[i*4+3]=0;const xx=i%W,yy=(i/W)|0;
+    if(xx>0)push(i-1);if(xx<W-1)push(i+1);if(yy>0)push(i-W);if(yy<H-1)push(i+W);}
+  // soften the 1px fringe left by antialiasing
+  for(let i=0;i<W*H;i++){ if(p[i*4+3]&&!seen[i]){const xx=i%W,yy=(i/W)|0;let n=0;
+      if(xx>0&&seen[i-1])n++;if(xx<W-1&&seen[i+1])n++;if(yy>0&&seen[i-W])n++;if(yy<H-1&&seen[i+W])n++;
+      if(n&&p[i*4]>200&&p[i*4+1]>200&&p[i*4+2]>200)p[i*4+3]=Math.round(p[i*4+3]*0.4);} }
+  x.putImageData(d,0,0);return true;
+}
+function trimAlpha(c){
+  const x=c.getContext('2d'),W=c.width,H=c.height,p=x.getImageData(0,0,W,H).data;
+  let x0=W,y0=H,x1=-1,y1=-1;
+  for(let j=0;j<H;j++)for(let i=0;i<W;i++)if(p[(j*W+i)*4+3]>24){if(i<x0)x0=i;if(i>x1)x1=i;if(j<y0)y0=j;if(j>y1)y1=j;}
+  if(x1<0)return c;
+  const o=document.createElement('canvas');o.width=x1-x0+1;o.height=y1-y0+1;
+  o.getContext('2d').drawImage(c,x0,y0,o.width,o.height,0,0,o.width,o.height);return o;
+}
+/* palette: bucket opaque pixels, merge buckets within ΔE 10, keep colours ≥0.4% of the art */
+function detectPalette(c){
+  const S=Math.min(1,500/Math.max(c.width,c.height));
+  const t=document.createElement('canvas');t.width=Math.max(1,Math.round(c.width*S));t.height=Math.max(1,Math.round(c.height*S));
+  const x=t.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(c,0,0,t.width,t.height);
+  const p=x.getImageData(0,0,t.width,t.height).data, B=new Map();let tot=0;
+  for(let i=0;i<p.length;i+=4){ if(p[i+3]<200)continue; tot++;
+    const k=(p[i]>>3)<<10|(p[i+1]>>3)<<5|(p[i+2]>>3); const b=B.get(k); if(b){b.n++;b.r+=p[i];b.g+=p[i+1];b.b+=p[i+2];} else B.set(k,{n:1,r:p[i],g:p[i+1],b:p[i+2]}); }
+  const bs=[...B.values()].sort((a,b)=>b.n-a.n).map(b=>({n:b.n,rgb:[b.r/b.n,b.g/b.n,b.b/b.n]}));
+  bs.forEach(b=>b.lab=rgb2lab(...b.rgb));
+  const cl=[];
+  for(const b of bs){ let best=null,bd=1e9; for(const q of cl){const d=de2000(b.lab,q.lab);if(d<bd){bd=d;best=q;}}
+    if(best&&bd<10){best.rgb=best.rgb.map((v,i)=>(v*best.n+b.rgb[i]*b.n)/(best.n+b.n));best.n+=b.n;best.lab=rgb2lab(...best.rgb);}
+    else if(cl.length<12) cl.push({n:b.n,rgb:b.rgb.slice(),lab:b.lab}); }
+  let keep=cl.filter(q=>q.n>=tot*0.004).sort((a,b)=>b.n-a.n);
+  // drop antialias blends: a small colour sitting on the line between two bigger ones
+  keep=keep.filter(c=>{ if(c.n>tot*0.03)return true;
+    for(const a of keep)for(const b of keep){ if(a===b||a===c||b===c||a.n<c.n||b.n<c.n)continue;
+      const ab=a.lab.map((v,i)=>b.lab[i]-v), ac=a.lab.map((v,i)=>c.lab[i]-v), L2=ab.reduce((s,v)=>s+v*v,0); if(!L2)continue;
+      const t=ab.reduce((s,v,i)=>s+v*ac[i],0)/L2; if(t<0.08||t>0.92)continue;
+      const d=Math.hypot(...ac.map((v,i)=>v-t*ab[i])); if(d<9)return false; }
+    return true; });
+  return keep.map((q,i)=>({id:'c'+(i+1),artHex:rgbHex(q.rgb),share:q.n/tot}));
+}
+function rgbHex(c){return '#'+c.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('').toUpperCase();}
+
+/* ---------- ANALYSIS: labels, distance field, columns vs fills, warnings ---------- */
+const R=200;                 // design raster, px per inch
+const SATIN_MAX_IN=0.30;     // wider than this → tatami fill
+const THIN_IN=0.035;         // narrower → will not hold
+let AN=null;                 // cached analysis
+function analyze(){
+  if(!ART||!JOB.slots.length)return null;
+  const s=styleCal();
+  let wIn=JOB.widthIn, hIn=wIn*ART.height/ART.width, capped=false;
+  if(hIn>s.maxH){hIn=s.maxH;wIn=hIn*ART.width/ART.height;capped=true;}
+  if(wIn>s.maxW){wIn=s.maxW;hIn=wIn*ART.height/ART.width;capped=true;}
+  const W=Math.max(8,Math.round(wIn*R)),H=Math.max(8,Math.round(hIn*R));
+  const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  x.imageSmoothingQuality='high';x.drawImage(ART,0,0,W,H);
+  const p=x.getImageData(0,0,W,H).data, N=W*H;
+  const labs=JOB.slots.map(sl=>rgb2lab(...hex2rgb(sl.artHex)));
+  const lab=new Int16Array(N).fill(-1), cache=new Map();
+  for(let i=0;i<N;i++){ if(p[i*4+3]<128)continue;
+    const k=(p[i*4]>>2)<<12|(p[i*4+1]>>2)<<6|(p[i*4+2]>>2); let s2=cache.get(k);
+    if(s2===undefined){const L=rgb2lab(p[i*4],p[i*4+1],p[i*4+2]);let bd=1e9;s2=0;labs.forEach((q,j)=>{const d=(L[0]-q[0])**2+(L[1]-q[1])**2+(L[2]-q[2])**2;if(d<bd){bd=d;s2=j;}});cache.set(k,s2);}
+    lab[i]=s2; }
+  // 3×3 majority clean-up on edges (antialias pixels snap to a neighbour), then despeckle
+  const lab2=new Int16Array(lab);
+  for(let j=1;j<H-1;j++)for(let i=1;i<W-1;i++){const k=j*W+i,s0=lab[k];
+    if(lab[k-1]===s0&&lab[k+1]===s0&&lab[k-W]===s0&&lab[k+W]===s0)continue;
+    const cnt={};let best=s0,bn=0;for(let dj=-1;dj<=1;dj++)for(let di=-1;di<=1;di++){const v=lab[k+dj*W+di];cnt[v]=(cnt[v]||0)+1;if(cnt[v]>bn||(cnt[v]===bn&&v===s0)){bn=cnt[v];best=v;}}
+    if(bn>=5)lab2[k]=best;}
+  despeckle(lab2,W,H,Math.round(0.0005*R*R));
+  return {W,H,wIn,hIn,capped,lab:lab2};
+}
+function despeckle(L,W,H,minA){
+  const seen=new Uint8Array(W*H),st=[],pts=[];
+  for(let k=0;k<W*H;k++){ if(L[k]<0||seen[k])continue; const s=L[k];pts.length=0;st.push(k);seen[k]=1;const nb={};
+    while(st.length){const q=st.pop();pts.push(q);const qi=q%W,qj=(q/W)|0;
+      for(const n of [qi>0?q-1:-1,qi<W-1?q+1:-1,qj>0?q-W:-1,qj<H-1?q+W:-1]){if(n<0){nb[-1]=(nb[-1]||0)+1;continue;}
+        if(L[n]===s){if(!seen[n]){seen[n]=1;st.push(n);}}else nb[L[n]]=(nb[L[n]]||0)+1;}}
+    if(pts.length<minA){let b=-1,bn=-1;for(const v in nb)if(nb[v]>bn){bn=nb[v];b=+v;}pts.forEach(q=>L[q]=b);} }
+}
+/* per-hat pass: apply off-switches, then distance field + components */
+function fieldsFor(an,offSet){
+  const {W,H}=an,N=W*H,L=new Int16Array(N);
+  for(let i=0;i<N;i++){const s=an.lab[i];L[i]=(s<0||offSet.has(s))?-1:s;}
+  // chamfer distance to the nearest pixel of a different label (stitched areas only)
+  const INF=1e6,D=new Float32Array(N);
+  for(let j=0;j<H;j++)for(let i=0;i<W;i++){const k=j*W+i;if(L[k]<0){D[k]=0;continue;}
+    const s=L[k];const b=(i==0||j==0||i==W-1||j==H-1||L[k-1]!==s||L[k+1]!==s||L[k-W]!==s||L[k+W]!==s);D[k]=b?0.5:INF;}
+  const a=1,d=1.4142;
+  for(let j=0;j<H;j++)for(let i=0;i<W;i++){const k=j*W+i;if(L[k]<0)continue;const s=L[k];let v=D[k];
+    if(i>0&&L[k-1]===s)v=Math.min(v,D[k-1]+a);
+    if(j>0){if(L[k-W]===s)v=Math.min(v,D[k-W]+a);if(i>0&&L[k-W-1]===s)v=Math.min(v,D[k-W-1]+d);if(i<W-1&&L[k-W+1]===s)v=Math.min(v,D[k-W+1]+d);}
+    D[k]=v;}
+  for(let j=H-1;j>=0;j--)for(let i=W-1;i>=0;i--){const k=j*W+i;if(L[k]<0)continue;const s=L[k];let v=D[k];
+    if(i<W-1&&L[k+1]===s)v=Math.min(v,D[k+1]+a);
+    if(j<H-1){if(L[k+W]===s)v=Math.min(v,D[k+W]+a);if(i<W-1&&L[k+W+1]===s)v=Math.min(v,D[k+W+1]+d);if(i>0&&L[k+W-1]===s)v=Math.min(v,D[k+W-1]+d);}
+    D[k]=v;}
+  // components (4-connected, same label)
+  const C=new Int32Array(N).fill(-1),comps=[],st=[];
+  for(let k=0;k<N;k++){ if(L[k]<0||C[k]>=0)continue; const id=comps.length,s=L[k];
+    const cp={slot:s,maxD:0,area:0,x0:1e9,y0:1e9,x1:-1,y1:-1};C[k]=id;st.push(k);
+    while(st.length){const q=st.pop(),qi=q%W,qj=(q/W)|0;cp.area++;if(D[q]>cp.maxD)cp.maxD=D[q];
+      if(qi<cp.x0)cp.x0=qi;if(qi>cp.x1)cp.x1=qi;if(qj<cp.y0)cp.y0=qj;if(qj>cp.y1)cp.y1=qj;
+      if(qi>0&&L[q-1]===s&&C[q-1]<0){C[q-1]=id;st.push(q-1);} if(qi<W-1&&L[q+1]===s&&C[q+1]<0){C[q+1]=id;st.push(q+1);}
+      if(qj>0&&L[q-W]===s&&C[q-W]<0){C[q-W]=id;st.push(q-W);} if(qj<H-1&&L[q+W]===s&&C[q+W]<0){C[q+W]=id;st.push(q+W);} }
+    const colIn=2*cp.maxD/R;
+    cp.type=colIn<=SATIN_MAX_IN?'satin':'fill';
+    cp.angle=(s%2?135:45)*Math.PI/180;
+    comps.push(cp); }
+  return {L,D,C,comps};
+}
+function warningsFor(an,f){
+  const w=[];let thin=0,tiny=0,smallText=0;
+  f.comps.forEach(c=>{ if(c.area<4)return; const colIn=2*c.maxD/R, hIn=(c.y1-c.y0+1)/R, wIn=(c.x1-c.x0+1)/R;
+    if(colIn<THIN_IN)thin++;
+    if(Math.max(hIn,wIn)<0.08)tiny++;
+    else if(hIn<0.25&&wIn<0.5&&c.type==='satin')smallText++; });
+  if(thin)w.push(thin+' piece'+(thin>1?'s are':' is')+' thinner than 1 mm — lines that thin won\'t hold in thread; they\'ll drop out or get beefed up by the digitizer.');
+  if(smallText>=3)w.push('Some lettering/detail is under ¼" tall — that\'s the practical floor for clean embroidered text. Go bigger or simplify.');
+  if(tiny)w.push(tiny+' tiny detail'+(tiny>1?'s':'')+' (under ~⅛") will likely be lost or merged.');
+  if(f.comps.some(c=>c.type==='fill'&&2*c.maxD/R>1.2))w.push('Big solid areas will be a tatami fill — that\'s a lot of stitches on a structured front and can make it stiff. Consider an outline or knock-out.');
+  if(an.capped)w.push('Art was capped to the sewable front ('+styleCal().maxW+'" × '+styleCal().maxH+'").');
+  return w;
+}
+function stitchEstimate(f){
+  let fill=0,sat=0; f.comps.forEach(c=>{const a=c.area/(R*R); if(c.type==='fill')fill+=a; else sat+=a;});
+  // rule of thumb: tatami ≈ 2,000 st/in², satin ≈ 1,600 st/in², +15% underlay/travel
+  return Math.round((fill*2000+sat*1600)*1.15/100)*100;
+}
+
+/* ---------- STITCH RENDER (design space, R px/in) ---------- */
+const LIGHT=(()=>{const v=[-0.45,-0.65,0.62];const m=Math.hypot(...v);return v.map(x=>x/m);})();
+const H2=(()=>{const h=[LIGHT[0],LIGHT[1],LIGHT[2]+1];const m=Math.hypot(...h);return h.map(x=>x/m);})();
+const lin=v=>{v/=255;return v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4);};
+const gam=v=>{v=Math.max(0,Math.min(1,v));return 255*(v<=0.0031308?12.92*v:1.055*Math.pow(v,1/2.4)-0.055);};
+function threadColorsFor(hatIdx){
+  const h=JOB.hats[hatIdx]; return JOB.slots.map(sl=>{const n=(h&&h.threads&&h.threads[sl.id])||sl.thread;return THR[n]||{n,hex:sl.artHex,name:'?'};});
+}
+function offSetFor(hatIdx){
+  const h=JOB.hats[hatIdx],s=new Set(); JOB.slots.forEach((sl,i)=>{const o=(h&&h.off&&sl.id in h.off)?h.off[sl.id]:sl.off; if(o)s.add(i);}); return s;
+}
+function renderStitch(an,f,threads){
+  const {W,H}=an,N=W*H,{L,D,C,comps}=f;
+  const sp=0.40/25.4*R;            // row spacing ≈0.4 mm
+  const SL=3.2/25.4*R;             // tatami stitch length ≈3.2 mm
+  const edge=0.022*R;              // raised-edge roll-off
+  // height field
+  const Hh=new Float32Array(N);
+  for(let k=0;k<N;k++){ if(L[k]<0)continue; const c=comps[C[k]];
+    if(c.type==='satin'){const r=Math.max(1,c.maxD);const t=Math.min(1,D[k]/r);Hh[k]=Math.sqrt(Math.max(0,1-(1-t)*(1-t)))*0.9+0.1;}
+    else {const t=Math.min(1,D[k]/edge);Hh[k]=0.25+0.55*(t*t*(3-2*t));} }
+  // satin orientation field: gradient of D as a doubled-angle vector, smoothed per colour region
+  // (doubling makes ±directions agree, so the medial line and corners don't flicker)
+  const Ox=new Float32Array(N),Oy=new Float32Array(N);
+  for(let j=0;j<H;j++)for(let i=0;i<W;i++){const k=j*W+i,s=L[k];if(s<0)continue;
+    const gx=(i<W-1&&L[k+1]===s?D[k+1]:D[k])-(i>0&&L[k-1]===s?D[k-1]:D[k]);
+    const gy=(j<H-1&&L[k+W]===s?D[k+W]:D[k])-(j>0&&L[k-W]===s?D[k-W]:D[k]);
+    Ox[k]=gx*gx-gy*gy;Oy[k]=2*gx*gy;}
+  const rr=Math.max(2,Math.round(0.02*R));
+  const blur1=(A,horiz)=>{const T=new Float32Array(N);for(let j=0;j<H;j++)for(let i=0;i<W;i++){const k=j*W+i,s=L[k];if(s<0)continue;let a=0;
+      for(let d=-rr;d<=rr;d++){const ii=horiz?i+d:i,jj=horiz?j:j+d;if(ii<0||jj<0||ii>=W||jj>=H)continue;const q=jj*W+ii;if(L[q]===s)a+=A[q];}T[k]=a;}return T;};
+  const Sx=blur1(blur1(Ox,true),false),Sy=blur1(blur1(Oy,true),false);
+  const LICN=Math.round(0.045*R), cell=Math.max(1,Math.round(sp*0.55));
+  const hn=(i,j)=>{let h=Math.imul((i/cell|0)*73856093^(j/cell|0)*19349663,0x9E3779B1);h^=h>>>15;h=Math.imul(h,0x85EBCA77);h^=h>>>13;return (h>>>0)/4294967296;};
+  const tl=threads.map(t=>hex2rgb(t.hex).map(lin));
+  const out=new ImageData(W,H),o=out.data;
+  for(let j=0;j<H;j++)for(let i=0;i<W;i++){const k=j*W+i,s=L[k];if(s<0)continue;
+    const c=comps[C[k]];let dx,dy,u,brk=1;
+    if(c.type==='satin'){
+      const m=Math.hypot(Sx[k],Sy[k]); if(m>1e-4){const a=Math.atan2(Sy[k],Sx[k])/2;dx=Math.cos(a);dy=Math.sin(a);} else {dx=Math.cos(c.angle);dy=Math.sin(c.angle);}
+      u=null;                                             // satin: streaks come from LIC below
+    } else {
+      dx=Math.cos(c.angle);dy=Math.sin(c.angle);
+      u=(i*-dy+j*dx)/sp; const row=Math.floor(u); const v=(i*dx+j*dy)/SL+row*0.37;
+      const fv=v-Math.floor(v); brk=fv<0.07?0.45+fv/0.07*0.55:(fv>0.95?0.55:1);
+    }
+    let fu,prof;
+    if(u===null){ // line-integral convolution: hash noise smeared along the thread → robust satin streaks on curves
+      let a=0,n=0;for(let t=-LICN;t<=LICN;t++){const ii=Math.round(i+dx*t),jj=Math.round(j+dy*t);if(ii<0||jj<0||ii>=W||jj>=H||L[jj*W+ii]!==s)continue;a+=hn(ii,jj);n++;}
+      const v=n?a/n:0.5; prof=Math.max(0,Math.min(1,0.55+(v-0.5)*2.6)); fu=prof*0.5; }
+    else { fu=u-Math.floor(u); prof=Math.sin(Math.PI*fu); }  // round thread cross-section
+    // surface normal from height + thread bump
+    const hx=(i<W-1?Hh[k+1]:Hh[k])-(i>0?Hh[k-1]:Hh[k]), hy=(j<H-1?Hh[k+W]:Hh[k])-(j>0?Hh[k-W]:Hh[k]);
+    const bump=Math.cos(Math.PI*fu)*0.35; let nx=-hx*6+(-dy)*bump, ny=-hy*6+dx*bump, nz=1;const nm=Math.hypot(nx,ny,nz);nx/=nm;ny/=nm;nz/=nm;
+    const lam=Math.max(0,nx*LIGHT[0]+ny*LIGHT[1]+nz*LIGHT[2]);
+    // anisotropic (Kajiya-Kay) sheen along the thread tangent
+    const th=dx*H2[0]+dy*H2[1]; const spec=Math.pow(Math.max(0,1-th*th),14)*prof;
+    const occ=0.55+0.45*Math.min(1,D[k]/1.6);           // dark seam where colours/edges meet
+    const base=(0.30+0.70*prof)*brk*occ, sh=0.18+0.95*lam;
+    const col=tl[s], S=0.32*spec;
+    o[k*4]=gam(col[0]*base*sh+S*(0.55+0.45*col[0]));o[k*4+1]=gam(col[1]*base*sh+S*(0.55+0.45*col[1]));o[k*4+2]=gam(col[2]*base*sh+S*(0.55+0.45*col[2]));
+    o[k*4+3]=D[k]<0.8?225:255;
+  }
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;cv.getContext('2d').putImageData(out,0,0);
+  return cv;
+}
+
+/* ---------- HAT COMPOSITE (cylinder wrap + shading + shadow) ---------- */
+const photoCache={};
+function hatPhoto(style,slug){
+  const key=style+'/'+slug; if(photoCache[key])return photoCache[key];
+  const S=HAT_STYLES[style]; return photoCache[key]=loadImage(S.base+S.photo(slug)).then(img=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0);return c;});
+}
+function styleCal(){return HAT_STYLES[JOB.style].calib;}
+function crownHW(cal,y){const t=cal.crown;if(y<=t[0][0])return t[0][1];for(let i=1;i<t.length;i++)if(y<=t[i][0]){const a=t[i-1],b=t[i],f=(y-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*f;}return t[t.length-1][1];}
+function downscale(src,w,h){let c=src;while(c.width/2>w){const n=document.createElement('canvas');n.width=Math.round(c.width/2);n.height=Math.round(c.height/2);const x=n.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(c,0,0,n.width,n.height);c=n;}
+  const o=document.createElement('canvas');o.width=Math.max(1,Math.round(w));o.height=Math.max(1,Math.round(h));const x=o.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(c,0,0,o.width,o.height);return o;}
+function fabricColor(photo,cal){const x=photo.getContext('2d');const d=x.getImageData(cal.fabric[0],cal.fabric[1],24,24).data;let r=[],g=[],b=[];for(let i=0;i<d.length;i+=4){r.push(d[i]);g.push(d[i+1]);b.push(d[i+2]);}const med=a=>a.sort((p,q)=>p-q)[a.length>>1];return [med(r),med(g),med(b)];}
+/* returns a canvas: the cropped hat photo at `scale`× with the embroidery wrapped on */
+function composeHat(photo,stitch,an,cal,scale,place){
+  const [cx0,cy0,cx1,cy1]=cal.crop, OW=Math.round((cx1-cx0)*scale), OH=Math.round((cy1-cy0)*scale);
+  const out=document.createElement('canvas');out.width=OW;out.height=OH;const ox=out.getContext('2d');
+  ox.imageSmoothingQuality='high';ox.drawImage(photo,cx0,cy0,cx1-cx0,cy1-cy0,0,0,OW,OH);
+  if(!stitch)return out;
+  const ppi=cal.ppi*scale, dw=an.wIn*ppi, dh=an.hIn*ppi;
+  const small=downscale(stitch,dw,dh), sd=small.getContext('2d').getImageData(0,0,small.width,small.height).data, SW=small.width,SH=small.height;
+  const cX=(cal.centerX+(place.dxIn||0)*cal.ppi-cx0)*scale, bottom=(cal.seamY-cy0-(place.seamGapIn)*cal.ppi)*scale, top=bottom-SH;
+  // shading reference from the photo itself
+  const ref=photo.getContext('2d').getImageData(cal.fabric[0],cal.fabric[1],24,24).data;let rl=0;for(let i=0;i<ref.length;i+=4)rl+=ref[i]+ref[i+1]+ref[i+2];rl/=ref.length/4;
+  const x0=Math.max(0,Math.floor(cX-SW/2-12)),x1=Math.min(OW,Math.ceil(cX+SW/2+12)),y0=Math.max(0,Math.floor(top-6)),y1=Math.min(OH,Math.ceil(bottom+10));
+  if(x1<=x0||y1<=y0)return out;
+  const img=ox.getImageData(x0,y0,x1-x0,y1-y0),p=img.data,IW=x1-x0;
+  const bg=new Uint8ClampedArray(p); // untouched photo for shading
+  const samp=(u,v)=>{ if(u<0||v<0||u>SW-1||v>SH-1)return null; const iu=Math.floor(u),iv=Math.floor(v),fu=u-iu,fv=v-iv,iu1=Math.min(SW-1,iu+1),iv1=Math.min(SH-1,iv+1);
+    const r=[0,0,0,0];const acc=(a,w)=>{const q=a*4;const al=sd[q+3]/255*w;r[0]+=sd[q]*al;r[1]+=sd[q+1]*al;r[2]+=sd[q+2]*al;r[3]+=al;};
+    acc(iv*SW+iu,(1-fu)*(1-fv));acc(iv*SW+iu1,fu*(1-fv));acc(iv1*SW+iu,(1-fu)*fv);acc(iv1*SW+iu1,fu*fv);return r;};
+  const sh=new Float32Array((x1-x0)*(y1-y0));
+  const map=(X,Y)=>{ const yPh=Y/scale+cy0, hw=crownHW(cal,yPh)*scale, Rr=hw/Math.sin(1.2), dxp=X-cX; const s=Math.max(-0.999,Math.min(0.999,dxp/Rr)); const th=Math.asin(s); return [Rr*th+SW/2, Y-top, th]; };
+  // pass 1: shadow mask (embroidery sits up off the crown)
+  for(let Y=y0;Y<y1;Y++)for(let X=x0;X<x1;X++){const m=map(X-1.2*scale,Y-2*scale);const r=samp(m[0],m[1]);if(r)sh[(Y-y0)*IW+(X-x0)]=r[3];}
+  const shB=new Float32Array(sh.length),rad=Math.max(1,Math.round(1.5*scale));
+  for(let j=0;j<y1-y0;j++)for(let i=0;i<IW;i++){let s=0,n=0;for(let dj=-rad;dj<=rad;dj++)for(let di=-rad;di<=rad;di++){const ii=i+di,jj=j+dj;if(ii<0||jj<0||ii>=IW||jj>=y1-y0)continue;s+=sh[jj*IW+ii];n++;}shB[j*IW+i]=s/n;}
+  for(let Y=y0;Y<y1;Y++)for(let X=x0;X<x1;X++){const q=((Y-y0)*IW+(X-x0))*4;const a=shB[(Y-y0)*IW+(X-x0)]*0.42;
+    p[q]*=1-a;p[q+1]*=1-a;p[q+2]*=1-a;
+    const m=map(X,Y);const r=samp(m[0],m[1]);if(!r||r[3]<0.004)continue;
+    const L=(bg[q]+bg[q+1]+bg[q+2]);const f=Math.max(0.8,Math.min(1.12,(L/(rl||1))*0.35+0.65))*(0.9+0.1*Math.cos(m[2]));
+    const A=Math.min(1,r[3]);p[q]=p[q]*(1-A)+r[0]/r[3]*f*A;p[q+1]=p[q+1]*(1-A)+r[1]/r[3]*f*A;p[q+2]=p[q+2]*(1-A)+r[2]/r[3]*f*A;}
+  ox.putImageData(img,x0,y0);
+  return out;
+}
+/* close-up: the stitch render on a swatch of the hat's fabric colour */
+function composeClose(stitch,fab,maxW,maxH){
+  const pad=0.35*R, W=stitch.width+pad*2, H=stitch.height+pad*2, sc=Math.min(1,maxW/W,maxH/H);
+  const c=document.createElement('canvas');c.width=Math.round(W*sc);c.height=Math.round(H*sc);const x=c.getContext('2d');
+  x.fillStyle='rgb('+fab.join(',')+')';x.fillRect(0,0,c.width,c.height);
+  // twill texture
+  const n=x.getImageData(0,0,c.width,c.height),d=n.data;for(let j=0;j<c.height;j++)for(let i=0;i<c.width;i++){const k=(j*c.width+i)*4;const t=((i+j)%4<2?1:-1)*5+(Math.random()-0.5)*8;d[k]+=t;d[k+1]+=t;d[k+2]+=t;}x.putImageData(n,0,0);
+  x.save();x.translate(pad*sc,pad*sc);x.scale(sc,sc);
+  x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=6;x.shadowOffsetX=2;x.shadowOffsetY=3;x.drawImage(stitch,0,0);x.restore();
+  return c;
+}
+
+/* ---------- view ---------- */
+let VIEW='hat', renderTimer=null, RENDER={};
+function scheduleRender(){clearTimeout(renderTimer);renderTimer=setTimeout(renderView,60);}
+async function renderView(){
+  const v=$('view');
+  const ready=ART&&JOB.slots.length&&JOB.hats.length;
+  $('emptyView').classList.toggle('hidden',!!(ART||JOB.hats.length));
+  v.classList.toggle('hidden',!(ART||JOB.hats.length));
+  updateButtons();
+  if(!ART&&!JOB.hats.length)return;
+  const cal=styleCal(); JOB.cur=Math.min(JOB.cur,Math.max(0,JOB.hats.length-1));
+  const hat=JOB.hats[JOB.cur];
+  let photo=null; if(hat){try{photo=await hatPhoto(JOB.style,hat.slug);}catch(e){showMsg('outMsg','Photo missing for '+hat.name+'.');}}
+  let stitch=null,f=null;
+  if(ART&&JOB.slots.length){ AN=AN||analyze(); f=fieldsFor(AN,offSetFor(JOB.cur)); stitch=renderStitch(AN,f,threadColorsFor(JOB.cur)); RENDER={an:AN,f}; }
+  const x=v.getContext('2d');
+  if(VIEW==='close'&&stitch){
+    const fab=photo?fabricColor(photo,cal):[60,60,60]; const c=composeClose(stitch,fab,1400,1000); v.width=c.width;v.height=c.height;x.drawImage(c,0,0);
+  } else if(photo){
+    const c=composeHat(photo,stitch,AN,cal,2,{seamGapIn:JOB.seamGapIn,dxIn:0}); v.width=c.width;v.height=c.height;x.drawImage(c,0,0);
+  } else if(stitch){ v.width=stitch.width;v.height=stitch.height;x.clearRect(0,0,v.width,v.height);x.drawImage(stitch,0,0); }
+  $('stageSub').textContent=hat?(HAT_STYLES[JOB.style].name+' · '+hat.name):'pick a hat in step 3';
+  // stats + warnings
+  if(AN&&f){
+    const st=stitchEstimate(f), th=threadColorsFor(JOB.cur), off=offSetFor(JOB.cur);
+    const used=[...new Set(JOB.slots.map((s,i)=>off.has(i)?null:th[i].n).filter(Boolean))];
+    $('stats').innerHTML='<span>SIZE <b>'+AN.wIn.toFixed(2)+'" × '+AN.hIn.toFixed(2)+'"</b></span><span>EST. STITCHES <b>≈'+st.toLocaleString()+'</b></span><span>THREADS <b>'+used.length+'</b></span><span>SATIN <b>'+f.comps.filter(c=>c.type==='satin').length+'</b> · FILL <b>'+f.comps.filter(c=>c.type==='fill').length+'</b></span>';
+    const w=warningsFor(AN,f); $('warnBox').innerHTML=w.map(t=>'<div class="msg">⚠ '+t+'</div>').join('');
+  } else {$('stats').innerHTML='';$('warnBox').innerHTML='';}
+  save();
+}
+
+/* ---------- UI: job ---------- */
+['jobCustomer','jobQuote','jobName'].forEach(id=>$(id).oninput=()=>{JOB.customer=$('jobCustomer').value;JOB.quote=$('jobQuote').value;JOB.name=$('jobName').value;save();});
+function showMsg(id,t,cls){$(id).innerHTML=t?'<div class="msg '+(cls||'')+'">'+t+'</div>':'';}
+
+/* ---------- UI: art ---------- */
+async function setArt(dataURL,name,keepSlots){
+  try{ ART=await artFromDataURL(dataURL); }catch(e){ showMsg('artMsg','⚠ Couldn\'t read that file. PNG, JPG or SVG please.'); return false; }
+  JOB.art=dataURL; JOB.artName=name||'logo';
+  if(!keepSlots){
+    JOB.slots=detectPalette(ART).map(s=>{const t=nearestThreads(s.artHex,1,true)[0];return {...s,thread:t?t.n:'1800',off:false};});
+    JOB.hats.forEach(h=>{h.threads=null;h.off=null;});
+  }
+  AN=null;
+  $('artThumb').src=ART.toDataURL();$('artThumb').classList.remove('hidden');
+  $('artDropT').textContent=JOB.artName;$('artDropS').textContent=JOB.slots.length+' colour'+(JOB.slots.length==1?'':'s')+' found · click to replace';
+  showMsg('artMsg',JOB.slots.length>8?'⚠ '+JOB.slots.length+' colours found — the Ricoma runs 10 needles per head, but most hat logos should stay ≤6. Photos and gradients don\'t embroider well.':'');
+  renderThreads();scheduleRender();return true;
+}
+$('artFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;await setArt(await fileToDataURL(f),f.name);e.target.value='';};
+const dz=$('artDrop');
+dz.ondragover=e=>{e.preventDefault();dz.classList.add('drag');};dz.ondragleave=()=>dz.classList.remove('drag');
+dz.ondrop=async e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)await setArt(await fileToDataURL(f),f.name);};
+
+/* ---------- UI: hats ---------- */
+function fillStyles(){$('hatStyle').innerHTML=Object.entries(HAT_STYLES).map(([k,s])=>'<option value="'+k+'">'+s.name+' — '+s.sub+'</option>').join('');$('hatStyle').value=JOB.style;}
+async function loadColors(style){
+  if(hatColors[style])return hatColors[style];
+  const S=HAT_STYLES[style]; try{hatColors[style]=await (await fetch(S.base+'colors.json')).json();}catch(e){hatColors[style]={};showMsg('outMsg','⚠ Couldn\'t load the '+S.name+' colour list.');}
+  return hatColors[style];
+}
+function hatSearch(q){
+  const toks=(q||'').toLowerCase().split(/\s+/).filter(Boolean), m=hatColors[JOB.style]||{}, out=[];
+  Object.entries(m).forEach(([slug,name])=>{const nl=name.toLowerCase(),hay=slug+' '+nl;let sc=0,ok=true;
+    toks.forEach(t=>{if(!hay.includes(t)){ok=false;return;}sc+=10;if(nl.startsWith(t))sc+=6;if(nl.split(/[\s/,-]+/).some(w=>w.startsWith(t)))sc+=4;});
+    if(ok)out.push({slug,name,sc});});
+  return out.sort((a,b)=>b.sc-a.sc||a.name.localeCompare(b.name));
+}
+function renderHatList(){
+  const S=HAT_STYLES[JOB.style], on=new Set(JOB.hats.map(h=>h.slug));
+  $('hatList').innerHTML=hatSearch($('hatSearch').value).map(h=>'<div class="hat'+(on.has(h.slug)?' on':'')+'" data-s="'+h.slug+'" title="'+h.name+'"><img loading="lazy" src="'+S.base+S.photo(h.slug)+'" alt=""><span>'+h.name+'</span></div>').join('')||'<div class="val">No colours match.</div>';
+  $('hatList').querySelectorAll('.hat').forEach(el=>el.onclick=()=>toggleHat(el.dataset.s));
+  renderChips();
+}
+function toggleHat(slug){
+  const i=JOB.hats.findIndex(h=>h.slug===slug);
+  if(i>=0){JOB.hats.splice(i,1);if(JOB.cur>=JOB.hats.length)JOB.cur=Math.max(0,JOB.hats.length-1);}
+  else{JOB.hats.push({slug,name:(hatColors[JOB.style]||{})[slug]||slug,threads:null,off:null});JOB.cur=JOB.hats.length-1;}
+  renderHatList();renderThreads();scheduleRender();
+}
+function renderChips(){
+  $('hatChips').innerHTML=JOB.hats.map((h,i)=>'<span class="chip'+(i===JOB.cur?' cur':'')+'" data-i="'+i+'">'+h.name+((h.threads||h.off)?' ✎':'')+' <i data-x="'+i+'" title="remove">✕</i></span>').join('');
+  $('hatChips').querySelectorAll('.chip').forEach(el=>el.onclick=e=>{const x=e.target.dataset.x;if(x!==undefined){toggleHat(JOB.hats[+x].slug);return;}JOB.cur=+el.dataset.i;renderChips();renderThreads();scheduleRender();});
+}
+$('hatSearch').oninput=renderHatList;
+$('hatStyle').onchange=async()=>{JOB.style=$('hatStyle').value;JOB.hats=[];AN=null;await loadColors(JOB.style);renderHatList();scheduleRender();};
+
+/* ---------- UI: threads ---------- */
+function hatScope(){return JOB.scope==='hat'&&JOB.hats[JOB.cur];}
+function renderThreads(){
+  $('thrScope').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.s===JOB.scope));
+  if(!JOB.slots.length){$('thrList').innerHTML='<div class="val">Add a logo first.</div>';return;}
+  const th=threadColorsFor(JOB.cur), off=offSetFor(JOB.cur), hs=hatScope();
+  $('thrList').innerHTML=JOB.slots.map((sl,i)=>{const t=th[i],o=off.has(i);
+    return '<div class="thr'+(o?' off':'')+'"><span class="sw art" style="background:'+sl.artHex+'" title="art colour '+sl.artHex+' ('+Math.round(sl.share*100)+'%)"></span>'
+      +'<span class="sw" style="background:'+t.hex+';cursor:pointer" data-pick="'+i+'"></span>'
+      +'<span class="nm" data-pick="'+i+'" style="cursor:pointer"><b>'+t.n+'</b> '+(t.name||'')+' '+(t.stock?'<span class="tag shelf">ON SHELF</span>':'<span class="tag order">ORDER</span>')+'<small>art '+sl.artHex+' · '+Math.round(sl.share*100)+'% of logo</small></span>'
+      +'<span><button class="iconbtn" data-off="'+i+'" title="'+(o?'stitch this colour':'don\'t stitch — hat shows through')+'">'+(o?'↺ on':'✕')+'</button></span></div>';}).join('');
+  $('thrList').querySelectorAll('[data-pick]').forEach(el=>el.onclick=()=>openPick(+el.dataset.pick));
+  $('thrList').querySelectorAll('[data-off]').forEach(el=>el.onclick=()=>toggleOff(+el.dataset.off));
+  showMsg('thrMsg',hs?'Editing <b>'+hs.name+'</b> only — other hats keep the shared threads.':(threadSource.live?'':'Using the built-in thread list (couldn\'t reach the thread picker).'),hs?'info':'');
+  renderChips();
+}
+$('thrScope').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  if(b.dataset.s==='hat'&&!JOB.hats.length){showMsg('thrMsg','⚠ Pick a hat first (step 3) — then you can give it its own threads.');return;}
+  JOB.scope=b.dataset.s;renderThreads();});
+function setThread(i,n){const sl=JOB.slots[i],h=hatScope();if(h){h.threads=h.threads||{};h.threads[sl.id]=n;}else{sl.thread=n;}renderThreads();scheduleRender();}
+function toggleOff(i){const sl=JOB.slots[i],h=hatScope(),cur=offSetFor(JOB.cur).has(i);if(h){h.off=h.off||{};h.off[sl.id]=!cur;}else{sl.off=!cur;}renderThreads();scheduleRender();}
+let pickIdx=-1;
+function openPick(i){pickIdx=i;const sl=JOB.slots[i];$('pickFor').textContent='· art '+sl.artHex+(hatScope()?' · '+hatScope().name+' only':'');$('pickSearch').value='';renderPick();$('pickWrap').classList.add('open');setTimeout(()=>$('pickSearch').focus(),30);}
+function renderPick(){
+  const sl=JOB.slots[pickIdx];if(!sl)return;const q=$('pickSearch').value.trim().toLowerCase(),shelf=$('pickShelf').checked;
+  let list=nearestThreads(sl.artHex,999,shelf);
+  if(q)list=list.filter(t=>t.n.includes(q)||t.name.toLowerCase().includes(q));
+  $('pickList').innerHTML=list.slice(0,60).map(t=>'<div class="pk" data-n="'+t.n+'"><span class="sw" style="background:'+t.hex+'"></span><span><b style="font-family:JetBrains Mono,monospace">'+t.n+'</b> '+t.name+(t.stock?' ★':'')+'<br><small>ΔE '+t.de.toFixed(1)+' · '+(t.de<3?'very close':t.de<7?'close':t.de<14?'noticeable':'different')+'</small></span><span class="sw art" style="background:'+sl.artHex+'"></span></div>').join('')||'<div class="val" style="padding:10px">No threads match.</div>';
+  $('pickList').querySelectorAll('.pk').forEach(el=>el.onclick=()=>{setThread(pickIdx,el.dataset.n);closePick();});
+}
+function closePick(){$('pickWrap').classList.remove('open');}
+$('pickSearch').oninput=renderPick;$('pickShelf').onchange=renderPick;$('pickClose').onclick=closePick;
+$('pickWrap').onclick=e=>{if(e.target===$('pickWrap'))closePick();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePick();});
+
+/* ---------- UI: placement ---------- */
+function syncPlaceUI(){const c=styleCal();$('wIn').max=c.maxW;$('wIn').value=JOB.widthIn;$('yIn').value=JOB.seamGapIn;
+  $('wVal').textContent=(+JOB.widthIn).toFixed(2)+'"';$('yVal').textContent=(+JOB.seamGapIn).toFixed(2)+'"';}
+$('wIn').oninput=()=>{JOB.widthIn=+$('wIn').value;AN=null;syncPlaceUI();scheduleRender();
+  setTimeout(()=>{if(AN&&AN.capped)showMsg('placeMsg','Height hit the '+styleCal().maxH+'" limit — width held at '+AN.wIn.toFixed(2)+'".');else showMsg('placeMsg','');},120);};
+$('yIn').oninput=()=>{JOB.seamGapIn=+$('yIn').value;syncPlaceUI();scheduleRender();};
+$('viewSeg').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  if(b.dataset.v==='close'&&!ART){showMsg('outMsg','⚠ Add a logo first — the close-up shows the stitching.');return;}
+  VIEW=b.dataset.v;$('viewSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));scheduleRender();});
+
+/* ---------- OUTPUTS ---------- */
+const PG={w:1275,h:1650},PGS=2;
+let LOGO=null; loadImage('assets/mayhem-logo.png').then(i=>LOGO=i).catch(()=>{});
+function canvasJpeg(cv){return new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(ab=>res(new Uint8Array(ab))),'image/jpeg',0.92));}
+function pdfFromJpegs(pages){
+  const enc=new TextEncoder();
+  const parts=[];let offset=0;
+  const push=u8=>{parts.push(u8);offset+=u8.length;};
+  const pushS=s=>push(enc.encode(s));
+  const objOff={};
+  pushS('%PDF-1.4\n');
+  push(new Uint8Array([0x25,0xE2,0xE3,0xCF,0xD3,0x0A]));
+  const N=pages.length;
+  objOff[1]=offset;pushS('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+  const kids=pages.map((_,i)=>(3+i*3)+' 0 R').join(' ');
+  objOff[2]=offset;pushS('2 0 obj\n<< /Type /Pages /Kids ['+kids+'] /Count '+N+' >>\nendobj\n');
+  pages.forEach((pg,i)=>{
+    const po=3+i*3,co=4+i*3,io=5+i*3;
+    /* v8.25: pages now come in at PGS x their layout size — divide it back out
+       so the PDF page stays the same physical size, just higher resolution */
+    const ps=0.5/(pg.scale||1);
+    const W=(pg.w*ps).toFixed(2),H=(pg.h*ps).toFixed(2);
+    objOff[po]=offset;
+    pushS(po+' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+W+' '+H+'] /Resources << /XObject << /Im'+i+' '+io+' 0 R >> >> /Contents '+co+' 0 R >>\nendobj\n');
+    const cs='q '+W+' 0 0 '+H+' 0 0 cm /Im'+i+' Do Q';
+    objOff[co]=offset;
+    pushS(co+' 0 obj\n<< /Length '+cs.length+' >>\nstream\n'+cs+'\nendstream\nendobj\n');
+    objOff[io]=offset;
+    pushS(io+' 0 obj\n<< /Type /XObject /Subtype /Image /Width '+pg.w+' /Height '+pg.h+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+pg.data.length+' >>\nstream\n');
+    push(pg.data);
+    pushS('\nendstream\nendobj\n');
+  });
+  const T=2+N*3;
+  const xref=offset;
+  let x='xref\n0 '+(T+1)+'\n0000000000 65535 f \n';
+  for(let n=1;n<=T;n++)x+=String(objOff[n]).padStart(10,'0')+' 00000 n \n';
+  x+='trailer\n<< /Size '+(T+1)+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF\n';
+  pushS(x);
+  return new Blob(parts,{type:'application/pdf'});
+}
+function downloadBlobFile(blob,fname){const a=document.createElement('a');a.download=fname;a.href=URL.createObjectURL(blob);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);}
+function fileBase(){return ((JOB.customer||'hat')+'-'+(JOB.quote||'')+'-'+(JOB.name||'')).replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()||'hat-lab';}
+function today(){return new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function pageCanvas(){const c=document.createElement('canvas');c.width=PG.w*PGS;c.height=PG.h*PGS;const x=c.getContext('2d');x.scale(PGS,PGS);x.fillStyle='#fff';x.fillRect(0,0,PG.w,PG.h);return [c,x];}
+function pageHeader(x,title){
+  x.fillStyle='#0E0F10';x.fillRect(0,0,PG.w,120);x.fillStyle='#4B9CD3';x.fillRect(0,120,PG.w,5);
+  if(LOGO){const h=64,w=LOGO.width*h/LOGO.height;x.drawImage(LOGO,48,28,w,h);}
+  x.fillStyle='#E8EAEC';x.textAlign='right';x.font='26px "Archivo Black",sans-serif';x.fillText(title,PG.w-48,62);
+  x.font='15px "JetBrains Mono",monospace';x.fillStyle='#98A0A6';
+  x.fillText([JOB.customer,JOB.quote&&('QUOTE '+JOB.quote.replace(/^#/,'#')),today()].filter(Boolean).join('  ·  ').toUpperCase(),PG.w-48,92);x.textAlign='left';
+}
+function pageFooter(x,n,of){
+  x.fillStyle='#0E0F10';x.fillRect(0,PG.h-46,PG.w,46);x.fillStyle='#98A0A6';x.font='12px "JetBrains Mono",monospace';
+  x.fillText('MAYHEM INK SCREEN PRINTING · ST. GEORGE, UT · mayhemink.net',48,PG.h-18);x.textAlign='right';x.fillText('HAT LAB v'+VERSION+'  ·  PAGE '+n+' / '+of,PG.w-48,PG.h-18);x.textAlign='left';
+}
+function watermark(x,X,Y,W,H){
+  x.save();x.beginPath();x.rect(X,Y,W,H);x.clip();x.globalAlpha=0.07;
+  if(LOGO){const w=170,h=LOGO.height*w/LOGO.width;x.translate(X+W/2,Y+H/2);x.rotate(-0.35);for(let j=-4;j<=4;j++)for(let i=-4;i<=4;i++)x.drawImage(LOGO,i*260-w/2+(j%2)*130,j*150-h/2,w,h);}
+  else{x.fillStyle='#000';x.font='28px "Archivo Black"';x.translate(X+W/2,Y+H/2);x.rotate(-0.35);for(let j=-4;j<=4;j++)for(let i=-3;i<=3;i++)x.fillText('MAYHEM INK',i*300+(j%2)*150,j*120);}
+  x.restore();
+}
+function wrapText(x,t,X,Y,maxW,lh){const ws=t.split(' ');let line='';for(const w of ws){const tt=line?line+' '+w:w;if(x.measureText(tt).width>maxW&&line){x.fillText(line,X,Y);Y+=lh;line=w;}else line=tt;}if(line){x.fillText(line,X,Y);Y+=lh;}return Y;}
+async function buildApprovalPage(hi,n,of){
+  const cal=styleCal(),hat=JOB.hats[hi],photo=await hatPhoto(JOB.style,hat.slug);
+  const an=AN||(AN=analyze()), f=fieldsFor(an,offSetFor(hi)), th=threadColorsFor(hi), off=offSetFor(hi);
+  const st=renderStitch(an,f,th);
+  const [c,x]=pageCanvas(); pageHeader(x,'EMBROIDERY APPROVAL');
+  // title
+  x.fillStyle='#111';x.font='30px "Archivo Black",sans-serif';x.fillText((HAT_STYLES[JOB.style].name+' · '+hat.name).toUpperCase(),48,178);
+  x.font='16px Inter,sans-serif';x.fillStyle='#555';x.fillText((JOB.name?JOB.name+' — ':'')+'Front centre embroidery · '+an.wIn.toFixed(2)+'" × '+an.hIn.toFixed(2)+'"',48,206);
+  // hat mockup (scale so it fills ~1180 wide) — rendered at page resolution
+  const sc=(PG.w-96)/(cal.crop[2]-cal.crop[0])*PGS*0.98;
+  const hatC=composeHat(photo,st,an,cal,sc,{seamGapIn:JOB.seamGapIn});
+  const hw=(PG.w-96)*0.98,hh=hw*hatC.height/hatC.width; const HX=48+(PG.w-96-hw)/2,HY=226;
+  x.drawImage(hatC,HX,HY,hw,hh); watermark(x,HX,HY,hw,hh);
+  // close-up + spec
+  const Y2=HY+hh+18;
+  x.fillStyle='#111';x.font='14px "Archivo Black"';x.fillText('STITCH CLOSE-UP',48,Y2+16);
+  const fab=fabricColor(photo,cal), cl=composeClose(st,fab,1800,1200);
+  const cw=560,ch=Math.min(PG.h-46-40-(Y2+28),cw*cl.height/cl.width), cw2=ch*cl.width/cl.height;
+  x.drawImage(cl,48,Y2+28,cw2,ch);x.strokeStyle='#ccc';x.strokeRect(48,Y2+28,cw2,ch);
+  // threads
+  const SX=48+Math.max(cw2,420)+40;let y=Y2+16;
+  x.fillStyle='#111';x.font='14px "Archivo Black"';x.fillText('THREAD COLOURS — MADEIRA POLYNEON',SX,y);y+=18;
+  const used=[];JOB.slots.forEach((sl,i)=>{if(off.has(i))return;const t=th[i];if(!used.find(u=>u.n===t.n))used.push(t);});
+  used.forEach((t,i)=>{x.fillStyle=t.hex;x.fillRect(SX,y,36,28);x.strokeStyle='#999';x.strokeRect(SX,y,36,28);
+    x.fillStyle='#111';x.font='bold 15px "JetBrains Mono",monospace';x.fillText(t.n,SX+48,y+19);x.font='15px Inter';x.fillText(t.name||'',SX+110,y+19);y+=36;});
+  y+=8;x.font='13px Inter';x.fillStyle='#333';
+  const lines=['Size: '+an.wIn.toFixed(2)+'" wide × '+an.hIn.toFixed(2)+'" tall','Placement: front centre, '+(+JOB.seamGapIn).toFixed(2)+'" above the bill seam','Estimated stitches: ≈'+stitchEstimate(f).toLocaleString()];
+  lines.forEach(l=>{x.fillText(l,SX,y+=20);});
+  const w=warningsFor(an,f).filter(t=>!/capped/.test(t));
+  if(w.length){y+=16;x.fillStyle='#8a6d00';x.font='bold 12px Inter';x.fillText('HEADS UP',SX,y);x.font='12px Inter';y+=16;w.slice(0,3).forEach(t=>{y=wrapText(x,'• '+t,SX,y,PG.w-48-SX,16)+2;});}
+  // approval line
+  const AY=PG.h-46-70; x.fillStyle='#666';x.font='11px Inter';
+  wrapText(x,'Visual approximation for approval only. Final stitching is digitized from this art — thread sheen, stitch direction and fabric texture will differ from the screen, and thread swatches are approximate (the physical Madeira card is the true colour). Small text and fine lines may be simplified.',SX,AY-62,PG.w-48-SX,14);
+  x.strokeStyle='#111';x.beginPath();x.moveTo(SX,AY+30);x.lineTo(SX+300,AY+30);x.moveTo(SX+330,AY+30);x.lineTo(PG.w-48,AY+30);x.stroke();
+  x.fillStyle='#333';x.font='11px "JetBrains Mono",monospace';x.fillText('APPROVED BY',SX,AY+46);x.fillText('DATE',SX+330,AY+46);
+  pageFooter(x,n,of);
+  return c;
+}
+async function buildSheetPage(){
+  const an=AN||(AN=analyze());const [c,x]=pageCanvas();pageHeader(x,'DIGITIZING / THREAD SHEET');
+  let y=180;x.fillStyle='#111';x.font='24px "Archivo Black"';x.fillText((JOB.name||JOB.artName||'Hat logo').toUpperCase(),48,y);
+  x.font='15px Inter';x.fillStyle='#444';x.fillText('Front centre · '+an.wIn.toFixed(2)+'" W × '+an.hIn.toFixed(2)+'" H · '+(+JOB.seamGapIn).toFixed(2)+'" above bill seam · '+HAT_STYLES[JOB.style].name,48,y+=28);
+  // art on checker
+  const aw=520,ah=Math.min(300,aw*ART.height/ART.width),aw2=ah*ART.width/ART.height;y+=24;
+  for(let j=0;j<ah;j+=12)for(let i=0;i<aw2;i+=12){x.fillStyle=((i+j)/12)%2?'#eee':'#fafafa';x.fillRect(48+i,y+j,Math.min(12,aw2-i),Math.min(12,ah-j));}
+  x.drawImage(ART,48,y,aw2,ah);x.strokeStyle='#ccc';x.strokeRect(48,y,aw2,ah);
+  // shared thread list
+  let ty=y;const TX=48+aw2+40;x.fillStyle='#111';x.font='14px "Archivo Black"';x.fillText('NEEDLE ORDER (SHARED)',TX,ty+12);ty+=26;
+  const f0=fieldsFor(an,offSetFor(-1));
+  JOB.slots.forEach((sl,i)=>{const t=THR[sl.thread]||{n:sl.thread,hex:sl.artHex,name:'?'};
+    x.fillStyle=sl.artHex;x.beginPath();x.arc(TX+10,ty+12,9,0,7);x.fill();x.strokeStyle='#999';x.stroke();
+    x.fillStyle=t.hex;x.fillRect(TX+28,ty,30,24);x.strokeRect(TX+28,ty,30,24);
+    x.fillStyle=sl.off?'#aaa':'#111';x.font='bold 14px "JetBrains Mono"';x.fillText((i+1)+'. '+t.n,TX+68,ty+17);x.font='14px Inter';x.fillText((t.name||'')+(sl.off?' — NOT STITCHED':''),TX+150,ty+17);
+    x.font='bold 11px "JetBrains Mono"';x.fillStyle=t.stock?'#1d8a55':'#a07800';x.fillText(t.stock?'ON SHELF':'ORDER',PG.w-130,ty+17);ty+=32;});
+  y=Math.max(y+ah,ty)+30;
+  // per hat overrides
+  x.fillStyle='#111';x.font='14px "Archivo Black"';x.fillText('HATS ON THIS JOB',48,y);y+=22;x.font='14px Inter';
+  JOB.hats.forEach((h,hi)=>{const th=threadColorsFor(hi),off=offSetFor(hi);
+    const seq=JOB.slots.map((sl,i)=>off.has(i)?null:th[i].n).filter(Boolean);
+    x.fillStyle='#111';x.fillText('• '+h.name,48,y);x.fillStyle='#555';x.font='13px "JetBrains Mono"';x.fillText((h.threads||h.off)?'OWN THREADS: '+seq.join(' / '):'shared: '+seq.join(' / '),380,y);x.font='14px Inter';y+=22;});
+  y+=14;x.fillStyle='#111';x.font='14px "Archivo Black"';x.fillText('NOTES FOR THE DIGITIZER',48,y);y+=22;x.font='13px Inter';x.fillStyle='#333';
+  const notes=['Est. ≈'+stitchEstimate(f0).toLocaleString()+' stitches (rule of thumb — the digitized file is the real count).',
+    f0.comps.filter(c=>c.type==='fill').length+' fill area(s), '+f0.comps.filter(c=>c.type==='satin').length+' satin column(s) detected.',...warningsFor(an,f0)];
+  notes.forEach(t=>{y=wrapText(x,'• '+t,48,y,PG.w-96,18)+4;});
+  pageFooter(x,1,1);return c;
+}
+async function pagesToPdf(cs){const pages=[];for(const c of cs)pages.push({data:await canvasJpeg(c),w:c.width,h:c.height,scale:PGS});return pdfFromJpegs(pages);}
+async function fontsReady(){try{await Promise.all(['30px "Archivo Black"','15px "JetBrains Mono"','bold 15px "JetBrains Mono"','15px Inter','bold 12px Inter'].map(f=>document.fonts.load(f)));await document.fonts.ready;}catch(e){}}
+async function exportApproval(){ if(!ART||!JOB.hats.length)throw new Error('need art + at least one hat'); await fontsReady();
+  const cs=[];for(let i=0;i<JOB.hats.length;i++)cs.push(await buildApprovalPage(i,i+1,JOB.hats.length));return pagesToPdf(cs);}
+async function exportSheet(){ if(!ART)throw new Error('need art'); await fontsReady();return pagesToPdf([await buildSheetPage()]);}
+function vitorRequest(){
+  const an=AN||(AN=analyze());
+  const L=['Hi Vitor — new hat logo to digitize for '+(JOB.customer||'a customer')+(JOB.quote?' (quote '+JOB.quote+')':'')+'.','',
+    'Placement: front centre of a structured '+HAT_STYLES[JOB.style].name+' (cap frame)',
+    'Size: '+an.wIn.toFixed(2)+'" wide × '+an.hIn.toFixed(2)+'" tall','Thread: Madeira Polyneon 40 — sew order:'];
+  JOB.slots.forEach((sl,i)=>{if(sl.off)return;const t=THR[sl.thread]||{n:sl.thread,name:''};L.push('  '+(i+1)+'. '+t.n+' '+t.name+'  (art colour '+sl.artHex+')');});
+  if(JOB.slots.some(s=>s.off))L.push('Not stitched (hat shows through): '+JOB.slots.filter(s=>s.off).map(s=>s.artHex).join(', '));
+  L.push('','Please send PNG + EMB + DST + PDF as usual. Thanks!');return L.join('\n');
+}
+function updateButtons(){const ok=!!(ART&&JOB.hats.length&&JOB.slots.length);$('dlApproval').disabled=!ok;$('dlSheet').disabled=!ART;$('cpVitor').disabled=!ART;}
+$('dlApproval').onclick=async()=>{showMsg('outMsg','Building '+JOB.hats.length+' page'+(JOB.hats.length>1?'s':'')+'…','info');try{downloadBlobFile(await exportApproval(),fileBase()+'-hat-approval.pdf');showMsg('outMsg','✓ Approval PDF downloaded.','ok');}catch(e){showMsg('outMsg','⚠ '+e.message);}};
+$('dlSheet').onclick=async()=>{try{downloadBlobFile(await exportSheet(),fileBase()+'-digitizing-sheet.pdf');showMsg('outMsg','✓ Digitizing sheet downloaded.','ok');}catch(e){showMsg('outMsg','⚠ '+e.message);}};
+async function copyText(t,label){try{await navigator.clipboard.writeText(t);showMsg('outMsg','✓ '+label+' copied.','ok');}catch(e){showMsg('outMsg','⚠ Clipboard blocked — select and copy:<br><textarea style="width:100%;height:120px">'+t.replace(/</g,'&lt;')+'</textarea>');}}
+$('cpVitor').onclick=()=>copyText(vitorRequest(),'Vitor request');
+$('cpJob').onclick=()=>copyText(JSON.stringify(jobForExport(),null,1),'Job JSON');
+$('newJob').onclick=()=>{if(!confirm('Clear this job and start fresh?'))return;resetJob();};
+
+/* ---------- persistence ---------- */
+function jobForExport(){const j=JSON.parse(JSON.stringify(JOB));if(j.art&&j.art.length>200)j.art='(data URL, '+Math.round(j.art.length/1024)+' KB)';return j;}
+function save(){try{localStorage.setItem(JOBKEY,JSON.stringify(JOB));}catch(e){try{const j={...JOB,art:null};localStorage.setItem(JOBKEY,JSON.stringify(j));}catch(_){}}}
+function syncJobUI(){$('jobCustomer').value=JOB.customer||'';$('jobQuote').value=JOB.quote||'';$('jobName').value=JOB.name||'';fillStyles();syncPlaceUI();}
+async function resetJob(){JOB=blankJob();ART=null;AN=null;$('artThumb').classList.add('hidden');$('artDropT').textContent='Drop logo here';$('artDropS').textContent='or click to choose';showMsg('artMsg','');syncJobUI();await loadColors(JOB.style);renderHatList();renderThreads();scheduleRender();}
+async function loadJob(spec){
+  const j=Object.assign(blankJob(),spec||{});
+  if(!HAT_STYLES[j.style])throw new Error('unknown hat style '+j.style+' — known: '+Object.keys(HAT_STYLES).join(', '));
+  const m=await loadColors(j.style);
+  j.hats=(j.hats||[]).map(h=>typeof h==='string'?{slug:h}:h).map(h=>{
+    let slug=h.slug; if(!m[slug]){const hit=Object.entries(m).find(([s,n])=>n.toLowerCase()===String(h.slug||h.name||'').toLowerCase());if(hit)slug=hit[0];}
+    if(!m[slug])throw new Error('unknown '+j.style+' colour "'+(h.slug||h.name)+'"');
+    return {slug,name:m[slug],threads:h.threads||null,off:h.off||null};});
+  const art=j.art, slots=j.slots; delete j.threads; JOB=j; ART=null; AN=null;
+  if(art&&/^data:/.test(art)){await setArt(art,j.artName,!!(slots&&slots.length));}
+  else if(art&&/^(https?:|\.|\/)/.test(art)){const b=await (await fetch(art)).blob();await setArt(await fileToDataURL(b),j.artName||art.split('/').pop(),!!(slots&&slots.length));}
+  // threads given as hex/number list → map onto detected slots in order
+  if(spec&&Array.isArray(spec.threads)){spec.threads.forEach((t,i)=>{if(JOB.slots[i]&&THR[String(t)])JOB.slots[i].thread=String(t);});}
+  syncJobUI();renderHatList();renderThreads();await renderView();return api.summary();
+}
+
+/* ---------- AGENT API ----------
+   Everything the UI does is reachable here, no clicks needed:
+     await HatLab.loadJob({customer,quote,name,style:'R112',hats:['navywhite','Black'],art:'data:…'|url,widthIn:3.5,seamGapIn:0.55,threads:['1801','1934']})
+     HatLab.summary()            → sizes, threads per hat, stitch estimate, warnings (JSON)
+     await HatLab.approvalPdf()  → Blob   ·  await HatLab.sheetPdf() → Blob  ·  HatLab.vitorRequest() → text
+     HatLab.hats(style?)         → {slug:name}  ·  HatLab.matchThread('#1F3D2B',k,shelfOnly) → nearest Polyneon */
+const api={
+  version:VERSION,
+  styles:()=>Object.fromEntries(Object.entries(HAT_STYLES).map(([k,s])=>[k,{name:s.name,sub:s.sub,maxW:s.calib.maxW,maxH:s.calib.maxH}])),
+  hats:async(style)=>loadColors(style||JOB.style),
+  matchThread:(hex,k=5,shelfOnly=false)=>nearestThreads(hex,k,shelfOnly).map(t=>({n:t.n,name:t.name,hex:t.hex,onShelf:t.stock,deltaE:+t.de.toFixed(2)})),
+  loadJob, getJob:()=>JSON.parse(JSON.stringify(JOB)),
+  setThread:(slotIdx,n,hatIdx)=>{if(!THR[n])throw new Error('unknown thread '+n);if(hatIdx!=null){JOB.cur=hatIdx;JOB.scope='hat';}else JOB.scope='all';setThread(slotIdx,n);JOB.scope='all';},
+  setOff:(slotIdx,off,hatIdx)=>{if(hatIdx!=null){const h=JOB.hats[hatIdx];h.off=h.off||{};h.off[JOB.slots[slotIdx].id]=!!off;}else JOB.slots[slotIdx].off=!!off;renderThreads();scheduleRender();},
+  setSize:(widthIn,seamGapIn)=>{if(widthIn!=null)JOB.widthIn=+widthIn;if(seamGapIn!=null)JOB.seamGapIn=+seamGapIn;AN=null;syncPlaceUI();scheduleRender();},
+  summary:()=>{ if(!ART)return {ready:false,reason:'no art'}; const an=AN||(AN=analyze());
+    const per=(JOB.hats.length?JOB.hats:[null]).map((h,hi)=>{const f=fieldsFor(an,offSetFor(h?hi:-1)),th=threadColorsFor(h?hi:-1),off=offSetFor(h?hi:-1);
+      return {hat:h?h.name:null,slug:h?h.slug:null,threads:JOB.slots.map((sl,i)=>off.has(i)?null:{n:th[i].n,name:th[i].name,onShelf:!!th[i].stock,art:sl.artHex}).filter(Boolean),
+        stitches:stitchEstimate(f),satin:f.comps.filter(c=>c.type==='satin').length,fill:f.comps.filter(c=>c.type==='fill').length,warnings:warningsFor(an,f)};});
+    return {ready:!!JOB.hats.length,style:JOB.style,widthIn:+an.wIn.toFixed(2),heightIn:+an.hIn.toFixed(2),seamGapIn:JOB.seamGapIn,capped:an.capped,
+      slots:JOB.slots.map(s=>({id:s.id,art:s.artHex,share:+s.share.toFixed(3),thread:s.thread,off:s.off})),hats:per,threadsLive:threadSource.live}; },
+  approvalPdf:exportApproval, sheetPdf:exportSheet, vitorRequest,
+  previewPng:async(hatIdx=0,view='hat')=>{const pv=VIEW,pc=JOB.cur;VIEW=view;JOB.cur=hatIdx;await renderView();const b=await new Promise(r=>$('view').toBlob(r,'image/png'));VIEW=pv;JOB.cur=pc;return b;},
+  render:renderView
+};
+window.HatLab=api;
+
+/* ---------- boot ---------- */
+(async function boot(){
+  fillStyles(); await loadColors(JOB.style);
+  const qs=new URLSearchParams(location.search);
+  if(qs.get('job')){try{const spec=await (await fetch(qs.get('job'))).json();await loadJob(spec);return;}catch(e){showMsg('outMsg','⚠ Couldn\'t load ?job= spec: '+e.message);}}
+  let saved=null;try{saved=JSON.parse(localStorage.getItem(JOBKEY)||'null');}catch(e){}
+  if(saved&&saved.v===1){try{await loadJob(saved);return;}catch(e){}}
+  syncJobUI();renderHatList();renderThreads();renderView();
+})();
+</script>
+</body>
+</html>
