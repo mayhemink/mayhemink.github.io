@@ -1215,6 +1215,122 @@
         "24M"
       ],
       "verified": false
+    },
+    "3001CVC": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL"
+      ],
+      "verified": false
+    },
+    "3001T": {
+      "sizes": [
+        "2T",
+        "3T",
+        "4T",
+        "5T"
+      ],
+      "verified": false
+    },
+    "4424": {
+      "sizes": [
+        "NB",
+        "6M",
+        "12M",
+        "18M",
+        "24M"
+      ],
+      "verified": false
+    },
+    "7200": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
+    },
+    "BW6502": {
+      "sizes": [
+        "XXS",
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "verified": false
+    },
+    "EXP20PQ": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
+    },
+    "EXP25PH": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
+    },
+    "EXP30PZ": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
+    },
+    "IND3000": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
+    },
+    "PRM4500": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
     }
   }
 }

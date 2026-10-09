@@ -18026,6 +18026,3155 @@
      "color": "White"
     }
    ]
+  },
+  "3001CVC": {
+   "name": "Bella+Canvas 3001CVC",
+   "sub": "Unisex Heather CVC Tee",
+   "tokens": [
+    "3001cvc"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 25.42,
+     "centerX": 439.0,
+     "collarY": 140,
+     "leftChestX": 548.3,
+     "default": true,
+     "proposed": true
+    },
+    "back": {
+     "ppi": 24.171,
+     "centerX": 445.5,
+     "collarY": 96.51,
+     "leftChestX": 445.5,
+     "default": true,
+     "proposed": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/3001CVC/front/3001cvc-athletic-heather-front.jpg",
+     "side": "front",
+     "color": "Athletic Heather"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-athletic-heather-back.jpg",
+     "side": "back",
+     "color": "Athletic Heather"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-black-heather-front.jpg",
+     "side": "front",
+     "color": "Black Heather"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-black-heather-back.jpg",
+     "side": "back",
+     "color": "Black Heather"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-dark-grey-heather-front.jpg",
+     "side": "front",
+     "color": "Dark Grey Heather"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-dark-grey-heather-back.jpg",
+     "side": "back",
+     "color": "Dark Grey Heather"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-deep-heather-front.jpg",
+     "side": "front",
+     "color": "Deep Heather"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-deep-heather-back.jpg",
+     "side": "back",
+     "color": "Deep Heather"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-aqua-front.jpg",
+     "side": "front",
+     "color": "Heather Aqua"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-aqua-back.jpg",
+     "side": "back",
+     "color": "Heather Aqua"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-autumn-front.jpg",
+     "side": "front",
+     "color": "Heather Autumn"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-autumn-back.jpg",
+     "side": "back",
+     "color": "Heather Autumn"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-baby-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Baby Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-baby-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Baby Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-blue-lagoon-front.jpg",
+     "side": "front",
+     "color": "Heather Blue Lagoon"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-blue-lagoon-back.jpg",
+     "side": "back",
+     "color": "Heather Blue Lagoon"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-blue-storm-front.jpg",
+     "side": "front",
+     "color": "Heather Blue Storm"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-blue-storm-back.jpg",
+     "side": "back",
+     "color": "Heather Blue Storm"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-brown-front.jpg",
+     "side": "front",
+     "color": "Heather Brown"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-brown-back.jpg",
+     "side": "back",
+     "color": "Heather Brown"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-bubble-gum-front.jpg",
+     "side": "front",
+     "color": "Heather Bubble Gum"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-bubble-gum-back.jpg",
+     "side": "back",
+     "color": "Heather Bubble Gum"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-canvas-red-front.jpg",
+     "side": "front",
+     "color": "Heather Canvas Red"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-canvas-red-back.jpg",
+     "side": "back",
+     "color": "Heather Canvas Red"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-cardinal-front.jpg",
+     "side": "front",
+     "color": "Heather Cardinal"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-cardinal-back.jpg",
+     "side": "back",
+     "color": "Heather Cardinal"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-carolina-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Carolina Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-carolina-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Carolina Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-cement-front.jpg",
+     "side": "front",
+     "color": "Heather Cement"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-cement-back.jpg",
+     "side": "back",
+     "color": "Heather Cement"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-charity-pink-front.jpg",
+     "side": "front",
+     "color": "Heather Charity Pink"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-charity-pink-back.jpg",
+     "side": "back",
+     "color": "Heather Charity Pink"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-clay-front.jpg",
+     "side": "front",
+     "color": "Heather Clay"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-clay-back.jpg",
+     "side": "back",
+     "color": "Heather Clay"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-columbia-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Columbia Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-columbia-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Columbia Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-cool-grey-front.jpg",
+     "side": "front",
+     "color": "Heather Cool Grey"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-cool-grey-back.jpg",
+     "side": "back",
+     "color": "Heather Cool Grey"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-dark-lavender-front.jpg",
+     "side": "front",
+     "color": "Heather Dark Lavender"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-dark-lavender-back.jpg",
+     "side": "back",
+     "color": "Heather Dark Lavender"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-deep-teal-front.jpg",
+     "side": "front",
+     "color": "Heather Deep Teal"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-deep-teal-back.jpg",
+     "side": "back",
+     "color": "Heather Deep Teal"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-dust-front.jpg",
+     "side": "front",
+     "color": "Heather Dust"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-dust-back.jpg",
+     "side": "back",
+     "color": "Heather Dust"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-dusty-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Dusty Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-dusty-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Dusty Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-emerald-front.jpg",
+     "side": "front",
+     "color": "Heather Emerald"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-emerald-back.jpg",
+     "side": "back",
+     "color": "Heather Emerald"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-forest-front.jpg",
+     "side": "front",
+     "color": "Heather Forest"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-forest-back.jpg",
+     "side": "back",
+     "color": "Heather Forest"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-french-vanilla-front.jpg",
+     "side": "front",
+     "color": "Heather French Vanilla"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-french-vanilla-back.jpg",
+     "side": "back",
+     "color": "Heather French Vanilla"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-grass-green-front.jpg",
+     "side": "front",
+     "color": "Heather Grass Green"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-grass-green-back.jpg",
+     "side": "back",
+     "color": "Heather Grass Green"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-green-front.jpg",
+     "side": "front",
+     "color": "Heather Green"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-green-back.jpg",
+     "side": "back",
+     "color": "Heather Green"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-ice-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Ice Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-ice-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Ice Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-kelly-front.jpg",
+     "side": "front",
+     "color": "Heather Kelly"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-kelly-back.jpg",
+     "side": "back",
+     "color": "Heather Kelly"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-lapis-front.jpg",
+     "side": "front",
+     "color": "Heather Lapis"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-lapis-back.jpg",
+     "side": "back",
+     "color": "Heather Lapis"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-magenta-front.jpg",
+     "side": "front",
+     "color": "Heather Magenta"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-magenta-back.jpg",
+     "side": "back",
+     "color": "Heather Magenta"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-marmalade-front.jpg",
+     "side": "front",
+     "color": "Heather Marmalade"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-marmalade-back.jpg",
+     "side": "back",
+     "color": "Heather Marmalade"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-maroon-front.jpg",
+     "side": "front",
+     "color": "Heather Maroon"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-maroon-back.jpg",
+     "side": "back",
+     "color": "Heather Maroon"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-mauve-front.jpg",
+     "side": "front",
+     "color": "Heather Mauve"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-mauve-back.jpg",
+     "side": "back",
+     "color": "Heather Mauve"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-midnight-navy-front.jpg",
+     "side": "front",
+     "color": "Heather Midnight Navy"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-midnight-navy-back.jpg",
+     "side": "back",
+     "color": "Heather Midnight Navy"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-military-green-front.jpg",
+     "side": "front",
+     "color": "Heather Military Green"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-military-green-back.jpg",
+     "side": "back",
+     "color": "Heather Military Green"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-mint-front.jpg",
+     "side": "front",
+     "color": "Heather Mint"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-mint-back.jpg",
+     "side": "back",
+     "color": "Heather Mint"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-mustard-front.jpg",
+     "side": "front",
+     "color": "Heather Mustard"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-mustard-back.jpg",
+     "side": "back",
+     "color": "Heather Mustard"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-natural-front.jpg",
+     "side": "front",
+     "color": "Heather Natural"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-natural-back.jpg",
+     "side": "back",
+     "color": "Heather Natural"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-navy-front.jpg",
+     "side": "front",
+     "color": "Heather Navy"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-navy-back.jpg",
+     "side": "back",
+     "color": "Heather Navy"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-oatmeal-front.jpg",
+     "side": "front",
+     "color": "Heather Oatmeal"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-oatmeal-back.jpg",
+     "side": "back",
+     "color": "Heather Oatmeal"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-olive-front.jpg",
+     "side": "front",
+     "color": "Heather Olive"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-olive-back.jpg",
+     "side": "back",
+     "color": "Heather Olive"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-orange-front.jpg",
+     "side": "front",
+     "color": "Heather Orange"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-orange-back.jpg",
+     "side": "back",
+     "color": "Heather Orange"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-orchid-front.jpg",
+     "side": "front",
+     "color": "Heather Orchid"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-orchid-back.jpg",
+     "side": "back",
+     "color": "Heather Orchid"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-peach-front.jpg",
+     "side": "front",
+     "color": "Heather Peach"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-peach-back.jpg",
+     "side": "back",
+     "color": "Heather Peach"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-pink-front.jpg",
+     "side": "front",
+     "color": "Heather Pink"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-pink-back.jpg",
+     "side": "back",
+     "color": "Heather Pink"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-pink-gravel-front.jpg",
+     "side": "front",
+     "color": "Heather Pink Gravel"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-pink-gravel-back.jpg",
+     "side": "back",
+     "color": "Heather Pink Gravel"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-prism-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Prism Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-prism-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Prism Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-prism-dusty-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Prism Dusty Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-prism-dusty-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Prism Dusty Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-prism-ice-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Prism Ice Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-prism-ice-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Prism Ice Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-prism-lilac-front.jpg",
+     "side": "front",
+     "color": "Heather Prism Lilac"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-prism-lilac-back.jpg",
+     "side": "back",
+     "color": "Heather Prism Lilac"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-prism-mint-front.jpg",
+     "side": "front",
+     "color": "Heather Prism Mint"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-prism-mint-back.jpg",
+     "side": "back",
+     "color": "Heather Prism Mint"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-prism-natural-front.jpg",
+     "side": "front",
+     "color": "Heather Prism Natural"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-prism-natural-back.jpg",
+     "side": "back",
+     "color": "Heather Prism Natural"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-prism-peach-front.jpg",
+     "side": "front",
+     "color": "Heather Prism Peach"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-prism-peach-back.jpg",
+     "side": "back",
+     "color": "Heather Prism Peach"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-prism-sunset-front.jpg",
+     "side": "front",
+     "color": "Heather Prism Sunset"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-prism-sunset-back.jpg",
+     "side": "back",
+     "color": "Heather Prism Sunset"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-purple-front.jpg",
+     "side": "front",
+     "color": "Heather Purple"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-purple-back.jpg",
+     "side": "back",
+     "color": "Heather Purple"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-raspberry-front.jpg",
+     "side": "front",
+     "color": "Heather Raspberry"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-raspberry-back.jpg",
+     "side": "back",
+     "color": "Heather Raspberry"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-red-front.jpg",
+     "side": "front",
+     "color": "Heather Red"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-red-back.jpg",
+     "side": "back",
+     "color": "Heather Red"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-sage-front.jpg",
+     "side": "front",
+     "color": "Heather Sage"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-sage-back.jpg",
+     "side": "back",
+     "color": "Heather Sage"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-sand-dune-front.jpg",
+     "side": "front",
+     "color": "Heather Sand Dune"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-sand-dune-back.jpg",
+     "side": "back",
+     "color": "Heather Sand Dune"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-sea-green-front.jpg",
+     "side": "front",
+     "color": "Heather Sea Green"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-sea-green-back.jpg",
+     "side": "back",
+     "color": "Heather Sea Green"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-silver-front.jpg",
+     "side": "front",
+     "color": "Heather Silver"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-silver-back.jpg",
+     "side": "back",
+     "color": "Heather Silver"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-slate-front.jpg",
+     "side": "front",
+     "color": "Heather Slate"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-slate-back.jpg",
+     "side": "back",
+     "color": "Heather Slate"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-soft-cream-front.jpg",
+     "side": "front",
+     "color": "Heather Soft Cream"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-soft-cream-back.jpg",
+     "side": "back",
+     "color": "Heather Soft Cream"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-stone-front.jpg",
+     "side": "front",
+     "color": "Heather Stone"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-stone-back.jpg",
+     "side": "back",
+     "color": "Heather Stone"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-storm-front.jpg",
+     "side": "front",
+     "color": "Heather Storm"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-storm-back.jpg",
+     "side": "back",
+     "color": "Heather Storm"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-sunset-front.jpg",
+     "side": "front",
+     "color": "Heather Sunset"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-sunset-back.jpg",
+     "side": "back",
+     "color": "Heather Sunset"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-tan-front.jpg",
+     "side": "front",
+     "color": "Heather Tan"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-tan-back.jpg",
+     "side": "back",
+     "color": "Heather Tan"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-team-purple-front.jpg",
+     "side": "front",
+     "color": "Heather Team Purple"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-team-purple-back.jpg",
+     "side": "back",
+     "color": "Heather Team Purple"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-true-royal-front.jpg",
+     "side": "front",
+     "color": "Heather True Royal"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-true-royal-back.jpg",
+     "side": "back",
+     "color": "Heather True Royal"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-yellow-front.jpg",
+     "side": "front",
+     "color": "Heather Yellow"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-yellow-back.jpg",
+     "side": "back",
+     "color": "Heather Yellow"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-heather-yellow-gold-front.jpg",
+     "side": "front",
+     "color": "Heather Yellow Gold"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-heather-yellow-gold-back.jpg",
+     "side": "back",
+     "color": "Heather Yellow Gold"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-neon-blue-front.jpg",
+     "side": "front",
+     "color": "Neon Blue"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-neon-blue-back.jpg",
+     "side": "back",
+     "color": "Neon Blue"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-neon-orange-front.jpg",
+     "side": "front",
+     "color": "Neon Orange"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-neon-orange-back.jpg",
+     "side": "back",
+     "color": "Neon Orange"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-neon-pink-front.jpg",
+     "side": "front",
+     "color": "Neon Pink"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-neon-pink-back.jpg",
+     "side": "back",
+     "color": "Neon Pink"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-neon-yellow-front.jpg",
+     "side": "front",
+     "color": "Neon Yellow"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-neon-yellow-back.jpg",
+     "side": "back",
+     "color": "Neon Yellow"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-solid-asphalt-blend-front.jpg",
+     "side": "front",
+     "color": "Solid Asphalt Blend"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-solid-asphalt-blend-back.jpg",
+     "side": "back",
+     "color": "Solid Asphalt Blend"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-solid-black-blend-front.jpg",
+     "side": "front",
+     "color": "Solid Black Blend"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-solid-black-blend-back.jpg",
+     "side": "back",
+     "color": "Solid Black Blend"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-solid-navy-blend-front.jpg",
+     "side": "front",
+     "color": "Solid Navy Blend"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-solid-navy-blend-back.jpg",
+     "side": "back",
+     "color": "Solid Navy Blend"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-solid-red-blend-front.jpg",
+     "side": "front",
+     "color": "Solid Red Blend"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-solid-red-blend-back.jpg",
+     "side": "back",
+     "color": "Solid Red Blend"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-solid-true-royal-blend-front.jpg",
+     "side": "front",
+     "color": "Solid True Royal Blend"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-solid-true-royal-blend-back.jpg",
+     "side": "back",
+     "color": "Solid True Royal Blend"
+    },
+    {
+     "file": "styles/3001CVC/front/3001cvc-solid-white-blend-front.jpg",
+     "side": "front",
+     "color": "Solid White Blend"
+    },
+    {
+     "file": "styles/3001CVC/back/3001cvc-solid-white-blend-back.jpg",
+     "side": "back",
+     "color": "Solid White Blend"
+    }
+   ]
+  },
+  "3001T": {
+   "name": "Bella+Canvas 3001T",
+   "sub": "Toddler Jersey Tee",
+   "tokens": [
+    "3001t"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 210,
+     "leftChestX": 500,
+     "default": true
+    },
+    "back": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 160,
+     "leftChestX": 500,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/3001T/front/3001t-asphalt-front.jpg",
+     "side": "front",
+     "color": "Asphalt"
+    },
+    {
+     "file": "styles/3001T/back/3001t-asphalt-back.jpg",
+     "side": "back",
+     "color": "Asphalt"
+    },
+    {
+     "file": "styles/3001T/front/3001t-athletic-heather-front.jpg",
+     "side": "front",
+     "color": "Athletic Heather"
+    },
+    {
+     "file": "styles/3001T/back/3001t-athletic-heather-back.jpg",
+     "side": "back",
+     "color": "Athletic Heather"
+    },
+    {
+     "file": "styles/3001T/front/3001t-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/3001T/back/3001t-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/3001T/front/3001t-dark-grey-front.jpg",
+     "side": "front",
+     "color": "Dark Grey"
+    },
+    {
+     "file": "styles/3001T/back/3001t-dark-grey-back.jpg",
+     "side": "back",
+     "color": "Dark Grey"
+    },
+    {
+     "file": "styles/3001T/front/3001t-dark-grey-heather-front.jpg",
+     "side": "front",
+     "color": "Dark Grey Heather"
+    },
+    {
+     "file": "styles/3001T/back/3001t-dark-grey-heather-back.jpg",
+     "side": "back",
+     "color": "Dark Grey Heather"
+    },
+    {
+     "file": "styles/3001T/front/3001t-deep-heather-front.jpg",
+     "side": "front",
+     "color": "Deep Heather"
+    },
+    {
+     "file": "styles/3001T/back/3001t-deep-heather-back.jpg",
+     "side": "back",
+     "color": "Deep Heather"
+    },
+    {
+     "file": "styles/3001T/front/3001t-dusty-blue-front.jpg",
+     "side": "front",
+     "color": "Dusty Blue"
+    },
+    {
+     "file": "styles/3001T/back/3001t-dusty-blue-back.jpg",
+     "side": "back",
+     "color": "Dusty Blue"
+    },
+    {
+     "file": "styles/3001T/front/3001t-forest-front.jpg",
+     "side": "front",
+     "color": "Forest"
+    },
+    {
+     "file": "styles/3001T/back/3001t-forest-back.jpg",
+     "side": "back",
+     "color": "Forest"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-columbia-blue-front.jpg",
+     "side": "front",
+     "color": "Heather Columbia Blue"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-columbia-blue-back.jpg",
+     "side": "back",
+     "color": "Heather Columbia Blue"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-deep-teal-front.jpg",
+     "side": "front",
+     "color": "Heather Deep Teal"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-deep-teal-back.jpg",
+     "side": "back",
+     "color": "Heather Deep Teal"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-dust-front.jpg",
+     "side": "front",
+     "color": "Heather Dust"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-dust-back.jpg",
+     "side": "back",
+     "color": "Heather Dust"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-maroon-front.jpg",
+     "side": "front",
+     "color": "Heather Maroon"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-maroon-back.jpg",
+     "side": "back",
+     "color": "Heather Maroon"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-mauve-front.jpg",
+     "side": "front",
+     "color": "Heather Mauve"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-mauve-back.jpg",
+     "side": "back",
+     "color": "Heather Mauve"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-navy-front.jpg",
+     "side": "front",
+     "color": "Heather Navy"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-navy-back.jpg",
+     "side": "back",
+     "color": "Heather Navy"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-red-front.jpg",
+     "side": "front",
+     "color": "Heather Red"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-red-back.jpg",
+     "side": "back",
+     "color": "Heather Red"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-stone-front.jpg",
+     "side": "front",
+     "color": "Heather Stone"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-stone-back.jpg",
+     "side": "back",
+     "color": "Heather Stone"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-team-purple-front.jpg",
+     "side": "front",
+     "color": "Heather Team Purple"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-team-purple-back.jpg",
+     "side": "back",
+     "color": "Heather Team Purple"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-true-royal-front.jpg",
+     "side": "front",
+     "color": "Heather True Royal"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-true-royal-back.jpg",
+     "side": "back",
+     "color": "Heather True Royal"
+    },
+    {
+     "file": "styles/3001T/front/3001t-heather-yellow-gold-front.jpg",
+     "side": "front",
+     "color": "Heather Yellow Gold"
+    },
+    {
+     "file": "styles/3001T/back/3001t-heather-yellow-gold-back.jpg",
+     "side": "back",
+     "color": "Heather Yellow Gold"
+    },
+    {
+     "file": "styles/3001T/front/3001t-kelly-front.jpg",
+     "side": "front",
+     "color": "Kelly"
+    },
+    {
+     "file": "styles/3001T/back/3001t-kelly-back.jpg",
+     "side": "back",
+     "color": "Kelly"
+    },
+    {
+     "file": "styles/3001T/front/3001t-maroon-front.jpg",
+     "side": "front",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/3001T/back/3001t-maroon-back.jpg",
+     "side": "back",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/3001T/front/3001t-natural-front.jpg",
+     "side": "front",
+     "color": "Natural"
+    },
+    {
+     "file": "styles/3001T/back/3001t-natural-back.jpg",
+     "side": "back",
+     "color": "Natural"
+    },
+    {
+     "file": "styles/3001T/front/3001t-navy-front.jpg",
+     "side": "front",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/3001T/back/3001t-navy-back.jpg",
+     "side": "back",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/3001T/front/3001t-olive-front.jpg",
+     "side": "front",
+     "color": "Olive"
+    },
+    {
+     "file": "styles/3001T/back/3001t-olive-back.jpg",
+     "side": "back",
+     "color": "Olive"
+    },
+    {
+     "file": "styles/3001T/front/3001t-pink-front.jpg",
+     "side": "front",
+     "color": "Pink"
+    },
+    {
+     "file": "styles/3001T/back/3001t-pink-back.jpg",
+     "side": "back",
+     "color": "Pink"
+    },
+    {
+     "file": "styles/3001T/front/3001t-red-front.jpg",
+     "side": "front",
+     "color": "Red"
+    },
+    {
+     "file": "styles/3001T/back/3001t-red-back.jpg",
+     "side": "back",
+     "color": "Red"
+    },
+    {
+     "file": "styles/3001T/front/3001t-solid-athletic-grey-front.jpg",
+     "side": "front",
+     "color": "Solid Athletic Grey"
+    },
+    {
+     "file": "styles/3001T/back/3001t-solid-athletic-grey-back.jpg",
+     "side": "back",
+     "color": "Solid Athletic Grey"
+    },
+    {
+     "file": "styles/3001T/front/3001t-solid-black-blend-front.jpg",
+     "side": "front",
+     "color": "Solid Black Blend"
+    },
+    {
+     "file": "styles/3001T/back/3001t-solid-black-blend-back.jpg",
+     "side": "back",
+     "color": "Solid Black Blend"
+    },
+    {
+     "file": "styles/3001T/front/3001t-team-purple-front.jpg",
+     "side": "front",
+     "color": "Team Purple"
+    },
+    {
+     "file": "styles/3001T/back/3001t-team-purple-back.jpg",
+     "side": "back",
+     "color": "Team Purple"
+    },
+    {
+     "file": "styles/3001T/front/3001t-true-royal-front.jpg",
+     "side": "front",
+     "color": "True Royal"
+    },
+    {
+     "file": "styles/3001T/back/3001t-true-royal-back.jpg",
+     "side": "back",
+     "color": "True Royal"
+    },
+    {
+     "file": "styles/3001T/front/3001t-vintage-black-front.jpg",
+     "side": "front",
+     "color": "Vintage Black"
+    },
+    {
+     "file": "styles/3001T/back/3001t-vintage-black-back.jpg",
+     "side": "back",
+     "color": "Vintage Black"
+    },
+    {
+     "file": "styles/3001T/front/3001t-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/3001T/back/3001t-white-back.jpg",
+     "side": "back",
+     "color": "White"
+    },
+    {
+     "file": "styles/3001T/front/3001t-yellow-front.jpg",
+     "side": "front",
+     "color": "Yellow"
+    },
+    {
+     "file": "styles/3001T/back/3001t-yellow-back.jpg",
+     "side": "back",
+     "color": "Yellow"
+    }
+   ]
+  },
+  "4424": {
+   "name": "Rabbit Skins 4424",
+   "sub": "Infant Fine Jersey Bodysuit",
+   "tokens": [
+    "4424"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 44.69,
+     "centerX": 440.25,
+     "collarY": 162.1,
+     "leftChestX": 547.51,
+     "default": true,
+     "proposed": true
+    },
+    "back": {
+     "ppi": 44.69,
+     "centerX": 440.0,
+     "collarY": 140.66,
+     "leftChestX": 440.0,
+     "default": true,
+     "proposed": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/4424/front/4424-apple-front.jpg",
+     "side": "front",
+     "color": "Apple"
+    },
+    {
+     "file": "styles/4424/back/4424-apple-back.jpg",
+     "side": "back",
+     "color": "Apple"
+    },
+    {
+     "file": "styles/4424/front/4424-ash-front.jpg",
+     "side": "front",
+     "color": "Ash"
+    },
+    {
+     "file": "styles/4424/back/4424-ash-back.jpg",
+     "side": "back",
+     "color": "Ash"
+    },
+    {
+     "file": "styles/4424/front/4424-ballerina-front.jpg",
+     "side": "front",
+     "color": "Ballerina"
+    },
+    {
+     "file": "styles/4424/back/4424-ballerina-back.jpg",
+     "side": "back",
+     "color": "Ballerina"
+    },
+    {
+     "file": "styles/4424/front/4424-bamboo-blackout-front.jpg",
+     "side": "front",
+     "color": "Bamboo Blackout"
+    },
+    {
+     "file": "styles/4424/back/4424-bamboo-blackout-back.jpg",
+     "side": "back",
+     "color": "Bamboo Blackout"
+    },
+    {
+     "file": "styles/4424/front/4424-basil-front.jpg",
+     "side": "front",
+     "color": "Basil"
+    },
+    {
+     "file": "styles/4424/back/4424-basil-back.jpg",
+     "side": "back",
+     "color": "Basil"
+    },
+    {
+     "file": "styles/4424/front/4424-bermuda-blackout-front.jpg",
+     "side": "front",
+     "color": "Bermuda Blackout"
+    },
+    {
+     "file": "styles/4424/back/4424-bermuda-blackout-back.jpg",
+     "side": "back",
+     "color": "Bermuda Blackout"
+    },
+    {
+     "file": "styles/4424/front/4424-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/4424/back/4424-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/4424/front/4424-black-leopard-front.jpg",
+     "side": "front",
+     "color": "Black Leopard"
+    },
+    {
+     "file": "styles/4424/back/4424-black-leopard-back.jpg",
+     "side": "back",
+     "color": "Black Leopard"
+    },
+    {
+     "file": "styles/4424/front/4424-black-reptile-front.jpg",
+     "side": "front",
+     "color": "Black Reptile"
+    },
+    {
+     "file": "styles/4424/back/4424-black-reptile-back.jpg",
+     "side": "back",
+     "color": "Black Reptile"
+    },
+    {
+     "file": "styles/4424/front/4424-blush-front.jpg",
+     "side": "front",
+     "color": "Blush"
+    },
+    {
+     "file": "styles/4424/back/4424-blush-back.jpg",
+     "side": "back",
+     "color": "Blush"
+    },
+    {
+     "file": "styles/4424/front/4424-brown-leopard-front.jpg",
+     "side": "front",
+     "color": "Brown Leopard"
+    },
+    {
+     "file": "styles/4424/back/4424-brown-leopard-back.jpg",
+     "side": "back",
+     "color": "Brown Leopard"
+    },
+    {
+     "file": "styles/4424/front/4424-brown-reptile-front.jpg",
+     "side": "front",
+     "color": "Brown Reptile"
+    },
+    {
+     "file": "styles/4424/back/4424-brown-reptile-back.jpg",
+     "side": "back",
+     "color": "Brown Reptile"
+    },
+    {
+     "file": "styles/4424/front/4424-butter-front.jpg",
+     "side": "front",
+     "color": "Butter"
+    },
+    {
+     "file": "styles/4424/back/4424-butter-back.jpg",
+     "side": "back",
+     "color": "Butter"
+    },
+    {
+     "file": "styles/4424/front/4424-cardinal-blackout-front.jpg",
+     "side": "front",
+     "color": "Cardinal Blackout"
+    },
+    {
+     "file": "styles/4424/back/4424-cardinal-blackout-back.jpg",
+     "side": "back",
+     "color": "Cardinal Blackout"
+    },
+    {
+     "file": "styles/4424/front/4424-caribbean-front.jpg",
+     "side": "front",
+     "color": "Caribbean"
+    },
+    {
+     "file": "styles/4424/back/4424-caribbean-back.jpg",
+     "side": "back",
+     "color": "Caribbean"
+    },
+    {
+     "file": "styles/4424/front/4424-carolina-blue-front.jpg",
+     "side": "front",
+     "color": "Carolina Blue"
+    },
+    {
+     "file": "styles/4424/back/4424-carolina-blue-back.jpg",
+     "side": "back",
+     "color": "Carolina Blue"
+    },
+    {
+     "file": "styles/4424/front/4424-charcoal-front.jpg",
+     "side": "front",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/4424/back/4424-charcoal-back.jpg",
+     "side": "back",
+     "color": "Charcoal"
+    },
+    {
+     "file": "styles/4424/front/4424-chill-front.jpg",
+     "side": "front",
+     "color": "Chill"
+    },
+    {
+     "file": "styles/4424/back/4424-chill-back.jpg",
+     "side": "back",
+     "color": "Chill"
+    },
+    {
+     "file": "styles/4424/front/4424-cobalt-front.jpg",
+     "side": "front",
+     "color": "Cobalt"
+    },
+    {
+     "file": "styles/4424/back/4424-cobalt-back.jpg",
+     "side": "back",
+     "color": "Cobalt"
+    },
+    {
+     "file": "styles/4424/front/4424-coyote-brown-front.jpg",
+     "side": "front",
+     "color": "Coyote Brown"
+    },
+    {
+     "file": "styles/4424/back/4424-coyote-brown-back.jpg",
+     "side": "back",
+     "color": "Coyote Brown"
+    },
+    {
+     "file": "styles/4424/front/4424-denim-front.jpg",
+     "side": "front",
+     "color": "Denim"
+    },
+    {
+     "file": "styles/4424/back/4424-denim-back.jpg",
+     "side": "back",
+     "color": "Denim"
+    },
+    {
+     "file": "styles/4424/front/4424-forest-front.jpg",
+     "side": "front",
+     "color": "Forest"
+    },
+    {
+     "file": "styles/4424/back/4424-forest-back.jpg",
+     "side": "back",
+     "color": "Forest"
+    },
+    {
+     "file": "styles/4424/front/4424-garnet-front.jpg",
+     "side": "front",
+     "color": "Garnet"
+    },
+    {
+     "file": "styles/4424/back/4424-garnet-back.jpg",
+     "side": "back",
+     "color": "Garnet"
+    },
+    {
+     "file": "styles/4424/front/4424-gold-front.jpg",
+     "side": "front",
+     "color": "Gold"
+    },
+    {
+     "file": "styles/4424/back/4424-gold-back.jpg",
+     "side": "back",
+     "color": "Gold"
+    },
+    {
+     "file": "styles/4424/front/4424-granite-heather-front.jpg",
+     "side": "front",
+     "color": "Granite Heather"
+    },
+    {
+     "file": "styles/4424/back/4424-granite-heather-back.jpg",
+     "side": "back",
+     "color": "Granite Heather"
+    },
+    {
+     "file": "styles/4424/front/4424-green-reptile-front.jpg",
+     "side": "front",
+     "color": "Green Reptile"
+    },
+    {
+     "file": "styles/4424/back/4424-green-reptile-back.jpg",
+     "side": "back",
+     "color": "Green Reptile"
+    },
+    {
+     "file": "styles/4424/front/4424-haze-tie-dye-front.jpg",
+     "side": "front",
+     "color": "Haze Tie Dye"
+    },
+    {
+     "file": "styles/4424/back/4424-haze-tie-dye-back.jpg",
+     "side": "back",
+     "color": "Haze Tie Dye"
+    },
+    {
+     "file": "styles/4424/front/4424-heather-front.jpg",
+     "side": "front",
+     "color": "Heather"
+    },
+    {
+     "file": "styles/4424/back/4424-heather-back.jpg",
+     "side": "back",
+     "color": "Heather"
+    },
+    {
+     "file": "styles/4424/front/4424-honeydew-front.jpg",
+     "side": "front",
+     "color": "Honeydew"
+    },
+    {
+     "file": "styles/4424/back/4424-honeydew-back.jpg",
+     "side": "back",
+     "color": "Honeydew"
+    },
+    {
+     "file": "styles/4424/front/4424-hot-pink-front.jpg",
+     "side": "front",
+     "color": "Hot Pink"
+    },
+    {
+     "file": "styles/4424/back/4424-hot-pink-back.jpg",
+     "side": "back",
+     "color": "Hot Pink"
+    },
+    {
+     "file": "styles/4424/front/4424-ice-blackout-front.jpg",
+     "side": "front",
+     "color": "Ice Blackout"
+    },
+    {
+     "file": "styles/4424/back/4424-ice-blackout-back.jpg",
+     "side": "back",
+     "color": "Ice Blackout"
+    },
+    {
+     "file": "styles/4424/front/4424-indigo-front.jpg",
+     "side": "front",
+     "color": "Indigo"
+    },
+    {
+     "file": "styles/4424/back/4424-indigo-back.jpg",
+     "side": "back",
+     "color": "Indigo"
+    },
+    {
+     "file": "styles/4424/front/4424-island-tie-dye-front.jpg",
+     "side": "front",
+     "color": "Island Tie Dye"
+    },
+    {
+     "file": "styles/4424/back/4424-island-tie-dye-back.jpg",
+     "side": "back",
+     "color": "Island Tie Dye"
+    },
+    {
+     "file": "styles/4424/front/4424-kelly-front.jpg",
+     "side": "front",
+     "color": "Kelly"
+    },
+    {
+     "file": "styles/4424/back/4424-kelly-back.jpg",
+     "side": "back",
+     "color": "Kelly"
+    },
+    {
+     "file": "styles/4424/front/4424-key-lime-front.jpg",
+     "side": "front",
+     "color": "Key Lime"
+    },
+    {
+     "file": "styles/4424/back/4424-key-lime-back.jpg",
+     "side": "back",
+     "color": "Key Lime"
+    },
+    {
+     "file": "styles/4424/front/4424-latte-front.jpg",
+     "side": "front",
+     "color": "Latte"
+    },
+    {
+     "file": "styles/4424/back/4424-latte-back.jpg",
+     "side": "back",
+     "color": "Latte"
+    },
+    {
+     "file": "styles/4424/front/4424-lavender-front.jpg",
+     "side": "front",
+     "color": "Lavender"
+    },
+    {
+     "file": "styles/4424/back/4424-lavender-back.jpg",
+     "side": "back",
+     "color": "Lavender"
+    },
+    {
+     "file": "styles/4424/front/4424-light-blue-front.jpg",
+     "side": "front",
+     "color": "Light Blue"
+    },
+    {
+     "file": "styles/4424/back/4424-light-blue-back.jpg",
+     "side": "back",
+     "color": "Light Blue"
+    },
+    {
+     "file": "styles/4424/front/4424-lilac-stripe-front.jpg",
+     "side": "front",
+     "color": "Lilac Stripe"
+    },
+    {
+     "file": "styles/4424/back/4424-lilac-stripe-back.jpg",
+     "side": "back",
+     "color": "Lilac Stripe"
+    },
+    {
+     "file": "styles/4424/front/4424-marine-stripe-front.jpg",
+     "side": "front",
+     "color": "Marine Stripe"
+    },
+    {
+     "file": "styles/4424/back/4424-marine-stripe-back.jpg",
+     "side": "back",
+     "color": "Marine Stripe"
+    },
+    {
+     "file": "styles/4424/front/4424-maroon-front.jpg",
+     "side": "front",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/4424/back/4424-maroon-back.jpg",
+     "side": "back",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/4424/front/4424-mauvelous-front.jpg",
+     "side": "front",
+     "color": "Mauvelous"
+    },
+    {
+     "file": "styles/4424/back/4424-mauvelous-back.jpg",
+     "side": "back",
+     "color": "Mauvelous"
+    },
+    {
+     "file": "styles/4424/front/4424-mauvelous-spot-front.jpg",
+     "side": "front",
+     "color": "Mauvelous Spot"
+    },
+    {
+     "file": "styles/4424/back/4424-mauvelous-spot-back.jpg",
+     "side": "back",
+     "color": "Mauvelous Spot"
+    },
+    {
+     "file": "styles/4424/front/4424-military-green-front.jpg",
+     "side": "front",
+     "color": "Military Green"
+    },
+    {
+     "file": "styles/4424/back/4424-military-green-back.jpg",
+     "side": "back",
+     "color": "Military Green"
+    },
+    {
+     "file": "styles/4424/front/4424-mustard-front.jpg",
+     "side": "front",
+     "color": "Mustard"
+    },
+    {
+     "file": "styles/4424/back/4424-mustard-back.jpg",
+     "side": "back",
+     "color": "Mustard"
+    },
+    {
+     "file": "styles/4424/front/4424-natural-front.jpg",
+     "side": "front",
+     "color": "Natural"
+    },
+    {
+     "file": "styles/4424/back/4424-natural-back.jpg",
+     "side": "back",
+     "color": "Natural"
+    },
+    {
+     "file": "styles/4424/front/4424-natural-camo-front.jpg",
+     "side": "front",
+     "color": "Natural Camo"
+    },
+    {
+     "file": "styles/4424/back/4424-natural-camo-back.jpg",
+     "side": "back",
+     "color": "Natural Camo"
+    },
+    {
+     "file": "styles/4424/front/4424-natural-heather-front.jpg",
+     "side": "front",
+     "color": "Natural Heather"
+    },
+    {
+     "file": "styles/4424/back/4424-natural-heather-back.jpg",
+     "side": "back",
+     "color": "Natural Heather"
+    },
+    {
+     "file": "styles/4424/front/4424-natural-leopard-front.jpg",
+     "side": "front",
+     "color": "Natural Leopard"
+    },
+    {
+     "file": "styles/4424/back/4424-natural-leopard-back.jpg",
+     "side": "back",
+     "color": "Natural Leopard"
+    },
+    {
+     "file": "styles/4424/front/4424-navy-front.jpg",
+     "side": "front",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/4424/back/4424-navy-back.jpg",
+     "side": "back",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/4424/front/4424-oceanside-front.jpg",
+     "side": "front",
+     "color": "Oceanside"
+    },
+    {
+     "file": "styles/4424/back/4424-oceanside-back.jpg",
+     "side": "back",
+     "color": "Oceanside"
+    },
+    {
+     "file": "styles/4424/front/4424-orange-front.jpg",
+     "side": "front",
+     "color": "Orange"
+    },
+    {
+     "file": "styles/4424/back/4424-orange-back.jpg",
+     "side": "back",
+     "color": "Orange"
+    },
+    {
+     "file": "styles/4424/front/4424-papaya-front.jpg",
+     "side": "front",
+     "color": "Papaya"
+    },
+    {
+     "file": "styles/4424/back/4424-papaya-back.jpg",
+     "side": "back",
+     "color": "Papaya"
+    },
+    {
+     "file": "styles/4424/front/4424-passionfruit-front.jpg",
+     "side": "front",
+     "color": "Passionfruit"
+    },
+    {
+     "file": "styles/4424/back/4424-passionfruit-back.jpg",
+     "side": "back",
+     "color": "Passionfruit"
+    },
+    {
+     "file": "styles/4424/front/4424-peachy-front.jpg",
+     "side": "front",
+     "color": "Peachy"
+    },
+    {
+     "file": "styles/4424/back/4424-peachy-back.jpg",
+     "side": "back",
+     "color": "Peachy"
+    },
+    {
+     "file": "styles/4424/front/4424-pink-front.jpg",
+     "side": "front",
+     "color": "Pink"
+    },
+    {
+     "file": "styles/4424/back/4424-pink-back.jpg",
+     "side": "back",
+     "color": "Pink"
+    },
+    {
+     "file": "styles/4424/front/4424-porcelain-front.jpg",
+     "side": "front",
+     "color": "Porcelain"
+    },
+    {
+     "file": "styles/4424/back/4424-porcelain-back.jpg",
+     "side": "back",
+     "color": "Porcelain"
+    },
+    {
+     "file": "styles/4424/front/4424-pro-purple-front.jpg",
+     "side": "front",
+     "color": "Pro Purple"
+    },
+    {
+     "file": "styles/4424/back/4424-pro-purple-back.jpg",
+     "side": "back",
+     "color": "Pro Purple"
+    },
+    {
+     "file": "styles/4424/front/4424-purple-front.jpg",
+     "side": "front",
+     "color": "Purple"
+    },
+    {
+     "file": "styles/4424/back/4424-purple-back.jpg",
+     "side": "back",
+     "color": "Purple"
+    },
+    {
+     "file": "styles/4424/front/4424-rainbow-stripe-front.jpg",
+     "side": "front",
+     "color": "Rainbow Stripe"
+    },
+    {
+     "file": "styles/4424/back/4424-rainbow-stripe-back.jpg",
+     "side": "back",
+     "color": "Rainbow Stripe"
+    },
+    {
+     "file": "styles/4424/front/4424-raspberry-front.jpg",
+     "side": "front",
+     "color": "Raspberry"
+    },
+    {
+     "file": "styles/4424/back/4424-raspberry-back.jpg",
+     "side": "back",
+     "color": "Raspberry"
+    },
+    {
+     "file": "styles/4424/front/4424-red-front.jpg",
+     "side": "front",
+     "color": "Red"
+    },
+    {
+     "file": "styles/4424/back/4424-red-back.jpg",
+     "side": "back",
+     "color": "Red"
+    },
+    {
+     "file": "styles/4424/front/4424-rouge-front.jpg",
+     "side": "front",
+     "color": "Rouge"
+    },
+    {
+     "file": "styles/4424/back/4424-rouge-back.jpg",
+     "side": "back",
+     "color": "Rouge"
+    },
+    {
+     "file": "styles/4424/front/4424-royal-front.jpg",
+     "side": "front",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/4424/back/4424-royal-back.jpg",
+     "side": "back",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/4424/front/4424-sage-front.jpg",
+     "side": "front",
+     "color": "Sage"
+    },
+    {
+     "file": "styles/4424/back/4424-sage-back.jpg",
+     "side": "back",
+     "color": "Sage"
+    },
+    {
+     "file": "styles/4424/front/4424-saltwater-front.jpg",
+     "side": "front",
+     "color": "Saltwater"
+    },
+    {
+     "file": "styles/4424/back/4424-saltwater-back.jpg",
+     "side": "back",
+     "color": "Saltwater"
+    },
+    {
+     "file": "styles/4424/front/4424-shadow-stripe-front.jpg",
+     "side": "front",
+     "color": "Shadow Stripe"
+    },
+    {
+     "file": "styles/4424/back/4424-shadow-stripe-back.jpg",
+     "side": "back",
+     "color": "Shadow Stripe"
+    },
+    {
+     "file": "styles/4424/front/4424-slate-front.jpg",
+     "side": "front",
+     "color": "Slate"
+    },
+    {
+     "file": "styles/4424/back/4424-slate-back.jpg",
+     "side": "back",
+     "color": "Slate"
+    },
+    {
+     "file": "styles/4424/front/4424-slate-spot-front.jpg",
+     "side": "front",
+     "color": "Slate Spot"
+    },
+    {
+     "file": "styles/4424/back/4424-slate-spot-back.jpg",
+     "side": "back",
+     "color": "Slate Spot"
+    },
+    {
+     "file": "styles/4424/front/4424-storm-camo-front.jpg",
+     "side": "front",
+     "color": "Storm Camo"
+    },
+    {
+     "file": "styles/4424/back/4424-storm-camo-back.jpg",
+     "side": "back",
+     "color": "Storm Camo"
+    },
+    {
+     "file": "styles/4424/front/4424-sunkissed-stripe-front.jpg",
+     "side": "front",
+     "color": "Sunkissed Stripe"
+    },
+    {
+     "file": "styles/4424/back/4424-sunkissed-stripe-back.jpg",
+     "side": "back",
+     "color": "Sunkissed Stripe"
+    },
+    {
+     "file": "styles/4424/front/4424-sunset-front.jpg",
+     "side": "front",
+     "color": "Sunset"
+    },
+    {
+     "file": "styles/4424/back/4424-sunset-back.jpg",
+     "side": "back",
+     "color": "Sunset"
+    },
+    {
+     "file": "styles/4424/front/4424-surf-blackout-front.jpg",
+     "side": "front",
+     "color": "Surf Blackout"
+    },
+    {
+     "file": "styles/4424/back/4424-surf-blackout-back.jpg",
+     "side": "back",
+     "color": "Surf Blackout"
+    },
+    {
+     "file": "styles/4424/front/4424-titanium-front.jpg",
+     "side": "front",
+     "color": "Titanium"
+    },
+    {
+     "file": "styles/4424/back/4424-titanium-back.jpg",
+     "side": "back",
+     "color": "Titanium"
+    },
+    {
+     "file": "styles/4424/front/4424-tradewind-front.jpg",
+     "side": "front",
+     "color": "Tradewind"
+    },
+    {
+     "file": "styles/4424/back/4424-tradewind-back.jpg",
+     "side": "back",
+     "color": "Tradewind"
+    },
+    {
+     "file": "styles/4424/front/4424-tradewind-spot-front.jpg",
+     "side": "front",
+     "color": "Tradewind Spot"
+    },
+    {
+     "file": "styles/4424/back/4424-tradewind-spot-back.jpg",
+     "side": "back",
+     "color": "Tradewind Spot"
+    },
+    {
+     "file": "styles/4424/front/4424-turquoise-front.jpg",
+     "side": "front",
+     "color": "Turquoise"
+    },
+    {
+     "file": "styles/4424/back/4424-turquoise-back.jpg",
+     "side": "back",
+     "color": "Turquoise"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-burgundy-front.jpg",
+     "side": "front",
+     "color": "Vintage Burgundy"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-burgundy-back.jpg",
+     "side": "back",
+     "color": "Vintage Burgundy"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-camo-front.jpg",
+     "side": "front",
+     "color": "Vintage Camo"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-camo-back.jpg",
+     "side": "back",
+     "color": "Vintage Camo"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-coyote-brown-front.jpg",
+     "side": "front",
+     "color": "Vintage Coyote Brown"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-coyote-brown-back.jpg",
+     "side": "back",
+     "color": "Vintage Coyote Brown"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-denim-front.jpg",
+     "side": "front",
+     "color": "Vintage Denim"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-denim-back.jpg",
+     "side": "back",
+     "color": "Vintage Denim"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-green-front.jpg",
+     "side": "front",
+     "color": "Vintage Green"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-green-back.jpg",
+     "side": "back",
+     "color": "Vintage Green"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-hot-pink-front.jpg",
+     "side": "front",
+     "color": "Vintage Hot Pink"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-hot-pink-back.jpg",
+     "side": "back",
+     "color": "Vintage Hot Pink"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-indigo-front.jpg",
+     "side": "front",
+     "color": "Vintage Indigo"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-indigo-back.jpg",
+     "side": "back",
+     "color": "Vintage Indigo"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-military-green-front.jpg",
+     "side": "front",
+     "color": "Vintage Military Green"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-military-green-back.jpg",
+     "side": "back",
+     "color": "Vintage Military Green"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-orange-front.jpg",
+     "side": "front",
+     "color": "Vintage Orange"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-orange-back.jpg",
+     "side": "back",
+     "color": "Vintage Orange"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-purple-front.jpg",
+     "side": "front",
+     "color": "Vintage Purple"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-purple-back.jpg",
+     "side": "back",
+     "color": "Vintage Purple"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-red-front.jpg",
+     "side": "front",
+     "color": "Vintage Red"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-red-back.jpg",
+     "side": "back",
+     "color": "Vintage Red"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-royal-front.jpg",
+     "side": "front",
+     "color": "Vintage Royal"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-royal-back.jpg",
+     "side": "back",
+     "color": "Vintage Royal"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-smoke-front.jpg",
+     "side": "front",
+     "color": "Vintage Smoke"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-smoke-back.jpg",
+     "side": "back",
+     "color": "Vintage Smoke"
+    },
+    {
+     "file": "styles/4424/front/4424-vintage-true-navy-front.jpg",
+     "side": "front",
+     "color": "Vintage True Navy"
+    },
+    {
+     "file": "styles/4424/back/4424-vintage-true-navy-back.jpg",
+     "side": "back",
+     "color": "Vintage True Navy"
+    },
+    {
+     "file": "styles/4424/front/4424-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/4424/back/4424-white-back.jpg",
+     "side": "back",
+     "color": "White"
+    },
+    {
+     "file": "styles/4424/front/4424-white-reptile-front.jpg",
+     "side": "front",
+     "color": "White Reptile"
+    },
+    {
+     "file": "styles/4424/back/4424-white-reptile-back.jpg",
+     "side": "back",
+     "color": "White Reptile"
+    },
+    {
+     "file": "styles/4424/front/4424-white-spot-front.jpg",
+     "side": "front",
+     "color": "White Spot"
+    },
+    {
+     "file": "styles/4424/back/4424-white-spot-back.jpg",
+     "side": "back",
+     "color": "White Spot"
+    },
+    {
+     "file": "styles/4424/front/4424-wisteria-blackout-front.jpg",
+     "side": "front",
+     "color": "Wisteria Blackout"
+    },
+    {
+     "file": "styles/4424/back/4424-wisteria-blackout-back.jpg",
+     "side": "back",
+     "color": "Wisteria Blackout"
+    },
+    {
+     "file": "styles/4424/front/4424-yellow-front.jpg",
+     "side": "front",
+     "color": "Yellow"
+    },
+    {
+     "file": "styles/4424/back/4424-yellow-back.jpg",
+     "side": "back",
+     "color": "Yellow"
+    }
+   ]
+  },
+  "7200": {
+   "name": "Next Level 7200",
+   "sub": "Heavyweight Tee",
+   "tokens": [
+    "7200"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 27.567,
+     "centerX": 440.5,
+     "collarY": 188,
+     "leftChestX": 559.04,
+     "default": true,
+     "proposed": true
+    },
+    "back": {
+     "ppi": 27.595,
+     "centerX": 435.5,
+     "collarY": 107,
+     "leftChestX": 435.5,
+     "default": true,
+     "proposed": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/7200/front/7200-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/7200/back/7200-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/7200/front/7200-blue-jean-front.jpg",
+     "side": "front",
+     "color": "Blue Jean"
+    },
+    {
+     "file": "styles/7200/back/7200-blue-jean-back.jpg",
+     "side": "back",
+     "color": "Blue Jean"
+    },
+    {
+     "file": "styles/7200/front/7200-bone-front.jpg",
+     "side": "front",
+     "color": "Bone"
+    },
+    {
+     "file": "styles/7200/back/7200-bone-back.jpg",
+     "side": "back",
+     "color": "Bone"
+    },
+    {
+     "file": "styles/7200/front/7200-clay-front.jpg",
+     "side": "front",
+     "color": "Clay"
+    },
+    {
+     "file": "styles/7200/back/7200-clay-back.jpg",
+     "side": "back",
+     "color": "Clay"
+    },
+    {
+     "file": "styles/7200/front/7200-deep-teal-front.jpg",
+     "side": "front",
+     "color": "Deep Teal"
+    },
+    {
+     "file": "styles/7200/back/7200-deep-teal-back.jpg",
+     "side": "back",
+     "color": "Deep Teal"
+    },
+    {
+     "file": "styles/7200/front/7200-graphite-black-front.jpg",
+     "side": "front",
+     "color": "Graphite Black"
+    },
+    {
+     "file": "styles/7200/back/7200-graphite-black-back.jpg",
+     "side": "back",
+     "color": "Graphite Black"
+    },
+    {
+     "file": "styles/7200/front/7200-harbor-blue-front.jpg",
+     "side": "front",
+     "color": "Harbor Blue"
+    },
+    {
+     "file": "styles/7200/back/7200-harbor-blue-back.jpg",
+     "side": "back",
+     "color": "Harbor Blue"
+    },
+    {
+     "file": "styles/7200/front/7200-heather-blue-jean-front.jpg",
+     "side": "front",
+     "color": "Heather Blue Jean"
+    },
+    {
+     "file": "styles/7200/back/7200-heather-blue-jean-back.jpg",
+     "side": "back",
+     "color": "Heather Blue Jean"
+    },
+    {
+     "file": "styles/7200/front/7200-heather-forest-green-front.jpg",
+     "side": "front",
+     "color": "Heather Forest Green"
+    },
+    {
+     "file": "styles/7200/back/7200-heather-forest-green-back.jpg",
+     "side": "back",
+     "color": "Heather Forest Green"
+    },
+    {
+     "file": "styles/7200/front/7200-heather-graphite-black-front.jpg",
+     "side": "front",
+     "color": "Heather Graphite Black"
+    },
+    {
+     "file": "styles/7200/back/7200-heather-graphite-black-back.jpg",
+     "side": "back",
+     "color": "Heather Graphite Black"
+    },
+    {
+     "file": "styles/7200/front/7200-heather-grey-front.jpg",
+     "side": "front",
+     "color": "Heather Grey"
+    },
+    {
+     "file": "styles/7200/back/7200-heather-grey-back.jpg",
+     "side": "back",
+     "color": "Heather Grey"
+    },
+    {
+     "file": "styles/7200/front/7200-heather-light-olive-front.jpg",
+     "side": "front",
+     "color": "Heather Light Olive"
+    },
+    {
+     "file": "styles/7200/back/7200-heather-light-olive-back.jpg",
+     "side": "back",
+     "color": "Heather Light Olive"
+    },
+    {
+     "file": "styles/7200/front/7200-light-olive-front.jpg",
+     "side": "front",
+     "color": "Light Olive"
+    },
+    {
+     "file": "styles/7200/back/7200-light-olive-back.jpg",
+     "side": "back",
+     "color": "Light Olive"
+    },
+    {
+     "file": "styles/7200/front/7200-light-pink-front.jpg",
+     "side": "front",
+     "color": "Light Pink"
+    },
+    {
+     "file": "styles/7200/back/7200-light-pink-back.jpg",
+     "side": "back",
+     "color": "Light Pink"
+    },
+    {
+     "file": "styles/7200/front/7200-maroon-front.jpg",
+     "side": "front",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/7200/back/7200-maroon-back.jpg",
+     "side": "back",
+     "color": "Maroon"
+    },
+    {
+     "file": "styles/7200/front/7200-midnight-navy-front.jpg",
+     "side": "front",
+     "color": "Midnight Navy"
+    },
+    {
+     "file": "styles/7200/back/7200-midnight-navy-back.jpg",
+     "side": "back",
+     "color": "Midnight Navy"
+    },
+    {
+     "file": "styles/7200/front/7200-red-front.jpg",
+     "side": "front",
+     "color": "Red"
+    },
+    {
+     "file": "styles/7200/back/7200-red-back.jpg",
+     "side": "back",
+     "color": "Red"
+    },
+    {
+     "file": "styles/7200/front/7200-royal-front.jpg",
+     "side": "front",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/7200/back/7200-royal-back.jpg",
+     "side": "back",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/7200/front/7200-shiitake-front.jpg",
+     "side": "front",
+     "color": "Shiitake"
+    },
+    {
+     "file": "styles/7200/back/7200-shiitake-back.jpg",
+     "side": "back",
+     "color": "Shiitake"
+    },
+    {
+     "file": "styles/7200/front/7200-stonewash-denim-front.jpg",
+     "side": "front",
+     "color": "Stonewash Denim"
+    },
+    {
+     "file": "styles/7200/back/7200-stonewash-denim-back.jpg",
+     "side": "back",
+     "color": "Stonewash Denim"
+    },
+    {
+     "file": "styles/7200/front/7200-tan-front.jpg",
+     "side": "front",
+     "color": "Tan"
+    },
+    {
+     "file": "styles/7200/back/7200-tan-back.jpg",
+     "side": "back",
+     "color": "Tan"
+    },
+    {
+     "file": "styles/7200/front/7200-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/7200/back/7200-white-back.jpg",
+     "side": "back",
+     "color": "White"
+    }
+   ]
+  },
+  "BW6502": {
+   "name": "Boxercraft BW6502",
+   "sub": "Women's Shorts",
+   "tokens": [
+    "bw6502"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 210,
+     "leftChestX": 500,
+     "default": true
+    },
+    "back": {
+     "ppi": 30,
+     "centerX": 366,
+     "collarY": 160,
+     "leftChestX": 500,
+     "default": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/BW6502/front/bw6502-charcoal-heather-front.jpg",
+     "side": "front",
+     "color": "Charcoal Heather"
+    },
+    {
+     "file": "styles/BW6502/back/bw6502-charcoal-heather-back.jpg",
+     "side": "back",
+     "color": "Charcoal Heather"
+    },
+    {
+     "file": "styles/BW6502/front/bw6502-electric-royal-front.jpg",
+     "side": "front",
+     "color": "Electric Royal"
+    },
+    {
+     "file": "styles/BW6502/back/bw6502-electric-royal-back.jpg",
+     "side": "back",
+     "color": "Electric Royal"
+    },
+    {
+     "file": "styles/BW6502/front/bw6502-navy-front.jpg",
+     "side": "front",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/BW6502/back/bw6502-navy-back.jpg",
+     "side": "back",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/BW6502/front/bw6502-oxford-heather-front.jpg",
+     "side": "front",
+     "color": "Oxford Heather"
+    },
+    {
+     "file": "styles/BW6502/back/bw6502-oxford-heather-back.jpg",
+     "side": "back",
+     "color": "Oxford Heather"
+    }
+   ]
+  },
+  "EXP20PQ": {
+   "name": "Independent Trading EXP20PQ",
+   "sub": "Quarter-Zip Pullover",
+   "tokens": [
+    "exp20pq"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 29.596,
+     "centerX": 440.0,
+     "collarY": 158,
+     "leftChestX": 567.26,
+     "default": true,
+     "proposed": true
+    },
+    "back": {
+     "ppi": 29.191,
+     "centerX": 440.0,
+     "collarY": 125,
+     "leftChestX": 440.0,
+     "default": true,
+     "proposed": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/EXP20PQ/front/exp20pq-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/EXP20PQ/back/exp20pq-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/EXP20PQ/front/exp20pq-classic-navy-front.jpg",
+     "side": "front",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/EXP20PQ/back/exp20pq-classic-navy-back.jpg",
+     "side": "back",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/EXP20PQ/front/exp20pq-pine-front.jpg",
+     "side": "front",
+     "color": "Pine"
+    },
+    {
+     "file": "styles/EXP20PQ/back/exp20pq-pine-back.jpg",
+     "side": "back",
+     "color": "Pine"
+    },
+    {
+     "file": "styles/EXP20PQ/front/exp20pq-smoke-front.jpg",
+     "side": "front",
+     "color": "Smoke"
+    },
+    {
+     "file": "styles/EXP20PQ/back/exp20pq-smoke-back.jpg",
+     "side": "back",
+     "color": "Smoke"
+    },
+    {
+     "file": "styles/EXP20PQ/front/exp20pq-storm-blue-front.jpg",
+     "side": "front",
+     "color": "Storm Blue"
+    },
+    {
+     "file": "styles/EXP20PQ/back/exp20pq-storm-blue-back.jpg",
+     "side": "back",
+     "color": "Storm Blue"
+    }
+   ]
+  },
+  "EXP25PH": {
+   "name": "Independent Trading EXP25PH",
+   "sub": "Pullover Hooded Sweatshirt",
+   "tokens": [
+    "exp25ph"
+   ],
+   "bodyLenM": 29,
+   "hood": true,
+   "calib": {
+    "front": {
+     "ppi": 27.036,
+     "centerX": 440.5,
+     "collarY": 200,
+     "leftChestX": 556.76,
+     "default": true,
+     "proposed": true
+    },
+    "back": {
+     "ppi": 28.987,
+     "centerX": 440.0,
+     "collarY": 306,
+     "leftChestX": 440.0,
+     "default": true,
+     "proposed": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/EXP25PH/front/exp25ph-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/EXP25PH/back/exp25ph-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/EXP25PH/front/exp25ph-classic-navy-front.jpg",
+     "side": "front",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/EXP25PH/back/exp25ph-classic-navy-back.jpg",
+     "side": "back",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/EXP25PH/front/exp25ph-pine-front.jpg",
+     "side": "front",
+     "color": "Pine"
+    },
+    {
+     "file": "styles/EXP25PH/back/exp25ph-pine-back.jpg",
+     "side": "back",
+     "color": "Pine"
+    },
+    {
+     "file": "styles/EXP25PH/front/exp25ph-smoke-front.jpg",
+     "side": "front",
+     "color": "Smoke"
+    },
+    {
+     "file": "styles/EXP25PH/back/exp25ph-smoke-back.jpg",
+     "side": "back",
+     "color": "Smoke"
+    }
+   ]
+  },
+  "EXP30PZ": {
+   "name": "Independent Trading EXP30PZ",
+   "sub": "Full-Zip Hooded Sweatshirt",
+   "tokens": [
+    "exp30pz"
+   ],
+   "bodyLenM": 29,
+   "hood": true,
+   "calib": {
+    "front": {
+     "ppi": 26.83,
+     "centerX": 440.0,
+     "collarY": 218,
+     "leftChestX": 555.37,
+     "default": true,
+     "proposed": true
+    },
+    "back": {
+     "ppi": 26.826,
+     "centerX": 440.0,
+     "collarY": 300,
+     "leftChestX": 440.0,
+     "default": true,
+     "proposed": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/EXP30PZ/front/exp30pz-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/EXP30PZ/back/exp30pz-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/EXP30PZ/front/exp30pz-classic-navy-front.jpg",
+     "side": "front",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/EXP30PZ/back/exp30pz-classic-navy-back.jpg",
+     "side": "back",
+     "color": "Classic Navy"
+    },
+    {
+     "file": "styles/EXP30PZ/front/exp30pz-pine-front.jpg",
+     "side": "front",
+     "color": "Pine"
+    },
+    {
+     "file": "styles/EXP30PZ/back/exp30pz-pine-back.jpg",
+     "side": "back",
+     "color": "Pine"
+    },
+    {
+     "file": "styles/EXP30PZ/front/exp30pz-smoke-front.jpg",
+     "side": "front",
+     "color": "Smoke"
+    },
+    {
+     "file": "styles/EXP30PZ/back/exp30pz-smoke-back.jpg",
+     "side": "back",
+     "color": "Smoke"
+    }
+   ]
+  },
+  "IND3000": {
+   "name": "Independent Trading IND3000",
+   "sub": "Heavyweight Crewneck Sweatshirt",
+   "tokens": [
+    "ind3000"
+   ],
+   "bodyLenM": 29,
+   "calib": {
+    "front": {
+     "ppi": 26.527,
+     "centerX": 440.5,
+     "collarY": 100,
+     "leftChestX": 554.57,
+     "default": true,
+     "proposed": true
+    },
+    "back": {
+     "ppi": 25.807,
+     "centerX": 440.0,
+     "collarY": 86.51,
+     "leftChestX": 440.0,
+     "default": true,
+     "proposed": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/IND3000/front/ind3000-army-front.jpg",
+     "side": "front",
+     "color": "Army"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-army-back.jpg",
+     "side": "back",
+     "color": "Army"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-ash-heather-front.jpg",
+     "side": "front",
+     "color": "Ash Heather"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-ash-heather-back.jpg",
+     "side": "back",
+     "color": "Ash Heather"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-asphalt-front.jpg",
+     "side": "front",
+     "color": "Asphalt"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-asphalt-back.jpg",
+     "side": "back",
+     "color": "Asphalt"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-black-front.jpg",
+     "side": "front",
+     "color": "Black"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-black-back.jpg",
+     "side": "back",
+     "color": "Black"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-bone-front.jpg",
+     "side": "front",
+     "color": "Bone"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-bone-back.jpg",
+     "side": "back",
+     "color": "Bone"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-brown-front.jpg",
+     "side": "front",
+     "color": "Brown"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-brown-back.jpg",
+     "side": "back",
+     "color": "Brown"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-cement-front.jpg",
+     "side": "front",
+     "color": "Cement"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-cement-back.jpg",
+     "side": "back",
+     "color": "Cement"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-deadwood-tree-camo-front.jpg",
+     "side": "front",
+     "color": "Deadwood Tree Camo"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-deadwood-tree-camo-back.jpg",
+     "side": "back",
+     "color": "Deadwood Tree Camo"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-dusty-sage-front.jpg",
+     "side": "front",
+     "color": "Dusty Sage"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-dusty-sage-back.jpg",
+     "side": "back",
+     "color": "Dusty Sage"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-grey-heather-front.jpg",
+     "side": "front",
+     "color": "Grey Heather"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-grey-heather-back.jpg",
+     "side": "back",
+     "color": "Grey Heather"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-navy-front.jpg",
+     "side": "front",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-navy-back.jpg",
+     "side": "back",
+     "color": "Navy"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-plum-front.jpg",
+     "side": "front",
+     "color": "Plum"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-plum-back.jpg",
+     "side": "back",
+     "color": "Plum"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-red-front.jpg",
+     "side": "front",
+     "color": "Red"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-red-back.jpg",
+     "side": "back",
+     "color": "Red"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-royal-front.jpg",
+     "side": "front",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-royal-back.jpg",
+     "side": "back",
+     "color": "Royal"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-sandstone-front.jpg",
+     "side": "front",
+     "color": "Sandstone"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-sandstone-back.jpg",
+     "side": "back",
+     "color": "Sandstone"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-storm-blue-front.jpg",
+     "side": "front",
+     "color": "Storm Blue"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-storm-blue-back.jpg",
+     "side": "back",
+     "color": "Storm Blue"
+    },
+    {
+     "file": "styles/IND3000/front/ind3000-white-front.jpg",
+     "side": "front",
+     "color": "White"
+    },
+    {
+     "file": "styles/IND3000/back/ind3000-white-back.jpg",
+     "side": "back",
+     "color": "White"
+    }
+   ]
+  },
+  "PRM4500": {
+   "name": "Independent Trading PRM4500",
+   "sub": "Pigment-Dyed Hooded Sweatshirt",
+   "tokens": [
+    "prm4500"
+   ],
+   "bodyLenM": 29,
+   "hood": true,
+   "calib": {
+    "front": {
+     "ppi": 28.196,
+     "centerX": 440.5,
+     "collarY": 200,
+     "leftChestX": 561.74,
+     "default": true,
+     "proposed": true
+    },
+    "back": {
+     "ppi": 29.517,
+     "centerX": 440.5,
+     "collarY": 272,
+     "leftChestX": 440.5,
+     "default": true,
+     "proposed": true
+    }
+   },
+   "photos": [
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-alpine-green-front.jpg",
+     "side": "front",
+     "color": "Pigment Alpine Green"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-alpine-green-back.jpg",
+     "side": "back",
+     "color": "Pigment Alpine Green"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-amber-front.jpg",
+     "side": "front",
+     "color": "Pigment Amber"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-amber-back.jpg",
+     "side": "back",
+     "color": "Pigment Amber"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-army-front.jpg",
+     "side": "front",
+     "color": "Pigment Army"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-army-back.jpg",
+     "side": "back",
+     "color": "Pigment Army"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-black-front.jpg",
+     "side": "front",
+     "color": "Pigment Black"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-black-back.jpg",
+     "side": "back",
+     "color": "Pigment Black"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-cement-front.jpg",
+     "side": "front",
+     "color": "Pigment Cement"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-cement-back.jpg",
+     "side": "back",
+     "color": "Pigment Cement"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-clay-front.jpg",
+     "side": "front",
+     "color": "Pigment Clay"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-clay-back.jpg",
+     "side": "back",
+     "color": "Pigment Clay"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-dusty-pink-front.jpg",
+     "side": "front",
+     "color": "Pigment Dusty Pink"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-dusty-pink-back.jpg",
+     "side": "back",
+     "color": "Pigment Dusty Pink"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-ivory-front.jpg",
+     "side": "front",
+     "color": "Pigment Ivory"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-ivory-back.jpg",
+     "side": "back",
+     "color": "Pigment Ivory"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-light-blue-front.jpg",
+     "side": "front",
+     "color": "Pigment Light Blue"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-light-blue-back.jpg",
+     "side": "back",
+     "color": "Pigment Light Blue"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-maroon-front.jpg",
+     "side": "front",
+     "color": "Pigment Maroon"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-maroon-back.jpg",
+     "side": "back",
+     "color": "Pigment Maroon"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-mint-front.jpg",
+     "side": "front",
+     "color": "Pigment Mint"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-mint-back.jpg",
+     "side": "back",
+     "color": "Pigment Mint"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-pink-front.jpg",
+     "side": "front",
+     "color": "Pigment Pink"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-pink-back.jpg",
+     "side": "back",
+     "color": "Pigment Pink"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-plum-front.jpg",
+     "side": "front",
+     "color": "Pigment Plum"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-plum-back.jpg",
+     "side": "back",
+     "color": "Pigment Plum"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-sage-front.jpg",
+     "side": "front",
+     "color": "Pigment Sage"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-sage-back.jpg",
+     "side": "back",
+     "color": "Pigment Sage"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-sandstone-front.jpg",
+     "side": "front",
+     "color": "Pigment Sandstone"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-sandstone-back.jpg",
+     "side": "back",
+     "color": "Pigment Sandstone"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-slate-blue-front.jpg",
+     "side": "front",
+     "color": "Pigment Slate Blue"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-slate-blue-back.jpg",
+     "side": "back",
+     "color": "Pigment Slate Blue"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-pigment-yellow-front.jpg",
+     "side": "front",
+     "color": "Pigment Yellow"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-pigment-yellow-back.jpg",
+     "side": "back",
+     "color": "Pigment Yellow"
+    },
+    {
+     "file": "styles/PRM4500/front/prm4500-prepared-for-dye-front.jpg",
+     "side": "front",
+     "color": "Prepared For Dye"
+    },
+    {
+     "file": "styles/PRM4500/back/prm4500-prepared-for-dye-back.jpg",
+     "side": "back",
+     "color": "Prepared For Dye"
+    }
+   ]
   }
  }
 }
