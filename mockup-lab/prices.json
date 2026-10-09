@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-05",
+  "updated": "2026-10-09",
   "note": "dealer costs = SanMar myPrice; base covers through XL; weekly task refreshes the 15 stalest styles",
   "styles": {
     "1717": {
@@ -109,6 +109,7 @@
     },
     "18500": {
       "sizes": [
+        "XS",
         "S",
         "M",
         "L",
@@ -119,14 +120,14 @@
         "5XL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "color": {
           "base": 9.8,
-          "2XL": 15.73,
-          "3XL": 18.44,
-          "4XL": 18.44,
-          "5XL": 18.44
+          "2XL": 17.73,
+          "3XL": 20.44,
+          "4XL": 20.44,
+          "5XL": 20.44
         }
       }
     },
@@ -142,7 +143,7 @@
         "5XL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "white": {
           "base": 14.49,
@@ -162,28 +163,32 @@
     },
     "64000": {
       "sizes": [
+        "XS",
         "S",
         "M",
         "L",
         "XL",
         "2XL",
         "3XL",
-        "4XL"
+        "4XL",
+        "5XL"
       ],
       "verified": true,
-      "checked": "2026-09-28",
+      "checked": "2026-10-09",
       "costs": {
         "white": {
           "base": 2.95,
-          "2XL": 4.7,
-          "3XL": 6.07,
-          "4XL": 6.07
+          "2XL": 5.7,
+          "3XL": 7.07,
+          "4XL": 7.07,
+          "5XL": 7.07
         },
         "color": {
           "base": 3.05,
-          "2XL": 5.18,
-          "3XL": 6.56,
-          "4XL": 6.56
+          "2XL": 6.18,
+          "3XL": 7.56,
+          "4XL": 7.56,
+          "5XL": 7.56
         }
       }
     },
@@ -197,17 +202,19 @@
         "2XL",
         "3XL",
         "4XL",
-        "5XL"
+        "5XL",
+        "6XL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "color": {
-          "base": 3.99,
-          "2XL": 5.62,
-          "3XL": 6.92,
-          "4XL": 8.2,
-          "5XL": 8.85
+          "base": 4.09,
+          "2XL": 6.76,
+          "3XL": 8.09,
+          "4XL": 9.39,
+          "5XL": 10.12,
+          "6XL": 10.54
         }
       }
     },
@@ -219,16 +226,20 @@
         "XL",
         "2XL",
         "3XL",
-        "4XL"
+        "4XL",
+        "5XL",
+        "6XL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "white": {
           "base": 2.33,
           "2XL": 4.21,
           "3XL": 5.12,
-          "4XL": 5.12
+          "4XL": 5.12,
+          "5XL": 5.12,
+          "6XL": 5.12
         },
         "color": {
           "base": 2.44,
@@ -247,24 +258,27 @@
         "2XL",
         "3XL",
         "4XL",
-        "5XL"
+        "5XL",
+        "6XL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "white": {
-          "base": 2.67,
+          "base": 2.59,
           "2XL": 4.34,
           "3XL": 5.45,
           "4XL": 5.45,
-          "5XL": 5.45
+          "5XL": 5.45,
+          "6XL": 5.45
         },
         "color": {
-          "base": 2.99,
+          "base": 2.89,
           "2XL": 4.92,
           "3XL": 6.46,
           "4XL": 6.46,
-          "5XL": 6.46
+          "5XL": 6.46,
+          "6XL": 6.46
         }
       }
     },
@@ -276,27 +290,32 @@
         "XL",
         "2XL",
         "3XL",
-        "4XL"
+        "4XL",
+        "5XL",
+        "6XL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "white": {
-          "base": 8.81,
-          "2XL": 11.16,
-          "3XL": 12.55,
-          "4XL": 12.55
+          "base": 9.75,
+          "2XL": 17.57,
+          "3XL": 20.26,
+          "4XL": 20.26,
+          "5XL": 20.26,
+          "6XL": 20.26
         },
         "color": {
-          "base": 8.92,
-          "2XL": 11.4,
-          "3XL": 13.44,
-          "4XL": 13.44
+          "base": 9.75,
+          "2XL": 17.57,
+          "3XL": 20.26,
+          "4XL": 20.26
         }
       }
     },
     "64000CVC": {
       "sizes": [
+        "XS",
         "S",
         "M",
         "L",
@@ -306,7 +325,7 @@
         "4XL"
       ],
       "verified": true,
-      "checked": "2026-09-28",
+      "checked": "2026-10-09",
       "costs": {
         "white": {
           "base": 2.95,
@@ -317,7 +336,8 @@
         "color": {
           "base": 3.05,
           "2XL": 5.18,
-          "3XL": 6.38
+          "3XL": 7.38,
+          "4XL": 7.38
         }
       }
     },
@@ -333,13 +353,13 @@
         "4XL"
       ],
       "verified": true,
-      "checked": "2026-09-28",
+      "checked": "2026-10-09",
       "costs": {
         "color": {
           "base": 3.04,
-          "2XL": 5.1,
-          "3XL": 6.1,
-          "4XL": 7.1
+          "2XL": 6.1,
+          "3XL": 7.1,
+          "4XL": 8.1
         }
       }
     },
@@ -355,13 +375,13 @@
         "4XL"
       ],
       "verified": true,
-      "checked": "2026-09-28",
+      "checked": "2026-10-09",
       "costs": {
         "color": {
           "base": 3.99,
-          "2XL": 6.2,
-          "3XL": 6.72,
-          "4XL": 7.23
+          "2XL": 7.2,
+          "3XL": 7.72,
+          "4XL": 8.23
         }
       }
     },
@@ -817,13 +837,13 @@
         "4XL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "color": {
           "base": 3.79,
-          "2XL": 5.45,
-          "3XL": 7.45,
-          "4XL": 8.45
+          "2XL": 6.45,
+          "3XL": 8.45,
+          "4XL": 9.45
         }
       }
     },
@@ -948,7 +968,7 @@
         "YXL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "color": {
           "base": 2.99
@@ -964,7 +984,7 @@
         "YXL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "color": {
           "base": 2.79
@@ -980,7 +1000,7 @@
         "YXL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "white": {
           "base": 2.31
@@ -992,16 +1012,17 @@
     },
     "18500B": {
       "sizes": [
+        "YXS",
         "YS",
         "YM",
         "YL",
         "YXL"
       ],
       "verified": true,
-      "checked": "2026-09-27",
+      "checked": "2026-10-09",
       "costs": {
         "color": {
-          "base": 11.34
+          "base": 10.66
         }
       }
     },
