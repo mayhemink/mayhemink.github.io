@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "week": "2026-10-12",
- "generatedAt": "2026-10-12T03:03:18.773089Z",
+ "generatedAt": "2026-10-12T13:33:17.391074Z",
  "source": "Weekly press board and verified Printavo order sizes",
  "days": [
   {
@@ -399,8 +399,8 @@
    "day": "2026-10-12",
    "expected": 159,
    "scheduleSignature": "[\"6535\",\"FRONT — 2c — 159 black: DM108M 151 · AS Colour 5001T L 6 · 4072 XS 2\",159]",
-   "note": "No mockup — art on the order. AS Colour L/XS box due Mon.",
-   "image": "",
+   "note": "AS Colour L/XS box due Mon.",
+   "image": "/data/mocks/2026-10-12/6535_wue.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
@@ -541,7 +541,7 @@
    "expected": 159,
    "scheduleSignature": "[\"6535\",\"BACK — 2c — same 159\",159]",
    "note": "",
-   "image": "",
+   "image": "/data/mocks/2026-10-12/6535_wue.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
@@ -5460,7 +5460,7 @@
    "expected": 8,
    "scheduleSignature": "[\"6535\",\"FRONT — late AS Colour 5001T: XL 6 · 3XL 2\",8]",
    "note": "Run when the box lands (XL ~Fri, 3XL not ordered).",
-   "image": "",
+   "image": "/data/mocks/2026-10-12/6535_wue.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
@@ -5523,7 +5523,7 @@
    "expected": 8,
    "scheduleSignature": "[\"6535\",\"BACK — late AS Colour 5001T — same 8\",8]",
    "note": "",
-   "image": "",
+   "image": "/data/mocks/2026-10-12/6535_wue.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
