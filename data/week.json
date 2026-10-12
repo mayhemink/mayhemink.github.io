@@ -305,9 +305,9 @@
      "nickname": "SGPD",
      "due": "2026-10-13",
      "id": "6524-front",
-     "location": "FRONT — SGPD badge, 3c — 210 DM108M: Htr Navy 70 · Black 70 · White 70",
+     "location": "FRONT — SGPD badge, 2c — 210 DM108M: Htr Navy 70 · Black 70 · White 70",
      "qty": 210,
-     "colors": 3,
+     "colors": 2,
      "img": "6524_navy",
      "inks": [
       {
@@ -315,23 +315,23 @@
        "hex": "#FFFFFF"
       },
       {
-       "n": "Gold — navy only",
-       "hex": "#FFB81C"
+       "n": "FN Golden Yellow — navy",
+       "hex": "#FFC72C"
       },
       {
-       "n": "Blue — black + white",
-       "hex": "#1E5BC6"
+       "n": "50/50 Royal — black + white",
+       "hex": "#4A72C9"
       },
       {
-       "n": "Black — white tees",
+       "n": "Black — white",
        "hex": "#111111"
       }
      ],
      "tags": [
       "INK SWAP"
      ],
-     "note": "Inks change by shirt color — see mockups.",
-     "screens": 3,
+     "note": "Navy: white + gold · Black: white + royal · White: black + royal.",
+     "screens": 2,
      "url": "https://www.printavo.com/invoices/24514368"
     },
     {
@@ -340,30 +340,29 @@
      "nickname": "SGPD",
      "due": "2026-10-13",
      "id": "6524-back",
-     "location": "UPPER BACK — #IAmSGPD script — same 210",
+     "location": "UPPER BACK — #IAmSGPD script, 2c — same 210",
      "qty": 210,
-     "colors": 3,
+     "colors": 2,
      "img": "6524_black",
      "inks": [
       {
-       "n": "Blue fill",
-       "hex": "#1E5BC6"
-      },
-      {
-       "n": "White outline",
+       "n": "White — navy + black",
        "hex": "#FFFFFF"
       },
       {
-       "n": "Black outline",
+       "n": "Black — white",
        "hex": "#111111"
+      },
+      {
+       "n": "50/50 Royal — all 210",
+       "hex": "#4A72C9"
       }
      ],
      "tags": [
-      "VERIFY"
+      "INK SWAP"
      ],
-     "noest": true,
-     "alert": "Back print is on the mockup but not named on the order — confirm colors.",
-     "screens": 3,
+     "note": "Navy + black: white + royal · White: black + royal.",
+     "screens": 2,
      "url": "https://www.printavo.com/invoices/24514368"
     },
     {
@@ -653,7 +652,7 @@
    "flags": [
     [
      "HOURS",
-     "~16.2 press-hrs"
+     "~13.7 press-hrs"
     ],
     [
      "RUN ORDER",
