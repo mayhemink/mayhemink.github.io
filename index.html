@@ -287,6 +287,19 @@ img{display:block}
 #lightbox{display:none;position:fixed;inset:0;background:#000f;z-index:90;overflow:auto;-webkit-overflow-scrolling:touch}
 #lbimg{display:block;margin:40px auto;width:96%;max-width:none;background:#fff}
 #lbclose{position:fixed;top:12px;right:14px;z-index:91;font:800 22px var(--bc);letter-spacing:.1em;color:#111;background:var(--lime);border-radius:10px;padding:10px 18px}
+#lbprev,#lbnext{position:fixed;top:50%;transform:translateY(-50%);z-index:91;width:64px;height:110px;border-radius:12px;background:#0c0d0fcc;color:var(--lime);font:800 64px/1 var(--bc);display:none}
+#lbprev{left:10px}#lbnext{right:10px}
+#lightbox.multi #lbprev,#lightbox.multi #lbnext{display:block}
+#lbdots{position:fixed;bottom:40px;left:0;right:0;text-align:center;z-index:91;pointer-events:none}
+#lbdots i{display:inline-block;width:12px;height:12px;border-radius:50%;background:#555;margin:0 5px}
+#lbdots i.on{background:var(--lime)}
+.nrbox .nrhd{font:800 34px/1 var(--bc);letter-spacing:.02em}
+.nrbox .nrloc{font:700 22px/1.15 var(--bc);color:var(--mut);margin:6px 0 16px;text-transform:uppercase}
+.nrbox .warn{font-size:26px;padding:14px 16px;margin-bottom:10px}
+.nrbox .note{font-size:24px;padding:12px 16px;margin-bottom:10px}
+.nrbox .nrwho{font:700 16px var(--in);color:var(--mut);margin-top:6px}
+.nrbox .nrbtn{width:100%;height:96px;margin-top:14px;border-radius:12px;background:var(--lime);color:var(--bg);font:800 40px var(--bc);letter-spacing:.05em}
+.artdots{position:absolute;left:0;right:0;bottom:76px;text-align:center;pointer-events:none}
 #lbhint{position:fixed;bottom:12px;left:0;right:0;text-align:center;color:#999;font-size:14px;z-index:91;pointer-events:none}
 
 /* ---------- PORTRAIT ---------- */
@@ -339,12 +352,15 @@ img{display:block}
 <div class="ov" id="ov-ready"></div>
 <div class="ov" id="ov-lunch"></div>
 <div class="ov" id="ov-setup"></div>
-<div class="md" id="md" onclick="if(event.target===this)closeMd()"><div class="sheet" id="mdbox"></div></div>
+<div class="md" id="md" onclick="if(event.target===this&&MD.kind!=='noteread')closeMd()"><div class="sheet" id="mdbox"></div></div>
 <div id="toast"></div>
 <div id="lightbox" onclick="if(event.target===this)hideLightbox()">
   <button id="lbclose" onclick="hideLightbox()">CLOSE</button>
   <img id="lbimg" alt="">
-  <div id="lbhint">pinch or double-tap to zoom &middot; tap outside to close</div>
+  <button id="lbprev" onclick="event.stopPropagation();lbStep(-1)">&#8249;</button>
+  <button id="lbnext" onclick="event.stopPropagation();lbStep(1)">&#8250;</button>
+  <div id="lbdots"></div>
+  <div id="lbhint">swipe for the next mockup &middot; pinch or double-tap to zoom &middot; tap outside to close</div>
 </div>
 <input type="file" id="filepick" accept="image/*" class="hide">
 <script>
@@ -1312,7 +1328,7 @@ function toast(msg){
 //  pauses, handoffs, sync, export, mailer) carried over unchanged so no logged data,
 //  sync record or export format changes. Everything below renders it.
 // =====================================================================================
-var APP_V = "4.0.5";
+var APP_V = "4.1.0";
 var DATA_URL = "data/week.json";
 var WEEKID = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], DAYSARR = [], IMG = {};
 var LABELS = {}, ALLROWS = [], FLAGSBY = {}, ROWSBY = {}, STATES = {}, CLOCKS = {};
@@ -1347,7 +1363,7 @@ function showList(){ go(VIEW === "job" ? "week" : VIEW); }
 //   pul_<row>   {at,by}                     blanks pulled / staged
 //   edt_<row>   {location,qty,...,img,hidden} Kolton's card edits
 //   add_<week>  {cards:[...]}               cards Kolton added from the board
-var VPFX = ["ord_","prs_","cnt_","pul_","edt_","add_","cat_"];
+var VPFX = ["ord_","prs_","cnt_","pul_","edt_","add_","cat_","rdn_"];
 function vKind(id){ id = String(id); for(var i = 0; i < VPFX.length; i++) if(id.indexOf(VPFX[i]) === 0) return VPFX[i]; return null; }
 var findRowV3 = findRow;
 findRow = function(id){
@@ -1673,8 +1689,8 @@ function paneHtml(row){
   var h = '<div class="pane' + (main ? '' : ' pnoart') + '"><div class="art">';
   h += '<div class="artlbl ' + lbl.c + '"><span>' + esc(lbl.t) + '</span>' + (isActive(s) ? '<span class="tm" id="livetm">' + hm(phaseMs(row)) + '</span>' : '') + '</div>';
   if(main){
-    h += '<img class="main" src="' + esc(main) + '" onclick="showLightbox(this.src)" alt="">';
-    h += '<div class="zoom">⤢ TAP TO ZOOM</div>';
+    h += '<img class="main" data-row="' + esc(row.id) + '" src="' + esc(main) + '" onclick="showGallery(\'' + row.id + '\')" alt="">';
+    h += '<div class="zoom">⤢ TAP TO ZOOM' + (imgs.length > 1 ? ' · SWIPE FOR MORE' : '') + '</div>';
   } else h += '<div class="noart">NO MOCKUP ON THE BOARD<small>Art is on the order in Printavo.</small></div>';
   if(imgs.length > 1){
     h += '<div class="thumbs">' + imgs.slice(0, 5).map(function(u){ return '<img src="' + esc(u) + '" class="' + (u === main ? "on" : "") + '" onclick="event.stopPropagation();artSel(\'' + row.id + '\',\'' + esc(u).replace(/'/g, "%27") + '\')">'; }).join("") + '</div>';
@@ -1733,6 +1749,7 @@ function act(id, what){
   if(!currentRow) return;
   var r = rec(id);
   if(what === "setupStart"){
+    if(noteGate(id)) return;
     if(!r.printer){
       var op = operator();
       if(op) r.printer = op;
@@ -1871,6 +1888,7 @@ function openDetails(id, again){
   }
   var cnt = vget("cnt_" + id);
   if(cnt) h += '<h4>FINAL COUNT</h4><div class="log">' + (cnt.good != null ? cnt.good : row.qty) + ' good · ' + (cnt.mis || 0) + ' misprints · ' + (cnt.stacked ? 'counted &amp; stacked' : 'NOT stacked yet') + '</div>';
+  h += noteReadLog(row);
   h += '<h4>NOTES — ANYTHING WEIRD ABOUT THIS RUN</h4><div class="fld"><textarea id="dt-notes" onblur="setNotes(this.value)" placeholder="Ink mixed, screen re-burned, short 3 larges...">' + esc(r.notes || "") + '</textarea></div>';
   if(s === "done"){
     var sent = jobEmailedAt(row);
@@ -2055,6 +2073,7 @@ function render(){
   if(MD.id && (MD.kind === "details" || MD.kind === "handoff")) currentRow = findRow(MD.id);
   renderReady(); renderLunch();
   refreshMd();
+  try{ notePopupCheck(); }catch(e){}
   setTimeout(fitHints, 30);
 }
 function qCard(row, cls, sub){
@@ -2389,6 +2408,136 @@ function hideLightbox(){ document.getElementById("lightbox").style.display = "no
   lb.addEventListener("touchmove", function(e){ if(e.touches.length === 2 && lbPinchD0 > 0){ e.preventDefault(); lbW = Math.min(500, Math.max(60, lbPinchW0 * d(e) / lbPinchD0)); im.style.width = lbW + "%"; } }, {passive:false});
   lb.addEventListener("touchend", function(e){ if(e.touches.length < 2) lbPinchD0 = 0; }, {passive:true});
   im.addEventListener("click", function(){ var n = Date.now(); if(n - lbLastTap < 350){ lbW = (lbW <= 100) ? 250 : 96; im.style.width = lbW + "%"; } lbLastTap = n; });
+})();
+
+// ======== [v4.1] READ-THE-NOTE popup (2026-10-12) ========
+// A card with a note/alert pops it up the first time each printer opens it. START SETUP stays
+// locked until "I READ THE NOTE". Receipts ride the virtual record rdn_<rowId> {r:{name:{s,at}}}
+// (LWW on the worker; we merge before writing) plus localStorage, so a re-push of the same text
+// doesn't ask again but an edited note does.
+function noteSig(nt){ var x = (nt.a || "") + "|" + (nt.n || ""), h = 0; for(var i = 0; i < x.length; i++){ h = ((h << 5) - h + x.charCodeAt(i)) | 0; } return String(h); }
+function noteText(row){ var nt = jobNotesFor(row); return (nt.a || nt.n) ? nt : null; }
+function readerName(row){ var op = operator(); if(op) return op; var r = recRO(row.id) || {}; if(r.printer) return r.printer; return PRESS ? ("iPad " + PRESS) : "this iPad"; }
+function noteReadBy(row, who){
+  var nt = noteText(row); if(!nt) return true;
+  var sig = noteSig(nt);
+  if(lsGet("mayhem_nr_" + row.id + "_" + who) === sig) return true;
+  var v = vget("rdn_" + row.id), e = v && v.r && v.r[who];
+  return !!(e && e.s === sig);
+}
+function needsRead(row){
+  if(!row || row._virtual || EDITOR) return false;
+  if(!noteText(row)) return false;
+  if(st(row) !== "idle") return false;            // already running/done — don't interrupt
+  return !noteReadBy(row, readerName(row));
+}
+var NR = {id:null, cb:null, shown:{}};
+function openNoteRead(id, cb){
+  var row = findRow(id); if(!row) return;
+  var nt = noteText(row) || {};
+  NR.id = id; NR.cb = cb || null;
+  var h = '<div class="nrbox"><div class="nrhd">#' + esc(row.job) + ' · ' + esc(row.nickname || row.customer || "") + '</div>' +
+    '<div class="nrloc">' + esc(row.location || "") + '</div>' +
+    (nt.a ? '<div class="warn">⚠ ' + esc(nt.a).replace(/\n/g, "<br>") + '</div>' : '') +
+    (nt.n ? '<div class="note">' + esc(nt.n).replace(/\n/g, "<br>") + '</div>' : '') +
+    '<button class="nrbtn" onclick="ackNote()">✓ I READ THE NOTE</button>' +
+    '<div class="nrwho">Signing as ' + esc(readerName(row).toUpperCase()) + '</div></div>';
+  openMd("noteread", h, id);
+}
+function ackNote(){
+  var row = findRow(NR.id); if(!row){ closeMd(); return; }
+  var nt = noteText(row), who = readerName(row);
+  if(nt){
+    var sig = noteSig(nt);
+    lsSet("mayhem_nr_" + row.id + "_" + who, sig);
+    var v = vget("rdn_" + row.id) || {r:{}}; if(!v.r) v.r = {};
+    v.r[who] = {s:sig, at:now()}; v.at = now();
+    vset("rdn_" + row.id, v);
+  }
+  var cb = NR.cb; NR.cb = null; NR.shown[row.id] = 1;
+  MD.kind = null; MD.id = null; document.getElementById("md").classList.remove("on");
+  if(cb) cb(); else render();
+}
+function noteGate(id){                              // true = blocked, popup shown
+  var row = findRow(id);
+  if(!needsRead(row)) return false;
+  openNoteRead(id, function(){ act(id, "setupStart"); });
+  return true;
+}
+function notePopupCheck(){
+  if(MD.kind || EDITOR || !isPressIpad() || VIEW !== "press") return;
+  if(document.getElementById("lightbox").style.display === "block") return;
+  if(document.getElementById("ov-ready").classList.contains("on")) return;
+  var L = null; try{ L = lunchState(); }catch(e){} if(L && L.open) return;
+  var row = currentRow; if(!row || !needsRead(row)) return;
+  var k = row.id + "|" + readerName(row) + "|" + noteSig(noteText(row));
+  if(NR.shown[k]) return;                           // shown once this session; START SETUP still gates
+  NR.shown[k] = 1;
+  openNoteRead(row.id, null);
+}
+function noteReadLog(row){
+  if(!noteText(row)) return "";
+  var v = vget("rdn_" + row.id), sig = noteSig(noteText(row)), out = [];
+  if(v && v.r) for(var n in v.r) if(v.r.hasOwnProperty(n)) out.push('<div class="log"><b>' + esc(n) + '</b> read the note ' + fmt(v.r[n].at) + (v.r[n].s !== sig ? ' <span class="ed">NOTE CHANGED SINCE</span>' : '') + '</div>');
+  return '<h4>NOTE READ BY</h4>' + (out.length ? out.join("") : '<div class="log"><span style="color:var(--mut)">Nobody yet</span></div>');
+}
+
+// ======== [v4.1] swipeable mockups (2026-10-12) ========
+// Lightbox walks every mockup on the job (jobImgs); swipe or arrows. The main art on the
+// NOW card swipes through the same list without opening.
+var LBG = {list:[], i:0};
+function showGallery(id){
+  var row = findRow(id); if(!row) return;
+  var imgs = jobImgs(row), main = ARTSEL[row.id] && imgs.indexOf(ARTSEL[row.id]) > -1 ? ARTSEL[row.id] : (imgOf(row) || imgs[0] || "");
+  LBG.list = imgs.length ? imgs : [main]; LBG.i = Math.max(0, LBG.list.indexOf(main));
+  showLightbox(LBG.list[LBG.i], true);
+}
+var _showLB = showLightbox;
+showLightbox = function(src, keep){
+  if(!keep){ LBG.list = [src]; LBG.i = 0; }
+  _showLB(src);
+  lbDots();
+};
+function lbDots(){
+  var lb = document.getElementById("lightbox"), n = LBG.list.length;
+  lb.classList.toggle("multi", n > 1);
+  var d = ""; if(n > 1) for(var i = 0; i < n; i++) d += '<i class="' + (i === LBG.i ? "on" : "") + '"></i>';
+  document.getElementById("lbdots").innerHTML = d;
+}
+function lbStep(dir){
+  var n = LBG.list.length; if(n < 2) return;
+  LBG.i = (LBG.i + dir + n) % n;
+  var im = document.getElementById("lbimg"); im.src = LBG.list[LBG.i]; lbW = 96; im.style.width = "96%";
+  document.getElementById("lightbox").scrollTop = 0;
+  lbDots();
+}
+function artStep(id, dir){
+  var row = findRow(id); if(!row) return;
+  var imgs = jobImgs(row); if(imgs.length < 2) return;
+  var cur = ARTSEL[id] && imgs.indexOf(ARTSEL[id]) > -1 ? ARTSEL[id] : (imgOf(row) || imgs[0]);
+  var i = imgs.indexOf(cur); i = (i + dir + imgs.length) % imgs.length;
+  ARTSEL[id] = imgs[i]; render();
+}
+(function(){
+  var sx = 0, sy = 0, one = false;
+  var lb = document.getElementById("lightbox");
+  lb.addEventListener("touchstart", function(e){ one = e.touches.length === 1; if(one){ sx = e.touches[0].pageX; sy = e.touches[0].pageY; } }, {passive:true});
+  lb.addEventListener("touchend", function(e){
+    if(!one || lbW > 100 || !e.changedTouches.length) return;
+    var dx = e.changedTouches[0].pageX - sx, dy = e.changedTouches[0].pageY - sy;
+    if(Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) lbStep(dx < 0 ? 1 : -1);
+  }, {passive:true});
+  var ax = 0, ay = 0, aid = null;
+  document.addEventListener("touchstart", function(e){
+    var t = e.target; aid = null;
+    if(e.touches.length === 1 && t && t.classList && t.classList.contains("main") && t.getAttribute("data-row")){ aid = t.getAttribute("data-row"); ax = e.touches[0].pageX; ay = e.touches[0].pageY; }
+  }, {passive:true});
+  document.addEventListener("touchend", function(e){
+    if(!aid || !e.changedTouches.length) return;
+    var dx = e.changedTouches[0].pageX - ax, dy = e.changedTouches[0].pageY - ay, id = aid; aid = null;
+    if(Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5){ e.preventDefault && e.cancelable && e.preventDefault(); artStep(id, dx < 0 ? 1 : -1); }
+  }, {passive:false});
+  document.addEventListener("keydown", function(e){ if(lb.style.display === "block"){ if(e.key === "ArrowRight") lbStep(1); if(e.key === "ArrowLeft") lbStep(-1); } });
 })();
 
 // ---------- tickers ----------
