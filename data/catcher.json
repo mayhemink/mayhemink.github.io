@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "week": "2026-10-12",
- "generatedAt": "2026-10-12T14:46:43.021634Z",
+ "generatedAt": "2026-10-12T15:24:00.186210Z",
  "source": "Weekly press board and verified Printavo order sizes",
  "days": [
   {
@@ -1167,12 +1167,12 @@
     "24514368:52711374"
    ],
    "customer": "SGPD — St. George Police",
-   "location": "FRONT — SGPD badge, 2c — 210 DM108M: Htr Navy 70 · Black 70 · White 70",
+   "location": "FRONT — SGPD badge, 3c (2c on white) — 210 DM108M: Htr Navy 70 · Black 70 · White 70",
    "locationLabel": "Front",
    "day": "2026-10-13",
    "expected": 210,
-   "scheduleSignature": "[\"6524\",\"FRONT — SGPD badge, 2c — 210 DM108M: Htr Navy 70 · Black 70 · White 70\",210]",
-   "note": "Navy: white + gold · Black: white + royal · White: black + royal.",
+   "scheduleSignature": "[\"6524\",\"FRONT — SGPD badge, 3c (2c on white) — 210 DM108M: Htr Navy 70 · Black 70 · White 70\",210]",
+   "note": "White tees: no underlay. Gold only on navy fronts.",
    "image": "/data/mocks/2026-10-12/6524_navy.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
@@ -1462,12 +1462,12 @@
     "24514368:52711374"
    ],
    "customer": "SGPD — St. George Police",
-   "location": "UPPER BACK — #IAmSGPD script, 2c — same 210",
+   "location": "UPPER BACK — #IAmSGPD script, 3c (2c on white) — same 210",
    "locationLabel": "Upper back",
    "day": "2026-10-13",
    "expected": 210,
-   "scheduleSignature": "[\"6524\",\"UPPER BACK — #IAmSGPD script, 2c — same 210\",210]",
-   "note": "Navy + black: white + royal · White: black + royal.",
+   "scheduleSignature": "[\"6524\",\"UPPER BACK — #IAmSGPD script, 3c (2c on white) — same 210\",210]",
+   "note": "",
    "image": "/data/mocks/2026-10-12/6524_black.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
@@ -1757,11 +1757,11 @@
     "24514368:52711374"
    ],
    "customer": "SGPD — St. George Police",
-   "location": "LEFT SLEEVE — USA flag, 1c — same 210: WHITE on navy + black · BLACK on white",
+   "location": "LEFT SLEEVE — USA flag, 2c (1c on white) — same 210",
    "locationLabel": "Left sleeve",
    "day": "2026-10-13",
    "expected": 210,
-   "scheduleSignature": "[\"6524\",\"LEFT SLEEVE — USA flag, 1c — same 210: WHITE on navy + black · BLACK on white\",210]",
+   "scheduleSignature": "[\"6524\",\"LEFT SLEEVE — USA flag, 2c (1c on white) — same 210\",210]",
    "note": "",
    "image": "/data/mocks/2026-10-12/6524_white.jpg",
    "artworkLabel": "Reference from the weekly press board",

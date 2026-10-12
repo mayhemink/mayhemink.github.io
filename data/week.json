@@ -305,13 +305,18 @@
      "nickname": "SGPD",
      "due": "2026-10-13",
      "id": "6524-front",
-     "location": "FRONT — SGPD badge, 2c — 210 DM108M: Htr Navy 70 · Black 70 · White 70",
+     "location": "FRONT — SGPD badge, 3c (2c on white) — 210 DM108M: Htr Navy 70 · Black 70 · White 70",
      "qty": 210,
-     "colors": 2,
+     "colors": 3,
+     "screens": 3,
      "img": "6524_navy",
      "inks": [
       {
-       "n": "White — navy + black",
+       "n": "White underlay — navy + black",
+       "hex": "#F2F2F2"
+      },
+      {
+       "n": "White — navy + black · BLACK on white",
        "hex": "#FFFFFF"
       },
       {
@@ -321,17 +326,12 @@
       {
        "n": "50/50 Royal — black + white",
        "hex": "#4A72C9"
-      },
-      {
-       "n": "Black — white",
-       "hex": "#111111"
       }
      ],
      "tags": [
       "INK SWAP"
      ],
-     "note": "Navy: white + gold · Black: white + royal · White: black + royal.",
-     "screens": 2,
+     "note": "White tees: no underlay. Gold only on navy fronts.",
      "url": "https://www.printavo.com/invoices/24514368"
     },
     {
@@ -340,18 +340,19 @@
      "nickname": "SGPD",
      "due": "2026-10-13",
      "id": "6524-back",
-     "location": "UPPER BACK — #IAmSGPD script, 2c — same 210",
+     "location": "UPPER BACK — #IAmSGPD script, 3c (2c on white) — same 210",
      "qty": 210,
-     "colors": 2,
+     "colors": 3,
+     "screens": 3,
      "img": "6524_black",
      "inks": [
       {
-       "n": "White — navy + black",
-       "hex": "#FFFFFF"
+       "n": "White underlay — navy + black",
+       "hex": "#F2F2F2"
       },
       {
-       "n": "Black — white",
-       "hex": "#111111"
+       "n": "White — navy + black · BLACK on white",
+       "hex": "#FFFFFF"
       },
       {
        "n": "50/50 Royal — all 210",
@@ -361,8 +362,6 @@
      "tags": [
       "INK SWAP"
      ],
-     "note": "Navy + black: white + royal · White: black + royal.",
-     "screens": 2,
      "url": "https://www.printavo.com/invoices/24514368"
     },
     {
@@ -371,24 +370,24 @@
      "nickname": "SGPD",
      "due": "2026-10-13",
      "id": "6524-sleeve",
-     "location": "LEFT SLEEVE — USA flag, 1c — same 210: WHITE on navy + black · BLACK on white",
+     "location": "LEFT SLEEVE — USA flag, 2c (1c on white) — same 210",
      "qty": 210,
-     "colors": 1,
+     "colors": 2,
+     "screens": 2,
      "img": "6524_white",
      "inks": [
       {
-       "n": "White — 140 navy + black",
-       "hex": "#FFFFFF"
+       "n": "White underlay — navy + black",
+       "hex": "#F2F2F2"
       },
       {
-       "n": "Black — 70 white",
-       "hex": "#111111"
+       "n": "White — navy + black · BLACK on white",
+       "hex": "#FFFFFF"
       }
      ],
      "tags": [
       "INK SWAP"
      ],
-     "screens": 1,
      "url": "https://www.printavo.com/invoices/24514368"
     },
     {
@@ -652,7 +651,7 @@
    "flags": [
     [
      "HOURS",
-     "~13.7 press-hrs"
+     "~17.1 press-hrs"
     ],
     [
      "RUN ORDER",
