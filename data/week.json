@@ -512,7 +512,8 @@
       "VERIFY"
      ],
      "noest": true,
-     "alert": "No mockup in Printavo. Puff on all prints.",
+     "img": "6587_m1_spec",
+     "alert": "Puff additive on all prints — matte finish.",
      "url": "https://www.printavo.com/invoices/24809847"
     },
     {
@@ -540,6 +541,7 @@
       "INK SWAP"
      ],
      "noest": true,
+     "img": "6587_m1_shirts",
      "url": "https://www.printavo.com/invoices/24809847"
     },
     {
@@ -567,6 +569,7 @@
       "INK SWAP"
      ],
      "noest": true,
+     "img": "6587_m2_spec",
      "url": "https://www.printavo.com/invoices/24809847"
     },
     {
@@ -594,6 +597,7 @@
       "INK SWAP"
      ],
      "noest": true,
+     "img": "6587_m2_shirts",
      "url": "https://www.printavo.com/invoices/24809847"
     },
     {
@@ -618,7 +622,7 @@
      "tags": [
       "VERIFY"
      ],
-     "note": "No mockup in Printavo — art on the order.",
+     "img": "6588_spec",
      "screens": 2,
      "url": "https://www.printavo.com/invoices/24809848"
     },
@@ -641,6 +645,7 @@
        "hex": "#BBBCBC"
       }
      ],
+     "img": "6588_hoodie",
      "screens": 2,
      "url": "https://www.printavo.com/invoices/24809848"
     }
@@ -1342,6 +1347,12 @@
   "6578_sheet": "/data/mocks/2026-10-12/6578_sheet.jpg",
   "6580_white": "/data/mocks/2026-10-12/6580_white.jpg",
   "6535_wue": "/data/mocks/2026-10-12/6535_wue.jpg",
+  "6587_m1_spec": "/data/mocks/2026-10-12/6587_m1_spec.jpg",
+  "6587_m1_shirts": "/data/mocks/2026-10-12/6587_m1_shirts.jpg",
+  "6587_m2_spec": "/data/mocks/2026-10-12/6587_m2_spec.jpg",
+  "6587_m2_shirts": "/data/mocks/2026-10-12/6587_m2_shirts.jpg",
+  "6588_spec": "/data/mocks/2026-10-12/6588_spec.jpg",
+  "6588_hoodie": "/data/mocks/2026-10-12/6588_hoodie.jpg",
   "6580_blue": "/data/mocks/2026-10-12/6580_blue.jpg",
   "6580_sand": "/data/mocks/2026-10-12/6580_sand.jpg",
   "6531_1": "/data/mocks/2026-10-05/6531_1.jpg",
