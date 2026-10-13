@@ -202,7 +202,8 @@ img{display:block}
 .jg{background:var(--panel);border:2px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}
 .jgh{display:flex;gap:12px;padding:10px 12px;align-items:flex-start;border-bottom:1px solid var(--line)}
 .jgh .ths{display:flex;gap:6px;flex:none}
-.jgh .ths img{width:72px;height:72px;border-radius:8px;object-fit:cover;background:#fff}
+.jgh .ths img{width:72px;height:72px;border-radius:8px;object-fit:cover;background:#fff;cursor:pointer}
+.jgh .ths .thmore{width:48px;height:72px;border-radius:8px;background:#23272c;color:var(--lime);font:800 22px/72px var(--bc);text-align:center;cursor:pointer}
 .jgh .t1{font:800 32px/1 var(--bc)}
 .jgh .t1 a{color:inherit;text-decoration:none}
 .jgh .t1 span{font:700 18px var(--bc);color:var(--mut);letter-spacing:.04em;margin-left:8px;text-transform:uppercase}
@@ -364,7 +365,7 @@ img{display:block}
   <button id="lbprev" onclick="event.stopPropagation();lbStep(-1)">&#8249;</button>
   <button id="lbnext" onclick="event.stopPropagation();lbStep(1)">&#8250;</button>
   <div id="lbdots"></div>
-  <div id="lbhint">swipe for the next mockup &middot; pinch or double-tap to zoom &middot; tap outside to close</div>
+  <div id="lbhint">swipe or tap swipe or tap &#8249; &#8250; for the next mockup &middot; pinch#8249; swipe or tap &#8249; &#8250; for the next mockup &middot; pinch#8250; for the next mockup &middot; pinch or double-tap to zoom &middot; tap outside to close</div>
 </div>
 <input type="file" id="filepick" accept="image/*" class="hide">
 <script>
@@ -1332,7 +1333,7 @@ function toast(msg){
 //  pauses, handoffs, sync, export, mailer) carried over unchanged so no logged data,
 //  sync record or export format changes. Everything below renders it.
 // =====================================================================================
-var APP_V = "4.1.1";
+var APP_V = "4.1.2";
 var DATA_URL = "data/week.json";
 var WEEKID = "", PRINTERS = [], COUNTS = [1,2,3,4,5,6], DAYSARR = [], IMG = {};
 var LABELS = {}, ALLROWS = [], FLAGSBY = {}, ROWSBY = {}, STATES = {}, CLOCKS = {};
@@ -2211,7 +2212,7 @@ function renderWeekBody(){
     var g0 = g[0], imgs = [], nt = jobNotesFor(g0);
     g.forEach(function(x){ var u = imgOf(x); if(u && imgs.indexOf(u) === -1) imgs.push(u); });
     h += '<div class="jg"><div class="jgh">';
-    if(imgs.length) h += '<div class="ths">' + imgs.slice(0, 3).map(function(u){ return '<img src="' + esc(u) + '" onclick="showLightbox(this.src)">'; }).join("") + '</div>';
+    if(imgs.length) h += '<div class="ths">' + imgs.slice(0, 3).map(function(u){ return '<img src="' + esc(u) + '" onclick="openJobGallery(\'' + g0.id + '\',this.src)">'; }).join("") + (imgs.length > 3 ? '<b class="thmore" onclick="openJobGallery(\'' + g0.id + '\',\'\')">+' + (imgs.length - 3) + '</b>' : '') + '</div>';
     h += '<div class="hn"><div class="t1">' + (g0.url ? '<a href="' + esc(g0.url) + '" target="_blank">#' + esc(g0.job) + '</a>' : '#' + esc(g0.job)) + '<span>' + esc(g0.customer) + (searchQuery ? ' · ' + dayLabel(showDay(g0)) + ' ' + dayNum(showDay(g0)) : '') + '</span></div>';
     if(nt.a) h += '<div class="warn">⚠ ' + esc(nt.a).replace(/\n/g, "<br>") + '</div>';
     if(nt.n) h += '<div class="note">' + esc(nt.n).replace(/\n/g, "<br>") + '</div>';
@@ -2495,6 +2496,15 @@ function noteReadLog(row){
 // Lightbox walks every mockup on the job (jobImgs); swipe or arrows. The main art on the
 // NOW card swipes through the same list without opening.
 var LBG = {list:[], i:0}, _swiped = 0;
+// Any thumbnail anywhere opens the WHOLE job's mockups at the one tapped (4.1.2 — the WEEK
+// view thumbnails still opened a single image in 4.1.1).
+function openJobGallery(id, src){
+  var row = findRow(id); if(!row){ if(src) showLightbox(src); return; }
+  var imgs = jobImgs(row); if(!imgs.length){ if(src) showLightbox(src); return; }
+  var i = -1; if(src){ for(var k = 0; k < imgs.length; k++){ var a = document.createElement("a"); a.href = imgs[k]; if(a.href === src){ i = k; break; } } }
+  LBG.list = imgs; LBG.i = Math.max(0, i);
+  showLightbox(LBG.list[LBG.i], true);
+}
 function showGallery(id){
   if(Date.now() - _swiped < 400) return;
   var row = findRow(id); if(!row) return;
@@ -2508,6 +2518,15 @@ showLightbox = function(src, keep){
   _showLB(src);
   lbDots();
 };
+// fit the whole mockup on screen when it opens (wide screens were cropping tall art)
+(function(){ var im = document.getElementById("lbimg");
+  im.addEventListener("load", function(){
+    if(document.getElementById("lightbox").style.display !== "block" || lbW !== 96 || !im.naturalWidth) return;
+    var vw = window.innerWidth, vh = window.innerHeight - 110;
+    var w = 0.96 * vw; if(w * im.naturalHeight / im.naturalWidth > vh) w = vh * im.naturalWidth / im.naturalHeight;
+    lbW = Math.max(30, Math.round(w / vw * 100)); im.style.width = lbW + "%";
+  });
+})();
 function lbDots(){
   var lb = document.getElementById("lightbox"), n = LBG.list.length;
   lb.classList.toggle("multi", n > 1);
