@@ -6399,15 +6399,16 @@ refreshInkList();
 <script>
 /* v8.42 SAVED JOB LINKS — the whole job (serializeJob) lives on the mayhem-ops-state
    worker under its quote number; ?open=NNNN reopens it on any computer.
-   The page key arrives in the link hash (#k=…) once and is kept in localStorage.
-   It must NEVER appear in this public file. */
+   Key = the ops board's own "mo-key" (same origin — any computer that has opened the ops
+   board can save/open jobs), or a #k=… hash once. It must NEVER appear in this public file
+   and is never put into the links the Lab copies. */
 (function(){
   const EP='https://mayhem-ops-state.autumn-mountain-14c6.workers.dev/job';
   const LS='mayhem.jobs.key';
   const qs=new URLSearchParams(location.search);
   const hash=new URLSearchParams(location.hash.replace(/^#/,''));
   let key='';
-  try{key=hash.get('k')||localStorage.getItem(LS)||'';if(hash.get('k'))localStorage.setItem(LS,hash.get('k'));}catch(e){key=hash.get('k')||'';}
+  try{key=hash.get('k')||localStorage.getItem(LS)||localStorage.getItem('mo-key')||'';if(hash.get('k'))localStorage.setItem(LS,hash.get('k'));}catch(e){key=hash.get('k')||'';}
   if(hash.get('k'))history.replaceState(null,'',location.pathname+location.search);   /* key off the address bar */
   window.__jobLinkId=null;
 
@@ -6417,12 +6418,12 @@ refreshInkList();
     const c=($('jobCustomer').value||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
     return c||null;
   }
-  function linkFor(id){return location.origin+location.pathname+'?open='+encodeURIComponent(id)+'#k='+key;}
+  function linkFor(id){return location.origin+location.pathname+'?open='+encodeURIComponent(id);}
   function say(t,cls){const m=$('jlMsg');if(m){m.textContent=t;m.className='jl-msg '+(cls||'');}}
 
   async function saveJob(opts){
     opts=opts||{};
-    if(!key){if(!opts.quiet)say('⚠ No job key on this computer — open the Lab once from a saved-job link (it carries the key).','bad');return false;}
+    if(!key){if(!opts.quiet)say('⚠ This computer isn\'t unlocked — open your ops board bookmark once, then try again.','bad');return false;}
     const id=window.__jobLinkId||jobId();
     if(!id){if(!opts.quiet)say('⚠ Type the quote # (or customer) in step 1 first — it names the link.','bad');return false;}
     if(!SETS.some(st=>st.items.length)){if(!opts.quiet)say('⚠ Nothing to save yet — add shirts first.','bad');return false;}
@@ -6466,7 +6467,7 @@ refreshInkList();
     (async()=>{
       say('opening saved job '+openId+'…');
       try{
-        if(!key)throw new Error('no job key on this computer');
+        if(!key)throw new Error('this computer isn\'t unlocked — open your ops board bookmark once, then reload');
         const r=await fetch(EP+'?id='+encodeURIComponent(openId),{headers:{'X-Ops-Key':key}});
         if(r.status===404)throw new Error('no saved job called '+openId);
         if(!r.ok)throw new Error('HTTP '+r.status);
