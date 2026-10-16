@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.40 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.42 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -6395,6 +6395,100 @@ syncJob();
 setMode('simple');
 refreshInkList();
 
+</script>
+<script>
+/* v8.42 SAVED JOB LINKS — the whole job (serializeJob) lives on the mayhem-ops-state
+   worker under its quote number; ?open=NNNN reopens it on any computer.
+   The page key arrives in the link hash (#k=…) once and is kept in localStorage.
+   It must NEVER appear in this public file. */
+(function(){
+  const EP='https://mayhem-ops-state.autumn-mountain-14c6.workers.dev/job';
+  const LS='mayhem.jobs.key';
+  const qs=new URLSearchParams(location.search);
+  const hash=new URLSearchParams(location.hash.replace(/^#/,''));
+  let key='';
+  try{key=hash.get('k')||localStorage.getItem(LS)||'';if(hash.get('k'))localStorage.setItem(LS,hash.get('k'));}catch(e){key=hash.get('k')||'';}
+  if(hash.get('k'))history.replaceState(null,'',location.pathname+location.search);   /* key off the address bar */
+  window.__jobLinkId=null;
+
+  function jobId(){
+    const q=($('jobQuote').value||'').replace(/\D/g,'');
+    if(q)return q;
+    const c=($('jobCustomer').value||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    return c||null;
+  }
+  function linkFor(id){return location.origin+location.pathname+'?open='+encodeURIComponent(id)+'#k='+key;}
+  function say(t,cls){const m=$('jlMsg');if(m){m.textContent=t;m.className='jl-msg '+(cls||'');}}
+
+  async function saveJob(opts){
+    opts=opts||{};
+    if(!key){if(!opts.quiet)say('⚠ No job key on this computer — open the Lab once from a saved-job link (it carries the key).','bad');return false;}
+    const id=window.__jobLinkId||jobId();
+    if(!id){if(!opts.quiet)say('⚠ Type the quote # (or customer) in step 1 first — it names the link.','bad');return false;}
+    if(!SETS.some(st=>st.items.length)){if(!opts.quiet)say('⚠ Nothing to save yet — add shirts first.','bad');return false;}
+    const btn=$('jlSave');if(btn&&!opts.quiet){btn.disabled=true;}
+    if(!opts.quiet)say('saving…');
+    try{
+      const job=serializeJob();
+      const r=await fetch(EP+'?id='+encodeURIComponent(id),{method:'POST',
+        headers:{'Content-Type':'application/json','X-Ops-Key':key},body:JSON.stringify(job)});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      window.__jobLinkId=id;
+      const url=linkFor(id);
+      if(!opts.quiet){try{await navigator.clipboard.writeText(url);}catch(e){}}
+      say('✓ saved '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+' — link '+(opts.quiet?'updated':'copied')+': ?open='+id,'ok');
+      return url;
+    }catch(e){say('⚠ couldn\'t save ('+(e.message||e)+') — your work is still here; try again.','bad');return false;}
+    finally{if(btn)btn.disabled=false;}
+  }
+  window.saveJobLink=saveJob;
+
+  /* UI: one row under the handoff button */
+  const row=$('pvRow');
+  if(row){
+    const wrap=document.createElement('div');wrap.className='btnrow';wrap.id='jlRow';wrap.style.marginTop='8px';wrap.style.alignItems='center';
+    wrap.innerHTML='<button class="btn ghost sm" id="jlSave" title="Saves this whole job online under its quote # and copies a link that reopens it on any computer.">☁ SAVE JOB LINK</button><span class="jl-msg" id="jlMsg"></span>';
+    row.after(wrap);
+    $('jlSave').onclick=()=>saveJob();
+    const st=document.createElement('style');
+    st.textContent='.jl-msg{font:500 11px "JetBrains Mono",monospace;color:#98A0A6;margin-left:8px;word-break:break-all}.jl-msg.ok{color:#7BAFD4}.jl-msg.bad{color:#E8C447}';
+    document.head.appendChild(st);
+  }
+  /* every Printavo handoff also refreshes the saved job (quietly) */
+  const pv=$('dlPrintavo');
+  if(pv)pv.addEventListener('click',()=>{if(key&&SETS.some(st=>st.items.length))saveJob({quiet:true});});
+
+  /* ?open=NNNN — load the saved job instead of the local autosave */
+  const openId=qs.get('open');
+  if(openId){
+    const bar=$('resumeBar');if(bar){window.__resumeOffer=false;bar.hidden=true;}
+    __bootRestored=false;
+    (async()=>{
+      say('opening saved job '+openId+'…');
+      try{
+        if(!key)throw new Error('no job key on this computer');
+        const r=await fetch(EP+'?id='+encodeURIComponent(openId),{headers:{'X-Ops-Key':key}});
+        if(r.status===404)throw new Error('no saved job called '+openId);
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        const j=await r.json();
+        await restoreJob(j);
+        window.__jobLinkId=openId;
+        __bootRestored=true;autosaveNow();
+        const ago=j.when?new Date(j.when).toLocaleString([], {month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'}):'';
+        say('✓ opened saved job '+openId+(ago?' (saved '+ago+')':'')+' — ☁ SAVE JOB LINK keeps it current.','ok');
+      }catch(e){
+        __bootRestored=true;
+        say('⚠ couldn\'t open '+openId+': '+(e.message||e),'bad');
+        alertBanner('Couldn\'t open saved job '+openId+' — '+(e.message||e));
+      }
+    })();
+  }
+  function alertBanner(t){
+    const d=document.createElement('div');
+    d.style.cssText='position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:90;background:#1E2124;border:1px solid #E8C447;color:#E8EAEC;padding:10px 16px;border-radius:8px;font:500 13px Inter,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.5)';
+    d.textContent='⚠ '+t;d.onclick=()=>d.remove();document.body.appendChild(d);setTimeout(()=>d.remove(),9000);
+  }
+})();
 </script>
 <script>
 /* v8.19: 💡 suggestion box → mayhem-ops-state worker (lands in Kolton's morning ops email).
