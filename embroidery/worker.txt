@@ -55,7 +55,7 @@ function classifyGroup(g, statusName) {
   const imps = (g.imprints && g.imprints.nodes) || [];
   const lines = ((g.lineItems && g.lineItems.nodes) || []);
   const tw = imps.map(i => (i.typeOfWork && i.typeOfWork.name || '').toLowerCase());
-  const txt = (imps.map(i => i.details || '').join(' ') + ' ' + lines.map(l => l.description || '').join(' ')).toLowerCase();
+  const txt = clean(imps.map(i => i.details || '').join(' ') + ' ' + lines.map(l => l.description || '').join(' ')).toLowerCase();
   const st = (statusName || '').toLowerCase();
   const typedEmb = tw.some(t => t.includes('embroid'));
   const typedHeat = tw.some(t => t.includes('heat'));
@@ -65,6 +65,7 @@ function classifyGroup(g, statusName) {
   const dtfWord = /\bdtf\b|dtfilm|direct[ -]to[ -]film|transfer/.test(txt);
   const patchWord = /patch|woven|leatherette|leather|silicone|pvc|chenille/.test(txt);
   if (/golf ball|pro v1/.test(txt) || /straight mayhem/.test(st)) return 'other';
+  if (/uv print|pickleball|paddle|tumbler|magnet/.test(txt) && !/embroid|patch|dtf/.test(txt)) return 'other';
   if (typedEmb || sewOn || embWord) return 'emb';
   if (dtfWord) return 'dtf';
   if (patchWord && (typedHeat || /heat press/.test(st) || !typedSP)) return 'patch';
@@ -225,7 +226,10 @@ export default {
         const [jobs, board, redo, threads, meta] = await Promise.all([
           getJSON(env, 'jobs', []), getJSON(env, 'board', { cards: {}, order: {}, manual: {} }),
           getJSON(env, 'redo', {}), getJSON(env, 'threads', {}), getJSON(env, 'meta', {})]);
-        return J({ jobs, board, redo, threads, ...meta });
+        // a hand-added card for the same invoice + tab replaces the auto-pulled one
+        const man = Object.values(board.manual || {});
+        const shown = jobs.filter(j => !man.some(m => m.invoiceId && m.invoiceId === j.invoiceId && m.tab === j.tab));
+        return J({ jobs: shown, board, redo, threads, ...meta });
       }
       if (req.method !== 'POST') return J({ error: 'not found' }, 404);
 
