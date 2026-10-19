@@ -1,5 +1,5 @@
 // Mayhem Ink — Embroidery Board worker (mayhem-emb)
-// Bindings: KV namespace EMB. Secrets: PRINTAVO_EMAIL, PRINTAVO_TOKEN. (EMB_KEY optional.)
+// Bindings: KV namespace EMB (photos), D1 database DB (board state). Secrets: PRINTAVO_EMAIL, PRINTAVO_TOKEN. (EMB_KEY optional.)
 // Cron: */15 13-23 * * 1-5  (≈7am–6pm Mountain, weekdays)
 //
 // GET  /all                 -> {jobs, board, redo, threads, pulledAt, pullError}
@@ -25,8 +25,45 @@ function cors() {
   return { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type,x-emb-key' };
 }
 
-async function getJSON(env, k, d) { const v = await env.EMB.get(k, 'json'); return v == null ? d : v; }
-async function putJSON(env, k, v) { await env.EMB.put(k, JSON.stringify(v)); }
+// Board state lives in D1 (binding DB), one row per card / hand-added job / redo record /
+// thread / tab order. D1 is strongly consistent and rows are independent, so quick
+// back-to-back taps can't overwrite each other (KV did exactly that). Photos stay in KV.
+let dbReady = false;
+async function db(env) {
+  if (!env.DB) throw new Error('D1 database not bound (binding name DB)');
+  if (!dbReady) {
+    await env.DB.prepare('CREATE TABLE IF NOT EXISTS store (k TEXT PRIMARY KEY, v TEXT NOT NULL)').run();
+    await migrate(env);
+    dbReady = true;
+  }
+  return env.DB;
+}
+async function getRaw(env, k) { const r = await (await db(env)).prepare('SELECT v FROM store WHERE k = ?').bind(k).first(); return r ? r.v : null; }
+async function putRaw(env, k, v) { await (await db(env)).prepare('INSERT INTO store (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v').bind(k, v).run(); }
+async function delRaw(env, k) { await (await db(env)).prepare('DELETE FROM store WHERE k = ?').bind(k).run(); }
+async function allRows(env) { const r = await (await db(env)).prepare('SELECT k, v FROM store').all(); return r.results || []; }
+// one-time copy of the old KV documents into rows
+async function migrate(env) {
+  const D = env.DB;
+  const done = await D.prepare("SELECT v FROM store WHERE k = 'migrated'").first();
+  if (done) return;
+  const put = (k, v) => D.prepare('INSERT INTO store (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v').bind(k, JSON.stringify(v));
+  const stmts = [];
+  const b = await env.EMB.get('board', 'json');
+  if (b) {
+    for (const [k, v] of Object.entries(b.cards || {})) stmts.push(put('card:' + k, v));
+    for (const [k, v] of Object.entries(b.manual || {})) stmts.push(put('man:' + k, v));
+    for (const [k, v] of Object.entries(b.order || {})) stmts.push(put('order:' + k, v));
+  }
+  for (const [k, v] of Object.entries((await env.EMB.get('redo', 'json')) || {})) stmts.push(put('redo:' + k, v));
+  for (const [k, v] of Object.entries((await env.EMB.get('threads', 'json')) || {})) stmts.push(put('thread:' + k, v));
+  const jobs = await env.EMB.get('jobs'); if (jobs) stmts.push(D.prepare("INSERT OR REPLACE INTO store (k, v) VALUES ('jobs', ?)").bind(jobs));
+  const meta = await env.EMB.get('meta'); if (meta) stmts.push(D.prepare("INSERT OR REPLACE INTO store (k, v) VALUES ('meta', ?)").bind(meta));
+  stmts.push(D.prepare("INSERT OR REPLACE INTO store (k, v) VALUES ('migrated', ?)").bind(new Date().toISOString()));
+  for (let i = 0; i < stmts.length; i += 50) await D.batch(stmts.slice(i, i + 50));
+}
+async function getJSON(env, k, dflt) { const v = await getRaw(env, k); return v == null ? dflt : JSON.parse(v); }
+async function putJSON(env, k, v) { await putRaw(env, k, JSON.stringify(v)); }
 
 async function pv(env, query, variables) {
   const r = await fetch(PV, {
@@ -151,9 +188,9 @@ async function pull(env) {
     }
     cursor = inv.pageInfo.hasNextPage ? inv.pageInfo.endCursor : null;
   } while (cursor && ++pages < 20);
-  const prev = await env.EMB.get('jobs');
+  const prev = await getRaw(env, 'jobs');
   const next = JSON.stringify(cards);
-  if (prev !== next) await env.EMB.put('jobs', next);
+  if (prev !== next) await putRaw(env, 'jobs', next);
   await putJSON(env, 'meta', { pulledAt: new Date().toISOString(), pullError: '' });
   return cards.length;
 }
@@ -183,22 +220,35 @@ async function pushPrintavo(env, origin, card, entry) {
 }
 
 // ---------------------------------------------------------------- state helpers
-async function mutateBoard(env, fn) {
-  const b = await getJSON(env, 'board', { cards: {}, order: {}, manual: {} });
-  b.cards = b.cards || {}; b.order = b.order || {}; b.manual = b.manual || {};
-  const r = await fn(b);
-  await putJSON(env, 'board', b);
-  return r === undefined ? b : r;
-}
 function mergeInto(obj, patch) {
   for (const [k, v] of Object.entries(patch || {})) { if (v === null) delete obj[k]; else obj[k] = v; }
   obj._t = Date.now();
   return obj;
 }
+async function patchCard(env, key, fn) {
+  const cur = await getJSON(env, 'card:' + key, {});
+  const next = fn(cur) || cur;
+  await putJSON(env, 'card:' + key, next);
+  return next;
+}
 async function findCard(env, key) {
   const jobs = await getJSON(env, 'jobs', []);
-  const b = await getJSON(env, 'board', { manual: {} });
-  return jobs.find(c => c.key === key) || (b.manual || {})[key] || null;
+  return jobs.find(c => c.key === key) || (await getJSON(env, 'man:' + key, null));
+}
+async function snapshot(env) {
+  const board = { cards: {}, order: {}, manual: {} }; const redo = {}; const threads = {};
+  let jobs = [], meta = {};
+  for (const { k, v } of await allRows(env)) {
+    const i = k.indexOf(':'); const p = i < 0 ? k : k.slice(0, i); const id = i < 0 ? '' : k.slice(i + 1);
+    if (k === 'jobs') jobs = JSON.parse(v);
+    else if (k === 'meta') meta = JSON.parse(v);
+    else if (p === 'card') board.cards[id] = JSON.parse(v);
+    else if (p === 'man') board.manual[id] = JSON.parse(v);
+    else if (p === 'order') board.order[id] = JSON.parse(v);
+    else if (p === 'redo') redo[id] = JSON.parse(v);
+    else if (p === 'thread') threads[id] = JSON.parse(v);
+  }
+  return { jobs, board, redo, threads, meta };
 }
 
 // ---------------------------------------------------------------- router
@@ -223,9 +273,7 @@ export default {
 
     try {
       if (p === '/all' && req.method === 'GET') {
-        const [jobs, board, redo, threads, meta] = await Promise.all([
-          getJSON(env, 'jobs', []), getJSON(env, 'board', { cards: {}, order: {}, manual: {} }),
-          getJSON(env, 'redo', {}), getJSON(env, 'threads', {}), getJSON(env, 'meta', {})]);
+        const { jobs, board, redo, threads, meta } = await snapshot(env);
         // a hand-added card for the same invoice + tab replaces the auto-pulled one
         const man = Object.values(board.manual || {});
         const shown = jobs.filter(j => !man.some(m => m.invoiceId && m.invoiceId === j.invoiceId && m.tab === j.tab));
@@ -252,41 +300,36 @@ export default {
 
       if (p === '/set') {
         if (!body.key) return J({ error: 'key' }, 400);
-        const b = await mutateBoard(env, b => { b.cards[body.key] = mergeInto(b.cards[body.key] || {}, body.patch); });
-        return J({ ok: true, card: b.cards[body.key] });
+        const card = await patchCard(env, body.key, c => mergeInto(c, body.patch));
+        return J({ ok: true, card });
       }
       if (p === '/order') {
         if (!['emb', 'patch', 'dtf'].includes(body.tab) || !Array.isArray(body.keys)) return J({ error: 'order' }, 400);
-        await mutateBoard(env, b => { b.order[body.tab] = body.keys.slice(0, 500); });
+        await putJSON(env, 'order:' + body.tab, body.keys.slice(0, 500));
         return J({ ok: true });
       }
       if (p === '/manual') {
-        await mutateBoard(env, b => {
-          if (body.remove) delete b.manual[body.remove];
-          else if (body.card && body.card.key && body.card.key.startsWith('m:')) b.manual[body.card.key] = { ...body.card, src: 'manual' };
-        });
+        if (body.remove) await delRaw(env, 'man:' + body.remove);
+        else if (body.card && body.card.key && body.card.key.startsWith('m:')) await putJSON(env, 'man:' + body.card.key, { ...body.card, src: 'manual' });
         return J({ ok: true });
       }
       if (p === '/redo') {
-        const r = await getJSON(env, 'redo', {});
-        if (body.remove) delete r[body.remove];
-        else if (body.slug && body.record) r[body.slug] = { ...(r[body.slug] || {}), ...body.record, slug: body.slug, updatedAt: new Date().toISOString() };
-        await putJSON(env, 'redo', r);
-        return J({ ok: true, record: r[body.slug] || null });
+        if (body.remove) { await delRaw(env, 'redo:' + body.remove); return J({ ok: true, record: null }); }
+        if (!body.slug || !body.record) return J({ error: 'slug/record' }, 400);
+        const rec = { ...(await getJSON(env, 'redo:' + body.slug, {})), ...body.record, slug: body.slug, updatedAt: new Date().toISOString() };
+        await putJSON(env, 'redo:' + body.slug, rec);
+        return J({ ok: true, record: rec });
       }
       if (p === '/thread') {
-        const t = await getJSON(env, 'threads', {});
         const no = String(body.no || '').trim();
         if (!no) return J({ error: 'no' }, 400);
-        t[no] = { name: String(body.name || '').slice(0, 40), hex: /^#[0-9a-f]{6}$/i.test(body.hex) ? body.hex : '#999999' };
-        await putJSON(env, 'threads', t);
+        await putJSON(env, 'thread:' + no, { name: String(body.name || '').slice(0, 40), hex: /^#[0-9a-f]{6}$/i.test(body.hex) ? body.hex : '#999999' });
         return J({ ok: true });
       }
       if (p === '/done' || p === '/push') {
         const card = await findCard(env, body.key);
         if (!card) return J({ error: 'card not on the board' }, 404);
-        let entry = await mutateBoard(env, b => {
-          const e = b.cards[body.key] || (b.cards[body.key] = {});
+        let entry = await patchCard(env, body.key, e => {
           if (p === '/done') {
             e.done = { at: new Date().toISOString(), by: body.by || '' };
             e.photoIds = [...new Set([...(e.photoIds || []), ...(body.photoIds || [])])];
@@ -300,7 +343,7 @@ export default {
         if (card.invoiceId) {
           try { printavo = await pushPrintavo(env, url.origin, card, entry); }
           catch (e) { printavo = { ...(entry.printavo || {}), ok: false, error: String(e.message || e).slice(0, 300) }; }
-          await mutateBoard(env, b => { const e = b.cards[body.key] || (b.cards[body.key] = {}); e.printavo = printavo; e._t = Date.now(); });
+          await patchCard(env, body.key, e => { e.printavo = printavo; e._t = Date.now(); return e; });
         }
         return J({ ok: true, printavo });
       }
