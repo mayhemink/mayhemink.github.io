@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mayhem Mockup Lab v8.43.1 — Calibration / Mockups / Print Summary</title>
+<title>Mayhem Mockup Lab v8.43.2 — Calibration / Mockups / Print Summary</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
@@ -6316,7 +6316,7 @@ async function buildSupHandoff(){
   entries.push({name:'printavo-'+tag+'-manifest.json',
     data:new TextEncoder().encode(JSON.stringify(manifest,null,2))});
   return {blob:zipStore(entries),name:'printavo-handoff-'+tag+'-supplied.zip',
-    customer:customer,quote:quote,pages:n,manifest:manifest};
+    tag:tag,customer:customer,quote:quote,pages:n,manifest:manifest};
 }
 $('supDlPv').onclick=async function(){
   const b=$('supDlPv'),orig=b.textContent,note=$('supPvNote');
@@ -6330,7 +6330,9 @@ $('supDlPv').onclick=async function(){
     downloadBlobFile(r.blob,r.name);
     const pvWho=[r.customer&&('for '+r.customer),r.quote&&('quote '+r.quote)]
       .filter(Boolean).join(' · ');
-    const prompt='push the mockup lab handoff '+(pvWho||'')+' (supplied)';
+    let prompt='push the mockup lab handoff '+(pvWho||'')+' (supplied)';
+    /* v8.43.2: supplied handoffs park on the ops worker too (same 4 s race as the main 📎) */
+    try{if(window.__pvUpload){const up=await window.__pvUpload(r);if(up&&up.ok)prompt+=' · '+up.list;}}catch(e){}
     try{await navigator.clipboard.writeText(prompt);}catch(e){}
     note.hidden=false;
     note.innerHTML='<b>Saved '+r.name+'</b> — '+r.pages+' sheet page'+(r.pages===1?'':'s')

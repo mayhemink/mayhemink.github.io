@@ -12,7 +12,7 @@ Prints the in-Lab path for each file. GitHub Pages serves it ~1–2 min after th
 the script polls until each URL answers 200. Clean up when the job is done (customer art
 should not sit in the public repo longer than needed).
 """
-import base64, json, os, sys, time, urllib.request
+import base64, json, os, re, sys, time, urllib.request
 
 REPO = 'mayhemink/mayhemink.github.io'
 PAGES = 'https://mayhemink.github.io/mockup-lab/'
@@ -46,6 +46,14 @@ def main():
         entries = []
         for f in files:
             b = open(f, 'rb').read()
+            if f.lower().endswith('.svg'):
+                # files that passed through Claude's outputs folder get a C2PA <metadata> block +
+                # xmlns:c2pa injected — the Lab's production SVG reader then drops to mockup-only
+                # (6569: 3 inks detected as 2). Strip it.
+                t = b.decode('utf-8')
+                t = re.sub(r'\s+xmlns:c2pa="[^"]*"', '', t)
+                t = re.sub(r'<metadata\b.*?</metadata>', '', t, flags=re.S)
+                b = t.encode('utf-8')
             blob = api('/repos/%s/git/blobs' % REPO, {'content': base64.b64encode(b).decode(), 'encoding': 'base64'})
             entries.append({'path': 'mockup-lab/tmp-art/' + os.path.basename(f), 'mode': '100644', 'type': 'blob', 'sha': blob['sha']})
         print('COMMITTED', commit(entries, 'tmp-art: stage ' + ', '.join(os.path.basename(f) for f in files)))
