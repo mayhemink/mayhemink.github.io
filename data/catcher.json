@@ -1,28 +1,28 @@
 {
  "schema": 1,
- "week": "2026-10-26",
- "generatedAt": "2026-10-26T05:35:18+00:00",
+ "week": "2026-11-02",
+ "generatedAt": "2026-11-02T03:47:09+00:00",
  "source": "Weekly press board and verified Printavo order sizes",
  "days": [
   {
-   "day": "2026-10-26",
-   "label": "Monday · Oct 26"
+   "day": "2026-11-02",
+   "label": "Monday · Nov 2"
   },
   {
-   "day": "2026-10-27",
-   "label": "Tuesday · Oct 27"
+   "day": "2026-11-03",
+   "label": "Tuesday · Nov 3"
   },
   {
-   "day": "2026-10-28",
-   "label": "Wednesday · Oct 28"
+   "day": "2026-11-04",
+   "label": "Wednesday · Nov 4"
   },
   {
-   "day": "2026-10-29",
-   "label": "Thursday · Oct 29"
+   "day": "2026-11-05",
+   "label": "Thursday · Nov 5"
   },
   {
-   "day": "2026-10-30",
-   "label": "Friday · Oct 30"
+   "day": "2026-11-06",
+   "label": "Friday · Nov 6"
   },
   {
    "day": "extra",
@@ -30,6 +30,839 @@
   }
  ],
  "cards": [
+  {
+   "id": "6624-front",
+   "job": "6624",
+   "runId": "24954107:6624-front",
+   "batchKeys": [
+    "24954107:53492771"
+   ],
+   "customer": "Edge Dance — Elite Teams",
+   "location": "FRONT — EDGE Dance 2026-27 Elite Teams (NO names — kids sign the shirts), 5c — 76 Violet: 40 CC9018 youth + 36 CC1717 adult",
+   "locationLabel": "Front",
+   "day": "2026-11-02",
+   "expected": 76,
+   "scheduleSignature": "[\"6624\",\"FRONT — EDGE Dance 2026-27 Elite Teams (NO names — kids sign the shirts), 5c — 76 Violet: 40 CC9018 youth + 36 CC1717 adult\",76]",
+   "note": "Print the art WITHOUT the name (mockup shows 'Lennon Burton' — kids sign instead). Inks read off the mockup — confirm.",
+   "image": "/data/mocks/2026-11-02/6624_front.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53492771:110883285",
+     "style": "9018",
+     "color": "Violet",
+     "lineItemIds": [
+      "110883285"
+     ],
+     "sizes": [
+      {
+       "id": "53492771:110883285:XS",
+       "label": "XS",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_xs",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883285:S",
+       "label": "S",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_s",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883285:M",
+       "label": "M",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_m",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883285:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883285:XL",
+       "label": "XL",
+       "expected": 13,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_xl",
+         "expected": 13
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53492771:110883286",
+     "style": "1717",
+     "color": "Violet",
+     "lineItemIds": [
+      "110883286"
+     ],
+     "sizes": [
+      {
+       "id": "53492771:110883286:S",
+       "label": "S",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "110883286",
+         "size": "size_s",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883286:M",
+       "label": "M",
+       "expected": 13,
+       "sources": [
+        {
+         "lineItemId": "110883286",
+         "size": "size_m",
+         "expected": 13
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883286:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110883286",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883286:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110883286",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6624-back",
+   "job": "6624",
+   "runId": "24954107:6624-back",
+   "batchKeys": [
+    "24954107:53492771"
+   ],
+   "customer": "Edge Dance — Elite Teams",
+   "location": "FULL BACK — Elite Teams Competition Tour schedule, 6c — same 76 Violet",
+   "locationLabel": "Full Back",
+   "day": "2026-11-02",
+   "expected": 76,
+   "scheduleSignature": "[\"6624\",\"FULL BACK — Elite Teams Competition Tour schedule, 6c — same 76 Violet\",76]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6624_back.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53492771:110883285",
+     "style": "9018",
+     "color": "Violet",
+     "lineItemIds": [
+      "110883285"
+     ],
+     "sizes": [
+      {
+       "id": "53492771:110883285:XS",
+       "label": "XS",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_xs",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883285:S",
+       "label": "S",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_s",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883285:M",
+       "label": "M",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_m",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883285:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883285:XL",
+       "label": "XL",
+       "expected": 13,
+       "sources": [
+        {
+         "lineItemId": "110883285",
+         "size": "size_xl",
+         "expected": 13
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53492771:110883286",
+     "style": "1717",
+     "color": "Violet",
+     "lineItemIds": [
+      "110883286"
+     ],
+     "sizes": [
+      {
+       "id": "53492771:110883286:S",
+       "label": "S",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "110883286",
+         "size": "size_s",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883286:M",
+       "label": "M",
+       "expected": 13,
+       "sources": [
+        {
+         "lineItemId": "110883286",
+         "size": "size_m",
+         "expected": 13
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883286:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110883286",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53492771:110883286:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110883286",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6597-lc",
+   "job": "6597",
+   "runId": "24832622:6597-lc",
+   "batchKeys": [
+    "24832622:53276746"
+   ],
+   "customer": "Jack of All Trades",
+   "location": "LEFT CHEST — Jack of All Trades badge, 3c — 6 PC55 White",
+   "locationLabel": "Left Chest",
+   "day": "2026-11-02",
+   "expected": 6,
+   "note": "Mockup is a BLACK work shirt — order is 6 WHITE PC55 tees. Confirm inks for white before burning. Blanks ETA Tue 10/20 (shows ordered).",
+   "image": "/data/mocks/2026-10-26/6597_mock.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53276746:110288883",
+     "style": "PC55",
+     "color": "White",
+     "lineItemIds": [
+      "110288883"
+     ],
+     "sizes": [
+      {
+       "id": "53276746:110288883:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110288883",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "scheduleSignature": "[\"6597\",\"LEFT CHEST — Jack of All Trades badge, 3c — 6 PC55 White\",6]"
+  },
+  {
+   "id": "6597-back",
+   "job": "6597",
+   "runId": "24832622:6597-back",
+   "batchKeys": [
+    "24832622:53276746"
+   ],
+   "customer": "Jack of All Trades",
+   "location": "FULL BACK — Jack of All Trades badge + phone #, 3c — same 6",
+   "locationLabel": "Full Back",
+   "day": "2026-11-02",
+   "expected": 6,
+   "note": "",
+   "image": "/data/mocks/2026-10-26/6597_mock.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53276746:110288883",
+     "style": "PC55",
+     "color": "White",
+     "lineItemIds": [
+      "110288883"
+     ],
+     "sizes": [
+      {
+       "id": "53276746:110288883:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110288883",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "scheduleSignature": "[\"6597\",\"FULL BACK — Jack of All Trades badge + phone #, 3c — same 6\",6]"
+  },
+  {
+   "id": "6602-lc",
+   "job": "6602",
+   "runId": "24844080:6602-lc",
+   "batchKeys": [
+    "24844080:53296686"
+   ],
+   "customer": "Ruthless Apparel — Winter Nov",
+   "location": "FRONT LEFT CHEST — Live Ruthless COWBOY box, 4c — 42 DT6100: 21 White Smoke + 21 Black",
+   "locationLabel": "Front Left Chest",
+   "day": "2026-11-02",
+   "expected": 42,
+   "note": "NEW ART \"Cowboy\". Inks read off the mockups — White Smoke vs Black hoodies differ (one card, swap between colors). Blanks received.",
+   "image": "/data/mocks/2026-10-26/6602_blk.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53296686:110345859",
+     "style": "DT6100",
+     "color": "White Smoke",
+     "lineItemIds": [
+      "110345859"
+     ],
+     "sizes": [
+      {
+       "id": "53296686:110345859:S",
+       "label": "S",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110345859",
+         "size": "size_s",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53296686:110345859:M",
+       "label": "M",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345859",
+         "size": "size_m",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296686:110345859:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345859",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296686:110345859:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345859",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53296686:110345860",
+     "style": "DT6100",
+     "color": "White Smoke",
+     "lineItemIds": [
+      "110345860"
+     ],
+     "sizes": [
+      {
+       "id": "53296686:110345860:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110345860",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53296686:110346014",
+     "style": "DT6100",
+     "color": "Black",
+     "lineItemIds": [
+      "110346014"
+     ],
+     "sizes": [
+      {
+       "id": "53296686:110346014:S",
+       "label": "S",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110346014",
+         "size": "size_s",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53296686:110346014:M",
+       "label": "M",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110346014",
+         "size": "size_m",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296686:110346014:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110346014",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296686:110346014:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110346014",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53296686:110346015",
+     "style": "DT6100",
+     "color": "Black",
+     "lineItemIds": [
+      "110346015"
+     ],
+     "sizes": [
+      {
+       "id": "53296686:110346015:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110346015",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "scheduleSignature": "[\"6602\",\"FRONT LEFT CHEST — Live Ruthless COWBOY box, 4c — 42 DT6100: 21 White Smoke + 21 Black\",42]"
+  },
+  {
+   "id": "6602-back",
+   "job": "6602",
+   "runId": "24844080:6602-back",
+   "batchKeys": [
+    "24844080:53296686"
+   ],
+   "customer": "Ruthless Apparel — Winter Nov",
+   "location": "FULL BACK — Ruthless Co. COWBOY roper, 4c — same 42 (21 White Smoke + 21 Black)",
+   "locationLabel": "Full Back",
+   "day": "2026-11-02",
+   "expected": 42,
+   "note": "",
+   "image": "/data/mocks/2026-10-26/6602_ws.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53296686:110345859",
+     "style": "DT6100",
+     "color": "White Smoke",
+     "lineItemIds": [
+      "110345859"
+     ],
+     "sizes": [
+      {
+       "id": "53296686:110345859:S",
+       "label": "S",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110345859",
+         "size": "size_s",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53296686:110345859:M",
+       "label": "M",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345859",
+         "size": "size_m",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296686:110345859:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345859",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296686:110345859:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345859",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53296686:110345860",
+     "style": "DT6100",
+     "color": "White Smoke",
+     "lineItemIds": [
+      "110345860"
+     ],
+     "sizes": [
+      {
+       "id": "53296686:110345860:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110345860",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53296686:110346014",
+     "style": "DT6100",
+     "color": "Black",
+     "lineItemIds": [
+      "110346014"
+     ],
+     "sizes": [
+      {
+       "id": "53296686:110346014:S",
+       "label": "S",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110346014",
+         "size": "size_s",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53296686:110346014:M",
+       "label": "M",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110346014",
+         "size": "size_m",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296686:110346014:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110346014",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296686:110346014:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110346014",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53296686:110346015",
+     "style": "DT6100",
+     "color": "Black",
+     "lineItemIds": [
+      "110346015"
+     ],
+     "sizes": [
+      {
+       "id": "53296686:110346015:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110346015",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "scheduleSignature": "[\"6602\",\"FULL BACK — Ruthless Co. COWBOY roper, 4c — same 42 (21 White Smoke + 21 Black)\",42]"
+  },
+  {
+   "id": "6602-crew",
+   "job": "6602",
+   "runId": "24844080:6602-crew",
+   "batchKeys": [
+    "24844080:53296687"
+   ],
+   "customer": "Ruthless Apparel — Winter Nov",
+   "location": "FRONT — Ruthless Co. tooled-leather frame, BLACK — 20 Jerzees 562M Golden Pecan crews",
+   "locationLabel": "Front",
+   "day": "2026-11-02",
+   "expected": 20,
+   "note": "Printavo says 2c — production note says black ink on pecan; art reads 1c. Confirm.",
+   "image": "/data/mocks/2026-10-26/6602_crew.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53296687:110345861",
+     "style": "562M",
+     "color": "Golden Pecan",
+     "lineItemIds": [
+      "110345861"
+     ],
+     "sizes": [
+      {
+       "id": "53296687:110345861:S",
+       "label": "S",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110345861",
+         "size": "size_s",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53296687:110345861:M",
+       "label": "M",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345861",
+         "size": "size_m",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296687:110345861:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345861",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53296687:110345861:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110345861",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53296687:110346016",
+     "style": "562M",
+     "color": "Golden Pecan",
+     "lineItemIds": [
+      "110346016"
+     ],
+     "sizes": [
+      {
+       "id": "53296687:110346016:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110346016",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "scheduleSignature": "[\"6602\",\"FRONT — Ruthless Co. tooled-leather frame, BLACK — 20 Jerzees 562M Golden Pecan crews\",20]"
+  },
   {
    "id": "6567-front",
    "job": "6567",
@@ -40,9 +873,9 @@
    "customer": "Back Porch (Cameron Payne)",
    "location": "FULL FRONT 10.5\" — BACK PORCH / St. George, Utah — 67 M&O 7800 Black hoodies",
    "locationLabel": "Full Front 10.5\"",
-   "day": "2026-10-26",
+   "day": "2026-11-02",
    "expected": 67,
-   "note": "APPROVED now. Blanks have no status in Printavo — check the 67 hoodies are here. Front says ST. GEORGE, back says SAINT GEORGE (as approved).",
+   "note": "Carried from last week (not run). Blanks have no status in Printavo — check the 67 hoodies are here. Front says ST. GEORGE, back says SAINT GEORGE (as approved).",
    "image": "/data/mocks/2026-10-19/6567_sheet.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
@@ -163,7 +996,7 @@
    "customer": "Back Porch (Cameron Payne)",
    "location": "FULL BACK 11\" — winged guitar, 4 screens — same 67",
    "locationLabel": "Full Back 11\"",
-   "day": "2026-10-26",
+   "day": "2026-11-02",
    "expected": 67,
    "note": "",
    "image": "/data/mocks/2026-10-19/6567_sheet.jpg",
@@ -276,6 +1109,6542 @@
    ],
    "scheduleSignature": "[\"6567\",\"FULL BACK 11\\\" — winged guitar, 4 screens — same 67\",67]"
   },
+  {
+   "id": "6613-back",
+   "job": "6613",
+   "runId": "24934521:6613-back",
+   "batchKeys": [
+    "24934521:53457724"
+   ],
+   "customer": "Upper Mesa Recovery",
+   "location": "FULL BACK — Upper Mesa Recovery mesa, 1815 / 3115 / black — 320 DM130: 160 Turquoise Frost + 160 Storm Cloud",
+   "locationLabel": "Full Back",
+   "day": "2026-11-03",
+   "expected": 320,
+   "scheduleSignature": "[\"6613\",\"FULL BACK — Upper Mesa Recovery mesa, 1815 / 3115 / black — 320 DM130: 160 Turquoise Frost + 160 Storm Cloud\",320]",
+   "note": "Repeat art (job 6186). Press log 7/3: 1815 → flash → 1815/3115 color pull → flash → black. Blanks ETA ~Tue 10/27.",
+   "image": "/data/mocks/2026-11-02/6613_mock.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53457724:110788667",
+     "style": "DM130",
+     "color": "Turquoise Frost",
+     "lineItemIds": [
+      "110788667"
+     ],
+     "sizes": [
+      {
+       "id": "53457724:110788667:S",
+       "label": "S",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "110788667",
+         "size": "size_s",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788667:M",
+       "label": "M",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788667",
+         "size": "size_m",
+         "expected": 40
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788667:L",
+       "label": "L",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788667",
+         "size": "size_l",
+         "expected": 40
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788667:XL",
+       "label": "XL",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788667",
+         "size": "size_xl",
+         "expected": 40
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53457724:110788668",
+     "style": "DM130",
+     "color": "Turquoise Frost",
+     "lineItemIds": [
+      "110788668"
+     ],
+     "sizes": [
+      {
+       "id": "53457724:110788668:2XL",
+       "label": "2XL",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "110788668",
+         "size": "size_2xl",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788668:3XL",
+       "label": "3XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110788668",
+         "size": "size_3xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53457724:110788669",
+     "style": "DM130",
+     "color": "Storm Cloud",
+     "lineItemIds": [
+      "110788669"
+     ],
+     "sizes": [
+      {
+       "id": "53457724:110788669:S",
+       "label": "S",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "110788669",
+         "size": "size_s",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788669:M",
+       "label": "M",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788669",
+         "size": "size_m",
+         "expected": 40
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788669:L",
+       "label": "L",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788669",
+         "size": "size_l",
+         "expected": 40
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788669:XL",
+       "label": "XL",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788669",
+         "size": "size_xl",
+         "expected": 40
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53457724:110788670",
+     "style": "DM130",
+     "color": "Storm Cloud",
+     "lineItemIds": [
+      "110788670"
+     ],
+     "sizes": [
+      {
+       "id": "53457724:110788670:2XL",
+       "label": "2XL",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "110788670",
+         "size": "size_2xl",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788670:3XL",
+       "label": "3XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110788670",
+         "size": "size_3xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6613-lc",
+   "job": "6613",
+   "runId": "24934521:6613-lc",
+   "batchKeys": [
+    "24934521:53457724"
+   ],
+   "customer": "Upper Mesa Recovery",
+   "location": "FRONT LEFT CHEST — UMR, 1c BLACK — same 320 DM130 (Turquoise Frost + Storm Cloud)",
+   "locationLabel": "Front Left Chest",
+   "day": "2026-11-03",
+   "expected": 320,
+   "scheduleSignature": "[\"6613\",\"FRONT LEFT CHEST — UMR, 1c BLACK — same 320 DM130 (Turquoise Frost + Storm Cloud)\",320]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6613_mock.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53457724:110788667",
+     "style": "DM130",
+     "color": "Turquoise Frost",
+     "lineItemIds": [
+      "110788667"
+     ],
+     "sizes": [
+      {
+       "id": "53457724:110788667:S",
+       "label": "S",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "110788667",
+         "size": "size_s",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788667:M",
+       "label": "M",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788667",
+         "size": "size_m",
+         "expected": 40
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788667:L",
+       "label": "L",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788667",
+         "size": "size_l",
+         "expected": 40
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788667:XL",
+       "label": "XL",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788667",
+         "size": "size_xl",
+         "expected": 40
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53457724:110788668",
+     "style": "DM130",
+     "color": "Turquoise Frost",
+     "lineItemIds": [
+      "110788668"
+     ],
+     "sizes": [
+      {
+       "id": "53457724:110788668:2XL",
+       "label": "2XL",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "110788668",
+         "size": "size_2xl",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788668:3XL",
+       "label": "3XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110788668",
+         "size": "size_3xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53457724:110788669",
+     "style": "DM130",
+     "color": "Storm Cloud",
+     "lineItemIds": [
+      "110788669"
+     ],
+     "sizes": [
+      {
+       "id": "53457724:110788669:S",
+       "label": "S",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "110788669",
+         "size": "size_s",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788669:M",
+       "label": "M",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788669",
+         "size": "size_m",
+         "expected": 40
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788669:L",
+       "label": "L",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788669",
+         "size": "size_l",
+         "expected": 40
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788669:XL",
+       "label": "XL",
+       "expected": 40,
+       "sources": [
+        {
+         "lineItemId": "110788669",
+         "size": "size_xl",
+         "expected": 40
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53457724:110788670",
+     "style": "DM130",
+     "color": "Storm Cloud",
+     "lineItemIds": [
+      "110788670"
+     ],
+     "sizes": [
+      {
+       "id": "53457724:110788670:2XL",
+       "label": "2XL",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "110788670",
+         "size": "size_2xl",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53457724:110788670:3XL",
+       "label": "3XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "110788670",
+         "size": "size_3xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6616-sleeve",
+   "job": "6616",
+   "runId": "24935908:6616-sleeve",
+   "batchKeys": [
+    "24935908:53460215"
+   ],
+   "customer": "United Defense Tactical",
+   "location": "RIGHT SLEEVE — UDT circle badge, 4c — 8 black quarter-zips: 3 EXP15WPQ women + 5 EXP20PQ men",
+   "locationLabel": "Right Sleeve",
+   "day": "2026-11-03",
+   "expected": 8,
+   "scheduleSignature": "[\"6616\",\"RIGHT SLEEVE — UDT circle badge, 4c — 8 black quarter-zips: 3 EXP15WPQ women + 5 EXP20PQ men\",8]",
+   "note": "Sleeve badge text differs men's vs women's on the mockup — check before printing. Order lists 4c; art reads 3 + UB.",
+   "image": "/data/mocks/2026-11-02/6616_mock.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53460215:110795646",
+     "style": "EXP15WPQ",
+     "color": "Black",
+     "lineItemIds": [
+      "110795646"
+     ],
+     "sizes": [
+      {
+       "id": "53460215:110795646:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110795646",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53460215:110795646:S",
+       "label": "S",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110795646",
+         "size": "size_s",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53460215:110795646:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110795646",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53460215:110795647",
+     "style": "EXP20PQ",
+     "color": "Black",
+     "lineItemIds": [
+      "110795647"
+     ],
+     "sizes": [
+      {
+       "id": "53460215:110795647:L",
+       "label": "L",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110795647",
+         "size": "size_l",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53460215:110795647:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110795647",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6616-lc",
+   "job": "6616",
+   "runId": "24935908:6616-lc",
+   "batchKeys": [
+    "24935908:53460215"
+   ],
+   "customer": "United Defense Tactical",
+   "location": "LEFT CHEST — United Defense Tactical box, 2c — same 8 black quarter-zips",
+   "locationLabel": "Left Chest",
+   "day": "2026-11-03",
+   "expected": 8,
+   "scheduleSignature": "[\"6616\",\"LEFT CHEST — United Defense Tactical box, 2c — same 8 black quarter-zips\",8]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6616_art.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53460215:110795646",
+     "style": "EXP15WPQ",
+     "color": "Black",
+     "lineItemIds": [
+      "110795646"
+     ],
+     "sizes": [
+      {
+       "id": "53460215:110795646:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110795646",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53460215:110795646:S",
+       "label": "S",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110795646",
+         "size": "size_s",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53460215:110795646:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110795646",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53460215:110795647",
+     "style": "EXP20PQ",
+     "color": "Black",
+     "lineItemIds": [
+      "110795647"
+     ],
+     "sizes": [
+      {
+       "id": "53460215:110795647:L",
+       "label": "L",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110795647",
+         "size": "size_l",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53460215:110795647:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110795647",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6631-lc",
+   "job": "6631",
+   "runId": "24980744:6631-lc",
+   "batchKeys": [
+    "24980744:53539938"
+   ],
+   "customer": "Hoover Dam (Creation Cartel) — CUST-SUPPLIED",
+   "location": "LEFT CHEST 3.75\" — HOOVER DAM Est. 1935 oval, 2c WHITE — 576 LS14003 Black full-zip hoodies",
+   "locationLabel": "Left Chest 3.75\"",
+   "day": "2026-11-04",
+   "expected": 576,
+   "note": "CUST-SUPPLIED — count in. Hang tags w/ UPCs on all 1,224 (Christian can take some). Due Thu 11/5 1 PM. Art sheet also says \"left thigh\" — mockup is a zip hoodie, left chest.",
+   "image": "/data/mocks/2026-10-26/6631_stars.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53539938:111011353",
+     "style": "LS14003",
+     "color": "Black",
+     "lineItemIds": [
+      "111011353"
+     ],
+     "sizes": [
+      {
+       "id": "53539938:111011353:S",
+       "label": "S",
+       "expected": 72,
+       "sources": [
+        {
+         "lineItemId": "111011353",
+         "size": "size_s",
+         "expected": 72
+        }
+       ]
+      },
+      {
+       "id": "53539938:111011353:M",
+       "label": "M",
+       "expected": 144,
+       "sources": [
+        {
+         "lineItemId": "111011353",
+         "size": "size_m",
+         "expected": 144
+        }
+       ]
+      },
+      {
+       "id": "53539938:111011353:L",
+       "label": "L",
+       "expected": 144,
+       "sources": [
+        {
+         "lineItemId": "111011353",
+         "size": "size_l",
+         "expected": 144
+        }
+       ]
+      },
+      {
+       "id": "53539938:111011353:XL",
+       "label": "XL",
+       "expected": 144,
+       "sources": [
+        {
+         "lineItemId": "111011353",
+         "size": "size_xl",
+         "expected": 144
+        }
+       ]
+      },
+      {
+       "id": "53539938:111011353:2XL",
+       "label": "2XL",
+       "expected": 72,
+       "sources": [
+        {
+         "lineItemId": "111011353",
+         "size": "size_2xl",
+         "expected": 72
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "scheduleSignature": "[\"6631\",\"LEFT CHEST 3.75\\\" — HOOVER DAM Est. 1935 oval, 2c WHITE — 576 LS14003 Black full-zip hoodies\",576]"
+  },
+  {
+   "id": "6631-flag-sml",
+   "job": "6631",
+   "runId": "24980744:6631-flag-sml",
+   "batchKeys": [
+    "24980744:53539937"
+   ],
+   "customer": "Hoover Dam (Creation Cartel) — CUST-SUPPLIED",
+   "location": "FRONT CENTER CHEST 9.25\" — HOOVER DAM flag, 1c tonal green — 360 SS3000 Army Heather crews (S/M/L)",
+   "locationLabel": "Front Center Chest 9.25\"",
+   "day": "2026-11-04",
+   "expected": 360,
+   "note": "CUST-SUPPLIED — count in. Hang tags w/ UPCs on all 1,224 (Christian can take some). Due Thu 11/5 1 PM. Soft hand, NO underbase.",
+   "image": "/data/mocks/2026-10-26/6631_flag.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53539937:111011349",
+     "style": "SS3000",
+     "color": "Army Heather",
+     "lineItemIds": [
+      "111011349"
+     ],
+     "sizes": [
+      {
+       "id": "53539937:111011349:S",
+       "label": "S",
+       "expected": 72,
+       "sources": [
+        {
+         "lineItemId": "111011349",
+         "size": "size_s",
+         "expected": 72
+        }
+       ]
+      },
+      {
+       "id": "53539937:111011349:M",
+       "label": "M",
+       "expected": 144,
+       "sources": [
+        {
+         "lineItemId": "111011349",
+         "size": "size_m",
+         "expected": 144
+        }
+       ]
+      },
+      {
+       "id": "53539937:111011349:L",
+       "label": "L",
+       "expected": 144,
+       "sources": [
+        {
+         "lineItemId": "111011349",
+         "size": "size_l",
+         "expected": 144
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "scheduleSignature": "[\"6631\",\"FRONT CENTER CHEST 9.25\\\" — HOOVER DAM flag, 1c tonal green — 360 SS3000 Army Heather crews (S/M/L)\",360]"
+  },
+  {
+   "id": "6631-flag-xl",
+   "job": "6631",
+   "runId": "24980744:6631-flag-xl",
+   "batchKeys": [
+    "24980744:53539937"
+   ],
+   "customer": "Hoover Dam (Creation Cartel) — CUST-SUPPLIED",
+   "location": "FRONT CENTER CHEST 10.25\" — HOOVER DAM flag, 1c tonal green — 288 SS3000 Army Heather crews (XL/2X/3X)",
+   "locationLabel": "Front Center Chest 10.25\"",
+   "day": "2026-11-04",
+   "expected": 288,
+   "note": "",
+   "image": "/data/mocks/2026-10-26/6631_flag.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53539937:111011349",
+     "style": "SS3000",
+     "color": "Army Heather",
+     "lineItemIds": [
+      "111011349"
+     ],
+     "sizes": [
+      {
+       "id": "53539937:111011349:XL",
+       "label": "XL",
+       "expected": 144,
+       "sources": [
+        {
+         "lineItemId": "111011349",
+         "size": "size_xl",
+         "expected": 144
+        }
+       ]
+      },
+      {
+       "id": "53539937:111011349:2XL",
+       "label": "2XL",
+       "expected": 72,
+       "sources": [
+        {
+         "lineItemId": "111011349",
+         "size": "size_2xl",
+         "expected": 72
+        }
+       ]
+      },
+      {
+       "id": "53539937:111011349:3XL",
+       "label": "3XL",
+       "expected": 72,
+       "sources": [
+        {
+         "lineItemId": "111011349",
+         "size": "size_3xl",
+         "expected": 72
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "scheduleSignature": "[\"6631\",\"FRONT CENTER CHEST 10.25\\\" — HOOVER DAM flag, 1c tonal green — 288 SS3000 Army Heather crews (XL/2X/3X)\",288]"
+  },
+  {
+   "id": "6644-front",
+   "job": "6644",
+   "runId": "25032617:6644-front",
+   "batchKeys": [
+    "25032617:53634024"
+   ],
+   "customer": "Platform Hair Extensions — CUST-SUPPLIED",
+   "location": "FRONT OF CAPE — PLATFORM box logo, WHITE — 19 cust-supplied black hair capes",
+   "locationLabel": "Front Of Cape",
+   "day": "2026-11-05",
+   "expected": 19,
+   "scheduleSignature": "[\"6644\",\"FRONT OF CAPE — PLATFORM box logo, WHITE — 19 cust-supplied black hair capes\",19]",
+   "note": "RUSH. Count in first. Capes are likely nylon/poly — test ink + cure on one before the run.",
+   "image": "/data/mocks/2026-11-02/6644_cape.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53634024:111264366",
+     "style": "Customer supplied",
+     "color": "",
+     "lineItemIds": [
+      "111264366"
+     ],
+     "sizes": [
+      {
+       "id": "53634024:111264366:ALL",
+       "label": "ALL",
+       "expected": 19,
+       "sources": [
+        {
+         "lineItemId": "111264366",
+         "size": "size_other",
+         "expected": 19
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6649-front",
+   "job": "6649",
+   "runId": "25052283:6649-front",
+   "batchKeys": [
+    "25052283:53668878"
+   ],
+   "customer": "Titanz (Brad) — Duck Face — CUST-SUPPLIED",
+   "location": "FULL FRONT — Duck Creek Utah duck in beanie, 4c — 52 cust-supplied cream crews",
+   "locationLabel": "Full Front",
+   "day": "2026-11-05",
+   "expected": 52,
+   "scheduleSignature": "[\"6649\",\"FULL FRONT — Duck Creek Utah duck in beanie, 4c — 52 cust-supplied cream crews\",52]",
+   "note": "CUST-SUPPLIED — count in. Inks read off the mockup — confirm.",
+   "image": "/data/mocks/2026-11-02/6649_duck.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53668878:111364091",
+     "style": "Customer supplied",
+     "color": "",
+     "lineItemIds": [
+      "111364091"
+     ],
+     "sizes": [
+      {
+       "id": "53668878:111364091:S",
+       "label": "S",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111364091",
+         "size": "size_s",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53668878:111364091:M",
+       "label": "M",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111364091",
+         "size": "size_m",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53668878:111364091:L",
+       "label": "L",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "111364091",
+         "size": "size_l",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53668878:111364091:XL",
+       "label": "XL",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "111364091",
+         "size": "size_xl",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53668878:111364091:2XL",
+       "label": "2XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111364091",
+         "size": "size_2xl",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53668878:111364091:3XL",
+       "label": "3XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "111364091",
+         "size": "size_3xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6650-front",
+   "job": "6650",
+   "runId": "25052332:6650-front",
+   "batchKeys": [
+    "25052332:53668949"
+   ],
+   "customer": "Titanz (Brad) — Mtn Life — CUST-SUPPLIED",
+   "location": "FULL FRONT — Duck Creek Utah buck skull, 1c BLACK — 52 cust-supplied Pecan hoodies",
+   "locationLabel": "Full Front",
+   "day": "2026-11-05",
+   "expected": 52,
+   "scheduleSignature": "[\"6650\",\"FULL FRONT — Duck Creek Utah buck skull, 1c BLACK — 52 cust-supplied Pecan hoodies\",52]",
+   "note": "CUST-SUPPLIED — count in.",
+   "image": "/data/mocks/2026-11-02/6650_buck.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53668949:111364295",
+     "style": "hoodie",
+     "color": "Pecan",
+     "lineItemIds": [
+      "111364295"
+     ],
+     "sizes": [
+      {
+       "id": "53668949:111364295:S",
+       "label": "S",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111364295",
+         "size": "size_s",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53668949:111364295:M",
+       "label": "M",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111364295",
+         "size": "size_m",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53668949:111364295:L",
+       "label": "L",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "111364295",
+         "size": "size_l",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53668949:111364295:XL",
+       "label": "XL",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "111364295",
+         "size": "size_xl",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53668949:111364295:2XL",
+       "label": "2XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111364295",
+         "size": "size_2xl",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53668949:111364295:3XL",
+       "label": "3XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "111364295",
+         "size": "size_3xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6585-6c",
+   "job": "6585",
+   "runId": "24787741:6585-6c",
+   "batchKeys": [
+    "24787741:53196636"
+   ],
+   "customer": "Cachet B. — October order",
+   "location": "LOCATION 1 (see order) — 6c — 77 Ash Grey: 36 SF000 crews + 2 P170 hoodies + 39 P473 youth hoodies",
+   "locationLabel": "Location 1 (See Order)",
+   "day": "2026-11-05",
+   "expected": 77,
+   "scheduleSignature": "[\"6585\",\"LOCATION 1 (see order) — 6c — 77 Ash Grey: 36 SF000 crews + 2 P170 hoodies + 39 P473 youth hoodies\",77]",
+   "note": "Due Wed — moved to Thu (crew). NO MOCKUP IN PRINTAVO — art on the order. Imprint has no placement or inks; confirm with Kolton.",
+   "image": "",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53196636:110068716",
+     "style": "SF000",
+     "color": "Ash Grey",
+     "lineItemIds": [
+      "110068716"
+     ],
+     "sizes": [
+      {
+       "id": "53196636:110068716:S",
+       "label": "S",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_s",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53196636:110068716:M",
+       "label": "M",
+       "expected": 13,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_m",
+         "expected": 13
+        }
+       ]
+      },
+      {
+       "id": "53196636:110068716:L",
+       "label": "L",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_l",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53196636:110068716:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53196636:110068716:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53196636:110068717",
+     "style": "P170",
+     "color": "Ash Grey",
+     "lineItemIds": [
+      "110068717"
+     ],
+     "sizes": [
+      {
+       "id": "53196636:110068717:S",
+       "label": "S",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110068717",
+         "size": "size_s",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53196636:110828206",
+     "style": "P473",
+     "color": "Ash Grey",
+     "lineItemIds": [
+      "110828206"
+     ],
+     "sizes": [
+      {
+       "id": "53196636:110828206:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110828206",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53196636:110828206:L",
+       "label": "L",
+       "expected": 14,
+       "sources": [
+        {
+         "lineItemId": "110828206",
+         "size": "size_l",
+         "expected": 14
+        }
+       ]
+      },
+      {
+       "id": "53196636:110828206:XL",
+       "label": "XL",
+       "expected": 24,
+       "sources": [
+        {
+         "lineItemId": "110828206",
+         "size": "size_xl",
+         "expected": 24
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6585-1c",
+   "job": "6585",
+   "runId": "24787741:6585-1c",
+   "batchKeys": [
+    "24787741:53196636"
+   ],
+   "customer": "Cachet B. — October order",
+   "location": "LOCATION 2 (see order) — 1c — same 77 Ash Grey",
+   "locationLabel": "Location 2 (See Order)",
+   "day": "2026-11-05",
+   "expected": 77,
+   "scheduleSignature": "[\"6585\",\"LOCATION 2 (see order) — 1c — same 77 Ash Grey\",77]",
+   "note": "",
+   "image": "",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53196636:110068716",
+     "style": "SF000",
+     "color": "Ash Grey",
+     "lineItemIds": [
+      "110068716"
+     ],
+     "sizes": [
+      {
+       "id": "53196636:110068716:S",
+       "label": "S",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_s",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53196636:110068716:M",
+       "label": "M",
+       "expected": 13,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_m",
+         "expected": 13
+        }
+       ]
+      },
+      {
+       "id": "53196636:110068716:L",
+       "label": "L",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_l",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53196636:110068716:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53196636:110068716:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110068716",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53196636:110068717",
+     "style": "P170",
+     "color": "Ash Grey",
+     "lineItemIds": [
+      "110068717"
+     ],
+     "sizes": [
+      {
+       "id": "53196636:110068717:S",
+       "label": "S",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110068717",
+         "size": "size_s",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53196636:110828206",
+     "style": "P473",
+     "color": "Ash Grey",
+     "lineItemIds": [
+      "110828206"
+     ],
+     "sizes": [
+      {
+       "id": "53196636:110828206:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110828206",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53196636:110828206:L",
+       "label": "L",
+       "expected": 14,
+       "sources": [
+        {
+         "lineItemId": "110828206",
+         "size": "size_l",
+         "expected": 14
+        }
+       ]
+      },
+      {
+       "id": "53196636:110828206:XL",
+       "label": "XL",
+       "expected": 24,
+       "sources": [
+        {
+         "lineItemId": "110828206",
+         "size": "size_xl",
+         "expected": 24
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6610-lc",
+   "job": "6610",
+   "runId": "24905548:6610-lc",
+   "batchKeys": [
+    "24905548:53406730"
+   ],
+   "customer": "The Biscuit Bus — CUST-SUPPLIED",
+   "location": "LEFT CHEST — The Biscuit Fix oval, WHITE (flash white) — 12 cust-supplied black tees",
+   "locationLabel": "Left Chest",
+   "day": "2026-11-05",
+   "expected": 12,
+   "scheduleSignature": "[\"6610\",\"LEFT CHEST — The Biscuit Fix oval, WHITE (flash white) — 12 cust-supplied black tees\",12]",
+   "note": "Due Mon — moved to Thu (crew). CUST-SUPPLIED — count in before you print. Hats on this job are embroidery (not press).",
+   "image": "/data/mocks/2026-11-02/6610_lc.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53406730:110647531",
+     "style": "Customer supplied",
+     "color": "",
+     "lineItemIds": [
+      "110647531"
+     ],
+     "sizes": [
+      {
+       "id": "53406730:110647531:ALL",
+       "label": "ALL",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110647531",
+         "size": "size_other",
+         "expected": 12
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6610-back",
+   "job": "6610",
+   "runId": "24905548:6610-back",
+   "batchKeys": [
+    "24905548:53406730"
+   ],
+   "customer": "The Biscuit Bus — CUST-SUPPLIED",
+   "location": "FULL BACK — RISK IT FOR THE BISCUIT only, WHITE (flash white) — same 12",
+   "locationLabel": "Full Back",
+   "day": "2026-11-05",
+   "expected": 12,
+   "scheduleSignature": "[\"6610\",\"FULL BACK — RISK IT FOR THE BISCUIT only, WHITE (flash white) — same 12\",12]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6610_back.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53406730:110647531",
+     "style": "Customer supplied",
+     "color": "",
+     "lineItemIds": [
+      "110647531"
+     ],
+     "sizes": [
+      {
+       "id": "53406730:110647531:ALL",
+       "label": "ALL",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110647531",
+         "size": "size_other",
+         "expected": 12
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6634-loc1",
+   "job": "6634",
+   "runId": "25015981:6634-loc1",
+   "batchKeys": [
+    "25015981:53603831"
+   ],
+   "customer": "R Staheli Plumbing — safety wear",
+   "location": "LOCATION 1 (TBD) — 1c — 44: 18 PC55 Safety Green + 4 Safety Orange tees · 18 Kishigo 1195 Yellow + 4 Orange vests",
+   "locationLabel": "Location 1 (Tbd)",
+   "day": "2026-11-05",
+   "expected": 44,
+   "scheduleSignature": "[\"6634\",\"LOCATION 1 (TBD) — 1c — 44: 18 PC55 Safety Green + 4 Safety Orange tees · 18 Kishigo 1195 Yellow + 4 Orange vests\",44]",
+   "note": "Due Mon — moved to Thu (crew). NO MOCKUP IN PRINTAVO — both imprints say TBD. Get art + placement from Kolton before burning. Vests are mesh.",
+   "image": "",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53603831:111184672",
+     "style": "PC55",
+     "color": "Safety Green",
+     "lineItemIds": [
+      "111184672"
+     ],
+     "sizes": [
+      {
+       "id": "53603831:111184672:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111184672",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53603831:111184672:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111184672",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53603831:111184673",
+     "style": "PC55",
+     "color": "Safety Orange",
+     "lineItemIds": [
+      "111184673"
+     ],
+     "sizes": [
+      {
+       "id": "53603831:111184673:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111184673",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53603831:111184673:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111184673",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53603831:111184674",
+     "style": "1195-1196",
+     "color": "Yellow",
+     "lineItemIds": [
+      "111184674"
+     ],
+     "sizes": [
+      {
+       "id": "53603831:111184674:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111184674",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53603831:111184674:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111184674",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53603831:111184675",
+     "style": "1195-1196",
+     "color": "Orange",
+     "lineItemIds": [
+      "111184675"
+     ],
+     "sizes": [
+      {
+       "id": "53603831:111184675:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111184675",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53603831:111184675:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111184675",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6634-loc2",
+   "job": "6634",
+   "runId": "25015981:6634-loc2",
+   "batchKeys": [
+    "25015981:53603831"
+   ],
+   "customer": "R Staheli Plumbing — safety wear",
+   "location": "LOCATION 2 (TBD) — 1c — same 44: 18 PC55 Safety Green + 4 Safety Orange tees · 18 Kishigo 1195 Yellow + 4 Orange vests",
+   "locationLabel": "Location 2 (Tbd)",
+   "day": "2026-11-05",
+   "expected": 44,
+   "scheduleSignature": "[\"6634\",\"LOCATION 2 (TBD) — 1c — same 44: 18 PC55 Safety Green + 4 Safety Orange tees · 18 Kishigo 1195 Yellow + 4 Orange vests\",44]",
+   "note": "",
+   "image": "",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53603831:111184672",
+     "style": "PC55",
+     "color": "Safety Green",
+     "lineItemIds": [
+      "111184672"
+     ],
+     "sizes": [
+      {
+       "id": "53603831:111184672:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111184672",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53603831:111184672:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111184672",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53603831:111184673",
+     "style": "PC55",
+     "color": "Safety Orange",
+     "lineItemIds": [
+      "111184673"
+     ],
+     "sizes": [
+      {
+       "id": "53603831:111184673:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111184673",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53603831:111184673:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111184673",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53603831:111184674",
+     "style": "1195-1196",
+     "color": "Yellow",
+     "lineItemIds": [
+      "111184674"
+     ],
+     "sizes": [
+      {
+       "id": "53603831:111184674:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111184674",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53603831:111184674:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "111184674",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53603831:111184675",
+     "style": "1195-1196",
+     "color": "Orange",
+     "lineItemIds": [
+      "111184675"
+     ],
+     "sizes": [
+      {
+       "id": "53603831:111184675:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111184675",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53603831:111184675:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111184675",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6630-front",
+   "job": "6630",
+   "runId": "24977035:6630-front",
+   "batchKeys": [
+    "24977035:53533090"
+   ],
+   "customer": "Unique Resin Creations",
+   "location": "FRONT — Unique Resin Creations logo, 5 screens — 24 DM108 Black tees",
+   "locationLabel": "Front",
+   "day": "2026-11-05",
+   "expected": 24,
+   "scheduleSignature": "[\"6630\",\"FRONT — Unique Resin Creations logo, 5 screens — 24 DM108 Black tees\",24]",
+   "note": "Repeat of 6472 — press log 9/28 Front: top white · UB · 654 · 306 · shop grey. Typed Heat Press in Printavo — it's screen. Blanks ETA ~Fri 10/30.",
+   "image": "/data/mocks/2026-11-02/6630_mock.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53533090:110994265",
+     "style": "DM108",
+     "color": "Black",
+     "lineItemIds": [
+      "110994265"
+     ],
+     "sizes": [
+      {
+       "id": "53533090:110994265:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110994265",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53533090:110994490",
+     "style": "DM108",
+     "color": "Black",
+     "lineItemIds": [
+      "110994490"
+     ],
+     "sizes": [
+      {
+       "id": "53533090:110994490:S",
+       "label": "S",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110994490",
+         "size": "size_s",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53533090:110994490:M",
+       "label": "M",
+       "expected": 7,
+       "sources": [
+        {
+         "lineItemId": "110994490",
+         "size": "size_m",
+         "expected": 7
+        }
+       ]
+      },
+      {
+       "id": "53533090:110994490:L",
+       "label": "L",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110994490",
+         "size": "size_l",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53533090:110994490:XL",
+       "label": "XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110994490",
+         "size": "size_xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6630-back",
+   "job": "6630",
+   "runId": "24977035:6630-back",
+   "batchKeys": [
+    "24977035:53533090"
+   ],
+   "customer": "Unique Resin Creations",
+   "location": "BACK — Two Girls Grinding, 6c — same 24 DM108 Black tees",
+   "locationLabel": "Back",
+   "day": "2026-11-05",
+   "expected": 24,
+   "scheduleSignature": "[\"6630\",\"BACK — Two Girls Grinding, 6c — same 24 DM108 Black tees\",24]",
+   "note": "Press log 9/28 Back: UB → 032 → golden yellow → CG8 → top white → 219.",
+   "image": "/data/mocks/2026-11-02/6630_mock.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53533090:110994265",
+     "style": "DM108",
+     "color": "Black",
+     "lineItemIds": [
+      "110994265"
+     ],
+     "sizes": [
+      {
+       "id": "53533090:110994265:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110994265",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53533090:110994490",
+     "style": "DM108",
+     "color": "Black",
+     "lineItemIds": [
+      "110994490"
+     ],
+     "sizes": [
+      {
+       "id": "53533090:110994490:S",
+       "label": "S",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110994490",
+         "size": "size_s",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53533090:110994490:M",
+       "label": "M",
+       "expected": 7,
+       "sources": [
+        {
+         "lineItemId": "110994490",
+         "size": "size_m",
+         "expected": 7
+        }
+       ]
+      },
+      {
+       "id": "53533090:110994490:L",
+       "label": "L",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110994490",
+         "size": "size_l",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53533090:110994490:XL",
+       "label": "XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110994490",
+         "size": "size_xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6645-front",
+   "job": "6645",
+   "runId": "25047593:6645-front",
+   "batchKeys": [
+    "25047593:53660958"
+   ],
+   "customer": "R Staheli Plumbing — hoodies",
+   "location": "FRONT — 3c — 48 PC78H hoodies: 12 each Woodland Brown · Stonewashed Blue · Maroon · Olive",
+   "locationLabel": "Front",
+   "day": "2026-11-05",
+   "expected": 48,
+   "scheduleSignature": "[\"6645\",\"FRONT — 3c — 48 PC78H hoodies: 12 each Woodland Brown · Stonewashed Blue · Maroon · Olive\",48]",
+   "note": "Due Wed night — moved to Thu (crew). NO MOCKUP IN PRINTAVO — art on the order. Blanks have NO status / no ETA — check they were ordered.",
+   "image": "",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53660958:111342088",
+     "style": "PC78H",
+     "color": "Woodland Brown",
+     "lineItemIds": [
+      "111342088"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342088:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342088:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342088:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342089",
+     "style": "PC78H",
+     "color": "Woodland Brown",
+     "lineItemIds": [
+      "111342089"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342089:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342089",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342090",
+     "style": "PC78H",
+     "color": "Stonewashed Blue",
+     "lineItemIds": [
+      "111342090"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342090:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342090:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342090:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342091",
+     "style": "PC78H",
+     "color": "Stonewashed Blue",
+     "lineItemIds": [
+      "111342091"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342091:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342091",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342092",
+     "style": "PC78H",
+     "color": "Maroon",
+     "lineItemIds": [
+      "111342092"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342092:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342092:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342092:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342093",
+     "style": "PC78H",
+     "color": "Maroon",
+     "lineItemIds": [
+      "111342093"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342093:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342093",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342094",
+     "style": "PC78H",
+     "color": "Olive",
+     "lineItemIds": [
+      "111342094"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342094:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342094",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342094:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342094",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342094:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342094",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342095",
+     "style": "PC78H",
+     "color": "Olive",
+     "lineItemIds": [
+      "111342095"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342095:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342095",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6645-back",
+   "job": "6645",
+   "runId": "25047593:6645-back",
+   "batchKeys": [
+    "25047593:53660958"
+   ],
+   "customer": "R Staheli Plumbing — hoodies",
+   "location": "BACK — 3c — same 48 PC78H hoodies",
+   "locationLabel": "Back",
+   "day": "2026-11-05",
+   "expected": 48,
+   "scheduleSignature": "[\"6645\",\"BACK — 3c — same 48 PC78H hoodies\",48]",
+   "note": "",
+   "image": "",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53660958:111342088",
+     "style": "PC78H",
+     "color": "Woodland Brown",
+     "lineItemIds": [
+      "111342088"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342088:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342088:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342088:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342089",
+     "style": "PC78H",
+     "color": "Woodland Brown",
+     "lineItemIds": [
+      "111342089"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342089:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342089",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342090",
+     "style": "PC78H",
+     "color": "Stonewashed Blue",
+     "lineItemIds": [
+      "111342090"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342090:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342090:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342090:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342091",
+     "style": "PC78H",
+     "color": "Stonewashed Blue",
+     "lineItemIds": [
+      "111342091"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342091:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342091",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342092",
+     "style": "PC78H",
+     "color": "Maroon",
+     "lineItemIds": [
+      "111342092"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342092:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342092:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342092:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342093",
+     "style": "PC78H",
+     "color": "Maroon",
+     "lineItemIds": [
+      "111342093"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342093:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342093",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342094",
+     "style": "PC78H",
+     "color": "Olive",
+     "lineItemIds": [
+      "111342094"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342094:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342094",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342094:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342094",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342094:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342094",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342095",
+     "style": "PC78H",
+     "color": "Olive",
+     "lineItemIds": [
+      "111342095"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342095:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342095",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6611-lc",
+   "job": "6611",
+   "runId": "24920749:6611-lc",
+   "batchKeys": [
+    "24920749:53434114"
+   ],
+   "customer": "XD Roofing",
+   "location": "LEFT CHEST — XD Roofing logo, SOLID 1c — all 238: 90 hoodies · 62 DM108 tees · 18 DT109 LS · 68 BAW XT106 hooded LS",
+   "locationLabel": "Left Chest",
+   "day": "2026-11-06",
+   "expected": 238,
+   "scheduleSignature": "[\"6611\",\"LEFT CHEST — XD Roofing logo, SOLID 1c — all 238: 90 hoodies · 62 DM108 tees · 18 DT109 LS · 68 BAW XT106 hooded LS\",238]",
+   "note": "Ink per garment color: tan on dark camo, black on light (per mockups). Tees/LS/BAW ink not shown — confirm. Blanks have NO status / no ETA — check they're here.",
+   "image": "/data/mocks/2026-11-02/6611_sage.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53434114:110724002",
+     "style": "",
+     "color": "NEON YELLOW",
+     "lineItemIds": [
+      "110724002"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110724002:M",
+       "label": "M",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724002",
+         "size": "size_m",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53434114:110724002:L",
+       "label": "L",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724002",
+         "size": "size_l",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53434114:110724002:XL",
+       "label": "XL",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724002",
+         "size": "size_xl",
+         "expected": 12
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110724003",
+     "style": "",
+     "color": "SAFETY ORANGE",
+     "lineItemIds": [
+      "110724003"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110724003:M",
+       "label": "M",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724003",
+         "size": "size_m",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53434114:110724003:L",
+       "label": "L",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110724003",
+         "size": "size_l",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53434114:110724003:XL",
+       "label": "XL",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724003",
+         "size": "size_xl",
+         "expected": 12
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926975",
+     "style": "DM108",
+     "color": "Duck Brown Heather",
+     "lineItemIds": [
+      "110926975"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926975:M",
+       "label": "M",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926975",
+         "size": "size_m",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926975:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926975",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926975:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926975",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926975:YM",
+       "label": "YM",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926975",
+         "size": "size_ym",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926976",
+     "style": "DM108",
+     "color": "Duck Brown Heather",
+     "lineItemIds": [
+      "110926976"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926976:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110926976",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926977",
+     "style": "DM108",
+     "color": "Heathered Russet",
+     "lineItemIds": [
+      "110926977"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926977:M",
+       "label": "M",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926977",
+         "size": "size_m",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926977:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926977",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926977:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926977",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926977:YM",
+       "label": "YM",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926977",
+         "size": "size_ym",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926978",
+     "style": "DM108",
+     "color": "Heathered Russet",
+     "lineItemIds": [
+      "110926978"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926978:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110926978",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926979",
+     "style": "DM108",
+     "color": "Heathered Eucalyptus Blue",
+     "lineItemIds": [
+      "110926979"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926979:M",
+       "label": "M",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926979",
+         "size": "size_m",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926979:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926979",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926979:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926979",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926979:YM",
+       "label": "YM",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926979",
+         "size": "size_ym",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926980",
+     "style": "DM108",
+     "color": "Heathered Eucalyptus Blue",
+     "lineItemIds": [
+      "110926980"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926980:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110926980",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926981",
+     "style": "DM108",
+     "color": "Electric Purple Heather",
+     "lineItemIds": [
+      "110926981"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926981:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926981",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926981:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110926981",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219064",
+     "style": "DM108",
+     "color": "Electric Purple Heather",
+     "lineItemIds": [
+      "111219064"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219064:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111219064",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926982",
+     "style": "DT109",
+     "color": "Heathered Royal",
+     "lineItemIds": [
+      "110926982"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926982:XL",
+       "label": "XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926982",
+         "size": "size_xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219065",
+     "style": "DT109",
+     "color": "Heathered Royal",
+     "lineItemIds": [
+      "111219065"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219065:2XL",
+       "label": "2XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "111219065",
+         "size": "size_2xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926983",
+     "style": "DT109",
+     "color": "Heathered Teal",
+     "lineItemIds": [
+      "110926983"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926983:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926983",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926983:XL",
+       "label": "XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926983",
+         "size": "size_xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219066",
+     "style": "DT109",
+     "color": "Heathered Teal",
+     "lineItemIds": [
+      "111219066"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219066:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111219066",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:111219066:2XL",
+       "label": "2XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "111219066",
+         "size": "size_2xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926984",
+     "style": "IND4000",
+     "color": "Desert Duck Camo",
+     "lineItemIds": [
+      "110926984"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926984:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926984:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926984:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926985",
+     "style": "IND4000",
+     "color": "Darkwood Tree Camo",
+     "lineItemIds": [
+      "110926985"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926985:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926985:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926985:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926986",
+     "style": "IND4000",
+     "color": "Black Camo",
+     "lineItemIds": [
+      "110926986"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926986:M",
+       "label": "M",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_m",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926986:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926986:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926987",
+     "style": "IND4000",
+     "color": "Dusty Sage",
+     "lineItemIds": [
+      "110926987"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926987:M",
+       "label": "M",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_m",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926987:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926987:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155606",
+     "style": "IND4000",
+     "color": "Saddle",
+     "lineItemIds": [
+      "111155606"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155606:M",
+       "label": "M",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_m",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155606:L",
+       "label": "L",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_l",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155606:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219067",
+     "style": "IND4000",
+     "color": "Saddle",
+     "lineItemIds": [
+      "111219067"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219067:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111219067",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155607",
+     "style": "ST259",
+     "color": "Vintage Heather",
+     "lineItemIds": [
+      "111155607"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155607:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155607",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155608",
+     "style": "IND4000",
+     "color": "Plum",
+     "lineItemIds": [
+      "111155608"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155608:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155608",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155608:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155608",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219068",
+     "style": "IND4000",
+     "color": "Plum",
+     "lineItemIds": [
+      "111219068"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219068:2XL",
+       "label": "2XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111219068",
+         "size": "size_2xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6611-back-outline",
+   "job": "6611",
+   "runId": "24920749:6611-back-outline",
+   "batchKeys": [
+    "24920749:53434114"
+   ],
+   "customer": "XD Roofing",
+   "location": "FULL BACK — XD Roofing OUTLINE logo, 1c — 142 tees/LS/BAW (no back on the 6 tee 2XLs marked NO BACK)",
+   "locationLabel": "Full Back",
+   "day": "2026-11-06",
+   "expected": 142,
+   "scheduleSignature": "[\"6611\",\"FULL BACK — XD Roofing OUTLINE logo, 1c — 142 tees/LS/BAW (no back on the 6 tee 2XLs marked NO BACK)\",142]",
+   "note": "Tees + longsleeves + BAW get the OUTLINE back logo; hoodies get the SOLID one (separate card).",
+   "image": "/data/mocks/2026-11-02/6611_sage.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53434114:110724002",
+     "style": "",
+     "color": "NEON YELLOW",
+     "lineItemIds": [
+      "110724002"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110724002:M",
+       "label": "M",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724002",
+         "size": "size_m",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53434114:110724002:L",
+       "label": "L",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724002",
+         "size": "size_l",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53434114:110724002:XL",
+       "label": "XL",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724002",
+         "size": "size_xl",
+         "expected": 12
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110724003",
+     "style": "",
+     "color": "SAFETY ORANGE",
+     "lineItemIds": [
+      "110724003"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110724003:M",
+       "label": "M",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724003",
+         "size": "size_m",
+         "expected": 12
+        }
+       ]
+      },
+      {
+       "id": "53434114:110724003:L",
+       "label": "L",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110724003",
+         "size": "size_l",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53434114:110724003:XL",
+       "label": "XL",
+       "expected": 12,
+       "sources": [
+        {
+         "lineItemId": "110724003",
+         "size": "size_xl",
+         "expected": 12
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926975",
+     "style": "DM108",
+     "color": "Duck Brown Heather",
+     "lineItemIds": [
+      "110926975"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926975:M",
+       "label": "M",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926975",
+         "size": "size_m",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926975:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926975",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926975:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926975",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926975:YM",
+       "label": "YM",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926975",
+         "size": "size_ym",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926977",
+     "style": "DM108",
+     "color": "Heathered Russet",
+     "lineItemIds": [
+      "110926977"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926977:M",
+       "label": "M",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926977",
+         "size": "size_m",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926977:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926977",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926977:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926977",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926977:YM",
+       "label": "YM",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926977",
+         "size": "size_ym",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926979",
+     "style": "DM108",
+     "color": "Heathered Eucalyptus Blue",
+     "lineItemIds": [
+      "110926979"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926979:M",
+       "label": "M",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926979",
+         "size": "size_m",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926979:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926979",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926979:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926979",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926979:YM",
+       "label": "YM",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926979",
+         "size": "size_ym",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926981",
+     "style": "DM108",
+     "color": "Electric Purple Heather",
+     "lineItemIds": [
+      "110926981"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926981:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926981",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926981:XL",
+       "label": "XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110926981",
+         "size": "size_xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219064",
+     "style": "DM108",
+     "color": "Electric Purple Heather",
+     "lineItemIds": [
+      "111219064"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219064:2XL",
+       "label": "2XL",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "111219064",
+         "size": "size_2xl",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926982",
+     "style": "DT109",
+     "color": "Heathered Royal",
+     "lineItemIds": [
+      "110926982"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926982:XL",
+       "label": "XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926982",
+         "size": "size_xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219065",
+     "style": "DT109",
+     "color": "Heathered Royal",
+     "lineItemIds": [
+      "111219065"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219065:2XL",
+       "label": "2XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "111219065",
+         "size": "size_2xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926983",
+     "style": "DT109",
+     "color": "Heathered Teal",
+     "lineItemIds": [
+      "110926983"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926983:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926983",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926983:XL",
+       "label": "XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110926983",
+         "size": "size_xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219066",
+     "style": "DT109",
+     "color": "Heathered Teal",
+     "lineItemIds": [
+      "111219066"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219066:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111219066",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:111219066:2XL",
+       "label": "2XL",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "111219066",
+         "size": "size_2xl",
+         "expected": 4
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6633-pocket",
+   "job": "6633",
+   "runId": "24992080:6633-pocket",
+   "batchKeys": [
+    "24992080:53560988"
+   ],
+   "customer": "The Well PRC",
+   "location": "FRONT POCKET — WHY NOT logo, WHITE — 10 CC6030 Pepper pocket tees",
+   "locationLabel": "Front Pocket",
+   "day": "2026-11-06",
+   "expected": 10,
+   "scheduleSignature": "[\"6633\",\"FRONT POCKET — WHY NOT logo, WHITE — 10 CC6030 Pepper pocket tees\",10]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6633_pocket.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53560988:111067337",
+     "style": "6030",
+     "color": "Pepper",
+     "lineItemIds": [
+      "111067337"
+     ],
+     "sizes": [
+      {
+       "id": "53560988:111067337:S",
+       "label": "S",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111067337",
+         "size": "size_s",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53560988:111067337:M",
+       "label": "M",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111067337",
+         "size": "size_m",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6633-back",
+   "job": "6633",
+   "runId": "24992080:6633-back",
+   "batchKeys": [
+    "24992080:53560988"
+   ],
+   "customer": "The Well PRC",
+   "location": "FULL BACK — LOVED + VALUED, WHITE — same 10 Pepper pocket tees",
+   "locationLabel": "Full Back",
+   "day": "2026-11-06",
+   "expected": 10,
+   "scheduleSignature": "[\"6633\",\"FULL BACK — LOVED + VALUED, WHITE — same 10 Pepper pocket tees\",10]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6633_back.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53560988:111067337",
+     "style": "6030",
+     "color": "Pepper",
+     "lineItemIds": [
+      "111067337"
+     ],
+     "sizes": [
+      {
+       "id": "53560988:111067337:S",
+       "label": "S",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111067337",
+         "size": "size_s",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53560988:111067337:M",
+       "label": "M",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111067337",
+         "size": "size_m",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6611-sleeve",
+   "job": "6611",
+   "runId": "24920749:6611-sleeve",
+   "batchKeys": [
+    "24920749:53434114"
+   ],
+   "customer": "XD Roofing",
+   "location": "SLEEVE — XD Roofing vertical, 1c — 90 hoodies (89 IND4000 + 1 ST259 zip)",
+   "locationLabel": "Sleeve",
+   "day": "2026-11-06",
+   "expected": 90,
+   "scheduleSignature": "[\"6611\",\"SLEEVE — XD Roofing vertical, 1c — 90 hoodies (89 IND4000 + 1 ST259 zip)\",90]",
+   "note": "Sleeve shows on the hoodie mockups only — confirm tees don't get it.",
+   "image": "/data/mocks/2026-11-02/6611_bcamo.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53434114:110926984",
+     "style": "IND4000",
+     "color": "Desert Duck Camo",
+     "lineItemIds": [
+      "110926984"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926984:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926984:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926984:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926985",
+     "style": "IND4000",
+     "color": "Darkwood Tree Camo",
+     "lineItemIds": [
+      "110926985"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926985:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926985:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926985:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926986",
+     "style": "IND4000",
+     "color": "Black Camo",
+     "lineItemIds": [
+      "110926986"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926986:M",
+       "label": "M",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_m",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926986:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926986:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926987",
+     "style": "IND4000",
+     "color": "Dusty Sage",
+     "lineItemIds": [
+      "110926987"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926987:M",
+       "label": "M",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_m",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926987:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926987:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155606",
+     "style": "IND4000",
+     "color": "Saddle",
+     "lineItemIds": [
+      "111155606"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155606:M",
+       "label": "M",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_m",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155606:L",
+       "label": "L",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_l",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155606:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219067",
+     "style": "IND4000",
+     "color": "Saddle",
+     "lineItemIds": [
+      "111219067"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219067:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111219067",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155607",
+     "style": "ST259",
+     "color": "Vintage Heather",
+     "lineItemIds": [
+      "111155607"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155607:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155607",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155608",
+     "style": "IND4000",
+     "color": "Plum",
+     "lineItemIds": [
+      "111155608"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155608:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155608",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155608:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155608",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219068",
+     "style": "IND4000",
+     "color": "Plum",
+     "lineItemIds": [
+      "111219068"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219068:2XL",
+       "label": "2XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111219068",
+         "size": "size_2xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6611-back-solid",
+   "job": "6611",
+   "runId": "24920749:6611-back-solid",
+   "batchKeys": [
+    "24920749:53434114"
+   ],
+   "customer": "XD Roofing",
+   "location": "FULL BACK — XD Roofing SOLID logo, 1c — same 90 hoodies",
+   "locationLabel": "Full Back",
+   "day": "2026-11-06",
+   "expected": 90,
+   "scheduleSignature": "[\"6611\",\"FULL BACK — XD Roofing SOLID logo, 1c — same 90 hoodies\",90]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6611_bcamo.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53434114:110926984",
+     "style": "IND4000",
+     "color": "Desert Duck Camo",
+     "lineItemIds": [
+      "110926984"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926984:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926984:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926984:XL",
+       "label": "XL",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110926984",
+         "size": "size_xl",
+         "expected": 8
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926985",
+     "style": "IND4000",
+     "color": "Darkwood Tree Camo",
+     "lineItemIds": [
+      "110926985"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926985:XS",
+       "label": "XS",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_xs",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926985:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926985:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926985",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926986",
+     "style": "IND4000",
+     "color": "Black Camo",
+     "lineItemIds": [
+      "110926986"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926986:M",
+       "label": "M",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_m",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926986:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926986:XL",
+       "label": "XL",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "110926986",
+         "size": "size_xl",
+         "expected": 6
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:110926987",
+     "style": "IND4000",
+     "color": "Dusty Sage",
+     "lineItemIds": [
+      "110926987"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:110926987:M",
+       "label": "M",
+       "expected": 8,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_m",
+         "expected": 8
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926987:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53434114:110926987:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "110926987",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155606",
+     "style": "IND4000",
+     "color": "Saddle",
+     "lineItemIds": [
+      "111155606"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155606:M",
+       "label": "M",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_m",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155606:L",
+       "label": "L",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_l",
+         "expected": 3
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155606:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111155606",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219067",
+     "style": "IND4000",
+     "color": "Saddle",
+     "lineItemIds": [
+      "111219067"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219067:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111219067",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155607",
+     "style": "ST259",
+     "color": "Vintage Heather",
+     "lineItemIds": [
+      "111155607"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155607:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155607",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111155608",
+     "style": "IND4000",
+     "color": "Plum",
+     "lineItemIds": [
+      "111155608"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111155608:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155608",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53434114:111155608:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111155608",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53434114:111219068",
+     "style": "IND4000",
+     "color": "Plum",
+     "lineItemIds": [
+      "111219068"
+     ],
+     "sizes": [
+      {
+       "id": "53434114:111219068:2XL",
+       "label": "2XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111219068",
+         "size": "size_2xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6592-lc",
+   "job": "6592",
+   "runId": "24821724:6592-lc",
+   "batchKeys": [
+    "24821724:53624454"
+   ],
+   "customer": "Patriot Arc Construction",
+   "location": "LEFT CHEST 2.25\" — PA circle, 1c — 435: 285 NL6210 tees + 150 NL6211 LS (Dk Heather Grey · Military Green · Black)",
+   "locationLabel": "Left Chest 2.25\"",
+   "day": "2026-11-06",
+   "expected": 435,
+   "scheduleSignature": "[\"6592\",\"LEFT CHEST 2.25\\\" — PA circle, 1c — 435: 285 NL6210 tees + 150 NL6211 LS (Dk Heather Grey · Military Green · Black)\",435]",
+   "note": "Art says BLACK ink — 145 of these are BLACK shirts. Confirm the ink for the blacks before burning.",
+   "image": "/data/mocks/2026-11-02/6592_tees.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53624454:111237923",
+     "style": "6210M",
+     "color": "Dark Heather Grey",
+     "lineItemIds": [
+      "111237923"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237923:S",
+       "label": "S",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "111237923",
+         "size": "size_s",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237923:M",
+       "label": "M",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237923",
+         "size": "size_m",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237923:L",
+       "label": "L",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237923",
+         "size": "size_l",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237923:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237923",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237924",
+     "style": "6210M",
+     "color": "Dark Heather Grey",
+     "lineItemIds": [
+      "111237924"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237924:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237924",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237925",
+     "style": "6210M",
+     "color": "Military Green",
+     "lineItemIds": [
+      "111237925"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237925:S",
+       "label": "S",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "111237925",
+         "size": "size_s",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237925:M",
+       "label": "M",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237925",
+         "size": "size_m",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237925:L",
+       "label": "L",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237925",
+         "size": "size_l",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237925:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237925",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237926",
+     "style": "6210M",
+     "color": "Military Green",
+     "lineItemIds": [
+      "111237926"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237926:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237926",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237927",
+     "style": "6210M",
+     "color": "Black",
+     "lineItemIds": [
+      "111237927"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237927:S",
+       "label": "S",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "111237927",
+         "size": "size_s",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237927:M",
+       "label": "M",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237927",
+         "size": "size_m",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237927:L",
+       "label": "L",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237927",
+         "size": "size_l",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237927:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237927",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237928",
+     "style": "6210M",
+     "color": "Black",
+     "lineItemIds": [
+      "111237928"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237928:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237928",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237929",
+     "style": "6211N",
+     "color": "Dark Heather Grey",
+     "lineItemIds": [
+      "111237929"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237929:S",
+       "label": "S",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237929",
+         "size": "size_s",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237929:M",
+       "label": "M",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237929",
+         "size": "size_m",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237929:L",
+       "label": "L",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237929",
+         "size": "size_l",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237929:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237929",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237930",
+     "style": "6211N",
+     "color": "Dark Heather Grey",
+     "lineItemIds": [
+      "111237930"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237930:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237930",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237931",
+     "style": "6211N",
+     "color": "Military Green",
+     "lineItemIds": [
+      "111237931"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237931:S",
+       "label": "S",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237931",
+         "size": "size_s",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237931:M",
+       "label": "M",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237931",
+         "size": "size_m",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237931:L",
+       "label": "L",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237931",
+         "size": "size_l",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237931:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237931",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237932",
+     "style": "6211N",
+     "color": "Military Green",
+     "lineItemIds": [
+      "111237932"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237932:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237932",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237933",
+     "style": "6211N",
+     "color": "Black",
+     "lineItemIds": [
+      "111237933"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237933:S",
+       "label": "S",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237933",
+         "size": "size_s",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237933:M",
+       "label": "M",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237933",
+         "size": "size_m",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237933:L",
+       "label": "L",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237933",
+         "size": "size_l",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237933:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237933",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237934",
+     "style": "6211N",
+     "color": "Black",
+     "lineItemIds": [
+      "111237934"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237934:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237934",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6592-back",
+   "job": "6592",
+   "runId": "24821724:6592-back",
+   "batchKeys": [
+    "24821724:53624454"
+   ],
+   "customer": "Patriot Arc Construction",
+   "location": "FULL BACK 10\" x 3.2\" — PATRIOT ARC, 1c — same 435 tees + LS",
+   "locationLabel": "Full Back 10\" X 3.2\"",
+   "day": "2026-11-06",
+   "expected": 435,
+   "scheduleSignature": "[\"6592\",\"FULL BACK 10\\\" x 3.2\\\" — PATRIOT ARC, 1c — same 435 tees + LS\",435]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6592_tees.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53624454:111237923",
+     "style": "6210M",
+     "color": "Dark Heather Grey",
+     "lineItemIds": [
+      "111237923"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237923:S",
+       "label": "S",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "111237923",
+         "size": "size_s",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237923:M",
+       "label": "M",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237923",
+         "size": "size_m",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237923:L",
+       "label": "L",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237923",
+         "size": "size_l",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237923:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237923",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237924",
+     "style": "6210M",
+     "color": "Dark Heather Grey",
+     "lineItemIds": [
+      "111237924"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237924:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237924",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237925",
+     "style": "6210M",
+     "color": "Military Green",
+     "lineItemIds": [
+      "111237925"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237925:S",
+       "label": "S",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "111237925",
+         "size": "size_s",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237925:M",
+       "label": "M",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237925",
+         "size": "size_m",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237925:L",
+       "label": "L",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237925",
+         "size": "size_l",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237925:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237925",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237926",
+     "style": "6210M",
+     "color": "Military Green",
+     "lineItemIds": [
+      "111237926"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237926:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237926",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237927",
+     "style": "6210M",
+     "color": "Black",
+     "lineItemIds": [
+      "111237927"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237927:S",
+       "label": "S",
+       "expected": 20,
+       "sources": [
+        {
+         "lineItemId": "111237927",
+         "size": "size_s",
+         "expected": 20
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237927:M",
+       "label": "M",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237927",
+         "size": "size_m",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237927:L",
+       "label": "L",
+       "expected": 30,
+       "sources": [
+        {
+         "lineItemId": "111237927",
+         "size": "size_l",
+         "expected": 30
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237927:XL",
+       "label": "XL",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237927",
+         "size": "size_xl",
+         "expected": 10
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237928",
+     "style": "6210M",
+     "color": "Black",
+     "lineItemIds": [
+      "111237928"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237928:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237928",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237929",
+     "style": "6211N",
+     "color": "Dark Heather Grey",
+     "lineItemIds": [
+      "111237929"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237929:S",
+       "label": "S",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237929",
+         "size": "size_s",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237929:M",
+       "label": "M",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237929",
+         "size": "size_m",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237929:L",
+       "label": "L",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237929",
+         "size": "size_l",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237929:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237929",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237930",
+     "style": "6211N",
+     "color": "Dark Heather Grey",
+     "lineItemIds": [
+      "111237930"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237930:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237930",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237931",
+     "style": "6211N",
+     "color": "Military Green",
+     "lineItemIds": [
+      "111237931"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237931:S",
+       "label": "S",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237931",
+         "size": "size_s",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237931:M",
+       "label": "M",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237931",
+         "size": "size_m",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237931:L",
+       "label": "L",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237931",
+         "size": "size_l",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237931:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237931",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237932",
+     "style": "6211N",
+     "color": "Military Green",
+     "lineItemIds": [
+      "111237932"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237932:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237932",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237933",
+     "style": "6211N",
+     "color": "Black",
+     "lineItemIds": [
+      "111237933"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237933:S",
+       "label": "S",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237933",
+         "size": "size_s",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237933:M",
+       "label": "M",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237933",
+         "size": "size_m",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237933:L",
+       "label": "L",
+       "expected": 15,
+       "sources": [
+        {
+         "lineItemId": "111237933",
+         "size": "size_l",
+         "expected": 15
+        }
+       ]
+      },
+      {
+       "id": "53624454:111237933:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237933",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624454:111237934",
+     "style": "6211N",
+     "color": "Black",
+     "lineItemIds": [
+      "111237934"
+     ],
+     "sizes": [
+      {
+       "id": "53624454:111237934:2XL",
+       "label": "2XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237934",
+         "size": "size_2xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6643-front",
+   "job": "6643",
+   "runId": "25031997:6643-front",
+   "batchKeys": [
+    "25031997:53632865"
+   ],
+   "customer": "Southern Thunder Softball",
+   "location": "FULL FRONT — Southern Thunder Softball palm tree, 4c — 32: 16 PC90H White hoodies + 16 DM108 Heathered Navy tees",
+   "locationLabel": "Full Front",
+   "day": "2026-11-06",
+   "expected": 32,
+   "scheduleSignature": "[\"6643\",\"FULL FRONT — Southern Thunder Softball palm tree, 4c — 32: 16 PC90H White hoodies + 16 DM108 Heathered Navy tees\",32]",
+   "note": "Blanks have NO status / no ETA — check they're here. Same palm design as 6595's 4c card — run them back to back.",
+   "image": "/data/mocks/2026-11-02/6643_palm.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53632865:111261571",
+     "style": "PC90H",
+     "color": "White",
+     "lineItemIds": [
+      "111261571"
+     ],
+     "sizes": [
+      {
+       "id": "53632865:111261571:M",
+       "label": "M",
+       "expected": 7,
+       "sources": [
+        {
+         "lineItemId": "111261571",
+         "size": "size_m",
+         "expected": 7
+        }
+       ]
+      },
+      {
+       "id": "53632865:111261571:L",
+       "label": "L",
+       "expected": 6,
+       "sources": [
+        {
+         "lineItemId": "111261571",
+         "size": "size_l",
+         "expected": 6
+        }
+       ]
+      },
+      {
+       "id": "53632865:111261571:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111261571",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53632865:111261875",
+     "style": "DM108",
+     "color": "Heathered Navy",
+     "lineItemIds": [
+      "111261875"
+     ],
+     "sizes": [
+      {
+       "id": "53632865:111261875:S",
+       "label": "S",
+       "expected": 7,
+       "sources": [
+        {
+         "lineItemId": "111261875",
+         "size": "size_s",
+         "expected": 7
+        }
+       ]
+      },
+      {
+       "id": "53632865:111261875:M",
+       "label": "M",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "111261875",
+         "size": "size_m",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53632865:111261875:L",
+       "label": "L",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "111261875",
+         "size": "size_l",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53632865:111261875:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111261875",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6595-palm",
+   "job": "6595",
+   "runId": "24830267:6595-palm",
+   "batchKeys": [
+    "24830267:53272571"
+   ],
+   "customer": "Southern Thunder — fan gear",
+   "location": "FULL FRONT — Southern Thunder palm tree, 4c — 7 fan gear: crews, ladies tee, hoodies, 1 tee (heather navy / gray / white)",
+   "locationLabel": "Full Front",
+   "day": "2026-11-06",
+   "expected": 7,
+   "scheduleSignature": "[\"6595\",\"FULL FRONT — Southern Thunder palm tree, 4c — 7 fan gear: crews, ladies tee, hoodies, 1 tee (heather navy / gray / white)\",7]",
+   "note": "Same screens as 6643 if it's the same art — run right after it. Blanks have NO status — check.",
+   "image": "/data/mocks/2026-11-02/6595_palm.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53272571:110277267",
+     "style": "PC78",
+     "color": "Heather Navy",
+     "lineItemIds": [
+      "110277267"
+     ],
+     "sizes": [
+      {
+       "id": "53272571:110277267:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277267",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272571:110277268",
+     "style": "PC78",
+     "color": "Heather Gray",
+     "lineItemIds": [
+      "110277268"
+     ],
+     "sizes": [
+      {
+       "id": "53272571:110277268:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277268",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272571:110277269",
+     "style": "DM109L",
+     "color": "Heather Gray",
+     "lineItemIds": [
+      "110277269"
+     ],
+     "sizes": [
+      {
+       "id": "53272571:110277269:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277269",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272571:110277270",
+     "style": "PC98H",
+     "color": "Heather Gray",
+     "lineItemIds": [
+      "110277270"
+     ],
+     "sizes": [
+      {
+       "id": "53272571:110277270:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277270",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53272571:110277270:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277270",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272571:110277271",
+     "style": "PC98H",
+     "color": "White",
+     "lineItemIds": [
+      "110277271"
+     ],
+     "sizes": [
+      {
+       "id": "53272571:110277271:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277271",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272571:110344537",
+     "style": "DM108",
+     "color": "Heathered Navy",
+     "lineItemIds": [
+      "110344537"
+     ],
+     "sizes": [
+      {
+       "id": "53272571:110344537:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110344537",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6595-thunder",
+   "job": "6595",
+   "runId": "24830267:6595-thunder",
+   "batchKeys": [
+    "24830267:53272570"
+   ],
+   "customer": "Southern Thunder — fan gear",
+   "location": "FULL FRONT — THUNDER arch + ST logo, 1c — 37 fan gear: tees, crews, hoodies, perf tees (orange / gray / navy / white)",
+   "locationLabel": "Full Front",
+   "day": "2026-11-06",
+   "expected": 37,
+   "scheduleSignature": "[\"6595\",\"FULL FRONT — THUNDER arch + ST logo, 1c — 37 fan gear: tees, crews, hoodies, perf tees (orange / gray / navy / white)\",37]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6595_thunder.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53272570:110277255",
+     "style": "DM108",
+     "color": "Medium Orange",
+     "lineItemIds": [
+      "110277255"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277255:S",
+       "label": "S",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277255",
+         "size": "size_s",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277255:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277255",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277255:L",
+       "label": "L",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110277255",
+         "size": "size_l",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277256",
+     "style": "DM108",
+     "color": "Medium Orange",
+     "lineItemIds": [
+      "110277256"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277256:2XL",
+       "label": "2XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277256",
+         "size": "size_2xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277257",
+     "style": "DM108",
+     "color": "Heather Gray",
+     "lineItemIds": [
+      "110277257"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277257:M",
+       "label": "M",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110277257",
+         "size": "size_m",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277257:L",
+       "label": "L",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110277257",
+         "size": "size_l",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277257:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277257",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277258",
+     "style": "DM108",
+     "color": "Heather Gray",
+     "lineItemIds": [
+      "110277258"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277258:2XL",
+       "label": "2XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277258",
+         "size": "size_2xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277259",
+     "style": "DM108",
+     "color": "Heather Navy",
+     "lineItemIds": [
+      "110277259"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277259:M",
+       "label": "M",
+       "expected": 4,
+       "sources": [
+        {
+         "lineItemId": "110277259",
+         "size": "size_m",
+         "expected": 4
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277259:L",
+       "label": "L",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110277259",
+         "size": "size_l",
+         "expected": 2
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277259:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "110277259",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277260",
+     "style": "DM108",
+     "color": "Heather Navy",
+     "lineItemIds": [
+      "110277260"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277260:2XL",
+       "label": "2XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277260",
+         "size": "size_2xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277261",
+     "style": "PC78",
+     "color": "Heather Navy",
+     "lineItemIds": [
+      "110277261"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277261:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277261",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277261:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277261",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277261:XL",
+       "label": "XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277261",
+         "size": "size_xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277262",
+     "style": "PC78",
+     "color": "Heather Gray",
+     "lineItemIds": [
+      "110277262"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277262:S",
+       "label": "S",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277262",
+         "size": "size_s",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277262:M",
+       "label": "M",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110277262",
+         "size": "size_m",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277263",
+     "style": "DM109L",
+     "color": "White",
+     "lineItemIds": [
+      "110277263"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277263:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277263",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277264",
+     "style": "PC98H",
+     "color": "Heather Navy",
+     "lineItemIds": [
+      "110277264"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277264:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277264",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277264:L",
+       "label": "L",
+       "expected": 2,
+       "sources": [
+        {
+         "lineItemId": "110277264",
+         "size": "size_l",
+         "expected": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277265",
+     "style": "PC98H",
+     "color": "Heather Navy",
+     "lineItemIds": [
+      "110277265"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277265:2XL",
+       "label": "2XL",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277265",
+         "size": "size_2xl",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110277266",
+     "style": "PC98H",
+     "color": "Heather Gray",
+     "lineItemIds": [
+      "110277266"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110277266:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277266",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53272570:110277266:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110277266",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110822442",
+     "style": "PC380",
+     "color": "True Navy",
+     "lineItemIds": [
+      "110822442"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110822442:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110822442",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110822443",
+     "style": "PC380",
+     "color": "Deep Orange",
+     "lineItemIds": [
+      "110822443"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110822443:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110822443",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53272570:110822444",
+     "style": "PC380",
+     "color": "Silver",
+     "lineItemIds": [
+      "110822444"
+     ],
+     "sizes": [
+      {
+       "id": "53272570:110822444:L",
+       "label": "L",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "110822444",
+         "size": "size_l",
+         "expected": 1
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6592-polo",
+   "job": "6592",
+   "runId": "24821724:6592-polo",
+   "batchKeys": [
+    "24821724:53624455"
+   ],
+   "customer": "Patriot Arc Construction",
+   "location": "FRONT LEFT CHEST — 1c — 50 K200 polos: 25 Olive Drab Green + 25 Deep Black",
+   "locationLabel": "Front Left Chest",
+   "day": "2026-11-06",
+   "expected": 50,
+   "scheduleSignature": "[\"6592\",\"FRONT LEFT CHEST — 1c — 50 K200 polos: 25 Olive Drab Green + 25 Deep Black\",50]",
+   "note": "NO POLO MOCKUP — confirm logo + ink (PA circle?).",
+   "image": "",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53624455:111237935",
+     "style": "K200",
+     "color": "Olive Drab Green",
+     "lineItemIds": [
+      "111237935"
+     ],
+     "sizes": [
+      {
+       "id": "53624455:111237935:M",
+       "label": "M",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237935",
+         "size": "size_m",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624455:111237935:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237935",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624455:111237935:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237935",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53624455:111237936",
+     "style": "K200",
+     "color": "Deep Black",
+     "lineItemIds": [
+      "111237936"
+     ],
+     "sizes": [
+      {
+       "id": "53624455:111237936:M",
+       "label": "M",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237936",
+         "size": "size_m",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624455:111237936:L",
+       "label": "L",
+       "expected": 10,
+       "sources": [
+        {
+         "lineItemId": "111237936",
+         "size": "size_l",
+         "expected": 10
+        }
+       ]
+      },
+      {
+       "id": "53624455:111237936:XL",
+       "label": "XL",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111237936",
+         "size": "size_xl",
+         "expected": 5
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "archivedCards": [
   {
    "id": "6526-lc",
    "job": "6526",
@@ -640,307 +8009,6 @@
     }
    ],
    "scheduleSignature": "[\"6526\",\"LEFT CHEST — NTY Windows logo, 2c — 217: 30 BC3945 crew · 26 SF500 hood · 26 SF600 zip · 30 NL7610 women · 40 NL6210 Black · 65 NL6211 Dk Heather LS\",217]"
-  },
-  {
-   "id": "6631-flag-sml",
-   "job": "6631",
-   "runId": "24980744:6631-flag-sml",
-   "batchKeys": [
-    "24980744:53539937"
-   ],
-   "customer": "Hoover Dam (Creation Cartel) — CUST-SUPPLIED",
-   "location": "FRONT CENTER CHEST 9.25\" — HOOVER DAM flag, 1c tonal green — 360 SS3000 Army Heather crews (S/M/L)",
-   "locationLabel": "Front Center Chest 9.25\"",
-   "day": "2026-10-26",
-   "expected": 360,
-   "note": "STILL A QUOTE — hold screens until approved. CUST-SUPPLIED — count in. Hang tags w/ UPCs on all 1,224 (Christian can take some). Soft hand, NO underbase.",
-   "image": "/data/mocks/2026-10-26/6631_flag.jpg",
-   "artworkLabel": "Reference from the weekly press board",
-   "groups": [
-    {
-     "id": "53539937:111011349",
-     "style": "SS3000",
-     "color": "Army Heather",
-     "lineItemIds": [
-      "111011349"
-     ],
-     "sizes": [
-      {
-       "id": "53539937:111011349:S",
-       "label": "S",
-       "expected": 72,
-       "sources": [
-        {
-         "lineItemId": "111011349",
-         "size": "size_s",
-         "expected": 72
-        }
-       ]
-      },
-      {
-       "id": "53539937:111011349:M",
-       "label": "M",
-       "expected": 144,
-       "sources": [
-        {
-         "lineItemId": "111011349",
-         "size": "size_m",
-         "expected": 144
-        }
-       ]
-      },
-      {
-       "id": "53539937:111011349:L",
-       "label": "L",
-       "expected": 144,
-       "sources": [
-        {
-         "lineItemId": "111011349",
-         "size": "size_l",
-         "expected": 144
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "scheduleSignature": "[\"6631\",\"FRONT CENTER CHEST 9.25\\\" — HOOVER DAM flag, 1c tonal green — 360 SS3000 Army Heather crews (S/M/L)\",360]"
-  },
-  {
-   "id": "6631-flag-xl",
-   "job": "6631",
-   "runId": "24980744:6631-flag-xl",
-   "batchKeys": [
-    "24980744:53539937"
-   ],
-   "customer": "Hoover Dam (Creation Cartel) — CUST-SUPPLIED",
-   "location": "FRONT CENTER CHEST 10.25\" — HOOVER DAM flag, 1c tonal green — 288 SS3000 Army Heather crews (XL/2X/3X)",
-   "locationLabel": "Front Center Chest 10.25\"",
-   "day": "2026-10-26",
-   "expected": 288,
-   "note": "",
-   "image": "/data/mocks/2026-10-26/6631_flag.jpg",
-   "artworkLabel": "Reference from the weekly press board",
-   "groups": [
-    {
-     "id": "53539937:111011349",
-     "style": "SS3000",
-     "color": "Army Heather",
-     "lineItemIds": [
-      "111011349"
-     ],
-     "sizes": [
-      {
-       "id": "53539937:111011349:XL",
-       "label": "XL",
-       "expected": 144,
-       "sources": [
-        {
-         "lineItemId": "111011349",
-         "size": "size_xl",
-         "expected": 144
-        }
-       ]
-      },
-      {
-       "id": "53539937:111011349:2XL",
-       "label": "2XL",
-       "expected": 72,
-       "sources": [
-        {
-         "lineItemId": "111011349",
-         "size": "size_2xl",
-         "expected": 72
-        }
-       ]
-      },
-      {
-       "id": "53539937:111011349:3XL",
-       "label": "3XL",
-       "expected": 72,
-       "sources": [
-        {
-         "lineItemId": "111011349",
-         "size": "size_3xl",
-         "expected": 72
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "scheduleSignature": "[\"6631\",\"FRONT CENTER CHEST 10.25\\\" — HOOVER DAM flag, 1c tonal green — 288 SS3000 Army Heather crews (XL/2X/3X)\",288]"
-  },
-  {
-   "id": "6631-lc",
-   "job": "6631",
-   "runId": "24980744:6631-lc",
-   "batchKeys": [
-    "24980744:53539938"
-   ],
-   "customer": "Hoover Dam (Creation Cartel) — CUST-SUPPLIED",
-   "location": "LEFT CHEST 3.75\" — HOOVER DAM Est. 1935 oval, 2c WHITE — 576 LS14003 Black full-zip hoodies",
-   "locationLabel": "Left Chest 3.75\"",
-   "day": "2026-10-27",
-   "expected": 576,
-   "note": "STILL A QUOTE — hold screens until approved. CUST-SUPPLIED — count in. Hang tags w/ UPCs on all 1,224 (Christian can take some). Art sheet also says \"left thigh\" — mockup is a zip hoodie, left chest.",
-   "image": "/data/mocks/2026-10-26/6631_stars.jpg",
-   "artworkLabel": "Reference from the weekly press board",
-   "groups": [
-    {
-     "id": "53539938:111011353",
-     "style": "LS14003",
-     "color": "Black",
-     "lineItemIds": [
-      "111011353"
-     ],
-     "sizes": [
-      {
-       "id": "53539938:111011353:S",
-       "label": "S",
-       "expected": 72,
-       "sources": [
-        {
-         "lineItemId": "111011353",
-         "size": "size_s",
-         "expected": 72
-        }
-       ]
-      },
-      {
-       "id": "53539938:111011353:M",
-       "label": "M",
-       "expected": 144,
-       "sources": [
-        {
-         "lineItemId": "111011353",
-         "size": "size_m",
-         "expected": 144
-        }
-       ]
-      },
-      {
-       "id": "53539938:111011353:L",
-       "label": "L",
-       "expected": 144,
-       "sources": [
-        {
-         "lineItemId": "111011353",
-         "size": "size_l",
-         "expected": 144
-        }
-       ]
-      },
-      {
-       "id": "53539938:111011353:XL",
-       "label": "XL",
-       "expected": 144,
-       "sources": [
-        {
-         "lineItemId": "111011353",
-         "size": "size_xl",
-         "expected": 144
-        }
-       ]
-      },
-      {
-       "id": "53539938:111011353:2XL",
-       "label": "2XL",
-       "expected": 72,
-       "sources": [
-        {
-         "lineItemId": "111011353",
-         "size": "size_2xl",
-         "expected": 72
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "scheduleSignature": "[\"6631\",\"LEFT CHEST 3.75\\\" — HOOVER DAM Est. 1935 oval, 2c WHITE — 576 LS14003 Black full-zip hoodies\",576]"
-  },
-  {
-   "id": "6597-lc",
-   "job": "6597",
-   "runId": "24832622:6597-lc",
-   "batchKeys": [
-    "24832622:53276746"
-   ],
-   "customer": "Jack of All Trades",
-   "location": "LEFT CHEST — Jack of All Trades badge, 3c — 6 PC55 White",
-   "locationLabel": "Left Chest",
-   "day": "2026-10-27",
-   "expected": 6,
-   "note": "Mockup is a BLACK work shirt — order is 6 WHITE PC55 tees. Confirm inks for white before burning. Blanks ETA Tue 10/20 (shows ordered).",
-   "image": "/data/mocks/2026-10-26/6597_mock.jpg",
-   "artworkLabel": "Reference from the weekly press board",
-   "groups": [
-    {
-     "id": "53276746:110288883",
-     "style": "PC55",
-     "color": "White",
-     "lineItemIds": [
-      "110288883"
-     ],
-     "sizes": [
-      {
-       "id": "53276746:110288883:L",
-       "label": "L",
-       "expected": 6,
-       "sources": [
-        {
-         "lineItemId": "110288883",
-         "size": "size_l",
-         "expected": 6
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "scheduleSignature": "[\"6597\",\"LEFT CHEST — Jack of All Trades badge, 3c — 6 PC55 White\",6]"
-  },
-  {
-   "id": "6597-back",
-   "job": "6597",
-   "runId": "24832622:6597-back",
-   "batchKeys": [
-    "24832622:53276746"
-   ],
-   "customer": "Jack of All Trades",
-   "location": "FULL BACK — Jack of All Trades badge + phone #, 3c — same 6",
-   "locationLabel": "Full Back",
-   "day": "2026-10-27",
-   "expected": 6,
-   "note": "",
-   "image": "/data/mocks/2026-10-26/6597_mock.jpg",
-   "artworkLabel": "Reference from the weekly press board",
-   "groups": [
-    {
-     "id": "53276746:110288883",
-     "style": "PC55",
-     "color": "White",
-     "lineItemIds": [
-      "110288883"
-     ],
-     "sizes": [
-      {
-       "id": "53276746:110288883:L",
-       "label": "L",
-       "expected": 6,
-       "sources": [
-        {
-         "lineItemId": "110288883",
-         "size": "size_l",
-         "expected": 6
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "scheduleSignature": "[\"6597\",\"FULL BACK — Jack of All Trades badge + phone #, 3c — same 6\",6]"
   },
   {
    "id": "6596-back",
@@ -1921,465 +8989,6 @@
    ],
    "scheduleSignature": "[\"6475\",\"LEFT SLEEVE 3.5\\\" — RR Crest logo, 2c (UB + white) — same 118\",118]"
   },
-  {
-   "id": "6602-lc",
-   "job": "6602",
-   "runId": "24844080:6602-lc",
-   "batchKeys": [
-    "24844080:53296686"
-   ],
-   "customer": "Ruthless Apparel — Winter Nov",
-   "location": "FRONT LEFT CHEST — Live Ruthless COWBOY box, 4c — 42 DT6100: 21 White Smoke + 21 Black",
-   "locationLabel": "Front Left Chest",
-   "day": "2026-10-30",
-   "expected": 42,
-   "note": "NEW ART \"Cowboy\". Inks read off the mockups — White Smoke vs Black hoodies differ (one card, swap between colors). Blanks received.",
-   "image": "/data/mocks/2026-10-26/6602_blk.jpg",
-   "artworkLabel": "Reference from the weekly press board",
-   "groups": [
-    {
-     "id": "53296686:110345859",
-     "style": "DT6100",
-     "color": "White Smoke",
-     "lineItemIds": [
-      "110345859"
-     ],
-     "sizes": [
-      {
-       "id": "53296686:110345859:S",
-       "label": "S",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110345859",
-         "size": "size_s",
-         "expected": 3
-        }
-       ]
-      },
-      {
-       "id": "53296686:110345859:M",
-       "label": "M",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345859",
-         "size": "size_m",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296686:110345859:L",
-       "label": "L",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345859",
-         "size": "size_l",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296686:110345859:XL",
-       "label": "XL",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345859",
-         "size": "size_xl",
-         "expected": 5
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53296686:110345860",
-     "style": "DT6100",
-     "color": "White Smoke",
-     "lineItemIds": [
-      "110345860"
-     ],
-     "sizes": [
-      {
-       "id": "53296686:110345860:2XL",
-       "label": "2XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110345860",
-         "size": "size_2xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53296686:110346014",
-     "style": "DT6100",
-     "color": "Black",
-     "lineItemIds": [
-      "110346014"
-     ],
-     "sizes": [
-      {
-       "id": "53296686:110346014:S",
-       "label": "S",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110346014",
-         "size": "size_s",
-         "expected": 3
-        }
-       ]
-      },
-      {
-       "id": "53296686:110346014:M",
-       "label": "M",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110346014",
-         "size": "size_m",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296686:110346014:L",
-       "label": "L",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110346014",
-         "size": "size_l",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296686:110346014:XL",
-       "label": "XL",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110346014",
-         "size": "size_xl",
-         "expected": 5
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53296686:110346015",
-     "style": "DT6100",
-     "color": "Black",
-     "lineItemIds": [
-      "110346015"
-     ],
-     "sizes": [
-      {
-       "id": "53296686:110346015:2XL",
-       "label": "2XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110346015",
-         "size": "size_2xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "scheduleSignature": "[\"6602\",\"FRONT LEFT CHEST — Live Ruthless COWBOY box, 4c — 42 DT6100: 21 White Smoke + 21 Black\",42]"
-  },
-  {
-   "id": "6602-back",
-   "job": "6602",
-   "runId": "24844080:6602-back",
-   "batchKeys": [
-    "24844080:53296686"
-   ],
-   "customer": "Ruthless Apparel — Winter Nov",
-   "location": "FULL BACK — Ruthless Co. COWBOY roper, 4c — same 42 (21 White Smoke + 21 Black)",
-   "locationLabel": "Full Back",
-   "day": "2026-10-30",
-   "expected": 42,
-   "note": "",
-   "image": "/data/mocks/2026-10-26/6602_ws.jpg",
-   "artworkLabel": "Reference from the weekly press board",
-   "groups": [
-    {
-     "id": "53296686:110345859",
-     "style": "DT6100",
-     "color": "White Smoke",
-     "lineItemIds": [
-      "110345859"
-     ],
-     "sizes": [
-      {
-       "id": "53296686:110345859:S",
-       "label": "S",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110345859",
-         "size": "size_s",
-         "expected": 3
-        }
-       ]
-      },
-      {
-       "id": "53296686:110345859:M",
-       "label": "M",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345859",
-         "size": "size_m",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296686:110345859:L",
-       "label": "L",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345859",
-         "size": "size_l",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296686:110345859:XL",
-       "label": "XL",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345859",
-         "size": "size_xl",
-         "expected": 5
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53296686:110345860",
-     "style": "DT6100",
-     "color": "White Smoke",
-     "lineItemIds": [
-      "110345860"
-     ],
-     "sizes": [
-      {
-       "id": "53296686:110345860:2XL",
-       "label": "2XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110345860",
-         "size": "size_2xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53296686:110346014",
-     "style": "DT6100",
-     "color": "Black",
-     "lineItemIds": [
-      "110346014"
-     ],
-     "sizes": [
-      {
-       "id": "53296686:110346014:S",
-       "label": "S",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110346014",
-         "size": "size_s",
-         "expected": 3
-        }
-       ]
-      },
-      {
-       "id": "53296686:110346014:M",
-       "label": "M",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110346014",
-         "size": "size_m",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296686:110346014:L",
-       "label": "L",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110346014",
-         "size": "size_l",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296686:110346014:XL",
-       "label": "XL",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110346014",
-         "size": "size_xl",
-         "expected": 5
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53296686:110346015",
-     "style": "DT6100",
-     "color": "Black",
-     "lineItemIds": [
-      "110346015"
-     ],
-     "sizes": [
-      {
-       "id": "53296686:110346015:2XL",
-       "label": "2XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110346015",
-         "size": "size_2xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "scheduleSignature": "[\"6602\",\"FULL BACK — Ruthless Co. COWBOY roper, 4c — same 42 (21 White Smoke + 21 Black)\",42]"
-  },
-  {
-   "id": "6602-crew",
-   "job": "6602",
-   "runId": "24844080:6602-crew",
-   "batchKeys": [
-    "24844080:53296687"
-   ],
-   "customer": "Ruthless Apparel — Winter Nov",
-   "location": "FRONT — Ruthless Co. tooled-leather frame, BLACK — 20 Jerzees 562M Golden Pecan crews",
-   "locationLabel": "Front",
-   "day": "2026-10-30",
-   "expected": 20,
-   "note": "Printavo says 2c — production note says black ink on pecan; art reads 1c. Confirm.",
-   "image": "/data/mocks/2026-10-26/6602_crew.jpg",
-   "artworkLabel": "Reference from the weekly press board",
-   "groups": [
-    {
-     "id": "53296687:110345861",
-     "style": "562M",
-     "color": "Golden Pecan",
-     "lineItemIds": [
-      "110345861"
-     ],
-     "sizes": [
-      {
-       "id": "53296687:110345861:S",
-       "label": "S",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "110345861",
-         "size": "size_s",
-         "expected": 3
-        }
-       ]
-      },
-      {
-       "id": "53296687:110345861:M",
-       "label": "M",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345861",
-         "size": "size_m",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296687:110345861:L",
-       "label": "L",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345861",
-         "size": "size_l",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53296687:110345861:XL",
-       "label": "XL",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "110345861",
-         "size": "size_xl",
-         "expected": 5
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53296687:110346016",
-     "style": "562M",
-     "color": "Golden Pecan",
-     "lineItemIds": [
-      "110346016"
-     ],
-     "sizes": [
-      {
-       "id": "53296687:110346016:2XL",
-       "label": "2XL",
-       "expected": 2,
-       "sources": [
-        {
-         "lineItemId": "110346016",
-         "size": "size_2xl",
-         "expected": 2
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "scheduleSignature": "[\"6602\",\"FRONT — Ruthless Co. tooled-leather frame, BLACK — 20 Jerzees 562M Golden Pecan crews\",20]"
-  }
- ],
- "archivedCards": [
   {
    "id": "6578-back",
    "job": "6578",
