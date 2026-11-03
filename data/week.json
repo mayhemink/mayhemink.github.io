@@ -937,51 +937,132 @@
      "due": "2026-11-05"
     },
     {
-     "id": "6645-front",
+     "id": "6645-flag-lc",
      "job": "6645",
      "url": "https://www.printavo.com/invoices/25047593",
      "customer": "R Staheli Plumbing — hoodies",
      "nickname": "Staheli Plumbing",
-     "location": "FRONT — 3c — 48 PC78H hoodies: 12 each Woodland Brown · Stonewashed Blue · Maroon · Olive",
-     "qty": 48,
-     "colors": 3,
-     "screens": 3,
-     "press": "Press 2",
+     "location": "LEFT CHEST — R. Staheli PLUMBING flag patch, 4c — 24 PC78H: 12 Stonewashed Blue + 12 Maroon",
+     "qty": 24,
+     "colors": 4,
+     "screens": 4,
+     "img": "6645_flag",
      "inks": [
       {
-       "n": "TBD — see art",
-       "hex": "#BBBCBC"
+       "n": "White UB",
+       "hex": "#F2F2F2"
+      },
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      },
+      {
+       "n": "Red PMS 186",
+       "hex": "#C8102E"
+      },
+      {
+       "n": "Navy PMS 289",
+       "hex": "#0C2340"
       }
      ],
      "tags": [
       "VERIFY"
      ],
-     "alert": "Due Wed night — moved to Thu (crew). NO MOCKUP IN PRINTAVO — art on the order. Blanks have NO status / no ETA — check they were ordered.",
+     "alert": "Due Wed night — moved to Thu (crew). Blanks have NO status / no ETA — check they were ordered. Inks read off the mockup — confirm.",
      "noest": true,
-     "due": "2026-11-04"
+     "due": "2026-11-04",
+     "press": "Press 2"
     },
     {
-     "id": "6645-back",
+     "id": "6645-flag-back",
      "job": "6645",
      "url": "https://www.printavo.com/invoices/25047593",
      "customer": "R Staheli Plumbing — hoodies",
      "nickname": "Staheli Plumbing",
-     "location": "BACK — 3c — same 48 PC78H hoodies",
-     "qty": 48,
-     "colors": 3,
-     "screens": 3,
-     "press": "Press 2",
+     "location": "FULL BACK — R. Staheli PLUMBING flag patch, 4c — same 24 (Stonewashed Blue + Maroon)",
+     "qty": 24,
+     "colors": 4,
+     "screens": 4,
+     "img": "6645_flag",
      "inks": [
       {
-       "n": "TBD — see art",
-       "hex": "#BBBCBC"
+       "n": "White UB",
+       "hex": "#F2F2F2"
+      },
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      },
+      {
+       "n": "Red PMS 186",
+       "hex": "#C8102E"
+      },
+      {
+       "n": "Navy PMS 289",
+       "hex": "#0C2340"
+      }
+     ],
+     "tags": [],
+     "noest": true,
+     "due": "2026-11-04",
+     "press": "Press 2"
+    },
+    {
+     "id": "6645-mtn-lc",
+     "job": "6645",
+     "url": "https://www.printavo.com/invoices/25047593",
+     "customer": "R Staheli Plumbing — hoodies",
+     "nickname": "Staheli Plumbing",
+     "location": "LEFT CHEST — R. Staheli mountain logo, 2c — 24 PC78H: 12 Woodland Brown + 12 Olive",
+     "qty": 24,
+     "colors": 2,
+     "screens": 2,
+     "img": "6645_mtn",
+     "inks": [
+      {
+       "n": "Dark brown — Woodland Brown hoodies",
+       "hex": "#4E3629"
+      },
+      {
+       "n": "Tan — Olive hoodies",
+       "hex": "#C8B18B"
       }
      ],
      "tags": [
-      "VERIFY"
+      "INK SWAP"
+     ],
+     "note": "Tonal dark brown on the brown hoodies, tan on the olive (per mockup).",
+     "noest": true,
+     "due": "2026-11-04",
+     "press": "Press 2"
+    },
+    {
+     "id": "6645-mtn-back",
+     "job": "6645",
+     "url": "https://www.printavo.com/invoices/25047593",
+     "customer": "R Staheli Plumbing — hoodies",
+     "nickname": "Staheli Plumbing",
+     "location": "FULL BACK — R. Staheli mountain logo, 2c — same 24 (Woodland Brown + Olive)",
+     "qty": 24,
+     "colors": 2,
+     "screens": 2,
+     "img": "6645_mtn",
+     "inks": [
+      {
+       "n": "Dark brown — Woodland Brown hoodies",
+       "hex": "#4E3629"
+      },
+      {
+       "n": "Tan — Olive hoodies",
+       "hex": "#C8B18B"
+      }
+     ],
+     "tags": [
+      "INK SWAP"
      ],
      "noest": true,
-     "due": "2026-11-04"
+     "due": "2026-11-04",
+     "press": "Press 2"
     }
    ],
    "flags": [
@@ -991,7 +1072,7 @@
     ],
     [
      "RUN ORDER",
-     "Press 1: 6644 capes (RUSH) → 6585 Cachet → 6630 Unique Resin. Press 2: 6649 Duck Face → 6650 Buck Skull (due Fri 9 AM) → 6610 Biscuit → 6634 + 6645 Staheli."
+     "Press 1: 6644 capes (RUSH) → 6585 Cachet → 6630 Unique Resin. Press 2: 6649 Duck Face → 6650 Buck Skull (due Fri 9 AM) → 6610 Biscuit → 6634 Staheli → 6645 Staheli hoodies (4c flag on blue/maroon, 2c mountain on brown/olive)."
     ],
     [
      "LATE",
@@ -1007,7 +1088,7 @@
     ],
     [
      "VERIFY",
-     "6634 + 6645 Staheli and 6585 — no mockups. 6645 blanks show no status."
+     "6634 Staheli and 6585 — no mockups. 6645 blanks show no status."
     ],
     [
      "NOT PRESS",
@@ -1432,6 +1513,8 @@
   "6633_pocket": "/data/mocks/2026-11-02/6633_pocket.jpg",
   "6643_palm": "/data/mocks/2026-11-02/6643_palm.jpg",
   "6644_cape": "/data/mocks/2026-11-02/6644_cape.jpg",
+  "6645_flag": "/data/mocks/2026-11-02/6645_flag.jpg",
+  "6645_mtn": "/data/mocks/2026-11-02/6645_mtn.jpg",
   "6649_duck": "/data/mocks/2026-11-02/6649_duck.jpg",
   "6650_buck": "/data/mocks/2026-11-02/6650_buck.jpg"
  }

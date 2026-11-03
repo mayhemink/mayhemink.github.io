@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "week": "2026-11-02",
- "generatedAt": "2026-11-02T03:47:09+00:00",
+ "generatedAt": "2026-11-03T15:10:03+00:00",
  "source": "Weekly press board and verified Printavo order sizes",
  "days": [
   {
@@ -3080,90 +3080,22 @@
    ]
   },
   {
-   "id": "6645-front",
+   "id": "6645-flag-lc",
    "job": "6645",
-   "runId": "25047593:6645-front",
+   "runId": "25047593:6645-flag-lc",
    "batchKeys": [
     "25047593:53660958"
    ],
    "customer": "R Staheli Plumbing — hoodies",
-   "location": "FRONT — 3c — 48 PC78H hoodies: 12 each Woodland Brown · Stonewashed Blue · Maroon · Olive",
-   "locationLabel": "Front",
+   "location": "LEFT CHEST — R. Staheli PLUMBING flag patch, 4c — 24 PC78H: 12 Stonewashed Blue + 12 Maroon",
+   "locationLabel": "Left Chest",
    "day": "2026-11-05",
-   "expected": 48,
-   "scheduleSignature": "[\"6645\",\"FRONT — 3c — 48 PC78H hoodies: 12 each Woodland Brown · Stonewashed Blue · Maroon · Olive\",48]",
-   "note": "Due Wed night — moved to Thu (crew). NO MOCKUP IN PRINTAVO — art on the order. Blanks have NO status / no ETA — check they were ordered.",
-   "image": "",
+   "expected": 24,
+   "scheduleSignature": "[\"6645\",\"LEFT CHEST — R. Staheli PLUMBING flag patch, 4c — 24 PC78H: 12 Stonewashed Blue + 12 Maroon\",24]",
+   "note": "Due Wed night — moved to Thu (crew). Blanks have NO status / no ETA — check they were ordered. Inks read off the mockup — confirm.",
+   "image": "/data/mocks/2026-11-02/6645_flag.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
-    {
-     "id": "53660958:111342088",
-     "style": "PC78H",
-     "color": "Woodland Brown",
-     "lineItemIds": [
-      "111342088"
-     ],
-     "sizes": [
-      {
-       "id": "53660958:111342088:M",
-       "label": "M",
-       "expected": 1,
-       "sources": [
-        {
-         "lineItemId": "111342088",
-         "size": "size_m",
-         "expected": 1
-        }
-       ]
-      },
-      {
-       "id": "53660958:111342088:L",
-       "label": "L",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "111342088",
-         "size": "size_l",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53660958:111342088:XL",
-       "label": "XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "111342088",
-         "size": "size_xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53660958:111342089",
-     "style": "PC78H",
-     "color": "Woodland Brown",
-     "lineItemIds": [
-      "111342089"
-     ],
-     "sizes": [
-      {
-       "id": "53660958:111342089:2XL",
-       "label": "2XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "111342089",
-         "size": "size_2xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    },
     {
      "id": "53660958:111342090",
      "style": "PC78H",
@@ -3299,9 +3231,251 @@
        ]
       }
      ]
+    }
+   ]
+  },
+  {
+   "id": "6645-flag-back",
+   "job": "6645",
+   "runId": "25047593:6645-flag-back",
+   "batchKeys": [
+    "25047593:53660958"
+   ],
+   "customer": "R Staheli Plumbing — hoodies",
+   "location": "FULL BACK — R. Staheli PLUMBING flag patch, 4c — same 24 (Stonewashed Blue + Maroon)",
+   "locationLabel": "Full Back",
+   "day": "2026-11-05",
+   "expected": 24,
+   "scheduleSignature": "[\"6645\",\"FULL BACK — R. Staheli PLUMBING flag patch, 4c — same 24 (Stonewashed Blue + Maroon)\",24]",
+   "note": "",
+   "image": "/data/mocks/2026-11-02/6645_flag.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53660958:111342090",
+     "style": "PC78H",
+     "color": "Stonewashed Blue",
+     "lineItemIds": [
+      "111342090"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342090:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342090:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342090:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342090",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
     },
     {
-     "id": "53660958:111342094",
+     "id": "53660958:111342091",
+     "style": "PC78H",
+     "color": "Stonewashed Blue",
+     "lineItemIds": [
+      "111342091"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342091:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342091",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342092",
+     "style": "PC78H",
+     "color": "Maroon",
+     "lineItemIds": [
+      "111342092"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342092:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342092:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53660958:111342092:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342092",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53660958:111342093",
+     "style": "PC78H",
+     "color": "Maroon",
+     "lineItemIds": [
+      "111342093"
+     ],
+     "sizes": [
+      {
+       "id": "53660958:111342093:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342093",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6645-mtn-lc",
+   "job": "6645",
+   "runId": "25047593:6645-mtn-lc",
+   "batchKeys": [
+    "25047593:53732598"
+   ],
+   "customer": "R Staheli Plumbing — hoodies",
+   "location": "LEFT CHEST — R. Staheli mountain logo, 2c — 24 PC78H: 12 Woodland Brown + 12 Olive",
+   "locationLabel": "Left Chest",
+   "day": "2026-11-05",
+   "expected": 24,
+   "scheduleSignature": "[\"6645\",\"LEFT CHEST — R. Staheli mountain logo, 2c — 24 PC78H: 12 Woodland Brown + 12 Olive\",24]",
+   "note": "Tonal dark brown on the brown hoodies, tan on the olive (per mockup).",
+   "image": "/data/mocks/2026-11-02/6645_mtn.jpg",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
+    {
+     "id": "53732598:111342088",
+     "style": "PC78H",
+     "color": "Woodland Brown",
+     "lineItemIds": [
+      "111342088"
+     ],
+     "sizes": [
+      {
+       "id": "53732598:111342088:M",
+       "label": "M",
+       "expected": 1,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_m",
+         "expected": 1
+        }
+       ]
+      },
+      {
+       "id": "53732598:111342088:L",
+       "label": "L",
+       "expected": 5,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_l",
+         "expected": 5
+        }
+       ]
+      },
+      {
+       "id": "53732598:111342088:XL",
+       "label": "XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342088",
+         "size": "size_xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53732598:111342089",
+     "style": "PC78H",
+     "color": "Woodland Brown",
+     "lineItemIds": [
+      "111342089"
+     ],
+     "sizes": [
+      {
+       "id": "53732598:111342089:2XL",
+       "label": "2XL",
+       "expected": 3,
+       "sources": [
+        {
+         "lineItemId": "111342089",
+         "size": "size_2xl",
+         "expected": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "53732598:111342094",
      "style": "PC78H",
      "color": "Olive",
      "lineItemIds": [
@@ -3309,7 +3483,7 @@
      ],
      "sizes": [
       {
-       "id": "53660958:111342094:M",
+       "id": "53732598:111342094:M",
        "label": "M",
        "expected": 1,
        "sources": [
@@ -3321,7 +3495,7 @@
        ]
       },
       {
-       "id": "53660958:111342094:L",
+       "id": "53732598:111342094:L",
        "label": "L",
        "expected": 5,
        "sources": [
@@ -3333,7 +3507,7 @@
        ]
       },
       {
-       "id": "53660958:111342094:XL",
+       "id": "53732598:111342094:XL",
        "label": "XL",
        "expected": 3,
        "sources": [
@@ -3347,7 +3521,7 @@
      ]
     },
     {
-     "id": "53660958:111342095",
+     "id": "53732598:111342095",
      "style": "PC78H",
      "color": "Olive",
      "lineItemIds": [
@@ -3355,7 +3529,7 @@
      ],
      "sizes": [
       {
-       "id": "53660958:111342095:2XL",
+       "id": "53732598:111342095:2XL",
        "label": "2XL",
        "expected": 3,
        "sources": [
@@ -3371,24 +3545,24 @@
    ]
   },
   {
-   "id": "6645-back",
+   "id": "6645-mtn-back",
    "job": "6645",
-   "runId": "25047593:6645-back",
+   "runId": "25047593:6645-mtn-back",
    "batchKeys": [
-    "25047593:53660958"
+    "25047593:53732598"
    ],
    "customer": "R Staheli Plumbing — hoodies",
-   "location": "BACK — 3c — same 48 PC78H hoodies",
-   "locationLabel": "Back",
+   "location": "FULL BACK — R. Staheli mountain logo, 2c — same 24 (Woodland Brown + Olive)",
+   "locationLabel": "Full Back",
    "day": "2026-11-05",
-   "expected": 48,
-   "scheduleSignature": "[\"6645\",\"BACK — 3c — same 48 PC78H hoodies\",48]",
+   "expected": 24,
+   "scheduleSignature": "[\"6645\",\"FULL BACK — R. Staheli mountain logo, 2c — same 24 (Woodland Brown + Olive)\",24]",
    "note": "",
-   "image": "",
+   "image": "/data/mocks/2026-11-02/6645_mtn.jpg",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
-     "id": "53660958:111342088",
+     "id": "53732598:111342088",
      "style": "PC78H",
      "color": "Woodland Brown",
      "lineItemIds": [
@@ -3396,7 +3570,7 @@
      ],
      "sizes": [
       {
-       "id": "53660958:111342088:M",
+       "id": "53732598:111342088:M",
        "label": "M",
        "expected": 1,
        "sources": [
@@ -3408,7 +3582,7 @@
        ]
       },
       {
-       "id": "53660958:111342088:L",
+       "id": "53732598:111342088:L",
        "label": "L",
        "expected": 5,
        "sources": [
@@ -3420,7 +3594,7 @@
        ]
       },
       {
-       "id": "53660958:111342088:XL",
+       "id": "53732598:111342088:XL",
        "label": "XL",
        "expected": 3,
        "sources": [
@@ -3434,7 +3608,7 @@
      ]
     },
     {
-     "id": "53660958:111342089",
+     "id": "53732598:111342089",
      "style": "PC78H",
      "color": "Woodland Brown",
      "lineItemIds": [
@@ -3442,7 +3616,7 @@
      ],
      "sizes": [
       {
-       "id": "53660958:111342089:2XL",
+       "id": "53732598:111342089:2XL",
        "label": "2XL",
        "expected": 3,
        "sources": [
@@ -3456,143 +3630,7 @@
      ]
     },
     {
-     "id": "53660958:111342090",
-     "style": "PC78H",
-     "color": "Stonewashed Blue",
-     "lineItemIds": [
-      "111342090"
-     ],
-     "sizes": [
-      {
-       "id": "53660958:111342090:M",
-       "label": "M",
-       "expected": 1,
-       "sources": [
-        {
-         "lineItemId": "111342090",
-         "size": "size_m",
-         "expected": 1
-        }
-       ]
-      },
-      {
-       "id": "53660958:111342090:L",
-       "label": "L",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "111342090",
-         "size": "size_l",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53660958:111342090:XL",
-       "label": "XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "111342090",
-         "size": "size_xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53660958:111342091",
-     "style": "PC78H",
-     "color": "Stonewashed Blue",
-     "lineItemIds": [
-      "111342091"
-     ],
-     "sizes": [
-      {
-       "id": "53660958:111342091:2XL",
-       "label": "2XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "111342091",
-         "size": "size_2xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53660958:111342092",
-     "style": "PC78H",
-     "color": "Maroon",
-     "lineItemIds": [
-      "111342092"
-     ],
-     "sizes": [
-      {
-       "id": "53660958:111342092:M",
-       "label": "M",
-       "expected": 1,
-       "sources": [
-        {
-         "lineItemId": "111342092",
-         "size": "size_m",
-         "expected": 1
-        }
-       ]
-      },
-      {
-       "id": "53660958:111342092:L",
-       "label": "L",
-       "expected": 5,
-       "sources": [
-        {
-         "lineItemId": "111342092",
-         "size": "size_l",
-         "expected": 5
-        }
-       ]
-      },
-      {
-       "id": "53660958:111342092:XL",
-       "label": "XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "111342092",
-         "size": "size_xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53660958:111342093",
-     "style": "PC78H",
-     "color": "Maroon",
-     "lineItemIds": [
-      "111342093"
-     ],
-     "sizes": [
-      {
-       "id": "53660958:111342093:2XL",
-       "label": "2XL",
-       "expected": 3,
-       "sources": [
-        {
-         "lineItemId": "111342093",
-         "size": "size_2xl",
-         "expected": 3
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "53660958:111342094",
+     "id": "53732598:111342094",
      "style": "PC78H",
      "color": "Olive",
      "lineItemIds": [
@@ -3600,7 +3638,7 @@
      ],
      "sizes": [
       {
-       "id": "53660958:111342094:M",
+       "id": "53732598:111342094:M",
        "label": "M",
        "expected": 1,
        "sources": [
@@ -3612,7 +3650,7 @@
        ]
       },
       {
-       "id": "53660958:111342094:L",
+       "id": "53732598:111342094:L",
        "label": "L",
        "expected": 5,
        "sources": [
@@ -3624,7 +3662,7 @@
        ]
       },
       {
-       "id": "53660958:111342094:XL",
+       "id": "53732598:111342094:XL",
        "label": "XL",
        "expected": 3,
        "sources": [
@@ -3638,7 +3676,7 @@
      ]
     },
     {
-     "id": "53660958:111342095",
+     "id": "53732598:111342095",
      "style": "PC78H",
      "color": "Olive",
      "lineItemIds": [
@@ -3646,7 +3684,7 @@
      ],
      "sizes": [
       {
-       "id": "53660958:111342095:2XL",
+       "id": "53732598:111342095:2XL",
        "label": "2XL",
        "expected": 3,
        "sources": [
