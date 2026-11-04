@@ -144,6 +144,10 @@ nav button.on .n{background:rgba(75,156,211,.4)}
 .tdone .tick{background:rgba(61,214,140,.25);border-color:var(--green)}
 .jcard .due{margin-left:auto;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .overduecard{border-color:rgba(224,82,82,.4)}
+/* v4: last-touched + per-job note */
+.touched{color:var(--dim2);font-size:12.5px;white-space:nowrap}
+.jnote{font-size:13px;color:var(--amber);margin-top:4px}
+.jnote::before{content:"✎ ";color:var(--dim2)}
 
 /* pending */
 #pendtiles{display:flex;gap:14px;margin-bottom:16px}
@@ -212,6 +216,7 @@ nav button.on .n{background:rgba(75,156,211,.4)}
 /* ===== config ===== */
 const WORKER = "https://mayhem-ops-state.autumn-mountain-14c6.workers.dev";
 const DATA_URL = "data/ops.json";
+const NOTES_URL = "data/notes.json";   // {"<visualId>": "short note"} — edited by hand / Claude
 const LANES = {FILMS:"Films", WVN:"Woven", DTF:"DTF", LASER:"Laser", DIGI:"Digitizing", OUTSOURCE:"Outsource"};
 const ACT_LABEL = {onfile:"ON FILE", made:"MADE", ordered:"ORDERED", printed:"PRINTED",
                    sent:"SENT OUT", received:"RECEIVED"};
@@ -253,6 +258,7 @@ window.addEventListener("hashchange", async () => {
 
 let OPS = null, STATE = {}, OV = {}, tab = sessionStorage.getItem("mo-tab") || "MUST";
 let V2IMG = {};   // visualId -> mockup path
+let NOTES = {};  // visualId -> note
 
 /* effective lanes after user moves (overrides live in KV, keyed by taskId).
    The taskId NEVER changes on a move — check-off state follows the row. */
@@ -285,6 +291,23 @@ function dueTxt(days, due){
   return `${day} · in ${days}d`;
 }
 const uCls = u => "u-" + u;
+/* "touched Nov 2 · 6:33pm" — last REAL Printavo update (bulk updates are ignored by the builder) */
+function touchedHtml(j){
+  if (!j.touched){
+    if (!j.touchedBatch) return "";
+    const b = new Date(j.touchedBatch).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit",timeZone:"America/Denver"});
+    return `<span class="touched" title="only a bulk update (${esc(b)}) since tracking started">touched —</span>`;
+  }
+  const t = new Date(j.touched), tz = {timeZone:"America/Denver"};
+  const day = s => new Date(s).toLocaleDateString("en-CA", tz);
+  const today = day(Date.now()), yest = day(Date.now() - 864e5);
+  const d = day(t) === today ? "today" : day(t) === yest ? "yesterday"
+          : t.toLocaleDateString("en-US", {month:"short", day:"numeric", ...tz});
+  const hm = t.toLocaleTimeString("en-US", {hour:"numeric", minute:"2-digit", ...tz}).toLowerCase().replace(" ","");
+  return `<span class="touched" title="last updated in Printavo">touched ${d} · ${hm}</span>`;
+}
+const noteHtml = v => NOTES[v] ? `<div class="jnote">${esc(NOTES[v])}</div>` : "";
+const jobOf = v => OPS.jobs.find(x => x.visualId === v) || (OPS.payment || []).find(x => x.visualId === v);
 function stampTxt(st){
   const t = new Date(st.ts);
   const hm = t.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}).toLowerCase().replace(" ","");
@@ -297,6 +320,13 @@ async function loadOps(){
   const r = await fetch(DATA_URL + "?cb=" + Date.now());
   if (!r.ok) throw new Error("ops.json " + r.status);
   OPS = await r.json();
+}
+async function loadNotes(){
+  if (window.__PREVIEW_NOTES){ NOTES = window.__PREVIEW_NOTES; return; }
+  try{
+    const r = await fetch(NOTES_URL + "?cb=" + Date.now());
+    if (r.ok){ const d = await r.json(); NOTES = d.notes || d; }
+  }catch(e){ /* notes are optional */ }
 }
 async function loadState(){
   if (!KEY) return;
@@ -370,6 +400,7 @@ function renderTabs(){
     if (!eff[k].length) continue;
     t.push([k, label, eff[k].filter(r => !isCleared(r)).length]);
   }
+  if (OPS.payment) t.push(["PAY","Waiting for final payment", OPS.payment.length]);
   if (KEY) t.push(["PEND","Pending Quotes", OPS.pendingCount]);
   $("#tabs").innerHTML = t.map(([k,label,n]) =>
     `<button data-t="${k}" class="${tab===k?"on":""}">${label}${n!=null?`<span class="n">${n}</span>`:""}</button>`).join("");
@@ -435,7 +466,8 @@ function laneRow(k, r){
     ${thumb}
     <span class="v"><a href="https://www.printavo.com/invoices/${jobId(r.v)}" target="_blank">#${r.v}</a></span>
     <div class="meat"><div class="job">${esc(r.job)}${badge}</div>
-      <div class="sub">${esc(r.cust)}${sub ? " — " + sub : ""}</div></div>
+      <div class="sub">${esc(r.cust)}${sub ? " — " + sub : ""}</div>${noteHtml(r.v)}</div>
+    ${(() => { const j = jobOf(r.v); return j ? touchedHtml(j) : ""; })()}
     ${r.qty ? `<span class="qty">${r.qty} pc</span>` : ""}
     <span class="due ${uCls(r.urgency)}">${dueTxt(r.days, r.due)}</span>
     ${right}</div>`;
@@ -466,20 +498,28 @@ function jobCard(j, laneRows, dim){
     const badges =
       (j.new ? `<span class="badge b-new">NEW</span>` : "") +
       (j.onHold ? `<span class="badge b-hold">ON HOLD</span>` : "") +
-      j.flags.filter(f => f !== "ON HOLD").map(f => `<span class="badge b-flag">${esc(f)}</span>`).join("");
+      (j.flags||[]).filter(f => f !== "ON HOLD").map(f => `<span class="badge b-flag">${esc(f)}</span>`).join("");
     return `<div class="card jcard ${j.overdue?"overduecard":""}"${dim?' style="opacity:.55"':''}>
       <div class="jrow">
         ${cardThumb}
         <div style="flex:1;min-width:0">
           <div class="top"><span class="v"><a style="color:var(--blue2);text-decoration:none;font-weight:800" href="${j.url}" target="_blank">#${j.visualId}</a></span>
             <span class="nick">${esc(j.nickname || j.customer)}</span>
-            <span class="due ${j.overdue?"u-red":j.days<=2?"u-amber":"u-ok"}">${dueTxt(j.days, j.due)}</span></div>
-          <div class="cust">${esc(j.customer)} · ${j.qty} pcs · ${esc(j.status)}</div>
-          <div class="chips">${j.services.map(s=>`<span class="chip">${s}</span>`).join("")}${badges}</div>
+            <span class="due ${j.overdue?"u-red":j.days==null?"u-ok":j.days<=2?"u-amber":"u-ok"}">${j.days==null ? "due " + new Date(j.due+"T12:00:00").toLocaleDateString("en-US",{month:"numeric",day:"numeric"}) : dueTxt(j.days, j.due)}</span></div>
+          <div class="cust">${esc(j.customer)} · ${j.qty} pcs · ${esc(j.status)} ${touchedHtml(j)}</div>
+          ${noteHtml(j.visualId)}
+          <div class="chips">${(j.services||[]).map(s=>`<span class="chip">${s}</span>`).join("")}${badges}</div>
           <ul>${items}</ul>
         </div>
       </div></div>`;
   }
+}
+/* ===== waiting for final payment (produced; never on the lanes, never counted late) ===== */
+function payView(){
+  const p = OPS.payment || [];
+  if (!p.length) return `<div class="gone">Nobody's waiting on a final payment.</div>`;
+  return `<div class="lanehead"><b>Waiting for final payment</b> — produced, waiting on the last payment. Not counted late.</div>
+    <div class="grid">` + p.map(j => jobCard({...j, new:false, overdue:false, days:null}, [], false)).join("") + `</div>`;
 }
 function laneLabel(r){ return r.what || (r.locs && r.locs.length ? r.locs.join(", ") : (r.qty ? r.qty + " pc" : "task")); }
 
@@ -546,6 +586,7 @@ async function render(){
   const v = $("#view");
   if (tab === "MUST" || tab === "ALL") v.innerHTML = allView();
   else if (tab === "PEND") v.innerHTML = await pendView();
+  else if (tab === "PAY") v.innerHTML = payView();
   else if (LANES[tab]) v.innerHTML = laneView(tab);
   else { tab = "MUST"; v.innerHTML = allView(); }
   // wire lane actions
@@ -589,11 +630,17 @@ document.addEventListener("click", closeMenu);
 (async function(){
   try{ await loadOps(); }
   catch(e){ $("#built").textContent = ""; showErr("Couldn't load the board data (" + e.message + "). Check the publish."); return; }
-  V2IMG = {}; OPS.jobs.forEach(j => { if (j.img) V2IMG[j.visualId] = j.img; });
+  V2IMG = {}; OPS.jobs.concat(OPS.payment || []).forEach(j => { if (j.img) V2IMG[j.visualId] = j.img; });
+  await loadNotes();
   if (!KEY) showErr("VIEW ONLY — this browser isn't unlocked. Paste your full bookmarked link (the one with #k=) into the address bar and hit Enter; it unlocks this machine for good.", true);
   await loadState();
   render();
   setInterval(async () => { await loadState(); render(); }, 60000);   // two-iMac sync
+  setInterval(async () => {   // pick up the midday rebuild + note edits without a reload
+    try{ await loadOps(); await loadNotes();
+      V2IMG = {}; OPS.jobs.concat(OPS.payment || []).forEach(j => { if (j.img) V2IMG[j.visualId] = j.img; });
+      render(); }catch(e){}
+  }, 15 * 60000);
 })();
 </script>
 </body>

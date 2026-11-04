@@ -8,6 +8,10 @@ Mayhem Ops daily builder.
 
 Lanes: FILMS (Joe) · WVN order · DTF print/order · LASER make (leather/engrave/UV) · DIGI (embroidery digitizing)
 Task IDs are stable: "<visualId>:<lane>" — KV state keys on them. Never add volatile text.
+v4 (2026-11-04): jobs carry "touched" (Printavo timestamps.updatedAt -> pull.json "upd"; bulk
+updates ignored), payment-status jobs go to ops.json "payment" (own tab, never late), and
+QUOTE-type statuses never reach the board. Per-job notes live in data/notes.json (read by the page).
+Optional input ops-last.json = live ops.json, used by midday runs to carry "touched" forward.
 """
 import json, re, datetime, sys, os
 from zoneinfo import ZoneInfo
@@ -32,9 +36,21 @@ EXCLUDE_STATUS = {
     "215155",  # Brandmakers complete
     "542109",  # Creation Cartel shipped
     "212737", "326764",  # Dead quote / Dont schedule
-    "248476",  # Request final payment  (produced; collections territory, Tuesday run)
-    "542108",  # Creation Cartel ready-needs-payment  (shipping skill territory)
 }
+# Produced, waiting on the last payment -> "Waiting for final payment" tab.
+# Never on the lanes, never counted late. (v4, 2026-11-04)
+PAYMENT_STATUS = {
+    "248476",  # Request final payment (email/text sent out)
+    "542108",  # Creation Cartel - Ready needs payment shipping
+    "542115",  # Creation Cartel - Ready needs payment pickup
+}
+# Printavo QUOTE-type statuses. Unapproved quotes live ONLY on the Pending Quotes tab;
+# if one ever shows up in the invoice pull it is dropped from the board.
+QUOTE_STATUS = {"142591", "142592", "197390", "527476"}
+# "last touched": orders saved in a burst are a batch/bulk update, not real work.
+BATCH_WINDOW_S = 90   # >= BATCH_MIN orders updated within this many seconds of each other
+BATCH_MIN = 3
+BATCH_SAME_S = 1      # ...or 2+ orders updated in the same second
 ON_HOLD = {"142603"}
 
 RX = {
@@ -62,6 +78,42 @@ def denver_date(iso):
         return datetime.datetime.fromisoformat(iso).astimezone(DENVER).date()
     except ValueError:
         return datetime.date.fromisoformat(iso[:10])
+
+
+def to_denver(iso):
+    try:
+        return datetime.datetime.fromisoformat(iso).astimezone(DENVER)
+    except (ValueError, TypeError):
+        return None
+
+
+def batch_set(pull):
+    """visualIds whose updatedAt is part of a bulk update. Printavo returns random
+    UTC offsets per call, so compare true instants, never the raw strings."""
+    pts = sorted((t.timestamp(), j["v"]) for j in pull["jobs"]
+                 if (t := to_denver(j.get("upd"))))
+    out = set()
+    for i, (ts, v) in enumerate(pts):
+        near = [w for t2, w in pts if abs(t2 - ts) <= BATCH_WINDOW_S]
+        same = [w for t2, w in pts if abs(t2 - ts) <= BATCH_SAME_S]
+        if len(near) >= BATCH_MIN or len(same) >= 2:
+            out.add(v)
+    return out
+
+
+def touched_for(job, batch, last_touched):
+    """ISO Denver time of the last REAL update. Batch updates are ignored: keep the
+    last real touch from the previous build if we have one, else None."""
+    t = to_denver(job.get("upd"))
+    if t and job["v"] not in batch:
+        return t.isoformat(timespec="minutes")
+    return last_touched.get(job["v"])
+
+
+def batch_ts(job, batch):
+    """When the ignored bulk update happened (shown only as a tooltip)."""
+    t = to_denver(job.get("upd"))
+    return t.isoformat(timespec="minutes") if (t and job["v"] in batch) else None
 
 
 def blob(job):
@@ -105,16 +157,36 @@ def build():
     hist = json.load(open("history.json"))
     try:
         prev = json.load(open("ops-prev.json"))
-        prev_ids = {j["visualId"] for j in prev.get("jobs", [])}
+        prev_ids = {j["visualId"] for j in prev.get("jobs", []) + prev.get("payment", [])}
     except FileNotFoundError:
-        prev_ids = None  # first run: nobody is "new"
+        prev, prev_ids = {}, None  # first run: nobody is "new"
+    # last real touch carried forward when today's updatedAt is a batch update.
+    # ops-last.json = the live ops.json (midday runs); falls back to ops-prev.json.
+    try:
+        last = json.load(open("ops-last.json"))
+    except FileNotFoundError:
+        last = prev
+    last_touched = {j["visualId"]: j["touched"] for j in last.get("jobs", []) + last.get("payment", [])
+                    if j.get("touched")}
+    batch = batch_set(pull)
 
-    jobs_out, lanes = [], {"FILMS": [], "WVN": [], "DTF": [], "LASER": [], "DIGI": []}
+    jobs_out, pay_out, lanes = [], [], {"FILMS": [], "WVN": [], "DTF": [], "LASER": [], "DIGI": []}
 
     for job in pull["jobs"]:
-        if job["statusId"] in EXCLUDE_STATUS:
+        if job["statusId"] in EXCLUDE_STATUS or job["statusId"] in QUOTE_STATUS:
             continue
         due = denver_date(job["due"])
+        touched = touched_for(job, batch, last_touched)
+        if job["statusId"] in PAYMENT_STATUS:
+            pay_out.append({
+                "id": job["id"], "visualId": job["v"], "img": None,
+                "url": f'https://www.printavo.com/invoices/{job["id"]}',
+                "nickname": job["nick"], "customer": job["customer"].strip(),
+                "due": str(due), "status": job["status"], "qty": job["qty"],
+                "touched": touched, "touchedBatch": batch_ts(job, batch),
+                "new": (prev_ids is not None and job["v"] not in prev_ids),
+            })
+            continue
         on_hold = job["statusId"] in ON_HOLD
         b = blob(job)
         cust = job["customer"].strip()
@@ -266,12 +338,27 @@ def build():
             "overdue": due < TODAY and not on_hold, "onHold": on_hold,
             "status": job["status"], "qty": job["qty"],
             "services": sorted(services), "tasks": tasks, "flags": flags,
+            "touched": touched, "touchedBatch": batch_ts(job, batch),
             "new": (prev_ids is not None and job["v"] not in prev_ids),
         })
 
     for lane in lanes.values():
         lane.sort(key=lambda r: r["due"])
     jobs_out.sort(key=lambda j: (not j["overdue"], j["due"]))
+    pay_out.sort(key=lambda j: j["due"])
+    for j in pay_out:   # mockup thumbs for the payment tab: published ones only (no new mock fetch)
+        if os.path.exists(f'mocks/{j["visualId"]}_1.jpg'):
+            j["img"] = f'/ops/data/mocks/{j["visualId"]}_1.jpg'
+        else:
+            try:
+                import urllib.request
+                rq = urllib.request.Request(
+                    f'https://mayhemink.github.io/ops/data/mocks/{j["visualId"]}_1.jpg', method="HEAD")
+                with urllib.request.urlopen(rq, timeout=8) as resp:
+                    if resp.status == 200:
+                        j["img"] = f'/ops/data/mocks/{j["visualId"]}_1.jpg'
+            except Exception:
+                pass
 
     # ---- must-do strip ---------------------------------------------------------
     RANK = {"red": 0, "amber": 1}
@@ -309,7 +396,7 @@ def build():
 
     ops = {
         "built": datetime.datetime.now(DENVER).isoformat(timespec="seconds"),
-        "window": pull["window"], "jobs": jobs_out, "lanes": lanes, "must": must,
+        "window": pull["window"], "jobs": jobs_out, "payment": pay_out, "lanes": lanes, "must": must,
         "pendingCount": len(pend),
         "pendingPaidCount": sum(1 for e in pend if e["paid"] > 0 and "adminFlag" not in e),
     }
@@ -332,6 +419,8 @@ def build():
         L.append("Nothing burns today — you're ahead.")
     L.append("")
     L.append("Lanes: " + " · ".join(f"{ln} {len(rows)}" for ln, rows in lanes.items() if rows))
+    if pay_out:
+        L.append(f"Waiting for final payment: {len(pay_out)} (not counted late)")
     new = [j for j in jobs_out if j["new"]]
     if new:
         L.append("New since yesterday: " + ", ".join(f'#{j["visualId"]} {j["nickname"] or j["customer"]}' for j in new))
@@ -353,7 +442,9 @@ def build():
     open("email.md", "w").write("\n".join(L))
 
     # ---- console review --------------------------------------------------------
-    print(f"jobs on board: {len(jobs_out)}   (excluded finished/pickup/collections statuses)")
+    print(f"jobs on board: {len(jobs_out)}   (excluded finished/pickup statuses)")
+    print(f"waiting for final payment: {len(pay_out)}: " + ", ".join("#" + j["visualId"] for j in pay_out))
+    print(f"batch-updated (touched ignored): {sorted(batch)}")
     for ln, rows in lanes.items():
         print(f"\n{ln} lane ({len(rows)}):")
         for r in rows:
