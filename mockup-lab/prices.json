@@ -1920,6 +1920,119 @@
           "base": 3.0
         }
       }
+    },
+    "3000": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL",
+        "5XL"
+      ],
+      "verified": false
+    },
+    "6030": {
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
+    },
+    "PRM3500": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
+    },
+    "PRM4600QZ": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "verified": false
+    },
+    "AFX90UN": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "verified": false
+    },
+    "6003": {
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "verified": false
+    },
+    "6682": {
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "verified": false
+    },
+    "6240": {
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "verified": false
+    },
+    "241": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL"
+      ],
+      "verified": false
+    },
+    "3321": {
+      "sizes": [
+        "2T",
+        "3T",
+        "4T",
+        "5/6",
+        "7"
+      ],
+      "verified": false
     }
   }
 }
