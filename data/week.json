@@ -685,66 +685,24 @@
       "INK SWAP"
      ],
      "due": "2026-11-11"
-    },
-    {
-     "id": "6664-front",
-     "job": "6664",
-     "url": "https://www.printavo.com/invoices/25117045",
-     "customer": "R Staheli — Girls Basketball travel gear",
-     "nickname": "Staheli Basketball",
-     "location": "FRONT — girls basketball travel design, 1c — 32 tees: 31 BC4719 Vintage White + 1 BC4739 Dust",
-     "qty": 32,
-     "colors": 1,
-     "screens": 1,
-     "due": "2026-11-11",
-     "inks": [],
-     "tags": [
-      "VERIFY"
-     ],
-     "note": "NO MOCKUP IN PRINTAVO — art on the order.",
-     "alert": "No mockup, no ink color on the order — get art + ink from Kolton before setup.",
-     "noest": true,
-     "arrived": "2026-11-06"
-    },
-    {
-     "id": "6664-leg",
-     "job": "6664",
-     "url": "https://www.printavo.com/invoices/25117045",
-     "customer": "R Staheli — Girls Basketball travel gear",
-     "nickname": "Staheli Basketball",
-     "location": "LEFT LEG — 1c — 32 bottoms: 31 BC4737 Navy + 1 PC78YJ youth Navy",
-     "qty": 32,
-     "colors": 1,
-     "screens": 1,
-     "due": "2026-11-11",
-     "inks": [],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true,
-     "arrived": "2026-11-06"
     }
    ],
    "flags": [
     [
      "CREW",
-     "Jalen + Spencer. ~5.0 press-hrs carded."
+     "Jalen + Spencer. ~4.3 press-hrs carded."
     ],
     [
      "RUN ORDER",
-     "6611 XD Roofing (all 4, due today) → 6664 Staheli basketball (due today)."
+     "6611 XD Roofing — all 4 runs, due today."
     ],
     [
      "VERIFY",
-     "6664 — no mockups or ink colors. 6611 ink per garment (tan on dark camo, black on light)."
-    ],
-    [
-     "HOLD",
-     "6664 — 4 BC4711 Dust crews (4c front + back) sold out everywhere; not carded."
+     "6611 ink per garment (tan on dark camo, black on light)."
     ],
     [
      "NOT PRESS",
-     "6611 hats + beanies (embroidery)."
+     "6611 hats + beanies (embroidery) · 6664 Staheli basketball (DTF transfers)."
     ]
    ]
   },
