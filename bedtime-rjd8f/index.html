@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bedtime</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bedtime">
+<meta name="theme-color" content="#1F2650">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%8C%99%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#EEF1F7; --card:#FFFFFF; --ink:#1C2238; --muted:#5E6782; --line:#D9DEEA;
+  --accent:#5B4FA8; --accent-ink:#FFFFFF; --soft:#E6E2F6; --night:#1F2650; --night-ink:#F3F1FF;
+  --warn:#8A5A1E; --warn-bg:#FBF0DC; --danger:#9C3B3B;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#101428; --card:#1A2040; --ink:#EEF0FA; --muted:#A5ABC7; --line:#2C3460;
+    --accent:#A99BEF; --accent-ink:#15193A; --soft:#272E58; --night:#0B0E22; --night-ink:#F3F1FF;
+    --warn:#F1C27B; --warn-bg:#3A2E14; --danger:#F08C8C;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101428; --card:#1A2040; --ink:#EEF0FA; --muted:#A5ABC7; --line:#2C3460;
+  --accent:#A99BEF; --accent-ink:#15193A; --soft:#272E58; --night:#0B0E22; --night-ink:#F3F1FF;
+  --warn:#F1C27B; --warn-bg:#3A2E14; --danger:#F08C8C;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45}
+main{max-width:520px;margin:0 auto;padding:16px 16px 48px}
+h1{font-size:20px;font-weight:800;margin:4px 0 12px;letter-spacing:-.01em}
+h2{font-size:15px;font-weight:800;margin:0 0 10px;color:var(--muted)}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+
+.answer{background:var(--night);color:var(--night-ink);border:none;padding:20px 18px 18px}
+.answer .label{opacity:.8;font-size:14px;font-weight:600}
+.answer .big{font-size:52px;font-weight:800;line-height:1;letter-spacing:-.02em;margin:4px 0 2px}
+.answer .sub{font-size:16px;opacity:.9}
+.answer .empty{font-size:16px;opacity:.9;margin:0}
+.answer .next{font-size:15px;background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;margin:0 0 14px}
+.track{position:relative;height:38px;margin:18px 0 4px}
+.track .bar{position:absolute;left:0;right:0;top:17px;height:4px;background:rgba(255,255,255,.22);border-radius:2px}
+.track .pt{position:absolute;top:10px;transform:translateX(-50%);text-align:center;font-size:12px;line-height:1;white-space:nowrap}
+.track .pt b{display:block;width:10px;height:10px;border-radius:50%;background:var(--night-ink);margin:0 auto 6px}
+.track .pt.crib b{width:14px;height:14px;background:#C9BEFF;margin-top:-2px;margin-bottom:4px}
+.notes{margin:12px 0 0;padding:0;list-style:none;font-size:14px;opacity:.95}
+.notes li{padding:6px 0;border-top:1px solid rgba(255,255,255,.14)}
+.notes li.alt{opacity:.85}
+
+.seg{display:flex;gap:6px;background:var(--bg);padding:4px;border-radius:14px}
+.seg button{flex:1;border:0;background:transparent;padding:10px 6px;border-radius:11px;font:inherit;font-weight:700;color:var(--muted);min-height:44px}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row > *{flex:1 1 0}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600;min-width:0}
+input,select{font:inherit;font-size:16px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);width:100%;min-height:44px}
+input[type=number]{-moz-appearance:textfield}
+button.add{border:0;background:var(--soft);color:var(--ink);font:inherit;font-weight:800;padding:0 14px;border-radius:10px;min-height:44px;flex:0 0 auto}
+button.add:active{transform:scale(.98)}
+
+ul.list{list-style:none;margin:10px 0 0;padding:0}
+ul.list li{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+ul.list li:first-child{border-top:0}
+ul.list .t{font-weight:800;min-width:118px}
+ul.list .d{color:var(--muted);flex:1}
+ul.list .x{border:0;background:transparent;color:var(--muted);font-size:20px;padding:6px 10px;min-height:44px}
+.total{margin-top:10px;font-size:14px;color:var(--muted);font-weight:600}
+.flag{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:8px 10px;font-size:14px;margin-top:10px;font-weight:600}
+
+details{margin-top:4px}
+summary{cursor:pointer;font-weight:800;color:var(--muted);font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:44px}
+summary::after{content:"+";font-size:22px}
+details[open] summary::after{content:"–"}
+.hist{list-style:none;margin:6px 0 0;padding:0}
+.hist li{padding:10px 0;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;font-size:14px}
+.hist .dt{font-weight:800;min-width:92px}
+.hist .m{color:var(--muted);flex:1}
+.hist button{border:0;background:var(--soft);color:var(--ink);font:inherit;font-weight:700;padding:6px 10px;border-radius:8px;min-height:36px}
+.status{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
+.hide{display:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<h1 id="dayTitle">Today</h1>
+
+<section class="answer" id="answer" aria-live="polite">
+  <p class="empty">Log his morning wake and naps below. Bedtime appears here after the last nap.</p>
+</section>
+
+<section>
+  <h2>What kind of day</h2>
+  <div class="seg" id="dayType" role="group" aria-label="Day type">
+    <button data-v="home">Home</button>
+    <button data-v="stgeorge">St. George</button>
+    <button data-v="grandma">Grandma</button>
+  </div>
+  <div class="row" id="homeRow" style="margin-top:12px">
+    <label class="f">Expect to be home at
+      <input type="time" id="homeAt">
+    </label>
+  </div>
+</section>
+
+<section>
+  <h2>Morning</h2>
+  <div class="row">
+    <label class="f">Woke up for the day
+      <input type="time" id="wake">
+    </label>
+  </div>
+</section>
+
+<section>
+  <h2>Naps</h2>
+  <div id="estBox" class="hide" style="margin-bottom:12px">
+    <div class="flag" style="margin:0 0 10px">Grandma’s rough numbers. Use these instead of logging each nap.</div>
+    <div class="row">
+      <label class="f">Slept about (hrs)<input type="number" id="estH" inputmode="numeric" min="0" max="6" step="1" placeholder="2"></label>
+      <label class="f">and (min)<input type="number" id="estM" inputmode="numeric" min="0" max="59" step="5" placeholder="30"></label>
+      <label class="f">Last nap ended about<input type="time" id="estEnd"></label>
+    </div>
+  </div>
+  <div id="napStartBox">
+    <div class="row">
+      <label class="f">Fell asleep at<input type="time" id="napStart"></label>
+      <label class="f">Where
+        <select id="napWhere">
+          <option value="crib">Crib</option>
+          <option value="held">Held</option>
+          <option value="car">Car</option>
+          <option value="grandma">Grandma’s</option>
+          <option value="stroller">Stroller</option>
+        </select>
+      </label>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="add" id="startNap" style="flex:1">He’s asleep</button>
+    </div>
+  </div>
+  <div id="napEndBox" class="hide">
+    <div class="flag" id="napOpenMsg" style="margin:0 0 10px"></div>
+    <div class="row">
+      <label class="f">Woke up at<input type="time" id="napEnd"></label>
+      <button class="add" id="endNap">He’s up</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="add" id="cancelNap" style="background:transparent;color:var(--muted)">That wasn’t a nap, clear it</button>
+    </div>
+  </div>
+  <ul class="list" id="napList"></ul>
+  <div class="total" id="napTotal"></div>
+</section>
+
+<section>
+  <h2>Bottles</h2>
+  <div class="row">
+    <label class="f">Time<input type="time" id="feedTime"></label>
+    <label class="f">Ounces<input type="number" id="feedOz" inputmode="decimal" step="0.5" min="0" placeholder="6"></label>
+    <button class="add" id="addFeed">Add bottle</button>
+  </div>
+  <ul class="list" id="feedList"></ul>
+  <div class="total" id="feedTotal"></div>
+</section>
+
+<section>
+  <details id="histBox">
+    <summary>Past days</summary>
+    <ul class="hist" id="hist"></ul>
+  </details>
+  <div class="status" id="status"></div>
+</section>
+</main>
+
+<script>
+(function(){
+  // ---------- helpers ----------
+  const $ = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2,"0");
+  const toMin = t => { if(!t) return null; const [h,m]=t.split(":").map(Number); return h*60+m; };
+  const fromMin = m => { m=Math.round(m); const h=Math.floor(m/60)%24; return pad(h)+":"+pad(m%60); };
+  const pretty = t => { if(t==null) return "—"; const m=typeof t==="number"?t:toMin(t); let h=Math.floor(m/60)%24; const mm=m%60; const ap=h>=12?"pm":"am"; h=h%12||12; return h+":"+pad(mm)+" "+ap; };
+  const dur = m => { const h=Math.floor(m/60), mm=m%60; return h? (h+" hr"+(mm?" "+mm+" min":"")) : mm+" min"; };
+  const todayKey = () => { const d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); };
+  const nowMin = () => { const d=new Date(); return d.getHours()*60+d.getMinutes(); };
+  const whereName = {crib:"crib",held:"held",car:"car",grandma:"Grandma’s",stroller:"stroller"};
+
+  // ---------- state ----------
+  let key = todayKey();
+  let day = blank();
+  function blank(){ return {dayType:"home", wake:"", homeAt:"", naps:[], feeds:[], open:null, est:{min:0,end:""}}; }
+
+  // ---------- storage (Cloudflare Worker + KV) ----------
+  const API = "https://mayhem-bedtime-state.autumn-mountain-14c6.workers.dev";  // set by deploy step
+  const LS = "bedtime-days", PINKEY = "bedtime-pin";
+  let pin = null, lastRemote = 0, lastLocalWrite = 0, pollTimer = null;
+  function lsAll(){ try{ return JSON.parse(localStorage.getItem(LS)||"{}"); }catch(e){ return {}; } }
+  function lsSave(k, d){ try{ const a=lsAll(); a[k]=d; localStorage.setItem(LS, JSON.stringify(a)); }catch(e){} }
+  function setStatus(s){ $("status").textContent = s; }
+
+  function getPin(){
+    if(pin) return pin;
+    try{ pin = localStorage.getItem(PINKEY); }catch(e){}
+    while(!pin){
+      const p = prompt("Enter the family PIN");
+      if(p===null) return null;
+      pin = p.trim();
+    }
+    try{ localStorage.setItem(PINKEY, pin); }catch(e){}
+    return pin;
+  }
+  async function api(method, path, body){
+    const p = getPin(); if(!p) throw new Error("no pin");
+    const res = await fetch(API+path, {method, headers:{"content-type":"application/json","x-pin":p}, body: body?JSON.stringify(body):undefined});
+    if(res.status===401){ pin=null; try{localStorage.removeItem(PINKEY);}catch(e){} setStatus("Wrong PIN. Reload to try again."); throw new Error("bad pin"); }
+    if(!res.ok) throw new Error("api "+res.status);
+    return res.status===204 ? null : res.json();
+  }
+
+  let writing = Promise.resolve();
+  function save(){
+    lsSave(key, day);
+    lastLocalWrite = Date.now();
+    const snapshot = JSON.parse(JSON.stringify(day));
+    writing = writing.then(()=>api("PUT","/day/"+key, snapshot)).then(r=>{ if(r&&r.updatedAt) lastRemote=r.updatedAt; setStatus("Synced."); })
+      .catch(e=>{ setStatus("Couldn’t sync. Saved on this phone; will retry."); });
+    render();
+  }
+  async function pull(){
+    try{
+      const r = await api("GET","/day/"+key);
+      if(r && r.data && r.updatedAt && r.updatedAt > Math.max(lastRemote, lastLocalWrite)){
+        lastRemote = r.updatedAt;
+        day = Object.assign(blank(), JSON.parse(JSON.stringify(r.data)));
+        lsSave(key, day); render();
+      }
+      if(r && r.updatedAt) lastRemote = Math.max(lastRemote, r.updatedAt);
+      setStatus("Synced.");
+    }catch(e){ if(e.message!=="bad pin") setStatus("Offline. Showing what’s on this phone."); }
+  }
+  async function initDb(){
+    loadLocal();
+    await pull();
+    loadHistory();
+    pollTimer = setInterval(pull, 15000);
+    document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) pull(); });
+  }
+  function loadLocal(){ const a=lsAll(); if(a[key]) day=Object.assign(blank(), a[key]); render(); }
+
+  async function loadHistory(){
+    const list = $("hist"); list.innerHTML="";
+    let rows = [];
+    try{ const r = await api("GET","/days"); rows = (r.days||[]).map(x=>({k:x.id, d:x.data})); }catch(e){}
+    if(!rows.length){ const a=lsAll(); rows = Object.keys(a).map(k=>({k, d:a[k]})); }
+    rows = rows.filter(r=>r.k!==key).sort((a,b)=>a.k<b.k?1:-1).slice(0,14);
+    if(!rows.length){ list.innerHTML="<li class='m'>Nothing logged yet.</li>"; return; }
+    rows.forEach(r=>{
+      const calc = compute(r.d, true);
+      const li=document.createElement("li");
+      const total = (r.d.naps||[]).reduce((s,n)=>s+n.min,0);
+      const oz = (r.d.feeds||[]).reduce((s,f)=>s+(+f.oz||0),0);
+      li.innerHTML = `<span class="dt">${niceDate(r.k)}</span><span class="m">${(r.d.naps||[]).length} naps, ${dur(total)} · ${oz} oz · ${calc.crib!=null?"crib "+pretty(calc.crib):"no bedtime"}</span>`;
+      const b=document.createElement("button"); b.textContent="Open"; b.onclick=()=>openDay(r.k, r.d);
+      li.appendChild(b); list.appendChild(li);
+    });
+  }
+  function niceDate(k){ const [y,m,d]=k.split("-").map(Number); return new Date(y,m-1,d).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); }
+  function openDay(k, d){
+    if(pollTimer){ clearInterval(pollTimer); pollTimer=null; }
+    key=k; day=Object.assign(blank(), JSON.parse(JSON.stringify(d))); $("dayTitle").textContent = (k===todayKey()?"Today":niceDate(k)); render();
+    if(k!==todayKey()){ const b=document.createElement("button"); b.className="add"; b.textContent="Back to today"; b.style.marginTop="10px"; b.onclick=()=>location.reload(); $("histBox").appendChild(b); }
+    window.scrollTo({top:0});
+  }
+
+  // ---------- the calculator ----------
+  // Encodes the rules worked out for him at 6–7 months:
+  //  • normal last window 2:15–2:30, short end on low-sleep days, long end on 3 hr+ days
+  //  • a catnap (≤35 min) that ends after 4:30 only needs 60–75 min before the crib
+  //  • crib no earlier than 5:45 (5:30 if under 2 hrs of naps), no later than 7:15
+  //  • St. George days: car-nap logic off the arrival time, short routine if there’s no time for the bath
+  //  • Grandma days: short routine, crib by about 6:30, gentler check-in timers
+  function compute(d, quiet){
+    const r = {crib:null, bath:null, routine:"full", notes:[], lastWake:null, total:0, intervals:"15 · 17 · 20", nextNap:null, nextFeed:null, napLabel:""};
+    const naps = (d.naps||[]).slice().sort((a,b)=>toMin(a.end)-toMin(b.end));
+    const est = (d.dayType==="grandma" && d.est && (d.est.min>0 || d.est.end)) ? d.est : null;
+    if(est && est.end){
+      const lastLogged = naps.length ? toMin(naps[naps.length-1].end) : -1;
+      if(toMin(est.end) > lastLogged) naps.push({start:est.end, end:est.end, min:est.min||0, where:"grandma", est:true});
+    }
+    r.total = naps.reduce((s,n)=>s+n.min,0) + (est && !est.end ? (est.min||0) : 0);
+    const wake = toMin(d.wake);
+    // next bottle: 3 hours after the last one
+    const feeds = (d.feeds||[]).slice().sort((a,b)=>toMin(a.time)-toMin(b.time));
+    if(feeds.length) r.nextFeed = toMin(feeds[feeds.length-1].time)+180;
+    // next nap: window depends on which nap is next
+    const lw = naps.length ? toMin(naps[naps.length-1].end) : wake;
+    if(lw!=null && !(d.open&&d.open.start)){
+      const n = naps.length;
+      const w = n===0 ? 120 : n===1 ? 120 : 135;
+      const cand = lw + w;
+      if(n<=2 && cand <= 16*60+15 && r.total < 195){ r.nextNap = cand; r.napLabel = n===0?"Nap 1":n===1?"Nap 2":"Nap 3"; }
+      else if(n>=3 && cand <= 16*60+15 && r.total < 165){ r.nextNap = cand; r.napLabel = "Catnap"; }
+    }
+    if(!naps.length){
+      if(wake==null) return r;
+      r.lastWake = wake;
+      r.notes.push("No naps logged yet. First nap about 2 hours after waking, around "+pretty(wake+120)+".");
+      return r;
+    }
+    const last = naps[naps.length-1];
+    const lastWake = toMin(last.end), lastDur = last.est ? 60 : last.min;
+    r.lastWake = lastWake;
+    const total = r.total;
+
+    let win, why;
+    if(lastDur<=35 && lastWake>=16*60+30){
+      win = 70; why = "After a late catnap he only needs about an hour before the crib.";
+    } else if(total>=180){
+      win = 150; why = "He’s banked 3 hours of naps, so use the full 2½-hour window.";
+    } else if(total<150){
+      win = 135; why = "Under 2½ hours of naps, so take the short end of the window (2:15).";
+    } else {
+      win = 140; why = "A normal nap day: about a 2:20 window.";
+    }
+    let crib = lastWake + win;
+    const floor = total<120 ? 17*60+30 : 17*60+45;
+    const ceil = 19*60+15;
+
+    if(crib < floor){
+      crib = floor; why += " That lands before "+pretty(floor)+", which is as early as bedtime should go, so hold until then and keep the last half hour low-key.";
+    }
+    if(crib > ceil){
+      crib = ceil; why = "The last nap ran late. Crib by "+pretty(ceil)+" at the latest even though the window will be short; quick bath.";
+      r.routine="short";
+    }
+
+    // Day-type adjustments
+    if(d.dayType==="grandma"){
+      r.routine="short"; r.intervals="10 · 12 · 15";
+      r.notes.push("Grandma day: quick bath, then pajamas, sleep sack, song, crib. Ask her for the last bottle at 5:15–5:30.");
+      r.notes.push("Expect 15–25 minutes of protest. Same rules, shorter timers, no rescue.");
+    }
+    if(d.dayType==="stgeorge" || d.dayType==="grandma"){
+      const home = toMin(d.homeAt);
+      if(home!=null){
+        if(lastWake < 15*60+30 && home >= 17*60+15){
+          // he will probably nap in the car; both branches
+          const cribIfNap = Math.min(home+70, ceil);
+          const cribIfAwake = Math.min(Math.max(lastWake+win, home+15), ceil);
+          r.notes.push("If he naps in the car and wakes when you get home: quick bath, crib about "+pretty(cribIfNap)+".");
+          r.notes.push("If he stays awake in the car: straight into the quick bath, crib by "+pretty(cribIfAwake)+".");
+          crib = cribIfNap; r.routine="short";
+          why = "He’ll likely catnap on the drive, so bedtime runs off your arrival time.";
+        } else if(crib - home < 40){
+          r.routine="short";
+          crib = Math.max(crib, home+15);
+          why += " There’s no time for the full bath after you get home, so make it a quick one.";
+        }
+      } else {
+        r.notes.push("Enter the time you expect to be home so the drive is accounted for.");
+      }
+    }
+
+    r.crib = crib;
+    r.bath = crib - (r.routine==="short"?15:30);
+    r.notes.unshift(why);
+
+    // Catnap option when bedtime would be very early on a well-slept day
+    if(d.dayType==="home" && lastWake <= 15*60+45 && total >= 165 && lastWake+win < 18*60){
+      r.notes.push({alt:true, text:"Other option: a 20–30 minute catnap done by 4:45, then crib around 7:00. Only if he goes down easily."});
+    }
+    if(!quiet && d.dayType!=="stgeorge" && lastWake < nowMin() && nowMin()-lastWake > win+10 && crib>=nowMin()){
+      // nothing
+    }
+    // Day-sleep sanity flags
+    if(total>205) r.notes.push({alt:true, text:"Over 3½ hours of naps today. If the night gets wired or he wakes before 6, cap the last nap tomorrow."});
+    return r;
+  }
+
+  // ---------- render ----------
+  function render(){
+    // day type
+    document.querySelectorAll("#dayType button").forEach(b=>b.classList.toggle("on", b.dataset.v===day.dayType));
+    $("homeRow").classList.toggle("hide", day.dayType==="home");
+    $("estBox").classList.toggle("hide", day.dayType!=="grandma");
+    const est = day.est||{min:0,end:""};
+    if(document.activeElement!==$("estH")) $("estH").value = est.min ? Math.floor(est.min/60) : "";
+    if(document.activeElement!==$("estM")) $("estM").value = est.min ? est.min%60 : "";
+    if(document.activeElement!==$("estEnd")) $("estEnd").value = est.end||"";
+    if(document.activeElement!==$("wake")) $("wake").value = day.wake||"";
+    if(document.activeElement!==$("homeAt")) $("homeAt").value = day.homeAt||"";
+
+    // naps
+    const nl=$("napList"); nl.innerHTML="";
+    const open = day.open && day.open.start ? day.open : null;
+    $("napStartBox").classList.toggle("hide", !!open);
+    $("napEndBox").classList.toggle("hide", !open);
+    if(open){
+      const since = nowMin()-toMin(open.start);
+      $("napOpenMsg").textContent = "Napping since "+pretty(open.start)+" in the "+(whereName[open.where]||open.where)+(since>0?" · "+dur(since)+" so far":"");
+      if(document.activeElement!==$("napEnd")) $("napEnd").value = fromMin(nowMin());
+    }
+    const naps = day.naps.slice().sort((a,b)=>toMin(a.start)-toMin(b.start));
+    naps.forEach(n=>{
+      const li=document.createElement("li");
+      li.innerHTML=`<span class="t">${pretty(n.start)}–${pretty(n.end)}</span><span class="d">${dur(n.min)} · ${whereName[n.where]||n.where}</span>`;
+      const x=document.createElement("button"); x.className="x"; x.setAttribute("aria-label","Remove nap"); x.textContent="×";
+      x.onclick=()=>{ day.naps=day.naps.filter(q=>q.id!==n.id); save(); };
+      li.appendChild(x); nl.appendChild(li);
+    });
+    const total = naps.reduce((s,n)=>s+n.min,0) + (day.dayType==="grandma" && day.est ? (day.est.min||0) : 0);
+    $("napTotal").textContent = (naps.length||total) ? "Day sleep so far: "+dur(total)+(day.dayType==="grandma"&&day.est&&day.est.min?" (incl. Grandma’s estimate)":"") : "";
+    if(open){ $("napTotal").textContent += (naps.length?" · ":"")+"Bedtime updates when he’s up."; }
+
+    // feeds
+    const fl=$("feedList"); fl.innerHTML="";
+    const feeds = day.feeds.slice().sort((a,b)=>toMin(a.time)-toMin(b.time));
+    feeds.forEach(f=>{
+      const li=document.createElement("li");
+      li.innerHTML=`<span class="t">${pretty(f.time)}</span><span class="d">${f.oz} oz</span>`;
+      const x=document.createElement("button"); x.className="x"; x.setAttribute("aria-label","Remove bottle"); x.textContent="×";
+      x.onclick=()=>{ day.feeds=day.feeds.filter(q=>q.id!==f.id); save(); };
+      li.appendChild(x); fl.appendChild(li);
+    });
+    const oz = feeds.reduce((s,f)=>s+(+f.oz||0),0);
+    $("feedTotal").textContent = feeds.length ? "Total: "+oz+" oz in "+feeds.length+" bottle"+(feeds.length>1?"s":"") : "";
+
+    // answer
+    const c = compute(day);
+    const a=$("answer");
+    const upBits=[];
+    if(c.nextNap!=null) upBits.push(c.napLabel+" around <strong>"+pretty(c.nextNap)+"</strong>");
+    if(c.nextFeed!=null) upBits.push("bottle around <strong>"+pretty(c.nextFeed)+"</strong>");
+    const upHtml = upBits.length ? `<div class="next">Next up: ${upBits.join(" · ")}</div>` : "";
+    if(c.crib==null){
+      a.innerHTML = upHtml + `<p class="empty">${c.notes[0]||"Log his morning wake and naps below. Bedtime appears here after the last nap."}</p>`;
+      return;
+    }
+    const span = c.crib - c.lastWake;
+    const pct = m => Math.max(0, Math.min(100, ((m-c.lastWake)/span)*100));
+    const noteHtml = c.notes.map(n=>typeof n==="string"?`<li>${n}</li>`:`<li class="alt">${n.text}</li>`).join("");
+    a.innerHTML = upHtml + `
+      <div class="label">${c.routine==="short"?"Quick bath":"Bath"} at</div>
+      <div class="big">${pretty(c.bath)}</div>
+      <div class="sub">In the crib by <strong>${pretty(c.crib)}</strong> · timers tonight ${c.intervals}</div>
+      <div class="track">
+        <div class="bar"></div>
+        <div class="pt" style="left:${pct(c.lastWake)}%"><b></b>woke ${pretty(c.lastWake)}</div>
+        <div class="pt" style="left:${pct(c.bath)}%"><b></b>${c.routine==="short"?"quick bath":"bath"}</div>
+        <div class="pt crib" style="left:${pct(c.crib)}%"><b></b>crib</div>
+      </div>
+      <ul class="notes">${noteHtml}</ul>`;
+  }
+
+  // ---------- events ----------
+  document.querySelectorAll("#dayType button").forEach(b=>b.onclick=()=>{ day.dayType=b.dataset.v; save(); });
+  $("wake").onchange = e=>{ day.wake=e.target.value; save(); };
+  $("homeAt").onchange = e=>{ day.homeAt=e.target.value; save(); };
+  function estChange(){ const h=+$("estH").value||0, m=+$("estM").value||0; day.est={min:h*60+m, end:$("estEnd").value||""}; save(); }
+  $("estH").onchange=estChange; $("estM").onchange=estChange; $("estEnd").onchange=estChange;
+  $("startNap").onclick = ()=>{
+    const s=$("napStart").value;
+    if(!s){ $("napTotal").textContent="Enter the time he fell asleep."; return; }
+    day.open = {start:s, where:$("napWhere").value};
+    $("napStart").value=fromMin(nowMin()); save();
+  };
+  $("endNap").onclick = ()=>{
+    const open=day.open; const e=$("napEnd").value;
+    if(!open||!e){ $("napTotal").textContent="Enter the time he woke up."; return; }
+    let min = toMin(e)-toMin(open.start);
+    if(min<=0){ $("napTotal").textContent="Wake time needs to be after "+pretty(open.start)+"."; return; }
+    day.naps.push({id:Date.now().toString(36), start:open.start, end:e, min, where:open.where});
+    day.open=null; save();
+  };
+  $("cancelNap").onclick = ()=>{ day.open=null; save(); };
+  $("addFeed").onclick = ()=>{
+    const t=$("feedTime").value, oz=$("feedOz").value;
+    if(!t||!oz){ $("feedTotal").textContent="Enter the time and the ounces."; return; }
+    day.feeds.push({id:Date.now().toString(36), time:t, oz:+oz});
+    $("feedTime").value=""; $("feedOz").value=""; save();
+  };
+  // default the time pickers to now
+  ["napStart","napEnd","feedTime"].forEach(id=>{ $(id).value=fromMin(nowMin()); });
+
+  render();
+  initDb();
+})();
+</script>
+</body>
+</html>
