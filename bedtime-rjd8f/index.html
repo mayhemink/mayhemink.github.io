@@ -87,6 +87,10 @@ details[open] summary::after{content:"–"}
 .hist .m{color:var(--muted);flex:1}
 .hist button{border:0;background:var(--soft);color:var(--ink);font:inherit;font-weight:700;padding:6px 10px;border-radius:8px;min-height:36px}
 .status{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
+.counter{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:12px;padding:6px 8px;justify-content:space-between}
+.counter span{font-weight:700;color:var(--muted);font-size:14px;padding-left:4px}
+.counter strong{font-size:22px;min-width:28px;text-align:center}
+.ctr{border:0;background:var(--soft);color:var(--ink);font:inherit;font-size:22px;font-weight:800;width:44px;height:44px;border-radius:10px}
 .hide{display:none}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
@@ -141,7 +145,6 @@ details[open] summary::after{content:"–"}
           <option value="crib">Crib</option>
           <option value="held">Held</option>
           <option value="car">Car</option>
-          <option value="grandma">Grandma’s</option>
           <option value="stroller">Stroller</option>
         </select>
       </label>
@@ -176,6 +179,36 @@ details[open] summary::after{content:"–"}
 </section>
 
 <section>
+  <h2>Bedtime</h2>
+  <div class="row">
+    <label class="f">In the crib at<input type="time" id="bedCrib"></label>
+    <label class="f">Asleep at<input type="time" id="bedAsleep"></label>
+  </div>
+  <div class="total" id="bedTotal"></div>
+</section>
+
+<section>
+  <h2>Diapers</h2>
+  <div class="row">
+    <div class="counter"><span>Wet</span><button class="ctr" id="wetMinus" aria-label="One fewer wet diaper">−</button><strong id="wetN">0</strong><button class="ctr" id="wetPlus" aria-label="One more wet diaper">+</button></div>
+    <div class="counter"><span>Poop</span><button class="ctr" id="poopMinus" aria-label="One fewer poop">−</button><strong id="poopN">0</strong><button class="ctr" id="poopPlus" aria-label="One more poop">+</button></div>
+  </div>
+  <div class="total" id="diaperNote"></div>
+</section>
+
+<section>
+  <h2>Notes &amp; medicine</h2>
+  <div class="row">
+    <label class="f">Time<input type="time" id="noteTime"></label>
+    <label class="f" style="flex:2 1 0">What<input type="text" id="noteText" placeholder="Tylenol 2.5 mL, teething, new food…"></label>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <button class="add" id="addNote" style="flex:1">Add note</button>
+  </div>
+  <ul class="list" id="noteList"></ul>
+</section>
+
+<section>
   <details id="histBox">
     <summary>Past days</summary>
     <ul class="hist" id="hist"></ul>
@@ -200,7 +233,7 @@ details[open] summary::after{content:"–"}
   // ---------- state ----------
   let key = todayKey();
   let day = blank();
-  function blank(){ return {dayType:"home", wake:"", homeAt:"", naps:[], feeds:[], open:null, est:{min:0,end:""}}; }
+  function blank(){ return {dayType:"home", wake:"", homeAt:"", naps:[], feeds:[], open:null, est:{min:0,end:""}, bed:{crib:"",asleep:""}, diapers:{wet:0,poop:0}, notes:[]}; }
 
   // ---------- storage (Cloudflare Worker + KV) ----------
   const API = "https://mayhem-bedtime-state.autumn-mountain-14c6.workers.dev";  // set by deploy step
@@ -437,6 +470,28 @@ details[open] summary::after{content:"–"}
     const oz = feeds.reduce((s,f)=>s+(+f.oz||0),0);
     $("feedTotal").textContent = feeds.length ? "Total: "+oz+" oz in "+feeds.length+" bottle"+(feeds.length>1?"s":"") : "";
 
+    // bedtime
+    const bed = day.bed||{crib:"",asleep:""};
+    if(document.activeElement!==$("bedCrib")) $("bedCrib").value = bed.crib||"";
+    if(document.activeElement!==$("bedAsleep")) $("bedAsleep").value = bed.asleep||"";
+    if(bed.crib && bed.asleep){ let m=toMin(bed.asleep)-toMin(bed.crib); if(m<0) m+=1440; $("bedTotal").textContent = "Took "+dur(m)+" to fall asleep."; }
+    else $("bedTotal").textContent = bed.crib ? "In the crib at "+pretty(bed.crib)+"." : "";
+    // diapers
+    const dp = day.diapers||{wet:0,poop:0};
+    $("wetN").textContent = dp.wet||0; $("poopN").textContent = dp.poop||0;
+    $("diaperNote").textContent = (dp.wet||0)>=6 ? "Plenty of wet diapers today." : (dp.wet||0)>0 ? "Aim for 6+ wet diapers a day." : "";
+    // notes
+    const nlst=$("noteList"); nlst.innerHTML="";
+    const notes = (day.notes||[]).slice().sort((a,b)=>toMin(a.time)-toMin(b.time));
+    notes.forEach(n=>{
+      const li=document.createElement("li");
+      li.innerHTML=`<span class="t">${pretty(n.time)}</span><span class="d"></span>`;
+      li.querySelector(".d").textContent = n.text;
+      const x=document.createElement("button"); x.className="x"; x.setAttribute("aria-label","Remove note"); x.textContent="×";
+      x.onclick=()=>{ day.notes=day.notes.filter(q=>q.id!==n.id); save(); };
+      li.appendChild(x); nlst.appendChild(li);
+    });
+
     // answer
     const c = compute(day);
     const a=$("answer");
@@ -470,6 +525,17 @@ details[open] summary::after{content:"–"}
   $("homeAt").onchange = e=>{ day.homeAt=e.target.value; save(); };
   function estChange(){ const h=+$("estH").value||0, m=+$("estM").value||0; day.est={min:h*60+m, end:$("estEnd").value||""}; save(); }
   $("estH").onchange=estChange; $("estM").onchange=estChange; $("estEnd").onchange=estChange;
+  $("bedCrib").onchange = e=>{ day.bed=Object.assign({crib:"",asleep:""}, day.bed, {crib:e.target.value}); save(); };
+  $("bedAsleep").onchange = e=>{ day.bed=Object.assign({crib:"",asleep:""}, day.bed, {asleep:e.target.value}); save(); };
+  function bump(k, n){ const d=Object.assign({wet:0,poop:0}, day.diapers); d[k]=Math.max(0,(d[k]||0)+n); day.diapers=d; save(); }
+  $("wetPlus").onclick=()=>bump("wet",1); $("wetMinus").onclick=()=>bump("wet",-1);
+  $("poopPlus").onclick=()=>bump("poop",1); $("poopMinus").onclick=()=>bump("poop",-1);
+  $("addNote").onclick = ()=>{
+    const t=$("noteTime").value, txt=$("noteText").value.trim();
+    if(!t||!txt){ return; }
+    day.notes=(day.notes||[]).concat([{id:Date.now().toString(36), time:t, text:txt}]);
+    $("noteText").value=""; $("noteTime").value=fromMin(nowMin()); save();
+  };
   $("startNap").onclick = ()=>{
     const s=$("napStart").value;
     if(!s){ $("napTotal").textContent="Enter the time he fell asleep."; return; }
@@ -492,7 +558,7 @@ details[open] summary::after{content:"–"}
     $("feedTime").value=""; $("feedOz").value=""; save();
   };
   // default the time pickers to now
-  ["napStart","napEnd","feedTime"].forEach(id=>{ $(id).value=fromMin(nowMin()); });
+  ["napStart","napEnd","feedTime","noteTime"].forEach(id=>{ $(id).value=fromMin(nowMin()); });
 
   render();
   initDb();
