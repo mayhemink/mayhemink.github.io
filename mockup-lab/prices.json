@@ -2033,6 +2033,28 @@
         "7"
       ],
       "verified": false
+    },
+    "3000B": {
+      "sizes": [
+        "YXS",
+        "YS",
+        "YM",
+        "YL",
+        "YXL"
+      ],
+      "verified": false
+    },
+    "BG1500": {
+      "sizes": [
+        "OSFA"
+      ],
+      "verified": true,
+      "checked": "2026-11-12",
+      "costs": {
+        "color": {
+          "base": 2.51
+        }
+      }
     }
   }
 }
