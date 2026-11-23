@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-11-23T19:33:15.779Z",
+ "generated": "2026-11-23T19:53:00.000Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -6951,14 +6951,14 @@
    "bodyLenM": 29,
    "calib": {
     "front": {
-     "ppi": 30.11127083123631,
-     "centerX": 363.5147658378442,
-     "collarY": 243.9541547277937,
-     "leftChestX": 461.22249880998936,
+     "ppi": 21,
+     "centerX": 363.0986078886311,
+     "collarY": 252.55529116186935,
+     "leftChestX": 447,
      "default": false
     },
     "back": {
-     "ppi": 30.11127083123631,
+     "ppi": 21,
      "centerX": 363.5147658378442,
      "collarY": 136.16045845272205,
      "leftChestX": 365.3333333333333,
