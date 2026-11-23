@@ -252,40 +252,52 @@
      "arrived": "2026-11-11"
     },
     {
-     "id": "6626-loc1",
+     "id": "6626-oval-lc",
      "job": "6626",
      "url": "https://www.printavo.com/invoices/24961311",
      "customer": "365 HVAC (Tanner) — reorder",
      "nickname": "365 HVAC",
-     "location": "LOCATION 1 (see order) — 1c — 142 hoodies: 47 IND4000 Desert Duck Camo + 95 DT6100 New Navy",
-     "qty": 142,
+     "location": "LEFT CHEST — 365 HVAC OVAL logo, 1c — HALF the order, 71: 24 IND4000 Desert Duck Camo + 47 DT6100 New Navy",
+     "qty": 71,
      "colors": 1,
      "screens": 1,
+     "img": "6626_mock",
      "due": "2026-11-23",
-     "inks": [],
+     "inks": [
+      {
+       "n": "Cream / light tan (match mockup)",
+       "hex": "#E6DFCF"
+      }
+     ],
      "tags": [
+      "SPLIT",
       "VERIFY"
      ],
-     "noest": true,
-     "note": "NO MOCKUP IN PRINTAVO — reorder; pull art from the last 365 HVAC order.",
-     "alert": "Camo hoodies still show ORDERED (SLC ETA ~Tue 11/10) — confirm they are in. Order has no imprint details."
+     "alert": "SPLIT IN HALF by logo — half get the OVAL, half get the 365HVAC WORDMARK. Left chest only, NO back print. Camo hoodies still show ORDERED — confirm they are in.",
+     "note": "Oval half: camo S4 M5 L10 XL5 · navy M10 L13 XL12 2XL10 3XL2. Wordmark half: camo S3 M5 L10 XL5 · navy M10 L12 XL13 2XL10 3XL3. Mockup shows camo only — confirm ink on New Navy."
     },
     {
-     "id": "6626-loc2",
+     "id": "6626-word-lc",
      "job": "6626",
      "url": "https://www.printavo.com/invoices/24961311",
      "customer": "365 HVAC (Tanner) — reorder",
      "nickname": "365 HVAC",
-     "location": "LOCATION 2 (see order) — 1c — same 142 (47 camo + 95 New Navy)",
-     "qty": 142,
+     "location": "LEFT CHEST — 365HVAC WORDMARK logo, 1c — other HALF, 71: 23 IND4000 Desert Duck Camo + 48 DT6100 New Navy",
+     "qty": 71,
      "colors": 1,
      "screens": 1,
+     "img": "6626_mock",
      "due": "2026-11-23",
-     "inks": [],
-     "tags": [
-      "VERIFY"
+     "inks": [
+      {
+       "n": "Cream / light tan (match mockup)",
+       "hex": "#E6DFCF"
+      }
      ],
-     "noest": true
+     "tags": [
+      "SPLIT",
+      "VERIFY"
+     ]
     },
     {
      "id": "6656-lc",
@@ -442,7 +454,7 @@
    "flags": [
     [
      "CREW",
-     "Jalen + Corey. ~10.4 press-hrs carded, plus whatever is left of 6599."
+     "Jalen + Corey. ~9.4 press-hrs carded, plus whatever is left of 6599."
     ],
     [
      "RUN ORDER",
@@ -450,7 +462,7 @@
     ],
     [
      "VERIFY",
-     "6626 — no art / imprint details; camo hoodies still show ordered. 6675 vests — no art on the order. 6527 — russet ink: order says BOX BROWN, mockup is cream."
+     "6626 — split in half by logo (oval / wordmark), left chest only; camo hoodies still show ordered; ink on New Navy. 6675 vests — no art on the order. 6527 — russet ink: order says BOX BROWN, mockup is cream."
     ],
     [
      "NOT PRESS",
@@ -1183,6 +1195,7 @@
   "6527_bay": "/data/mocks/2026-11-23/6527_bay.jpg",
   "6527_white": "/data/mocks/2026-11-23/6527_white.jpg",
   "6527_espresso": "/data/mocks/2026-11-23/6527_espresso.jpg",
+  "6626_mock": "/data/mocks/2026-11-23/6626_mock.jpg",
   "6658_mock": "/data/mocks/2026-11-16/6658_mock.jpg",
   "6656_mock": "/data/mocks/2026-11-16/6656_mock.jpg",
   "6675_front": "/data/mocks/2026-11-16/6675_front.jpg",
