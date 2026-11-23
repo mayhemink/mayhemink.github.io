@@ -2056,6 +2056,71 @@
           "base": 2.51
         }
       }
+    },
+    "DT1101": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL"
+      ],
+      "verified": true,
+      "checked": "2026-11-23",
+      "costs": {
+        "color": {
+          "base": 12.79,
+          "2XL": 14.44,
+          "3XL": 16.44,
+          "4XL": 17.44
+        }
+      }
+    },
+    "DM132": {
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL"
+      ],
+      "verified": true,
+      "checked": "2026-11-23",
+      "costs": {
+        "color": {
+          "base": 8.72,
+          "2XL": 9.72,
+          "3XL": 11.72,
+          "4XL": 12.72
+        }
+      }
+    },
+    "PC78SP": {
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL"
+      ],
+      "verified": true,
+      "checked": "2026-11-23",
+      "costs": {
+        "color": {
+          "base": 12.34,
+          "2XL": 13.89,
+          "3XL": 14.93,
+          "4XL": 14.93
+        }
+      }
     }
   }
 }
