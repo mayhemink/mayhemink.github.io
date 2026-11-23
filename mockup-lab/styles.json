@@ -1,6 +1,6 @@
 {
  "version": 5,
- "generated": "2026-10-02T17:21:52.326700+00:00",
+ "generated": "2026-11-23T19:33:15.779Z",
  "rules": {
   "front": {
    "fullFront": {
@@ -33426,18 +33426,18 @@
    "bodyLenM": 28,
    "calib": {
     "front": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 23.768893668249863,
+     "centerX": 364.79930394431557,
+     "collarY": 330.78790660595007,
+     "leftChestX": 456.63689095127614,
+     "default": false
     },
     "back": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 23.768893668249863,
+     "centerX": 366.5,
+     "collarY": 422.6261943011753,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
@@ -33662,18 +33662,18 @@
    "bodyLenM": 29.25,
    "calib": {
     "front": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 23.791248979610067,
+     "centerX": 359.6972157772622,
+     "collarY": 223.64323762818734,
+     "leftChestX": 448.13341067285387,
+     "default": false
     },
     "back": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 160,
+     "ppi": 23.791248979610067,
+     "centerX": 359.6972157772622,
+     "collarY": 133.50565896435518,
      "leftChestX": 500,
-     "default": true
+     "default": false
     }
    },
    "photos": [
@@ -33807,17 +33807,28 @@
    ],
    "calib": {
     "front": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 210,
-     "leftChestX": 500,
-     "default": true
+     "ppi": 18.133333333333333,
+     "centerX": 480.40000000000003,
+     "collarY": 218.03333333333336,
+     "leftChestX": 480.40000000000003,
+     "default": false,
+     "areas": [
+      {
+       "name": "LEFT POCKET",
+       "maps": "customF",
+       "x": 439.6,
+       "y": 254.3,
+       "w": 81.6,
+       "h": 108.8,
+       "wIn": 4.5
+      }
+     ]
     },
     "back": {
-     "ppi": 30,
-     "centerX": 366,
-     "collarY": 160,
-     "leftChestX": 500,
+     "ppi": 20.022222222222222,
+     "centerX": 481.25,
+     "collarY": 207.45555555555555,
+     "leftChestX": 481.25,
      "default": true
     }
    },
