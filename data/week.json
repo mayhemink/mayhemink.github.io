@@ -355,35 +355,68 @@
      "id": "6675-loc1",
      "job": "6675",
      "url": "https://www.printavo.com/invoices/25133925",
-     "customer": "Vest order — Kishigo hi-vis",
-     "nickname": "Vest order",
-     "location": "LOCATION 1 (see order) — 1c — 60 Kishigo 1195 Lime vests: 45 Construction + 15 Concrete",
+     "customer": "Allout — Kishigo hi-vis vests",
+     "nickname": "Allout vests",
+     "location": "FRONT LEFT POCKET — AC triangle mark, BLACK — all 60 Kishigo 1195 Lime vests (45 Construction + 15 Concrete)",
      "qty": 60,
      "colors": 1,
      "screens": 1,
-     "img": "6675_front",
+     "img": "6675_construction",
      "due": "2026-11-23",
-     "inks": [],
-     "tags": [
-      "VERIFY"
+     "arrived": "2026-11-12",
+     "inks": [
+      {
+       "n": "Black",
+       "hex": "#111111"
+      }
      ],
-     "noest": true,
-     "alert": "NO ART on the mockup — blank vest photos only. 45 \"Construction\" / 15 \"Concrete\" may be two different logos. Get art before screens.",
-     "note": "Blanks ETA Thu 11/12."
+     "tags": [],
+     "note": "Same AC mark on the front of all 60. Backs are two different logos: 45 ALLOUT CONSTRUCTION, 15 ALLOUT CONCRETE. Blanks received."
     },
     {
      "id": "6675-loc2",
      "job": "6675",
      "url": "https://www.printavo.com/invoices/25133925",
-     "customer": "Vest order — Kishigo hi-vis",
-     "nickname": "Vest order",
-     "location": "LOCATION 2 (see order) — 1c — same 60 vests",
-     "qty": 60,
+     "customer": "Allout — Kishigo hi-vis vests",
+     "nickname": "Allout vests",
+     "location": "FULL BACK — ALLOUT CONSTRUCTION, BLACK — 45 Construction vests",
+     "qty": 45,
      "colors": 1,
      "screens": 1,
-     "img": "6675_back",
+     "img": "6675_construction",
      "due": "2026-11-23",
-     "inks": [],
+     "arrived": "2026-11-12",
+     "inks": [
+      {
+       "n": "Black",
+       "hex": "#111111"
+      }
+     ],
+     "tags": []
+    },
+    {
+     "id": "6675-back-concrete",
+     "job": "6675",
+     "url": "https://www.printavo.com/invoices/25133925",
+     "customer": "Allout — Kishigo hi-vis vests",
+     "nickname": "Allout vests",
+     "location": "FULL BACK — ALLOUT CONCRETE, black + grey triangle — 15 Concrete vests",
+     "qty": 15,
+     "colors": 2,
+     "screens": 2,
+     "img": "6675_concrete",
+     "due": "2026-11-23",
+     "arrived": "2026-11-12",
+     "inks": [
+      {
+       "n": "Grey triangle (match mockup)",
+       "hex": "#8A9A5B"
+      },
+      {
+       "n": "Black",
+       "hex": "#111111"
+      }
+     ],
      "tags": [
       "VERIFY"
      ],
@@ -454,7 +487,7 @@
    "flags": [
     [
      "CREW",
-     "Jalen + Corey. ~9.4 press-hrs carded, plus whatever is left of 6599."
+     "Jalen + Corey. ~9.7 press-hrs carded, plus whatever is left of 6599."
     ],
     [
      "RUN ORDER",
@@ -462,7 +495,7 @@
     ],
     [
      "VERIFY",
-     "6626 — split in half by logo (oval / wordmark), left chest only; camo hoodies still show ordered; ink on New Navy. 6675 vests — no art on the order. 6527 — russet ink: order says BOX BROWN, mockup is cream."
+     "6626 — split in half by logo (oval / wordmark), left chest only; camo hoodies still show ordered; ink on New Navy. 6675 vests — Concrete back shows 2 colors (black + grey triangle), priced 1c. 6527 — russet ink: order says BOX BROWN, mockup is cream."
     ],
     [
      "NOT PRESS",
@@ -1198,8 +1231,8 @@
   "6626_mock": "/data/mocks/2026-11-23/6626_mock.jpg",
   "6658_mock": "/data/mocks/2026-11-16/6658_mock.jpg",
   "6656_mock": "/data/mocks/2026-11-16/6656_mock.jpg",
-  "6675_front": "/data/mocks/2026-11-16/6675_front.jpg",
-  "6675_back": "/data/mocks/2026-11-16/6675_back.jpg",
+  "6675_construction": "/data/mocks/2026-11-23/6675_construction.jpg",
+  "6675_concrete": "/data/mocks/2026-11-23/6675_concrete.jpg",
   "6683_mock": "/data/mocks/2026-11-23/6683_mock.jpg",
   "6687_mock": "/data/mocks/2026-11-23/6687_mock.jpg",
   "6676_brown": "/data/mocks/2026-11-23/6676_brown.jpg",

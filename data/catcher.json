@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "week": "2026-11-23",
- "generatedAt": "2026-11-23T15:26:57+00:00",
+ "generatedAt": "2026-11-23T15:31:28+00:00",
  "source": "Weekly press board and verified Printavo order sizes",
  "days": [
   {
@@ -2977,13 +2977,13 @@
    "batchKeys": [
     "25133925:53818682"
    ],
-   "customer": "Vest order — Kishigo hi-vis",
-   "location": "LOCATION 1 (see order) — 1c — 60 Kishigo 1195 Lime vests: 45 Construction + 15 Concrete",
-   "locationLabel": "Location 1 (See Order)",
+   "customer": "Allout — Kishigo hi-vis vests",
+   "location": "FRONT LEFT POCKET — AC triangle mark, BLACK — all 60 Kishigo 1195 Lime vests (45 Construction + 15 Concrete)",
+   "locationLabel": "Front Left Pocket",
    "day": "2026-11-23",
    "expected": 60,
-   "scheduleSignature": "[\"6675\",\"LOCATION 1 (see order) — 1c — 60 Kishigo 1195 Lime vests: 45 Construction + 15 Concrete\",60]",
-   "note": "Blanks ETA Thu 11/12.",
+   "scheduleSignature": "[\"6675\",\"FRONT LEFT POCKET — AC triangle mark, BLACK — all 60 Kishigo 1195 Lime vests (45 Construction + 15 Concrete)\",60]",
+   "note": "Same AC mark on the front of all 60. Backs are two different logos: 45 ALLOUT CONSTRUCTION, 15 ALLOUT CONCRETE. Blanks received.",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
     {
@@ -3079,7 +3079,7 @@
      ]
     }
    ],
-   "image": "/data/mocks/2026-11-16/6675_front.jpg"
+   "image": "/data/mocks/2026-11-23/6675_construction.jpg"
   },
   {
    "id": "6675-loc2",
@@ -3088,12 +3088,12 @@
    "batchKeys": [
     "25133925:53818682"
    ],
-   "customer": "Vest order — Kishigo hi-vis",
-   "location": "LOCATION 2 (see order) — 1c — same 60 vests",
-   "locationLabel": "Location 2 (See Order)",
+   "customer": "Allout — Kishigo hi-vis vests",
+   "location": "FULL BACK — ALLOUT CONSTRUCTION, BLACK — 45 Construction vests",
+   "locationLabel": "Full Back — Construction",
    "day": "2026-11-23",
-   "expected": 60,
-   "scheduleSignature": "[\"6675\",\"LOCATION 2 (see order) — 1c — same 60 vests\",60]",
+   "expected": 45,
+   "scheduleSignature": "[\"6675\",\"FULL BACK — ALLOUT CONSTRUCTION, BLACK — 45 Construction vests\",45]",
    "note": "",
    "artworkLabel": "Reference from the weekly press board",
    "groups": [
@@ -3142,7 +3142,26 @@
        ]
       }
      ]
-    },
+    }
+   ],
+   "image": "/data/mocks/2026-11-23/6675_construction.jpg"
+  },
+  {
+   "id": "6675-back-concrete",
+   "job": "6675",
+   "runId": "25133925:6675-back-concrete",
+   "batchKeys": [
+    "25133925:53818682"
+   ],
+   "customer": "Allout — Kishigo hi-vis vests",
+   "location": "FULL BACK — ALLOUT CONCRETE, black + grey triangle — 15 Concrete vests",
+   "locationLabel": "Full Back — Concrete",
+   "day": "2026-11-23",
+   "expected": 15,
+   "scheduleSignature": "[\"6675\",\"FULL BACK — ALLOUT CONCRETE, black + grey triangle — 15 Concrete vests\",15]",
+   "note": "",
+   "artworkLabel": "Reference from the weekly press board",
+   "groups": [
     {
      "id": "53818682:111785298",
      "style": "1195-1196",
@@ -3190,7 +3209,7 @@
      ]
     }
    ],
-   "image": "/data/mocks/2026-11-16/6675_back.jpg"
+   "image": "/data/mocks/2026-11-23/6675_concrete.jpg"
   },
   {
    "id": "6683-front",
