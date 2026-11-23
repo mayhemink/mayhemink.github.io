@@ -1,5 +1,5 @@
 {
- "week": "2026-11-16",
+ "week": "2026-11-23",
  "printers": [
   "Jalen",
   "Spencer",
@@ -25,361 +25,232 @@
   },
   "setup": {
    "1": 5.9,
-   "2": 7.6,
-   "3": 5.3,
+   "2": 7.4,
+   "3": 4.9,
    "4": 5.7,
    "5": 6.9,
-   "6": 5.1
+   "6": 5.4
   }
  },
  "days": [
   {
-   "day": "2026-11-16",
-   "rows": [],
-   "flags": [
-    [
-     "OPEN",
-     "Board built Wed 11/18 — Mon/Tue ran off last week’s board."
-    ]
-   ]
-  },
-  {
-   "day": "2026-11-17",
-   "rows": [],
-   "flags": []
-  },
-  {
-   "day": "2026-11-18",
+   "day": "2026-11-23",
    "rows": [
     {
-     "id": "6688-6c",
-     "job": "6688",
-     "url": "https://www.printavo.com/invoices/25178061",
-     "customer": "Cachet — Disney add-on (goes with 6585)",
-     "nickname": "Cachet Disney add-on",
-     "location": "LOCATION 1 — Disney balloon characters, 6c — 3 Ash Grey: 2 SF000 crews (M, L) + 1 P473 youth hoodie (L)",
-     "qty": 3,
-     "colors": 6,
-     "screens": 6,
-     "img": "6688_disney",
-     "due": "2026-11-18",
-     "inks": [],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true,
-     "note": "Same art as 6585 last week — reuse those screens. Blanks ETA Mon 11/16.",
-     "alert": "Production note asks for 2 SMALL P170 hoodies too (reprint) — the order line shows 0. Count what is in the box before running."
-    },
-    {
-     "id": "6688-1c",
-     "job": "6688",
-     "url": "https://www.printavo.com/invoices/25178061",
-     "customer": "Cachet — Disney add-on (goes with 6585)",
-     "nickname": "Cachet Disney add-on",
-     "location": "LOCATION 2 (see order) — 1c — same 3 Ash Grey",
-     "qty": 3,
+     "id": "6599-finish",
+     "job": "6599",
+     "url": "https://www.printavo.com/invoices/24841891",
+     "customer": "Dixie Intermediate PTA",
+     "nickname": "Dixie PTA",
+     "location": "FINISH THE JOB — fronts + sponsor back, whatever is left of 723: Silver 184 · White 226 · Black 168 · Hthr Royal 145",
+     "qty": 723,
      "colors": 1,
      "screens": 1,
-     "img": "6688_disney",
-     "due": "2026-11-18",
-     "inks": [],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true
-    },
-    {
-     "id": "6660-front",
-     "job": "6660",
-     "url": "https://www.printavo.com/invoices/25114463",
-     "customer": "Baptism shirts — Elevate Church",
-     "nickname": "Baptism shirts",
-     "location": "FRONT — I HAVE DECIDED, WHITE (flash white) — 71 Jet Black tees",
-     "qty": 71,
-     "colors": 2,
-     "screens": 1,
-     "img": "6660_proof",
-     "due": "2026-11-18",
+     "img": "6599_all",
+     "due": "2026-11-23",
+     "arrived": "2026-11-16",
      "inks": [
       {
-       "n": "White — print / flash / print",
-       "hex": "#FFFFFF"
-      }
-     ],
-     "tags": [],
-     "arrived": "2026-11-09",
-     "note": "XS are DM108 Black (PC43 has no XS) — same print."
-    },
-    {
-     "id": "6660-back",
-     "job": "6660",
-     "url": "https://www.printavo.com/invoices/25114463",
-     "customer": "Baptism shirts — Elevate Church",
-     "nickname": "Baptism shirts",
-     "location": "BACK — logo 2.9\" + \"established\" 11\" wide, WHITE (flash white) — same 71",
-     "qty": 71,
-     "colors": 2,
-     "screens": 1,
-     "img": "6660_proof",
-     "due": "2026-11-18",
-     "inks": [
-      {
-       "n": "White — print / flash / print",
-       "hex": "#FFFFFF"
-      }
-     ],
-     "tags": [],
-     "arrived": "2026-11-09"
-    },
-    {
-     "id": "6694-lc",
-     "job": "6694",
-     "url": "https://www.printavo.com/invoices/25202080",
-     "customer": "Iron Goat Industries — CUST-SUPPLIED",
-     "nickname": "Iron Goat",
-     "location": "LEFT CHEST — Iron Goat Industries circle, 1c INK SWAP — 74: 37 olive (black ink) + 37 black (white ink)",
-     "qty": 74,
-     "colors": 1,
-     "screens": 1,
-     "img": "6694_logo",
-     "due": "2026-11-18",
-     "inks": [
-      {
-       "n": "Black — 37 olive",
-       "hex": "#111111"
+       "n": "Blue — Silver + White shirts (front + back)",
+       "hex": "#1F5FD0"
       },
       {
-       "n": "White — 37 black",
+       "n": "White — Black + Hthr Royal shirts (front + back)",
        "hex": "#FFFFFF"
       }
      ],
      "tags": [
-      "CUST-SUPPLIED",
+      "CARRYOVER"
+     ],
+     "noest": true,
+     "note": "Carryover from last week — mockups only, no need to time this one. Back ink matches the front ink on each shirt color."
+    },
+    {
+     "id": "6527-stamp-lc",
+     "job": "6527",
+     "url": "https://www.printavo.com/invoices/24524941",
+     "customer": "Swell Soda — Dillon",
+     "nickname": "Swell Soda",
+     "location": "LEFT CHEST — birds + \"Maui, Hawaii\", 1c INK SWAP — 50 DM130: 26 Flint Blue Heather + 24 Heather Charcoal",
+     "qty": 50,
+     "colors": 1,
+     "screens": 1,
+     "img": "6527_blue",
+     "due": "2026-11-23",
+     "inks": [
+      {
+       "n": "Navy — Flint Blue Heather (26)",
+       "hex": "#1B2A4A"
+      },
+      {
+       "n": "White — Heather Charcoal (24)",
+       "hex": "#FFFFFF"
+      }
+     ],
+     "tags": [
       "INK SWAP"
      ],
-     "noest": true,
-     "alert": "COUNT IN — customer-supplied, sizes on the order are mostly unsorted (30 per color listed as \"other\")."
+     "arrived": "2026-11-11",
+     "note": "5 designs on this job. Order says NAVY ink; the Heather Charcoal mockup shows WHITE. Blanks in (ETA was Wed 11/11)."
     },
     {
-     "id": "6694-back",
-     "job": "6694",
-     "url": "https://www.printavo.com/invoices/25202080",
-     "customer": "Iron Goat Industries — CUST-SUPPLIED",
-     "nickname": "Iron Goat",
-     "location": "FULL BACK — Iron Goat Industries circle, 1c INK SWAP — same 74",
-     "qty": 74,
+     "id": "6527-stamp-back",
+     "job": "6527",
+     "url": "https://www.printavo.com/invoices/24524941",
+     "customer": "Swell Soda — Dillon",
+     "nickname": "Swell Soda",
+     "location": "FULL BACK — Swell Soda Co. stamp, 1c INK SWAP — same 50",
+     "qty": 50,
      "colors": 1,
      "screens": 1,
-     "img": "6694_logo",
-     "due": "2026-11-18",
+     "img": "6527_char",
+     "due": "2026-11-23",
      "inks": [
       {
-       "n": "Black — 37 olive",
-       "hex": "#111111"
+       "n": "Navy — Flint Blue Heather (26)",
+       "hex": "#1B2A4A"
       },
       {
-       "n": "White — 37 black",
+       "n": "White — Heather Charcoal (24)",
        "hex": "#FFFFFF"
       }
      ],
      "tags": [
-      "CUST-SUPPLIED",
       "INK SWAP"
      ],
-     "noest": true
+     "arrived": "2026-11-11"
     },
     {
-     "id": "6695-ivoid-lc",
-     "job": "6695",
-     "url": "https://www.printavo.com/invoices/25202135",
-     "customer": "Anarchy Offroad Utah — CUST-SUPPLIED",
-     "nickname": "Anarchy Offroad",
-     "location": "LEFT CHEST — Anarchy Offroad Utah logo, 3c — 16 I VOID WARRANTIES tees",
-     "qty": 16,
-     "colors": 3,
-     "screens": 3,
-     "img": "6695_ivoid",
-     "due": "2026-11-18",
+     "id": "6527-russet-front",
+     "job": "6527",
+     "url": "https://www.printavo.com/invoices/24524941",
+     "customer": "Swell Soda — Dillon",
+     "nickname": "Swell Soda",
+     "location": "FULL FRONT — Swell arch / palm — 32 DM108 Heathered Russet",
+     "qty": 32,
+     "colors": 1,
+     "screens": 1,
+     "img": "6527_russet",
+     "due": "2026-11-23",
      "inks": [
       {
-       "n": "Underbase",
-       "hex": "#E8E8E8"
-      },
-      {
-       "n": "Red",
-       "hex": "#C8102E"
-      },
-      {
-       "n": "White",
-       "hex": "#FFFFFF"
+       "n": "Cream (mockup) — order says BOX BROWN",
+       "hex": "#EDE3CF"
       }
      ],
      "tags": [
-      "CUST-SUPPLIED",
       "VERIFY"
      ],
-     "noest": true,
-     "alert": "COUNT IN — customer-supplied. Order says BLACK tees but the I VOID mockup is on grey — check ink colors against the shirts in the box.",
-     "note": "LC logo is the same on both designs — one setup may cover all 31."
-    },
-    {
-     "id": "6695-ivoid-back",
-     "job": "6695",
-     "url": "https://www.printavo.com/invoices/25202135",
-     "customer": "Anarchy Offroad Utah — CUST-SUPPLIED",
-     "nickname": "Anarchy Offroad",
-     "location": "FULL BACK — I VOID WARRANTIES skull, 2c — same 16",
-     "qty": 16,
-     "colors": 2,
-     "screens": 2,
-     "img": "6695_ivoid",
-     "due": "2026-11-18",
-     "inks": [],
-     "tags": [
-      "CUST-SUPPLIED",
-      "VERIFY"
-     ],
+     "arrived": "2026-11-11",
      "noest": true
     },
     {
-     "id": "6695-graffiti-lc",
-     "job": "6695",
-     "url": "https://www.printavo.com/invoices/25202135",
-     "customer": "Anarchy Offroad Utah — CUST-SUPPLIED",
-     "nickname": "Anarchy Offroad",
-     "location": "LEFT CHEST — Anarchy Offroad Utah logo, 3c — 15 Original Logo Graffiti tees",
-     "qty": 15,
-     "colors": 3,
-     "screens": 3,
-     "img": "6695_graffiti",
-     "due": "2026-11-18",
-     "inks": [
-      {
-       "n": "Underbase",
-       "hex": "#E8E8E8"
-      },
-      {
-       "n": "Red",
-       "hex": "#C8102E"
-      },
-      {
-       "n": "White",
-       "hex": "#FFFFFF"
-      }
-     ],
-     "tags": [
-      "CUST-SUPPLIED"
-     ],
-     "noest": true
-    },
-    {
-     "id": "6695-graffiti-back",
-     "job": "6695",
-     "url": "https://www.printavo.com/invoices/25202135",
-     "customer": "Anarchy Offroad Utah — CUST-SUPPLIED",
-     "nickname": "Anarchy Offroad",
-     "location": "FULL BACK — big Anarchy Offroad Utah logo, 3c — same 15",
-     "qty": 15,
-     "colors": 3,
-     "screens": 3,
-     "img": "6695_graffiti",
-     "due": "2026-11-18",
-     "inks": [
-      {
-       "n": "Underbase",
-       "hex": "#E8E8E8"
-      },
-      {
-       "n": "Red",
-       "hex": "#C8102E"
-      },
-      {
-       "n": "White",
-       "hex": "#FFFFFF"
-      }
-     ],
-     "tags": [
-      "CUST-SUPPLIED"
-     ],
-     "noest": true
-    },
-    {
-     "id": "6651-front",
-     "job": "6651",
-     "url": "https://www.printavo.com/invoices/25061473",
-     "customer": "John G's Pizzeria",
-     "nickname": "John G's Pizzeria",
-     "location": "FRONT LEFT CHEST — John G's PIZZERIA, underlay + white — 15 DM108 Black (all XL)",
-     "qty": 15,
+     "id": "6527-tan-front",
+     "job": "6527",
+     "url": "https://www.printavo.com/invoices/24524941",
+     "customer": "Swell Soda — Dillon",
+     "nickname": "Swell Soda",
+     "location": "FULL FRONT — Swell Soda sunset, baby pink + cream — 24 DM130 Desert Tan Heather",
+     "qty": 24,
      "colors": 2,
      "screens": 2,
-     "img": "6651_mock",
-     "due": "2026-11-18",
+     "img": "6527_tan",
+     "due": "2026-11-23",
      "inks": [
       {
-       "n": "Underlay",
-       "hex": "#E8E8E8"
+       "n": "Baby pink",
+       "hex": "#E3B5DC"
       },
       {
-       "n": "White",
-       "hex": "#FFFFFF"
+       "n": "Cream",
+       "hex": "#EDE3CF"
       }
      ],
-     "tags": [],
-     "note": "Blanks ETA Mon 11/16."
-    },
-    {
-     "id": "6651-back",
-     "job": "6651",
-     "url": "https://www.printavo.com/invoices/25061473",
-     "customer": "John G's Pizzeria",
-     "nickname": "John G's Pizzeria",
-     "location": "FULL BACK — chef + PIZZERIA, underlay + white — same 15",
-     "qty": 15,
-     "colors": 2,
-     "screens": 2,
-     "img": "6651_mock",
-     "due": "2026-11-18",
-     "inks": [
-      {
-       "n": "Underlay",
-       "hex": "#E8E8E8"
-      },
-      {
-       "n": "White",
-       "hex": "#FFFFFF"
-      }
-     ],
+     "arrived": "2026-11-11",
      "tags": []
-    }
-   ],
-   "flags": [
-    [
-     "CREW",
-     "Jalen + Spencer + Corey + Tukker. ~6.8 press-hrs carded."
-    ],
-    [
-     "RUN ORDER",
-     "6688 Cachet add-on (3 pcs, 6585 screens) → 6660 Baptism → 6694 Iron Goat → 6695 Anarchy → 6651 John G’s. All due today."
-    ],
-    [
-     "COUNT IN",
-     "6694 Iron Goat + 6695 Anarchy — customer-supplied."
-    ],
-    [
-     "VERIFY",
-     "6688 — note asks for 2 small P170 hoodies, order shows 0. 6695 — order says black tees, I VOID mockup is grey."
-    ],
-    [
-     "SCREEN ROOM",
-     "Thursday is 6599 Dixie PTA — 5 screens, 723 shirts, both presses. Burn today."
-    ]
-   ]
-  },
-  {
-   "day": "2026-11-19",
-   "rows": [
+    },
+    {
+     "id": "6527-bay-front",
+     "job": "6527",
+     "url": "https://www.printavo.com/invoices/24524941",
+     "customer": "Swell Soda — Dillon",
+     "nickname": "Swell Soda",
+     "location": "FULL FRONT — Swell Soda sunset, dark sage + cream — 32 Comfort Colors 1717 Bay",
+     "qty": 32,
+     "colors": 2,
+     "screens": 2,
+     "img": "6527_bay",
+     "due": "2026-11-23",
+     "inks": [
+      {
+       "n": "Dark sage green (match mockup)",
+       "hex": "#6F7C6C"
+      },
+      {
+       "n": "Cream",
+       "hex": "#EDE3CF"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "arrived": "2026-11-11",
+     "noest": true
+    },
+    {
+     "id": "6527-wives-lc",
+     "job": "6527",
+     "url": "https://www.printavo.com/invoices/24524941",
+     "customer": "Swell Soda — Dillon",
+     "nickname": "Swell Soda",
+     "location": "FRONT LEFT CHEST — Swell hibiscus, 1c INK SWAP — 60 Comfort Colors 1717: 24 White + 36 Espresso",
+     "qty": 60,
+     "colors": 1,
+     "screens": 1,
+     "img": "6527_white",
+     "due": "2026-11-23",
+     "inks": [
+      {
+       "n": "Coral — White tees (24)",
+       "hex": "#F4826A"
+      },
+      {
+       "n": "Light pink — Espresso tees (36)",
+       "hex": "#E9BFC6"
+      }
+     ],
+     "tags": [
+      "INK SWAP"
+     ],
+     "arrived": "2026-11-11"
+    },
+    {
+     "id": "6527-wives-back",
+     "job": "6527",
+     "url": "https://www.printavo.com/invoices/24524941",
+     "customer": "Swell Soda — Dillon",
+     "nickname": "Swell Soda",
+     "location": "FULL BACK — Secret Lives of Maui Wives, 1c INK SWAP — same 60",
+     "qty": 60,
+     "colors": 1,
+     "screens": 1,
+     "img": "6527_espresso",
+     "due": "2026-11-23",
+     "inks": [
+      {
+       "n": "Coral — White tees (24)",
+       "hex": "#F4826A"
+      },
+      {
+       "n": "Light pink — Espresso tees (36)",
+       "hex": "#E9BFC6"
+      }
+     ],
+     "tags": [
+      "INK SWAP"
+     ],
+     "arrived": "2026-11-11"
+    },
     {
      "id": "6626-loc1",
      "job": "6626",
@@ -390,7 +261,7 @@
      "qty": 142,
      "colors": 1,
      "screens": 1,
-     "due": "2026-11-19",
+     "due": "2026-11-23",
      "inks": [],
      "tags": [
       "VERIFY"
@@ -409,261 +280,7 @@
      "qty": 142,
      "colors": 1,
      "screens": 1,
-     "due": "2026-11-19",
-     "inks": [],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true
-    },
-    {
-     "id": "6599-front-silver",
-     "job": "6599",
-     "url": "https://www.printavo.com/invoices/24841891",
-     "customer": "Dixie Intermediate PTA",
-     "nickname": "Dixie PTA",
-     "location": "FULL FRONT — DIXIE jet, BLUE — 184 Silver (21 youth L + 163 adult)",
-     "qty": 184,
-     "colors": 1,
-     "screens": 1,
-     "img": "6599_front",
-     "due": "2026-11-19",
-     "inks": [
-      {
-       "n": "Blue (match mockup)",
-       "hex": "#1F5FD0"
-      }
-     ],
-     "tags": [],
-     "note": "4 different fronts, one per shirt color. Back sponsor print matches the front ink — back is SPLIT: blue on Press 1, white on Press 2. Blanks ETA Mon 11/16."
-    },
-    {
-     "id": "6599-front-white",
-     "job": "6599",
-     "url": "https://www.printavo.com/invoices/24841891",
-     "customer": "Dixie Intermediate PTA",
-     "nickname": "Dixie PTA",
-     "location": "FULL FRONT — FIGHTING FALCONS, BLUE — 226 White (105 youth L + 121 adult)",
-     "qty": 226,
-     "colors": 1,
-     "screens": 1,
-     "img": "6599_front",
-     "due": "2026-11-19",
-     "inks": [
-      {
-       "n": "Blue (match mockup)",
-       "hex": "#1F5FD0"
-      }
-     ],
-     "tags": []
-    },
-    {
-     "id": "6599-front-black",
-     "job": "6599",
-     "url": "https://www.printavo.com/invoices/24841891",
-     "customer": "Dixie Intermediate PTA",
-     "nickname": "Dixie PTA",
-     "location": "FULL FRONT — DIXIE Intermediate School jet, WHITE — 168 Black (25 youth L + 143 adult)",
-     "qty": 168,
-     "colors": 1,
-     "screens": 1,
-     "img": "6599_front",
-     "due": "2026-11-19",
-     "inks": [
-      {
-       "n": "White",
-       "hex": "#FFFFFF"
-      }
-     ],
-     "tags": []
-    },
-    {
-     "id": "6599-front-royal",
-     "job": "6599",
-     "url": "https://www.printavo.com/invoices/24841891",
-     "customer": "Dixie Intermediate PTA",
-     "nickname": "Dixie PTA",
-     "location": "FULL FRONT — FEAR THE BLUE, WHITE — 145 Heather Royal (67 youth L + 78 adult)",
-     "qty": 145,
-     "colors": 1,
-     "screens": 1,
-     "img": "6599_front",
-     "due": "2026-11-19",
-     "inks": [
-      {
-       "n": "White",
-       "hex": "#FFFFFF"
-      }
-     ],
-     "tags": []
-    },
-    {
-     "id": "6599-back-blue",
-     "job": "6599",
-     "url": "https://www.printavo.com/invoices/24841891",
-     "customer": "Dixie Intermediate PTA",
-     "nickname": "Dixie PTA",
-     "location": "FULL BACK — sponsor logos, BLUE — 410: 184 Silver + 226 White",
-     "qty": 410,
-     "colors": 1,
-     "screens": 1,
-     "img": "6599_back",
-     "due": "2026-11-19",
-     "inks": [
-      {
-       "n": "Blue (match mockup)",
-       "hex": "#1F5FD0"
-      }
-     ],
-     "tags": [],
-     "press": "Press 1"
-    },
-    {
-     "id": "6599-back-white",
-     "job": "6599",
-     "url": "https://www.printavo.com/invoices/24841891",
-     "customer": "Dixie Intermediate PTA",
-     "nickname": "Dixie PTA",
-     "location": "FULL BACK — sponsor logos, WHITE — 313: 168 Black + 145 Heather Royal",
-     "qty": 313,
-     "colors": 1,
-     "screens": 1,
-     "img": "6599_back",
-     "due": "2026-11-19",
-     "inks": [
-      {
-       "n": "White",
-       "hex": "#FFFFFF"
-      }
-     ],
-     "tags": [],
-     "press": "Press 2"
-    },
-    {
-     "id": "6675-loc1",
-     "job": "6675",
-     "url": "https://www.printavo.com/invoices/25133925",
-     "customer": "Vest order — Kishigo hi-vis",
-     "nickname": "Vest order",
-     "location": "LOCATION 1 (see order) — 1c — 60 Kishigo 1195 Lime vests: 45 Construction + 15 Concrete",
-     "qty": 60,
-     "colors": 1,
-     "screens": 1,
-     "img": "6675_front",
-     "due": "2026-11-19",
-     "inks": [],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true,
-     "alert": "NO ART on the mockup — blank vest photos only. 45 \"Construction\" / 15 \"Concrete\" may be two different logos. Get art before screens.",
-     "note": "Blanks ETA Thu 11/12."
-    },
-    {
-     "id": "6675-loc2",
-     "job": "6675",
-     "url": "https://www.printavo.com/invoices/25133925",
-     "customer": "Vest order — Kishigo hi-vis",
-     "nickname": "Vest order",
-     "location": "LOCATION 2 (see order) — 1c — same 60 vests",
-     "qty": 60,
-     "colors": 1,
-     "screens": 1,
-     "img": "6675_back",
-     "due": "2026-11-19",
-     "inks": [],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true
-    },
-    {
-     "id": "6710-lc",
-     "job": "6710",
-     "url": "https://www.printavo.com/invoices/25249398",
-     "customer": "Lattitude — Larsen Plumbing PO #5019-17782 — CUST-SUPPLIED",
-     "nickname": "Larsen Plumbing",
-     "location": "LEFT CHEST 3.5\" wide — Larsen Plumbing, BLACK — 431 hi-vis orange: 190 PC54 tees + 190 PC54LS long sleeves + 40 mesh vests + 11 SRJ754 jackets",
-     "qty": 431,
-     "colors": 1,
-     "screens": 1,
-     "img": "6710_logo",
-     "due": "2026-11-19",
-     "inks": [
-      {
-       "n": "Black",
-       "hex": "#111111"
-      }
-     ],
-     "tags": [
-      "CUST-SUPPLIED",
-      "VERIFY"
-     ],
-     "noest": true,
-     "alert": "COUNT IN — counts are from the Lattitude PO (431). Printavo only shows 200. Write the real count on the card.",
-     "note": "Vests + jackets: watch the platen / zippers."
-    }
-   ],
-   "flags": [
-    [
-     "CREW",
-     "Jalen + Spencer + Corey + Tukker. ~17.3 press-hrs carded — heavy day."
-    ],
-    [
-     "RUN ORDER",
-     "6626 365 HVAC → 6599 Dixie PTA (4 fronts, then the back) → 6675 vests → 6710 Larsen."
-    ],
-    [
-     "STRETCH",
-     "6599 back is SPLIT by ink on purpose: BLUE (410 Silver + White) on Press 1, WHITE (313 Black + Hthr Royal) on Press 2."
-    ],
-    [
-     "COUNT IN",
-     "6710 Larsen — customer-supplied; 431 per the PO, Printavo shows 200."
-    ],
-    [
-     "VERIFY",
-     "6675 vests — no art on the order. 6626 — no art / imprint details; camo hoodies still show ordered."
-    ],
-    [
-     "NOT PRESS",
-     "6626 golf balls (6)."
-    ]
-   ]
-  },
-  {
-   "day": "2026-11-20",
-   "rows": [
-    {
-     "id": "6680-loc1",
-     "job": "6680",
-     "url": "https://www.printavo.com/invoices/25148811",
-     "customer": "Winter hoodies (Bart Taylor)",
-     "nickname": "Winter hoodies",
-     "location": "LOCATION 1 (see order) — 3c — 65 DT6100 hoodies: 33 Black + 32 Light Heather Grey",
-     "qty": 65,
-     "colors": 3,
-     "screens": 3,
-     "due": "2026-11-20",
-     "inks": [],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true,
-     "alert": "BLANKS NOT ORDERED? No goods status and no ETA on the order. No mockup or imprint details either.",
-     "note": "NO MOCKUP IN PRINTAVO — art on the order."
-    },
-    {
-     "id": "6680-loc2",
-     "job": "6680",
-     "url": "https://www.printavo.com/invoices/25148811",
-     "customer": "Winter hoodies (Bart Taylor)",
-     "nickname": "Winter hoodies",
-     "location": "LOCATION 2 (see order) — 3c — same 65",
-     "qty": 65,
-     "colors": 3,
-     "screens": 3,
-     "due": "2026-11-20",
+     "due": "2026-11-23",
      "inks": [],
      "tags": [
       "VERIFY"
@@ -681,7 +298,7 @@
      "colors": 1,
      "screens": 1,
      "img": "6656_mock",
-     "due": "2026-11-20",
+     "due": "2026-11-23",
      "inks": [
       {
        "n": "Black",
@@ -703,7 +320,7 @@
      "colors": 3,
      "screens": 3,
      "img": "6656_mock",
-     "due": "2026-11-20",
+     "due": "2026-11-23",
      "inks": [
       {
        "n": "PMS 1815 maroon",
@@ -723,6 +340,132 @@
      "noest": true
     },
     {
+     "id": "6675-loc1",
+     "job": "6675",
+     "url": "https://www.printavo.com/invoices/25133925",
+     "customer": "Vest order — Kishigo hi-vis",
+     "nickname": "Vest order",
+     "location": "LOCATION 1 (see order) — 1c — 60 Kishigo 1195 Lime vests: 45 Construction + 15 Concrete",
+     "qty": 60,
+     "colors": 1,
+     "screens": 1,
+     "img": "6675_front",
+     "due": "2026-11-23",
+     "inks": [],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true,
+     "alert": "NO ART on the mockup — blank vest photos only. 45 \"Construction\" / 15 \"Concrete\" may be two different logos. Get art before screens.",
+     "note": "Blanks ETA Thu 11/12."
+    },
+    {
+     "id": "6675-loc2",
+     "job": "6675",
+     "url": "https://www.printavo.com/invoices/25133925",
+     "customer": "Vest order — Kishigo hi-vis",
+     "nickname": "Vest order",
+     "location": "LOCATION 2 (see order) — 1c — same 60 vests",
+     "qty": 60,
+     "colors": 1,
+     "screens": 1,
+     "img": "6675_back",
+     "due": "2026-11-23",
+     "inks": [],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6683-front",
+     "job": "6683",
+     "url": "https://www.printavo.com/invoices/25157496",
+     "customer": "Taco Plaza — reorder",
+     "nickname": "Taco Plaza",
+     "location": "FRONT LEFT CHEST — sombrero mustache logo, 3c — 52 Black: 40 DM108 tees + 12 Gildan 18600 zip hoodies",
+     "qty": 52,
+     "colors": 3,
+     "screens": 3,
+     "img": "6683_mock",
+     "due": "2026-11-23",
+     "inks": [
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      },
+      {
+       "n": "Kelly Green PMS 348C",
+       "hex": "#00843D"
+      },
+      {
+       "n": "Bright Red PMS 186C",
+       "hex": "#C8102E"
+      }
+     ],
+     "tags": [
+      "REORDER"
+     ],
+     "note": "Reorder of #5913 — same art / films (mockup is from 5913). 6 screens total, shared across tees + zips. Blanks ETA Thu 11/12."
+    },
+    {
+     "id": "6683-back",
+     "job": "6683",
+     "url": "https://www.printavo.com/invoices/25157496",
+     "customer": "Taco Plaza — reorder",
+     "nickname": "Taco Plaza",
+     "location": "FULL BACK — TACOS PLAZA, 3c — same 52 (zip hoodies too)",
+     "qty": 52,
+     "colors": 3,
+     "screens": 3,
+     "img": "6683_mock",
+     "due": "2026-11-23",
+     "inks": [
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      },
+      {
+       "n": "Kelly Green PMS 348C",
+       "hex": "#00843D"
+      },
+      {
+       "n": "Bright Red PMS 186C",
+       "hex": "#C8102E"
+      }
+     ],
+     "tags": [
+      "REORDER"
+     ]
+    }
+   ],
+   "flags": [
+    [
+     "CREW",
+     "Jalen + Corey. ~10.4 press-hrs carded, plus whatever is left of 6599."
+    ],
+    [
+     "RUN ORDER",
+     "6599 Dixie PTA finish → 6527 Swell Soda (7 runs) → 6626 365 HVAC → 6656 Upper Mesa → 6675 vests → 6683 Taco Plaza."
+    ],
+    [
+     "VERIFY",
+     "6626 — no art / imprint details; camo hoodies still show ordered. 6675 vests — no art on the order. 6527 — russet ink: order says BOX BROWN, mockup is cream."
+    ],
+    [
+     "NOT PRESS",
+     "6527 — 56 Ivory 1717 tees are DTF (heat press). 6626 golf balls (6)."
+    ],
+    [
+     "SCREEN ROOM",
+     "Tuesday is 6658 C3 — 356 pcs, LC + back — plus 6638 AO (5 screens). Burn today."
+    ]
+   ]
+  },
+  {
+   "day": "2026-11-24",
+   "rows": [
+    {
      "id": "6658-lc",
      "job": "6658",
      "url": "https://www.printavo.com/invoices/25100301",
@@ -733,7 +476,7 @@
      "colors": 2,
      "screens": 2,
      "img": "6658_mock",
-     "due": "2026-11-20",
+     "due": "2026-11-23",
      "inks": [
       {
        "n": "Tan — black garments (155)",
@@ -750,7 +493,7 @@
      ],
      "noest": true,
      "alert": "Order says LEFT CHEST + FULL BACK, but 3 of the 4 mockups show a big CENTER FRONT buckle — confirm placement. Ink for the 6 youth Military Green not shown.",
-     "note": "Toddler / infant pieces need the small platen. Blanks ETA Fri 11/13."
+     "note": "Toddler / infant pieces need the small platen. Blanks ETA Fri 11/13 — order still shows ORDERED, confirm they are in."
     },
     {
      "id": "6658-back",
@@ -763,7 +506,7 @@
      "colors": 2,
      "screens": 2,
      "img": "6658_mock",
-     "due": "2026-11-20",
+     "due": "2026-11-23",
      "inks": [
       {
        "n": "Tan — black garments (155)",
@@ -778,189 +521,11 @@
       "INK SWAP"
      ],
      "noest": true
-    }
-   ],
-   "flags": [
-    [
-     "CREW",
-     "Jalen + Spencer + Corey + Tukker. ~13.1 press-hrs carded."
-    ],
-    [
-     "RUN ORDER",
-     "6680 Winter hoodies → 6656 Upper Mesa → 6658 C3 Christmas (356 pcs, LC + back)."
-    ],
-    [
-     "VERIFY",
-     "6680 — blanks not ordered? No goods status, ETA, mockup or imprint details. 6658 — LC vs center-front placement; ink for 6 youth Military Green."
-    ],
-    [
-     "NOT PRESS",
-     "6658 hats + leather / woven patches (heat press) · Carhartt jackets (embroidery) · 6 Deadwood camo hoodies ship BLANK."
-    ]
-   ]
-  },
-  {
-   "day": "extra",
-   "label": "Extra cards",
-   "rows": [
-    {
-     "id": "6670-hm-front",
-     "job": "6670",
-     "url": "https://www.printavo.com/invoices/25126663",
-     "customer": "Modern Warriors — MW Stripes Flag LS",
-     "nickname": "MW Stripes Flag",
-     "location": "FRONT CHEST 8\" — MW stripes, BLACK, no underlay — 144 NL6211 Heavy Metal long sleeves",
-     "qty": 144,
-     "colors": 1,
-     "screens": 1,
-     "img": "6670_front",
-     "due": "2026-11-16",
-     "inks": [
-      {
-       "n": "Black",
-       "hex": "#111111"
-      }
-     ],
-     "tags": [],
-     "note": "HANG TAGS: YES. Split shipping per color: TN 86 (S9 M17 L24 XL22 2XL14) / UT 58 (S6 M10 L18 XL14 2XL10). Blanks ETA ~Wed 11/11 (SLC).",
-     "alert": "6 screens on the PO cover the DARK shirts only (3 front + 3 back). Heavy Metal runs black 1/1 — a color change on those screens or 2 extra screens."
-    },
-    {
-     "id": "6670-hm-back",
-     "job": "6670",
-     "url": "https://www.printavo.com/invoices/25126663",
-     "customer": "Modern Warriors — MW Stripes Flag LS",
-     "nickname": "MW Stripes Flag",
-     "location": "BACK CENTER 12\" — Modern Warriors flag, BLACK, no underlay — same 144 Heavy Metal",
-     "qty": 144,
-     "colors": 1,
-     "screens": 1,
-     "img": "6670_back",
-     "due": "2026-11-16",
-     "inks": [
-      {
-       "n": "Black",
-       "hex": "#111111"
-      }
-     ],
-     "tags": []
-    },
-    {
-     "id": "6670-blk-front",
-     "job": "6670",
-     "url": "https://www.printavo.com/invoices/25126663",
-     "customer": "Modern Warriors — MW Stripes Flag LS",
-     "nickname": "MW Stripes Flag",
-     "location": "FRONT CHEST 8\" — MW stripes, underlay + Dark Tan + OD Green — 144 NL6211 Black long sleeves",
-     "qty": 144,
-     "colors": 3,
-     "screens": 3,
-     "img": "6670_front",
-     "due": "2026-11-16",
-     "inks": [
-      {
-       "n": "Underlay",
-       "hex": "#E8E8E8"
-      },
-      {
-       "n": "Dark Tan (match previous MW)",
-       "hex": "#8C8474"
-      },
-      {
-       "n": "OD Green (match previous MW)",
-       "hex": "#4A4D3E"
-      }
-     ],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true
-    },
-    {
-     "id": "6670-blk-back",
-     "job": "6670",
-     "url": "https://www.printavo.com/invoices/25126663",
-     "customer": "Modern Warriors — MW Stripes Flag LS",
-     "nickname": "MW Stripes Flag",
-     "location": "BACK CENTER 12\" — Modern Warriors flag, underlay + Dark Tan + OD Green — same 144 Black",
-     "qty": 144,
-     "colors": 3,
-     "screens": 3,
-     "img": "6670_back",
-     "due": "2026-11-16",
-     "inks": [
-      {
-       "n": "Underlay",
-       "hex": "#E8E8E8"
-      },
-      {
-       "n": "Dark Tan (match previous MW)",
-       "hex": "#8C8474"
-      },
-      {
-       "n": "OD Green (match previous MW)",
-       "hex": "#4A4D3E"
-      }
-     ],
-     "tags": [
-      "VERIFY"
-     ],
-     "noest": true
-    },
-    {
-     "id": "6672-front",
-     "job": "6672",
-     "url": "https://www.printavo.com/invoices/25126666",
-     "customer": "Modern Warriors — Badge UT TN",
-     "nickname": "MW Badge UT TN",
-     "location": "FRONT CENTER CHEST 8\" — MODERN WARRIORS, BLACK — 261: 144 NL6211 Military Green LS + 117 NL6210 Heavy Metal tees",
-     "qty": 261,
-     "colors": 1,
-     "screens": 1,
-     "img": "6672_front",
-     "due": "2026-11-16",
-     "inks": [
-      {
-       "n": "Black",
-       "hex": "#111111"
-      }
-     ],
-     "tags": [],
-     "note": "HANG TAGS: YES. Split shipping — Military Green TN 86 / UT 58; Heavy Metal TN 67 / UT 50 (size splits on the order). 10 Military Green XL came separately (S&S, ETA Thu 11/12).",
-     "alert": "BACK: use the UPDATED DISTRESSED artwork (Oct 2026 PDF)."
-    },
-    {
-     "id": "6672-back",
-     "job": "6672",
-     "url": "https://www.printavo.com/invoices/25126666",
-     "customer": "Modern Warriors — Badge UT TN",
-     "nickname": "MW Badge UT TN",
-     "location": "BACK CENTER 11\" — UT / TN badge, underlay + white + black (updated distressed art) — same 261",
-     "qty": 261,
-     "colors": 3,
-     "screens": 3,
-     "img": "6672_back",
-     "due": "2026-11-16",
-     "inks": [
-      {
-       "n": "Underlay",
-       "hex": "#E8E8E8"
-      },
-      {
-       "n": "White",
-       "hex": "#FFFFFF"
-      },
-      {
-       "n": "Black",
-       "hex": "#111111"
-      }
-     ],
-     "tags": []
     },
     {
      "id": "6638-chest",
      "job": "6638",
-     "url": "https://www.printavo.com/quotes/25028205",
+     "url": "https://www.printavo.com/invoices/25028205",
      "customer": "Lattitude — AO Construction PO #5044-17764 — CUST-SUPPLIED",
      "nickname": "AO Construction",
      "location": "CENTER CHEST 10\" — AO logo, black/white, 3 screens — 79: 60 6210 tees (Warm Grey · Hthr Columbia Blue · Hthr Redwood) + 19 797 White mock turtlenecks",
@@ -982,14 +547,14 @@
       "CUST-SUPPLIED",
       "VERIFY"
      ],
-     "note": "NO MOCKUP IN PRINTAVO — art on the order.",
-     "alert": "STILL A QUOTE — hold screens. Email proof required on the chest (Zach asked about the width). Blanks not pulled. Production 11/24, ships 11/25.",
+     "note": "NO MOCKUP IN PRINTAVO — art on the order. Customer-supplied blanks — count in.",
+     "alert": "Email proof required on the chest — Zach asked about the width (10\" or our call). Ships 11/25.",
      "noest": true
     },
     {
      "id": "6638-sleeve",
      "job": "6638",
-     "url": "https://www.printavo.com/quotes/25028205",
+     "url": "https://www.printavo.com/invoices/25028205",
      "customer": "Lattitude — AO Construction PO #5044-17764 — CUST-SUPPLIED",
      "nickname": "AO Construction",
      "location": "LEFT SLEEVE 4\" — Dixie, BLACK, 2 screens — same 79",
@@ -1011,33 +576,631 @@
    ],
    "flags": [
     [
-     "OPEN",
-     "Modern Warriors 6670 + 6672 — ~14.0 press-hrs, production date was Mon 11/16. Pull in wherever there’s room."
+     "CREW",
+     "Jalen + Corey. ~11.0 press-hrs carded."
+    ],
+    [
+     "RUN ORDER",
+     "6658 C3 Christmas (LC, then back) → 6638 AO Construction (ships 11/25)."
+    ],
+    [
+     "COUNT IN",
+     "6638 AO Construction — customer-supplied."
     ],
     [
      "VERIFY",
-     "6670 — match Dark Tan / OD Green to previous MW runs. 6638 AO Construction is still a quote — due 11/24, hold screens until it converts."
+     "6658 — LC vs center-front placement; ink for 6 youth Military Green; blanks still show ordered. 6638 — email proof on the chest before screens."
+    ],
+    [
+     "NOT PRESS",
+     "6658 hats + leather / woven patches (heat press) · Carhartt jackets (embroidery) · 6 Deadwood camo hoodies ship BLANK."
     ]
    ]
+  },
+  {
+   "day": "2026-11-25",
+   "rows": [
+    {
+     "id": "6687-lc",
+     "job": "6687",
+     "url": "https://www.printavo.com/invoices/25177672",
+     "customer": "Rebel K9 Foundations",
+     "nickname": "Rebel K9",
+     "location": "FRONT LEFT CHEST — Rebel K9 Foundations, 1c — 5 Next Level 9302 Oatmeal hoodies (all S)",
+     "qty": 5,
+     "colors": 1,
+     "screens": 1,
+     "img": "6687_mock",
+     "due": "2026-11-25",
+     "inks": [
+      {
+       "n": "Green (match mockup — last run photo on the order is brighter lime)",
+       "hex": "#6F7F3A"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true,
+     "alert": "Mockup is a BLACK hoodie — these are OATMEAL. Confirm the ink color.",
+     "note": "Blanks ETA Thu 11/12."
+    },
+    {
+     "id": "6687-back",
+     "job": "6687",
+     "url": "https://www.printavo.com/invoices/25177672",
+     "customer": "Rebel K9 Foundations",
+     "nickname": "Rebel K9",
+     "location": "FULL BACK — Rebel K9 Foundations, 1c — same 5",
+     "qty": 5,
+     "colors": 1,
+     "screens": 1,
+     "img": "6687_mock",
+     "due": "2026-11-25",
+     "inks": [
+      {
+       "n": "Green (match mockup — last run photo on the order is brighter lime)",
+       "hex": "#6F7F3A"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6676-rx-front",
+     "job": "6676",
+     "url": "https://www.printavo.com/invoices/25142226",
+     "customer": "Redline Excavation — Christmas order",
+     "nickname": "Redline X",
+     "location": "FRONT — vertical REDLINE X, INK SWAP — 94: 47 DM130 Black + 47 NL6210 Hthr Coyote Brown",
+     "qty": 94,
+     "colors": 2,
+     "screens": 2,
+     "img": "6676_brown",
+     "due": "2026-11-25",
+     "inks": [
+      {
+       "n": "Orange — Black DM130 (47)",
+       "hex": "#C4701C"
+      },
+      {
+       "n": "Black — Hthr Coyote Brown 6210 (47)",
+       "hex": "#111111"
+      }
+     ],
+     "tags": [
+      "INK SWAP",
+      "VERIFY"
+     ],
+     "noest": true,
+     "alert": "NL6210 tees (Coyote Brown, Black, Heavy Metal — 141 pcs) show NOT ORDERED. Priced 2c per location; mockups show 1 ink. Sleeve art is not on any mockup.",
+     "note": "Black DM130 are in (ETA was Wed 11/11)."
+    },
+    {
+     "id": "6676-rx-back",
+     "job": "6676",
+     "url": "https://www.printavo.com/invoices/25142226",
+     "customer": "Redline Excavation — Christmas order",
+     "nickname": "Redline X",
+     "location": "FULL BACK — Master the Monotonous badge, INK SWAP — same 94",
+     "qty": 94,
+     "colors": 2,
+     "screens": 2,
+     "img": "6676_blackorange",
+     "due": "2026-11-25",
+     "inks": [
+      {
+       "n": "Orange — Black DM130 (47)",
+       "hex": "#C4701C"
+      },
+      {
+       "n": "Black — Hthr Coyote Brown 6210 (47)",
+       "hex": "#111111"
+      }
+     ],
+     "tags": [
+      "INK SWAP",
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6676-rx-sleeve",
+     "job": "6676",
+     "url": "https://www.printavo.com/invoices/25142226",
+     "customer": "Redline Excavation — Christmas order",
+     "nickname": "Redline X",
+     "location": "SLEEVE (see order) — same 94",
+     "qty": 94,
+     "colors": 2,
+     "screens": 2,
+     "img": "6676_brown",
+     "due": "2026-11-25",
+     "inks": [
+      {
+       "n": "Orange — Black DM130 (47)",
+       "hex": "#C4701C"
+      },
+      {
+       "n": "Black — Hthr Coyote Brown 6210 (47)",
+       "hex": "#111111"
+      }
+     ],
+     "tags": [
+      "INK SWAP",
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6676-flag-lc",
+     "job": "6676",
+     "url": "https://www.printavo.com/invoices/25142226",
+     "customer": "Redline Excavation — Christmas order",
+     "nickname": "Redline X",
+     "location": "FRONT LEFT CHEST — Redline EX flag, WHITE — 94 NL6210: 47 Black + 47 Hthr Heavy Metal",
+     "qty": 94,
+     "colors": 2,
+     "screens": 2,
+     "img": "6676_flagblk",
+     "due": "2026-11-25",
+     "inks": [
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6676-flag-back",
+     "job": "6676",
+     "url": "https://www.printavo.com/invoices/25142226",
+     "customer": "Redline Excavation — Christmas order",
+     "nickname": "Redline X",
+     "location": "FULL BACK — Redline EX flag circle, WHITE — same 94",
+     "qty": 94,
+     "colors": 2,
+     "screens": 2,
+     "img": "6676_flaghm",
+     "due": "2026-11-25",
+     "inks": [
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6676-flag-sleeve",
+     "job": "6676",
+     "url": "https://www.printavo.com/invoices/25142226",
+     "customer": "Redline Excavation — Christmas order",
+     "nickname": "Redline X",
+     "location": "SLEEVE (see order) — same 94",
+     "qty": 94,
+     "colors": 2,
+     "screens": 2,
+     "img": "6676_flagblk",
+     "due": "2026-11-25",
+     "inks": [
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6680-loc1",
+     "job": "6680",
+     "url": "https://www.printavo.com/invoices/25148811",
+     "customer": "Winter hoodies (Bart Taylor)",
+     "nickname": "Winter hoodies",
+     "location": "LOCATION 1 (see order) — 3c — 65 DT6100 hoodies: 33 Black + 32 Light Heather Grey",
+     "qty": 65,
+     "colors": 3,
+     "screens": 3,
+     "due": "2026-11-24",
+     "inks": [],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true,
+     "alert": "BLANKS ETA Wed 11/25 — after the 11/24 production date. No mockup or imprint details on the order.",
+     "note": "NO MOCKUP IN PRINTAVO — art on the order."
+    },
+    {
+     "id": "6680-loc2",
+     "job": "6680",
+     "url": "https://www.printavo.com/invoices/25148811",
+     "customer": "Winter hoodies (Bart Taylor)",
+     "nickname": "Winter hoodies",
+     "location": "LOCATION 2 (see order) — 3c — same 65",
+     "qty": 65,
+     "colors": 3,
+     "screens": 3,
+     "due": "2026-11-24",
+     "inks": [],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    }
+   ],
+   "flags": [
+    [
+     "CREW",
+     "Jalen + Corey. ~11.1 press-hrs carded."
+    ],
+    [
+     "RUN ORDER",
+     "6687 Rebel K9 (5 pcs) → 6676 Redline (6 runs) → 6680 Winter hoodies once the blanks land."
+    ],
+    [
+     "BLANKS LATE",
+     "6680 — blanks ETA Wed 11/25 (SanMar Phoenix Tue 11/24, Reno Wed 11/25). Production date was Tue 11/24."
+    ],
+    [
+     "VERIFY",
+     "6680 — no mockup or imprint details. 6687 — ink color on oatmeal. 6676 — NL6210 tees show not ordered; priced 2c, mockups show 1 ink; no sleeve art."
+    ],
+    [
+     "NOT PRESS",
+     "6676 — 200 Zapped hats + woven patches (embroidery)."
+    ]
+   ]
+  },
+  {
+   "day": "2026-11-26",
+   "rows": [],
+   "flags": [
+    [
+     "CLOSED",
+     "Thanksgiving — shop closed."
+    ]
+   ]
+  },
+  {
+   "day": "2026-11-27",
+   "rows": [
+    {
+     "id": "6640-ls-lc",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "LEFT CHEST — Allout flag, Cool Grey 4 + black — 66 DT109 long sleeves: 22 Grey Frost + 22 Hthr Navy + 22 Hthr Charcoal",
+     "qty": 66,
+     "colors": 2,
+     "screens": 2,
+     "img": "6640_ls_char",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Cool Gray 4",
+       "hex": "#BBBCBC"
+      },
+      {
+       "n": "Black",
+       "hex": "#111111"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true,
+     "alert": "BLANKS NOT ORDERED? No goods status or ETA anywhere on this order. Color counts are from pricing (3c / 2c / 2c) — which location is the 3c is a guess.",
+     "note": "4 press groups on this job: long sleeves, DM108 tees + V-necks, Allout Concrete tees, youth."
+    },
+    {
+     "id": "6640-ls-back",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "FULL BACK — ALLOUT CONSTRUCTION diamond — same 66 long sleeves",
+     "qty": 66,
+     "colors": 3,
+     "screens": 3,
+     "img": "6640_ls_grey",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Cool Gray 4",
+       "hex": "#BBBCBC"
+      },
+      {
+       "n": "Black",
+       "hex": "#111111"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6640-ls-sleeve",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "RIGHT SLEEVE — ALLOUT vertical — same 66 long sleeves",
+     "qty": 66,
+     "colors": 2,
+     "screens": 2,
+     "img": "6640_ls_navy",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Cool Gray 4",
+       "hex": "#BBBCBC"
+      },
+      {
+       "n": "Black",
+       "hex": "#111111"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6640-tee-lc",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "LEFT CHEST — Allout flag patch, 3c — 176: 156 DM108 (Hthr Cardinal · Charcoal · Olive · Navy, 39 each) + 20 Allmade AL2014 V-necks",
+     "qty": 176,
+     "colors": 3,
+     "screens": 3,
+     "img": "6640_tee_char",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Black",
+       "hex": "#111111"
+      },
+      {
+       "n": "Cool Gray 4",
+       "hex": "#BBBCBC"
+      },
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6640-tee-back",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "FULL BACK — ALLOUT CONSTRUCTION circle, 3c — same 176",
+     "qty": 176,
+     "colors": 3,
+     "screens": 3,
+     "img": "6640_tee_card",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Black",
+       "hex": "#111111"
+      },
+      {
+       "n": "Cool Gray 4",
+       "hex": "#BBBCBC"
+      },
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6640-tee-loc3",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "LOCATION 3 (see order) — 1c — same 176",
+     "qty": 176,
+     "colors": 1,
+     "screens": 1,
+     "img": "6640_tee_navy",
+     "due": "2026-11-27",
+     "inks": [],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6640-conc-lc",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "FRONT LEFT — ALLOUT CONCRETE, 3c — 24 DM108: 8 Flint Blue Hthr + 8 Lt Hthr Grey + 8 Charcoal",
+     "qty": 24,
+     "colors": 3,
+     "screens": 3,
+     "img": "6640_concrete",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Black",
+       "hex": "#111111"
+      },
+      {
+       "n": "Cool Gray 4",
+       "hex": "#BBBCBC"
+      },
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6640-conc-back",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "FULL BACK — ALLOUT CONCRETE, 3c — same 24",
+     "qty": 24,
+     "colors": 3,
+     "screens": 3,
+     "img": "6640_concrete",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Black",
+       "hex": "#111111"
+      },
+      {
+       "n": "Cool Gray 4",
+       "hex": "#BBBCBC"
+      },
+      {
+       "n": "White",
+       "hex": "#FFFFFF"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6640-youth-front",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "FRONT — AC triangle mark, 1c — 24 youth: 8 DT108Y Hthr Navy + 8 DT108Y Hthr Red + 8 PC54YLS Red",
+     "qty": 24,
+     "colors": 1,
+     "screens": 1,
+     "img": "6640_youth_front",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Black",
+       "hex": "#111111"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    },
+    {
+     "id": "6640-youth-back",
+     "job": "6640",
+     "url": "https://www.printavo.com/invoices/25028298",
+     "customer": "Allout Construction — Christmas order (Dec 10 party)",
+     "nickname": "Allout Christmas",
+     "location": "BACK — ALLOUT CONSTRUCTION excavator, 1c — same 24 youth",
+     "qty": 24,
+     "colors": 1,
+     "screens": 1,
+     "img": "6640_youth_back",
+     "due": "2026-11-27",
+     "inks": [
+      {
+       "n": "Black",
+       "hex": "#111111"
+      }
+     ],
+     "tags": [
+      "VERIFY"
+     ],
+     "noest": true
+    }
+   ],
+   "flags": [
+    [
+     "CREW",
+     "Jalen + Corey (same as Mon–Wed unless you change it). ~12.8 press-hrs carded."
+    ],
+    [
+     "RUN ORDER",
+     "6640 Allout: long sleeves (LC, back, sleeve) → DM108 tees + V-necks (LC, back, location 3) → Allout Concrete (front left, back) → youth (front, back)."
+    ],
+    [
+     "VERIFY",
+     "6640 — blanks not ordered? Color counts are from pricing. Location 3 on the tees is not on the mockup. 145 customer-supplied pieces (Buckle hoodies, Abercrombie, Ariat jackets, L.L. Bean bags) have NO imprint on the order — not carded."
+    ],
+    [
+     "NOT PRESS",
+     "6640 — 276 hats + leather / woven patches."
+    ]
+   ]
+  },
+  {
+   "day": "extra",
+   "rows": [],
+   "flags": [],
+   "label": "Extra cards"
   }
  ],
  "img": {
-  "6688_disney": "/data/mocks/2026-11-16/6688_disney.jpg",
-  "6694_logo": "/data/mocks/2026-11-16/6694_logo.jpg",
-  "6695_ivoid": "/data/mocks/2026-11-16/6695_ivoid.jpg",
-  "6695_graffiti": "/data/mocks/2026-11-16/6695_graffiti.jpg",
-  "6651_mock": "/data/mocks/2026-11-16/6651_mock.jpg",
-  "6599_front": "/data/mocks/2026-11-16/6599_front.jpg",
-  "6599_back": "/data/mocks/2026-11-16/6599_back.jpg",
+  "6599_all": "/data/mocks/2026-11-23/6599_all.jpg",
+  "6527_blue": "/data/mocks/2026-11-23/6527_blue.jpg",
+  "6527_char": "/data/mocks/2026-11-23/6527_char.jpg",
+  "6527_russet": "/data/mocks/2026-11-23/6527_russet.jpg",
+  "6527_tan": "/data/mocks/2026-11-23/6527_tan.jpg",
+  "6527_bay": "/data/mocks/2026-11-23/6527_bay.jpg",
+  "6527_white": "/data/mocks/2026-11-23/6527_white.jpg",
+  "6527_espresso": "/data/mocks/2026-11-23/6527_espresso.jpg",
+  "6658_mock": "/data/mocks/2026-11-16/6658_mock.jpg",
+  "6656_mock": "/data/mocks/2026-11-16/6656_mock.jpg",
   "6675_front": "/data/mocks/2026-11-16/6675_front.jpg",
   "6675_back": "/data/mocks/2026-11-16/6675_back.jpg",
-  "6710_logo": "/data/mocks/2026-11-16/6710_logo.jpg",
-  "6656_mock": "/data/mocks/2026-11-16/6656_mock.jpg",
-  "6658_mock": "/data/mocks/2026-11-16/6658_mock.jpg",
-  "6670_front": "/data/mocks/2026-11-16/6670_front.jpg",
-  "6670_back": "/data/mocks/2026-11-16/6670_back.jpg",
-  "6672_front": "/data/mocks/2026-11-16/6672_front.jpg",
-  "6672_back": "/data/mocks/2026-11-16/6672_back.jpg",
-  "6660_proof": "/data/mocks/2026-11-16/6660_proof.jpg"
+  "6683_mock": "/data/mocks/2026-11-23/6683_mock.jpg",
+  "6687_mock": "/data/mocks/2026-11-23/6687_mock.jpg",
+  "6676_brown": "/data/mocks/2026-11-23/6676_brown.jpg",
+  "6676_blackorange": "/data/mocks/2026-11-23/6676_blackorange.jpg",
+  "6676_flagblk": "/data/mocks/2026-11-23/6676_flagblk.jpg",
+  "6676_flaghm": "/data/mocks/2026-11-23/6676_flaghm.jpg",
+  "6640_ls_char": "/data/mocks/2026-11-23/6640_ls_char.jpg",
+  "6640_ls_grey": "/data/mocks/2026-11-23/6640_ls_grey.jpg",
+  "6640_ls_navy": "/data/mocks/2026-11-23/6640_ls_navy.jpg",
+  "6640_tee_char": "/data/mocks/2026-11-23/6640_tee_char.jpg",
+  "6640_tee_card": "/data/mocks/2026-11-23/6640_tee_card.jpg",
+  "6640_tee_navy": "/data/mocks/2026-11-23/6640_tee_navy.jpg",
+  "6640_concrete": "/data/mocks/2026-11-23/6640_concrete.jpg",
+  "6640_youth_front": "/data/mocks/2026-11-23/6640_youth_front.jpg",
+  "6640_youth_back": "/data/mocks/2026-11-23/6640_youth_back.jpg"
  }
 }
